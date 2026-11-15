@@ -1,7 +1,7 @@
 import { fileURLToPath } from 'node:url';
 import { ESLint } from 'eslint';
 import { describe, expect, it } from 'vitest';
-import { PURE_PACKAGES } from '../eslint.config.js';
+import { DETERMINISTIC_PACKAGES, PURE_PACKAGES } from '../eslint.config.js';
 
 const repoRoot = fileURLToPath(new URL('..', import.meta.url));
 const eslint = new ESLint({ cwd: repoRoot });
@@ -53,5 +53,38 @@ describe('UI import boundary', () => {
       "import { PACKAGE_NAME } from '@mateo/engine';\nexport const x = PACKAGE_NAME;\n",
     );
     expect(ids).not.toContain('no-restricted-imports');
+  });
+});
+
+const nonDeterministic: [string, string][] = [
+  ['export const x = Math.random();', 'no-restricted-properties'],
+  ['export const x = Date.now();', 'no-restricted-properties'],
+  ['export const x = new Date();', 'no-restricted-syntax'],
+];
+
+describe('determinism boundary', () => {
+  for (const pkg of DETERMINISTIC_PACKAGES) {
+    for (const [statement, rule] of nonDeterministic) {
+      it(`rejects \`${statement}\` in packages/${pkg}`, async () => {
+        const ids = await ruleIdsFor(`packages/${pkg}/src/index.ts`, `${statement}\n`);
+        expect(ids).toContain(rule);
+      });
+    }
+  }
+
+  it('allows a clock in packages that record timestamps', async () => {
+    const ids = await ruleIdsFor(
+      'packages/project/src/index.ts',
+      'export const x = new Date().toISOString();\n',
+    );
+    expect(ids).not.toContain('no-restricted-syntax');
+  });
+
+  it('allows deterministic Math in calculation code', async () => {
+    const ids = await ruleIdsFor(
+      'packages/engine/src/index.ts',
+      'export const x = Math.sqrt(2);\n',
+    );
+    expect(ids).not.toContain('no-restricted-properties');
   });
 });
