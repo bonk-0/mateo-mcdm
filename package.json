@@ -18,7 +18,11 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "pnpm -r --if-present run test:coverage",
-    "verify": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test && pnpm test:coverage"
+    "i18n:check": "node tooling/check-i18n.ts",
+    "dev": "pnpm --filter @mateo/web dev",
+    "dev:desktop": "pnpm --filter @mateo/desktop dev",
+    "build": "pnpm --filter @mateo/web build",
+    "verify": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm i18n:check && pnpm test && pnpm test:coverage"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

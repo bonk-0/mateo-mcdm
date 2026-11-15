@@ -16,15 +16,19 @@ pnpm install
 
 ## Everyday commands
 
-| Command              | What it does                                                    |
-| -------------------- | --------------------------------------------------------------- |
-| `pnpm typecheck`     | Strict TypeScript check of the root config and every workspace. |
-| `pnpm lint`          | ESLint (type-aware) with zero warnings allowed.                 |
-| `pnpm format`        | Formats the repo with Prettier (`format:check` only checks).    |
-| `pnpm test`          | Runs Vitest for every package, app and the repo tooling.        |
-| `pnpm test:watch`    | Vitest in watch mode.                                           |
-| `pnpm test:coverage` | Runs the tests of packages that enforce a coverage threshold.   |
-| `pnpm verify`        | Everything CI runs, in the same order.                          |
+| Command              | What it does                                                      |
+| -------------------- | ----------------------------------------------------------------- |
+| `pnpm typecheck`     | Strict TypeScript check of the root config and every workspace.   |
+| `pnpm lint`          | ESLint (type-aware) with zero warnings allowed.                   |
+| `pnpm format`        | Formats the repo with Prettier (`format:check` only checks).      |
+| `pnpm test`          | Runs Vitest for every package, app and the repo tooling.          |
+| `pnpm test:watch`    | Vitest in watch mode.                                             |
+| `pnpm test:coverage` | Runs the tests of packages that enforce a coverage threshold.     |
+| `pnpm i18n:check`    | Fails on missing or unused keys between `en` and `tr`.            |
+| `pnpm dev`           | Web app with hot reload at http://localhost:5173.                 |
+| `pnpm dev:desktop`   | Desktop app (Tauri) around the same dev server.                   |
+| `pnpm build`         | Production build of the web app into `apps/web/dist`.             |
+| `pnpm verify`        | Everything CI runs, in the same order (except the desktop build). |
 
 Run a single package with a filter, for example `pnpm --filter @mateo/engine test`.
 
@@ -59,6 +63,27 @@ Each workspace is an internal, source-first package: its `package.json` `exports
 ### Engine purity
 
 `engine`, `fuzzy`, `methods`, `io` and `project` must stay free of UI code (plan §4). ESLint rejects imports of `@mateo/ui`, `@mateo/explain`, the apps, React and Tauri from these packages, including relative paths that climb into them. [`tooling/lint-boundaries.test.ts`](tooling/lint-boundaries.test.ts) proves the rule keeps working. The calculation packages (`engine`, `fuzzy`, `methods`) are also deterministic: no I/O, no randomness, no clock. ESLint rejects `Math.random`, `Date` and similar sources there, and every method test calls `assertDeterministic` from `@mateo/engine`. See [`packages/engine/README.md`](packages/engine/README.md) for the guide to writing a method.
+
+## Desktop app
+
+The desktop app is a Tauri 2 wrapper around the web build (`apps/desktop/src-tauri`). It needs a Rust toolchain and the [Tauri system prerequisites](https://v2.tauri.app/start/prerequisites/) for your OS. `pnpm dev:desktop` starts the web dev server and opens it in a native window; `pnpm --filter @mateo/desktop build` builds installers. CI builds a Linux `.deb` on every pull request.
+
+The native menu (File: New, Open, Open Recent, Save, Save As) is built by the UI through the Tauri menu API, so its labels follow the UI language. Menu items and buttons trigger app commands (`apps/web/src/commands`); project file handling registers the real handlers in P1.8. Files opened through the `.mateo` association reach the UI as a `file.open` command.
+
+The app icon comes from `apps/desktop/icons/source.svg`. After changing it, export a 1024×1024 `source.png` next to it and run `pnpm --filter @mateo/desktop icons`.
+
+## Translations
+
+All user-facing text goes through i18n (`packages/i18n`), including accessible labels such as `aria-label`.
+
+- Catalogs live in `packages/i18n/src/catalogs/<language>/<namespace>.json`. English (`en`) is the source; Turkish (`tr`) must have exactly the same keys.
+- Messages use ICU syntax: `{name}` for values, `{count, plural, one {# item} other {# items}}` for plurals. Use the typographic apostrophe (’) in text; a plain `'` is an escape character in ICU.
+- In components use `useTranslation('<namespace>')`. Keys are type-checked against the English catalog.
+- Method names (MARCOS, CRITIC…) stay as they are in every language. Mark text that must never be translated, such as method names and formatted numbers, with `translate="no"`.
+- Format numbers and dates with the helpers from `useFormatters()` (apps/web) or `@mateo/i18n`, never with `toFixed` or string concatenation. The UI language, display number format and import number format are separate settings.
+- `pnpm i18n:check` fails on missing or unused keys, invalid ICU messages and placeholders that differ between languages. A test in `apps/web` renders every screen with a pseudo-locale and fails on any visible text or label that bypassed i18n.
+
+To add a namespace, add the JSON file to every language folder and register it in `packages/i18n/src/catalogs/index.ts`.
 
 ## Branches
 

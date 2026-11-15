@@ -1,0 +1,93 @@
+{
+  "languageFormats": {
+    "title": "Language and Formats",
+    "description": "The interface language, the number format used for display and the number format used for import are independent. Each one follows your operating system until you change it."
+  },
+  "language": {
+    "title": "Interface language",
+    "description": "Method names such as MARCOS stay in their standard form in every language.",
+    "label": "Language",
+    "hint": "Applies immediately, including menus.",
+    "system": "System ({language})"
+  },
+  "formats": {
+    "system": "System · {example}",
+    "presets": {
+      "comma-dot": "Decimal point · {example}",
+      "dot-comma": "Decimal comma · {example}",
+      "space-comma": "Space and comma · {example}",
+      "apostrophe-dot": "Apostrophe and point · {example}"
+    }
+  },
+  "displayFormat": {
+    "title": "Display",
+    "description": "How numbers look in tables, charts and results. Display never changes stored values.",
+    "label": "Number format",
+    "hint": "Separators for thousands and decimals."
+  },
+  "precision": {
+    "label": "Decimal places",
+    "hint": "Shown for computed values. Calculations always use full precision.",
+    "option": "{count, plural, one {# decimal place} other {# decimal places}}"
+  },
+  "preview": {
+    "title": "Preview",
+    "caption": "Stored values next to how they are shown with the current settings",
+    "stored": "Stored value",
+    "shown": "Shown as",
+    "date": "Today"
+  },
+  "importFormat": {
+    "title": "Import",
+    "description": "How numbers are read from CSV files and text cells in spreadsheets. You can still change it for each import.",
+    "label": "Number format",
+    "hint": "The default for new imports.",
+    "decimal": "Decimal separator",
+    "group": "Thousands separator"
+  },
+  "appearance": {
+    "title": "Appearance",
+    "description": "Choose how Mateo looks and moves."
+  },
+  "theme": {
+    "title": "Theme",
+    "description": "System follows your operating system’s light or dark setting.",
+    "options": {
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark"
+    }
+  },
+  "motion": {
+    "title": "Motion",
+    "description": "Animations make steps easier to follow. Reduce them if motion is uncomfortable.",
+    "options": {
+      "system": {
+        "title": "System",
+        "description": "Follow the operating system’s reduced motion setting."
+      },
+      "full": {
+        "title": "Full",
+        "description": "Smooth transitions and animated explanations."
+      },
+      "reduce": {
+        "title": "Reduced",
+        "description": "Instant changes, minimal movement."
+      }
+    },
+    "statusReduced": "Motion is currently reduced.",
+    "statusFull": "Animations are currently on."
+  },
+  "about": {
+    "title": "About",
+    "tagline": "A local-first desktop application for classical and fuzzy multi-criteria decision making.",
+    "version": "Version",
+    "runtime": "Running as",
+    "runtimeDesktop": "Desktop app",
+    "runtimeBrowser": "Browser build",
+    "storage": "Data",
+    "storageValue": "Stored only on this computer",
+    "languages": "Languages",
+    "languagesValue": "English, Turkish"
+  }
+}

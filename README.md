@@ -12,5 +12,7 @@ Mateo is a local-first desktop application for classical and fuzzy multi-criteri
 ```sh
 corepack enable
 pnpm install
-pnpm verify   # typecheck, lint, format check, tests
+pnpm verify       # typecheck, lint, format check, i18n check, tests
+pnpm dev          # web app in the browser at http://localhost:5173
+pnpm dev:desktop  # desktop app (needs Rust and the Tauri system libraries)
 ```

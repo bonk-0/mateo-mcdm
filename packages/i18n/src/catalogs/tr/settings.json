@@ -1,0 +1,93 @@
+{
+  "languageFormats": {
+    "title": "Dil ve Biçimler",
+    "description": "Arayüz dili, gösterimde kullanılan sayı biçimi ve içe aktarmada kullanılan sayı biçimi birbirinden bağımsızdır. Siz değiştirene kadar her biri işletim sisteminizi izler."
+  },
+  "language": {
+    "title": "Arayüz dili",
+    "description": "MARCOS gibi yöntem adları her dilde standart biçimleriyle kalır.",
+    "label": "Dil",
+    "hint": "Menüler dahil hemen uygulanır.",
+    "system": "Sistem ({language})"
+  },
+  "formats": {
+    "system": "Sistem · {example}",
+    "presets": {
+      "comma-dot": "Ondalık nokta · {example}",
+      "dot-comma": "Ondalık virgül · {example}",
+      "space-comma": "Boşluk ve virgül · {example}",
+      "apostrophe-dot": "Kesme işareti ve nokta · {example}"
+    }
+  },
+  "displayFormat": {
+    "title": "Gösterim",
+    "description": "Sayıların tablolarda, grafiklerde ve sonuçlarda nasıl görüneceği. Gösterim, kayıtlı değerleri asla değiştirmez.",
+    "label": "Sayı biçimi",
+    "hint": "Binlik ve ondalık ayırıcılar."
+  },
+  "precision": {
+    "label": "Ondalık basamak",
+    "hint": "Hesaplanan değerlerde gösterilir. Hesaplamalar her zaman tam duyarlılıkla yapılır.",
+    "option": "{count, plural, one {# ondalık basamak} other {# ondalık basamak}}"
+  },
+  "preview": {
+    "title": "Önizleme",
+    "caption": "Kayıtlı değerler ve geçerli ayarlarla nasıl gösterildikleri",
+    "stored": "Kayıtlı değer",
+    "shown": "Gösterim",
+    "date": "Bugün"
+  },
+  "importFormat": {
+    "title": "İçe aktarma",
+    "description": "Sayıların CSV dosyalarından ve tablolardaki metin hücrelerinden nasıl okunacağı. Her içe aktarmada ayrıca değiştirebilirsiniz.",
+    "label": "Sayı biçimi",
+    "hint": "Yeni içe aktarmalar için varsayılan.",
+    "decimal": "Ondalık ayırıcı",
+    "group": "Binlik ayırıcı"
+  },
+  "appearance": {
+    "title": "Görünüm",
+    "description": "Mateo’nun nasıl görüneceğini ve hareket edeceğini seçin."
+  },
+  "theme": {
+    "title": "Tema",
+    "description": "Sistem, işletim sisteminizin açık ya da koyu ayarını izler.",
+    "options": {
+      "system": "Sistem",
+      "light": "Açık",
+      "dark": "Koyu"
+    }
+  },
+  "motion": {
+    "title": "Hareket",
+    "description": "Animasyonlar adımları izlemeyi kolaylaştırır. Hareket rahatsız ediyorsa azaltın.",
+    "options": {
+      "system": {
+        "title": "Sistem",
+        "description": "İşletim sisteminin hareketi azaltma ayarını izle."
+      },
+      "full": {
+        "title": "Tam",
+        "description": "Yumuşak geçişler ve animasyonlu açıklamalar."
+      },
+      "reduce": {
+        "title": "Azaltılmış",
+        "description": "Anlık değişimler, en az hareket."
+      }
+    },
+    "statusReduced": "Hareket şu anda azaltılmış.",
+    "statusFull": "Animasyonlar şu anda açık."
+  },
+  "about": {
+    "title": "Hakkında",
+    "tagline": "Klasik ve bulanık çok kriterli karar verme için yerel öncelikli bir masaüstü uygulaması.",
+    "version": "Sürüm",
+    "runtime": "Çalışma biçimi",
+    "runtimeDesktop": "Masaüstü uygulaması",
+    "runtimeBrowser": "Tarayıcı sürümü",
+    "storage": "Veriler",
+    "storageValue": "Yalnızca bu bilgisayarda saklanır",
+    "languages": "Diller",
+    "languagesValue": "İngilizce, Türkçe"
+  }
+}
