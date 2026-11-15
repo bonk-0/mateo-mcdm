@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "method": "critic",
+  "variant": "classical",
+  "numberType": "crisp",
+  "title": "Eight firms evaluated on profitability, market share and productivity",
+  "source": {
+    "role": "original",
+    "citation": "Diakoulaki, D., Mavrotas, G., Papayannakis, L. (1995). Determining objective weights in multiple criteria problems: The CRITIC method. Computers & Operations Research, 22(7), 763-770.",
+    "doi": "10.1016/0305-0548(94)00059-H",
+    "location": "Section 5, Tables 1-3 and the statistics printed in the text",
+    "note": "Values were read from a text-extracted (OCR) copy of the published article."
+  },
+  "precision": {
+    "decimals": 3,
+    "rule": "round-half-away-from-zero"
+  },
+  "input": {
+    "alternatives": ["A", "B", "C", "D", "E", "F", "G", "H"],
+    "criteria": [
+      {
+        "id": "profitability",
+        "name": "Profitability",
+        "unit": "%",
+        "direction": "benefit"
+      },
+      {
+        "id": "marketShare",
+        "name": "Market share",
+        "unit": "%",
+        "direction": "benefit"
+      },
+      {
+        "id": "productivity",
+        "name": "Productivity",
+        "unit": "$ million",
+        "direction": "benefit"
+      }
+    ],
+    "matrix": [
+      [61.0, 1.08, 4.33],
+      [20.7, 0.26, 4.34],
+      [16.3, 1.98, 2.53],
+      [9.0, 3.29, 1.65],
+      [5.4, 2.77, 2.33],
+      [4.0, 4.12, 1.21],
+      [-6.1, 3.52, 2.1],
+      [-34.6, 3.31, 0.98]
+    ]
+  },
+  "parameters": {
+    "standardDeviation": "population",
+    "correlation": "pearson"
+  },
+  "steps": {
+    "normalizedMatrix": {
+      "printedIn": "Table 2",
+      "decimals": 3,
+      "values": [
+        [1, 0.212, 0.996],
+        [0.578, 0, 1],
+        [0.524, 0.446, 0.46],
+        [0.455, 0.785, 0.2],
+        [0.418, 0.65, 0.401],
+        [0.404, 1, 0.069],
+        [0.298, 0.845, 0.335],
+        [0, 0.79, 0]
+      ]
+    },
+    "standardDeviations": {
+      "printedIn": "Section 5, text",
+      "decimals": 3,
+      "values": [0.263, 0.321, 0.358]
+    },
+    "correlationMatrix": {
+      "printedIn": "Section 5, text",
+      "decimals": 3,
+      "values": [
+        [1, -0.656, 0.811],
+        [-0.656, 1, -0.934],
+        [0.811, -0.934, 1]
+      ]
+    }
+  },
+  "result": {
+    "weights": {
+      "printedIn": "Table 3, row CRITIC",
+      "decimals": 3,
+      "values": [0.202, 0.481, 0.317]
+    }
+  },
+  "deviations": [
+    {
+      "path": "steps.normalizedMatrix.values[0][2]",
+      "printed": 0.996,
+      "recomputed": 0.997,
+      "note": "(4.33 - 0.98) / (4.34 - 0.98) = 0.99702. The productivity column of Table 2 was probably computed from unrounded source data."
+    },
+    {
+      "path": "steps.normalizedMatrix.values[2][0]",
+      "printed": 0.524,
+      "recomputed": 0.5324,
+      "note": "(16.3 + 34.6) / (61.0 + 34.6) = 0.5324. Probably a typo in Table 2 (0.524 for 0.532)."
+    },
+    {
+      "path": "steps.normalizedMatrix.values[2][2]",
+      "printed": 0.46,
+      "recomputed": 0.4613,
+      "note": "Productivity column; see the note on A."
+    },
+    {
+      "path": "steps.normalizedMatrix.values[3][0]",
+      "printed": 0.455,
+      "recomputed": 0.4561,
+      "note": "(9.0 + 34.6) / 95.6 = 0.4561; printed one unit lower in the last decimal."
+    },
+    {
+      "path": "steps.normalizedMatrix.values[3][2]",
+      "printed": 0.2,
+      "recomputed": 0.1994,
+      "note": "Productivity column; see the note on A."
+    },
+    {
+      "path": "steps.normalizedMatrix.values[4][2]",
+      "printed": 0.401,
+      "recomputed": 0.4018,
+      "note": "Productivity column: Table 2 differs from Table 1 by up to 0.002, probably because the authors normalised unrounded source data."
+    },
+    {
+      "path": "steps.normalizedMatrix.values[5][2]",
+      "printed": 0.069,
+      "recomputed": 0.0685,
+      "note": "Productivity column: Table 2 differs from Table 1 by up to 0.002, probably because the authors normalised unrounded source data."
+    },
+    {
+      "path": "steps.normalizedMatrix.values[6][2]",
+      "printed": 0.335,
+      "recomputed": 0.3333,
+      "note": "Productivity column; see the note on A."
+    },
+    {
+      "path": "steps.correlationMatrix.values[0][2]",
+      "printed": 0.811,
+      "recomputed": 0.8117,
+      "note": "The printed correlations were computed from Table 2 as printed (0.8118 there), not from Table 1."
+    },
+    {
+      "path": "steps.correlationMatrix.values[1][2]",
+      "printed": -0.934,
+      "recomputed": -0.9345,
+      "note": "Recomputed from Table 1: -0.93455; from printed Table 2: -0.9342."
+    },
+    {
+      "path": "steps.correlationMatrix.values[2][0]",
+      "printed": 0.811,
+      "recomputed": 0.8117,
+      "note": "Symmetric to [0][2]."
+    },
+    {
+      "path": "steps.correlationMatrix.values[2][1]",
+      "printed": -0.934,
+      "recomputed": -0.9345,
+      "note": "Symmetric to [1][2]."
+    }
+  ],
+  "notes": [
+    "All three criteria are maximised in the paper, so the ideal value is the column maximum and the anti-ideal value the column minimum.",
+    "The printed standard deviations are population standard deviations (divide by n). Sample standard deviations would be 0.281, 0.344, 0.383. The weights are identical under both conventions because the factor cancels in the normalisation of C_j.",
+    "C_j is not printed in the paper. Recomputed from Table 1: 0.4852, 1.1539, 0.7603.",
+    "The final weights reproduce exactly from Table 1 (0.2022, 0.4809, 0.3169) and from printed Table 2 (0.2020, 0.4812, 0.3167)."
+  ]
+}

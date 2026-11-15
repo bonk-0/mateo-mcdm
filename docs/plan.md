@@ -197,14 +197,17 @@ Each method declares its inputs and outputs, so the Hybrid Builder and Batch Ana
 
 The plan uses each method's original and most widely cited formulation. Citations below must be checked against the actual papers before they appear in the app or in reports, and the golden test for each method is written from that paper's worked example.
 
+The Phase 1 rows were verified in P1.4; formulations, worked examples, errata and the reasons for any substitute example are in [`docs/methods/`](methods/fixtures.md). The other rows are still unverified and are checked in their phase's references sub-phase.
+
 | Method | Reference formulation |
 |---|---|
-| MARCOS | Stević, Pamučar, Puška, Chatterjee (2020), *Computers & Industrial Engineering* 140, 106231 |
-| Fuzzy MARCOS (TFN) | Stanković, Stević, Das, Subotić, Pamučar (2020), *Mathematics* 8(3), 457 |
-| CRITIC | Diakoulaki, Mavrotas, Papayannakis (1995), *Computers & Operations Research* 22(7) |
-| MEREC | Keshavarz-Ghorabaee, Amiri, Zavadskas, Turskis, Antucheviciene (2021), *Symmetry* 13(4), 525 |
+| MARCOS | Stević, Pamučar, Puška, Chatterjee (2020), *Computers & Industrial Engineering* 140, 106231, doi:10.1016/j.cie.2019.106231 (paywalled; worked example from Damjanović, Stević et al. (2022), *Facta Universitatis, Series: Mechanical Engineering* 20(1), 177–197, doi:10.22190/FUME220215012D) |
+| Fuzzy MARCOS (TFN) | Stanković, Stević, Das, Subotić, Pamučar (2020), *Mathematics* 8(3), 457, doi:10.3390/math8030457 |
+| CRITIC | Diakoulaki, Mavrotas, Papayannakis (1995), *Computers & Operations Research* 22(7), 763–770, doi:10.1016/0305-0548(94)00059-H |
+| MEREC | Keshavarz-Ghorabaee, Amiri, Zavadskas, Turskis, Antucheviciene (2021), *Symmetry* 13(4), 525, doi:10.3390/sym13040525 |
 | LOPCOW | Ecer, Pamučar (2022), *Omega* 112, 102690 |
-| SWARA | Keršulienė, Zavadskas, Turskis (2010), *Journal of Business Economics and Management* 11(2) |
+| SWARA | Keršulienė, Zavadskas, Turskis (2010), *Journal of Business Economics and Management* 11(2), 243–258, doi:10.3846/jbem.2010.12 |
+| Fuzzy SWARA (TFN) | IMF SWARA: Vrtagić, Softić, Subotić, Stević, Dordevic, Ponjavic (2021), *Axioms* 10(2), 92, doi:10.3390/axioms10020092 (chosen over the Chang-scale variant, see `docs/methods/swara.md`) |
 | FUCOM | Pamučar, Stević, Sremac (2018), *Symmetry* 10(9), 393 |
 | BWM | Rezaei (2015), *Omega* 53; linear model: Rezaei (2016), *Omega* 64 |
 | DEMATEL | Gabus, Fontela (1972/1973), Battelle Geneva Research Centre; fuzzy variant chosen in Phase 2 from the most cited TFN formulation |

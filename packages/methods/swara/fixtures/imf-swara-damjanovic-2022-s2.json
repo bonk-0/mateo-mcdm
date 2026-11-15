@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "method": "swara",
+  "variant": "imf-swara",
+  "numberType": "tfn",
+  "title": "Criteria weights for traffic-safety scenario S2 with IMF SWARA",
+  "source": {
+    "role": "substitute",
+    "citation": "Damjanović, M., Stević, Ž., Stanimirović, D., Tanackov, I., Marinković, D. (2022). Impact of the number of vehicles on traffic safety: multiphase modeling. Facta Universitatis, Series: Mechanical Engineering, 20(1), 177-197.",
+    "doi": "10.22190/FUME220215012D",
+    "location": "Section 3.3 (Eqs. 1-4), Table 2 (scale) and Table 4 (scenario S2)",
+    "accessedVia": "https://core.ac.uk/download/524099176.pdf",
+    "note": "Worked example of IMF SWARA (Vrtagić et al. 2021, Axioms 10(2), 92, doi:10.3390/axioms10020092) by co-authors of the method. The Axioms paper's own tables could not be read (images on the publisher page)."
+  },
+  "precision": {
+    "decimals": 2,
+    "rule": "round-half-away-from-zero"
+  },
+  "input": {
+    "criteria": [
+      {
+        "id": "DP",
+        "name": "Number of dead persons"
+      },
+      {
+        "id": "IP",
+        "name": "Number of injured persons"
+      },
+      {
+        "id": "NRV",
+        "name": "Number of registered vehicles"
+      },
+      {
+        "id": "PASS",
+        "name": "Passengers in road transport"
+      }
+    ],
+    "criteriaOrder": "descending significance, as ranked by the experts",
+    "scale": [
+      {
+        "abbreviation": "ALS",
+        "term": "Absolutely less significant",
+        "tfn": [1, 1, 1]
+      },
+      {
+        "abbreviation": "DLS",
+        "term": "Dominantly less significant",
+        "tfn": [0.5, 0.6666666666666666, 1]
+      },
+      {
+        "abbreviation": "MLS",
+        "term": "Much less significant",
+        "tfn": [0.4, 0.5, 0.6666666666666666]
+      },
+      {
+        "abbreviation": "RLS",
+        "term": "Really less significant",
+        "tfn": [0.3333333333333333, 0.4, 0.5]
+      },
+      {
+        "abbreviation": "LS",
+        "term": "Less significant",
+        "tfn": [0.2857142857142857, 0.3333333333333333, 0.4]
+      },
+      {
+        "abbreviation": "MDLS",
+        "term": "Moderately less significant",
+        "tfn": [0.25, 0.2857142857142857, 0.3333333333333333]
+      },
+      {
+        "abbreviation": "WLS",
+        "term": "Weakly less significant",
+        "tfn": [0.2222222222222222, 0.25, 0.2857142857142857]
+      },
+      {
+        "abbreviation": "ES",
+        "term": "Equally significant",
+        "tfn": [0, 0, 0]
+      }
+    ],
+    "assessments": [null, "MDLS", "WLS", "ES"]
+  },
+  "parameters": {
+    "defuzzification": "graded-mean"
+  },
+  "steps": {
+    "coefficients": {
+      "printedIn": "Table 4",
+      "decimals": 2,
+      "values": [
+        [1, 1, 1],
+        [1.25, 1.29, 1.33],
+        [1.22, 1.25, 1.29],
+        [1, 1, 1]
+      ]
+    },
+    "recalculatedWeights": {
+      "printedIn": "Table 4",
+      "decimals": 2,
+      "values": [
+        [1, 1, 1],
+        [0.75, 0.78, 0.8],
+        [0.58, 0.62, 0.65],
+        [0.58, 0.62, 0.65]
+      ]
+    },
+    "recalculatedWeightsSum": {
+      "printedIn": "Table 4, unlabelled sum row",
+      "decimals": 2,
+      "values": [2.92, 3.02, 3.11]
+    },
+    "fuzzyWeights": {
+      "printedIn": "Table 4",
+      "decimals": 2,
+      "values": [
+        [0.32, 0.33, 0.34],
+        [0.24, 0.26, 0.27],
+        [0.19, 0.21, 0.22],
+        [0.19, 0.21, 0.22]
+      ]
+    }
+  },
+  "result": {
+    "weights": {
+      "printedIn": "Table 4, column 'crisp value'",
+      "decimals": 2,
+      "values": [0.33, 0.26, 0.21, 0.21]
+    }
+  },
+  "deviations": [],
+  "notes": [
+    "The scale TFNs are stored as exact fractions in double precision (2/9 = 0.2222...), as printed in Table 2.",
+    "Assessments were read back from the printed s_j triples of Table 4; the term with the matching TFN is recorded.",
+    "Crisp weights are the graded mean (l + 4m + u) / 6 of the fuzzy weights. The paper does not state the formula. The graded mean reproduces every printed crisp value; so does the centroid, so the choice follows Fuzzy MARCOS by the same authors (docs/methods/swara.md).",
+    "The crisp weights do not sum exactly to 1 (for example 1.0003 in S1) because defuzzification is not additive across the normalised fuzzy weights."
+  ]
+}

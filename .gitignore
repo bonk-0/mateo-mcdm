@@ -13,3 +13,4 @@ coverage/
 
 # Tauri (P1.7)
 apps/desktop/src-tauri/target/
+__pycache__/

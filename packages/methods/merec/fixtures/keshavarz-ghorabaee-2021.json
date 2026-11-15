@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "method": "merec",
+  "variant": "classical",
+  "numberType": "crisp",
+  "title": "Illustrative example: five alternatives, four criteria",
+  "source": {
+    "role": "original",
+    "citation": "Keshavarz-Ghorabaee, M., Amiri, M., Zavadskas, E. K., Turskis, Z., Antucheviciene, J. (2021). Determination of objective weights using a new method based on the removal effects of criteria (MEREC). Symmetry, 13(4), 525.",
+    "doi": "10.3390/sym13040525",
+    "location": "Section 3 (Eqs. 1-6) and Section 4.1, Tables 2-4 and the text of Steps 3-6",
+    "note": "Read from the publisher's PDF (CC BY)."
+  },
+  "precision": {
+    "decimals": 2,
+    "rule": "round-half-away-from-zero"
+  },
+  "input": {
+    "alternatives": ["A1", "A2", "A3", "A4", "A5"],
+    "criteria": [
+      {
+        "id": "C1",
+        "direction": "benefit"
+      },
+      {
+        "id": "C2",
+        "direction": "benefit"
+      },
+      {
+        "id": "C3",
+        "direction": "cost"
+      },
+      {
+        "id": "C4",
+        "direction": "cost"
+      }
+    ],
+    "matrix": [
+      [450, 8000, 54, 145],
+      [10, 9100, 2, 160],
+      [100, 8200, 31, 153],
+      [220, 9300, 1, 162],
+      [5, 8400, 23, 158]
+    ]
+  },
+  "parameters": {},
+  "steps": {
+    "normalizedMatrix": {
+      "printedIn": "Table 3",
+      "decimals": 3,
+      "values": [
+        [0.011, 1, 1, 0.895],
+        [0.5, 0.879, 0.037, 0.988],
+        [0.05, 0.976, 0.574, 0.944],
+        [0.023, 0.86, 0.019, 1],
+        [1, 0.952, 0.426, 0.975]
+      ]
+    },
+    "overallPerformance": {
+      "printedIn": "Section 4.1, Step 3",
+      "decimals": 2,
+      "values": [0.77, 0.71, 0.65, 1.09, 0.21]
+    },
+    "removalPerformance": {
+      "printedIn": "Table 4",
+      "decimals": 2,
+      "values": [
+        [0.03, 0.77, 0.77, 0.75],
+        [0.62, 0.69, 0.19, 0.71],
+        [0.15, 0.64, 0.57, 0.64],
+        [0.71, 1.08, 0.68, 1.09],
+        [0.21, 0.2, 0.02, 0.2]
+      ]
+    },
+    "removalEffects": {
+      "printedIn": "Section 4.1, Step 5",
+      "decimals": 2,
+      "values": [1.71, 0.04, 1.19, 0.03]
+    }
+  },
+  "result": {
+    "weights": {
+      "printedIn": "Section 4.1, Step 6",
+      "decimals": 4,
+      "values": [0.5752, 0.0141, 0.4016, 0.0091]
+    }
+  },
+  "deviations": [],
+  "notes": [
+    "Criteria types are printed in Table 2: C1, C2 in B (beneficial), C3, C4 in H (non-beneficial).",
+    "Every criterion is transformed into a minimisation type: n = min/x for beneficial and x/max for non-beneficial criteria (Eq. 2), so smaller normalised values mean better performance.",
+    "Step 6 prints 'w1 = 1.71 / 2.97 = 0.5752'. The quotient of the rounded numbers is 0.5758; 0.5752 is E_1 / sum E with unrounded E (1.7087 / 2.9705). All four printed weights follow the unrounded values.",
+    "All x_ij must be > 0 (Step 1); the logarithm is undefined otherwise."
+  ]
+}
