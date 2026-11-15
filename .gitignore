@@ -1,0 +1,15 @@
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+.eslintcache
+.vite/
+.DS_Store
+*.log
+.env
+.env.*
+!.env.example
+
+# Tauri (P1.7)
+apps/desktop/src-tauri/target/

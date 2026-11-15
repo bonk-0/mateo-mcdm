@@ -1,0 +1,14 @@
+{
+  "name": "@mateo/desktop",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Tauri desktop shell of Mateo.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run"
+  }
+}

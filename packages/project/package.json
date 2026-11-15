@@ -1,0 +1,14 @@
+{
+  "name": "@mateo/project",
+  "version": "0.0.0",
+  "private": true,
+  "description": ".mateo project file format, schema, migrations and history.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run"
+  }
+}

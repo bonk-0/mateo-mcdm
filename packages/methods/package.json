@@ -1,0 +1,14 @@
+{
+  "name": "@mateo/methods",
+  "version": "0.0.0",
+  "private": true,
+  "description": "MCDM method implementations, one folder per method.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run"
+  }
+}

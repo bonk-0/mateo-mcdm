@@ -1,0 +1,7 @@
+pnpm-lock.yaml
+node_modules/
+dist/
+coverage/
+# Planning documents are authored by hand; keep their formatting as written.
+base-plan.md
+docs/

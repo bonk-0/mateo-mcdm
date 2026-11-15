@@ -1,0 +1,14 @@
+{
+  "name": "@mateo/engine",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Pure TypeScript calculation engine (no UI dependencies).",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run"
+  }
+}
