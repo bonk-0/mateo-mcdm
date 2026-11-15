@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "method": "swara",
+  "variant": "classical",
+  "numberType": "crisp",
+  "title": "Attributes for selecting a rational dispute resolution method",
+  "source": {
+    "role": "original",
+    "citation": "Keršulienė, V., Zavadskas, E. K., Turskis, Z. (2010). Selection of rational dispute resolution method by applying new step-wise weight assessment ratio analysis (SWARA). Journal of Business Economics and Management, 11(2), 243-258.",
+    "doi": "10.3846/jbem.2010.12",
+    "location": "Fig. 2 (procedure) and Table 1 (worked example)",
+    "note": "Values were read from a text-extracted copy of the published article."
+  },
+  "precision": {
+    "decimals": 2,
+    "rule": "round-half-away-from-zero"
+  },
+  "input": {
+    "criteria": [
+      {
+        "id": "x1",
+        "name": "Expedition of dispute resolution"
+      },
+      {
+        "id": "x2",
+        "name": "Price of dispute resolution"
+      },
+      {
+        "id": "x3",
+        "name": "Possibility to appeal"
+      },
+      {
+        "id": "x4",
+        "name": "Assurance of confidentiality"
+      },
+      {
+        "id": "x5",
+        "name": "Authority of person solving the dispute"
+      },
+      {
+        "id": "x6",
+        "name": "Legal advice"
+      }
+    ],
+    "criteriaOrder": "descending importance, as ranked by the experts",
+    "comparativeImportance": [null, 0.15, 0.04, 0.29, 0.02, 0.04]
+  },
+  "parameters": {},
+  "steps": {
+    "coefficients": {
+      "printedIn": "Table 1, column k_j",
+      "decimals": 2,
+      "values": [1, 1.15, 1.04, 1.29, 1.02, 1.04]
+    },
+    "recalculatedWeights": {
+      "printedIn": "Table 1, column w_j (recalculated weight)",
+      "decimals": 2,
+      "values": [1, 0.87, 0.84, 0.65, 0.64, 0.61]
+    }
+  },
+  "result": {
+    "weights": {
+      "printedIn": "Table 1, column q_j, and the text of Section 4",
+      "decimals": 2,
+      "values": [0.22, 0.19, 0.18, 0.14, 0.14, 0.13]
+    }
+  },
+  "deviations": [],
+  "notes": [
+    "s_j is the average comparative importance given by the experts; the paper prints only the averages, not each expert's answer.",
+    "The first criterion has no s_j; k_1 = 1 and w_1 = 1 by definition.",
+    "Symbol names follow the paper: w_j is the recalculated weight and q_j the final weight. Many later papers swap the two letters.",
+    "Unrounded recomputation: w = 1, 0.8696, 0.8361, 0.6482, 0.6354, 0.6110; q = 0.2174, 0.1890, 0.1818, 0.1409, 0.1381, 0.1328 (sum 1)."
+  ]
+}

@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "method": "marcos",
+  "variant": "classical",
+  "numberType": "crisp",
+  "title": "Ranking observation years by traffic-safety indicators (scenario S1)",
+  "source": {
+    "role": "substitute",
+    "citation": "Damjanović, M., Stević, Ž., Stanimirović, D., Tanackov, I., Marinković, D. (2022). Impact of the number of vehicles on traffic safety: multiphase modeling. Facta Universitatis, Series: Mechanical Engineering, 20(1), 177-197.",
+    "doi": "10.22190/FUME220215012D",
+    "location": "Section 3.4 (Eqs. 5-16) and Section 4, Tables 5-8 (scenario S1)",
+    "accessedVia": "https://core.ac.uk/download/524099176.pdf",
+    "note": "The original MARCOS paper (Stević et al. 2020, Computers & Industrial Engineering 140, 106231, doi:10.1016/j.cie.2019.106231) is paywalled and could not be accessed. This open-access example is co-authored by the method's first author and prints every intermediate table of the classical MARCOS procedure."
+  },
+  "precision": {
+    "decimals": 3,
+    "rule": "round-half-away-from-zero"
+  },
+  "input": {
+    "alternatives": ["2011", "2012", "2013", "2014", "2015", "2016", "2018", "2020"],
+    "criteria": [
+      {
+        "id": "AADT",
+        "name": "Annual average daily traffic",
+        "direction": "benefit"
+      },
+      {
+        "id": "NRV",
+        "name": "Number of registered vehicles",
+        "direction": "benefit"
+      },
+      {
+        "id": "TAC",
+        "name": "Traffic accidents with casualties",
+        "direction": "cost"
+      },
+      {
+        "id": "TAMD",
+        "name": "Traffic accidents with material damage",
+        "direction": "cost"
+      }
+    ],
+    "matrix": [
+      [7140, 196419, 1451, 7068],
+      [5593, 197826, 1217, 6886],
+      [4733, 203266, 1266, 3998],
+      [6440, 196059, 1334, 4197],
+      [7471, 198772, 1554, 3390],
+      [7912, 209098, 1698, 3531],
+      [8953, 235385, 1855, 4017],
+      [3052, 240611, 1490, 3102]
+    ],
+    "weights": [0.247, 0.247, 0.309, 0.197]
+  },
+  "parameters": {},
+  "steps": {
+    "extendedMatrix": {
+      "printedIn": "Table 5",
+      "decimals": 0,
+      "rows": ["AAI", "2011", "2012", "2013", "2014", "2015", "2016", "2018", "2020", "AI"],
+      "values": [
+        [3052, 196059, 1855, 7068],
+        [7140, 196419, 1451, 7068],
+        [5593, 197826, 1217, 6886],
+        [4733, 203266, 1266, 3998],
+        [6440, 196059, 1334, 4197],
+        [7471, 198772, 1554, 3390],
+        [7912, 209098, 1698, 3531],
+        [8953, 235385, 1855, 4017],
+        [3052, 240611, 1490, 3102],
+        [8953, 240611, 1217, 3102]
+      ]
+    },
+    "normalizedMatrix": {
+      "printedIn": "Table 6",
+      "decimals": 3,
+      "rows": ["AAI", "2011", "2012", "2013", "2014", "2015", "2016", "2018", "2020", "AI"],
+      "values": [
+        [0.341, 0.815, 0.656, 0.439],
+        [0.797, 0.816, 0.839, 0.439],
+        [0.625, 0.822, 1.0, 0.45],
+        [0.529, 0.845, 0.961, 0.776],
+        [0.719, 0.815, 0.912, 0.739],
+        [0.834, 0.826, 0.783, 0.915],
+        [0.884, 0.869, 0.717, 0.879],
+        [1.0, 0.978, 0.656, 0.772],
+        [0.341, 1.0, 0.817, 1.0],
+        [1, 1, 1, 1]
+      ]
+    },
+    "weightedMatrix": {
+      "printedIn": "Table 7",
+      "decimals": 3,
+      "rows": ["AAI", "2011", "2012", "2013", "2014", "2015", "2016", "2018", "2020", "AI"],
+      "values": [
+        [0.084, 0.201, 0.203, 0.086],
+        [0.197, 0.202, 0.259, 0.086],
+        [0.154, 0.203, 0.309, 0.089],
+        [0.131, 0.209, 0.297, 0.153],
+        [0.178, 0.201, 0.282, 0.146],
+        [0.206, 0.204, 0.242, 0.18],
+        [0.218, 0.215, 0.221, 0.173],
+        [0.247, 0.242, 0.203, 0.152],
+        [0.084, 0.247, 0.252, 0.197],
+        [0.247, 0.247, 0.309, 0.197]
+      ]
+    },
+    "sums": {
+      "printedIn": "Table 8, column S_i",
+      "decimals": 3,
+      "rows": ["AAI", "2011", "2012", "2013", "2014", "2015", "2016", "2018", "2020", "AI"],
+      "values": [0.575, 0.744, 0.755, 0.789, 0.806, 0.832, 0.827, 0.843, 0.781, 1.0]
+    },
+    "kMinus": {
+      "printedIn": "Table 8, column K_i^-",
+      "decimals": 3,
+      "values": [1.295, 1.314, 1.373, 1.403, 1.449, 1.44, 1.468, 1.358]
+    },
+    "kPlus": {
+      "printedIn": "Table 8, column K_i^+",
+      "decimals": 3,
+      "values": [0.744, 0.755, 0.789, 0.806, 0.832, 0.827, 0.843, 0.781]
+    },
+    "fKMinus": {
+      "printedIn": "Table 8, column f(K^-)",
+      "decimals": 3,
+      "values": [0.365, 0.365, 0.365, 0.365, 0.365, 0.365, 0.365, 0.365]
+    },
+    "fKPlus": {
+      "printedIn": "Table 8, column f(K^+)",
+      "decimals": 3,
+      "values": [0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635]
+    },
+    "fK": {
+      "printedIn": "Table 8, column f(K_i)",
+      "decimals": 3,
+      "values": [0.615, 0.624, 0.652, 0.667, 0.688, 0.684, 0.697, 0.645]
+    }
+  },
+  "result": {
+    "ranking": {
+      "printedIn": "Table 8, column Rank",
+      "values": [8, 7, 5, 4, 2, 3, 1, 6]
+    }
+  },
+  "deviations": [],
+  "notes": [
+    "Rows AAI and AI are the anti-ideal and ideal solutions of Eqs. (6)-(7); the alternatives are the eight observation years that DEA found efficient in scenario S1.",
+    "The weights are the crisp IMF SWARA weights of scenario S1 (Table 4), printed in the text as 'w1=w2=0.247; w3=0.309 and w4=0197' (the last value is a typo for 0.197; Table 7 confirms 0.197).",
+    "f(K_i^-) is the same for every alternative (0.365). This is a property of the formulation, not an error: K_i^-/K_i^+ = S_AI/S_AAI for every i.",
+    "Recomputing from the inputs reproduces every printed cell of Tables 5-8 to 3 decimals."
+  ]
+}
