@@ -47,6 +47,10 @@ jobs:
       - name: Test
         run: pnpm test
 
+      # Packages with a coverage threshold (see their vitest.config.ts) fail below it.
+      - name: Coverage
+        run: pnpm test:coverage
+
   accessibility:
     name: Lighthouse accessibility (web build)
     runs-on: ubuntu-latest

@@ -16,18 +16,19 @@ pnpm install
 
 ## Everyday commands
 
-| Command            | What it does                                                      |
-| ------------------ | ----------------------------------------------------------------- |
-| `pnpm typecheck`   | Strict TypeScript check of the root config and every workspace.   |
-| `pnpm lint`        | ESLint (type-aware) with zero warnings allowed.                   |
-| `pnpm format`      | Formats the repo with Prettier (`format:check` only checks).      |
-| `pnpm test`        | Runs Vitest for every package, app and the repo tooling.          |
-| `pnpm test:watch`  | Vitest in watch mode.                                             |
-| `pnpm i18n:check`  | Fails on missing or unused keys between `en` and `tr`.            |
-| `pnpm dev`         | Web app with hot reload at http://localhost:5173.                 |
-| `pnpm dev:desktop` | Desktop app (Tauri) around the same dev server.                   |
-| `pnpm build`       | Production build of the web app into `apps/web/dist`.             |
-| `pnpm verify`      | Everything CI runs, in the same order (except the desktop build). |
+| Command              | What it does                                                      |
+| -------------------- | ----------------------------------------------------------------- |
+| `pnpm typecheck`     | Strict TypeScript check of the root config and every workspace.   |
+| `pnpm lint`          | ESLint (type-aware) with zero warnings allowed.                   |
+| `pnpm format`        | Formats the repo with Prettier (`format:check` only checks).      |
+| `pnpm test`          | Runs Vitest for every package, app and the repo tooling.          |
+| `pnpm test:watch`    | Vitest in watch mode.                                             |
+| `pnpm test:coverage` | Runs the tests of packages that enforce a coverage threshold.     |
+| `pnpm i18n:check`    | Fails on missing or unused keys between `en` and `tr`.            |
+| `pnpm dev`           | Web app with hot reload at http://localhost:5173.                 |
+| `pnpm dev:desktop`   | Desktop app (Tauri) around the same dev server.                   |
+| `pnpm build`         | Production build of the web app into `apps/web/dist`.             |
+| `pnpm verify`        | Everything CI runs, in the same order (except the desktop build). |
 
 Run a single package with a filter, for example `pnpm --filter @mateo/engine test`.
 
@@ -61,7 +62,7 @@ Each workspace is an internal, source-first package: its `package.json` `exports
 
 ### Engine purity
 
-`engine`, `fuzzy`, `methods`, `io` and `project` must stay free of UI code (plan §4). ESLint rejects imports of `@mateo/ui`, `@mateo/explain`, the apps, React and Tauri from these packages, including relative paths that climb into them. [`tooling/lint-boundaries.test.ts`](tooling/lint-boundaries.test.ts) proves the rule keeps working. The engine is also deterministic: no I/O, no randomness, no clock.
+`engine`, `fuzzy`, `methods`, `io` and `project` must stay free of UI code (plan §4). ESLint rejects imports of `@mateo/ui`, `@mateo/explain`, the apps, React and Tauri from these packages, including relative paths that climb into them. [`tooling/lint-boundaries.test.ts`](tooling/lint-boundaries.test.ts) proves the rule keeps working. The calculation packages (`engine`, `fuzzy`, `methods`) are also deterministic: no I/O, no randomness, no clock. ESLint rejects `Math.random`, `Date` and similar sources there, and every method test calls `assertDeterministic` from `@mateo/engine`. See [`packages/engine/README.md`](packages/engine/README.md) for the guide to writing a method.
 
 ## Desktop app
 
@@ -102,6 +103,6 @@ To add a namespace, add the JSON file to every language folder and register it i
 - Title: `P<phase>.<sub> <sub-phase title>` for sub-phase work, otherwise a short imperative summary.
 - Description: what changed, how it was checked, and a checklist of the sub-phase's **Done when** criteria.
 - Stay inside the sub-phase scope. Anything needed outside it goes into the PR description instead of the diff. If a decision in `docs/plan.md` turns out to be wrong, propose the change in the PR rather than silently deviating.
-- CI must be green: type check, lint, format check, tests (and, from P1.7 on, the i18n missing-key check).
+- CI must be green: type check, lint, format check, tests, coverage thresholds (and, from P1.7 on, the i18n missing-key check).
 - Every method implementation ships with a golden test that reproduces its reference paper's worked example.
 - Squash or merge commits are both fine; keep the history readable.

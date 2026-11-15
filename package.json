@@ -17,15 +17,17 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:coverage": "pnpm -r --if-present run test:coverage",
     "i18n:check": "node tooling/check-i18n.ts",
     "dev": "pnpm --filter @mateo/web dev",
     "dev:desktop": "pnpm --filter @mateo/desktop dev",
     "build": "pnpm --filter @mateo/web build",
-    "verify": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm i18n:check && pnpm test"
+    "verify": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm i18n:check && pnpm test && pnpm test:coverage"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/node": "^22.20.5",
+    "@vitest/coverage-v8": "^5.1.0",
     "eslint": "^10.15.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.14.0",
