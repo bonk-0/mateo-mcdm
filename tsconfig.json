@@ -6,5 +6,5 @@
     "checkJs": true,
     "types": ["node"]
   },
-  "include": ["*.ts", "*.js", "tooling"]
+  "include": ["*.ts", "*.js", "tooling", "packages/*/vitest.config.ts"]
 }
