@@ -1,0 +1,14 @@
+{
+  "name": "@mateo/io",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Excel/CSV import and export, structure detection, locale parsing.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run"
+  }
+}

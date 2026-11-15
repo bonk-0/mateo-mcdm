@@ -1,0 +1,14 @@
+{
+  "name": "@mateo/web",
+  "version": "0.0.0",
+  "private": true,
+  "description": "React UI of Mateo (also runs standalone in a browser).",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run"
+  }
+}
