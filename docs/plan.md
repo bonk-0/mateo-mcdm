@@ -345,6 +345,9 @@ Carried over from `base-plan.md` §24: calm, minimal, scientific. White and ligh
 
 ## 15. Next steps
 
+The detailed main phases and sub-phases are in [`docs/phases/`](phases/README.md). Each sub-phase is completed by its own thread.
+
+
 1. Review this plan and adjust phases or method choices.
 2. Verify the Phase 1 references (MARCOS, Fuzzy MARCOS, CRITIC, MEREC, SWARA) and extract their worked examples as test fixtures.
 3. Set up the monorepo, engine package and CI.
