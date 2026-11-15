@@ -1,0 +1,70 @@
+{
+  "greeting": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening"
+  },
+  "hero": {
+    "title": "Decisions you can explain, number by number.",
+    "lead": "Bring your spreadsheet, build a decision model and rank alternatives with classical and fuzzy methods. Every result can be traced back to its inputs.",
+    "newProject": "New project",
+    "openProject": "Open project"
+  },
+  "journey": {
+    "title": "From data to decision in four steps",
+    "step": "Step {number}",
+    "open": "Go there",
+    "steps": {
+      "import": {
+        "title": "Import your data",
+        "description": "Bring in an Excel or CSV file instead of retyping it."
+      },
+      "model": {
+        "title": "Build the model",
+        "description": "Define criteria, alternatives and benefit or cost directions."
+      },
+      "weight": {
+        "title": "Weight the criteria",
+        "description": "Let CRITIC, MEREC or SWARA tell you what matters most."
+      },
+      "rank": {
+        "title": "Rank with MARCOS",
+        "description": "Rank the alternatives and watch each step unfold."
+      }
+    }
+  },
+  "methods": {
+    "title": "Methods in this release",
+    "description": "Each one is tested against the worked example of its original paper.",
+    "groups": {
+      "weighting": {
+        "title": "Weighting",
+        "description": "Objective and subjective criteria weights."
+      },
+      "ranking": {
+        "title": "Ranking",
+        "description": "Utility-based ranking with crisp or triangular fuzzy numbers."
+      }
+    }
+  },
+  "recent": {
+    "title": "Recent projects",
+    "emptyTitle": "No recent projects yet",
+    "emptyDescription": "Projects you open or save will show up here."
+  },
+  "principles": {
+    "label": "Principles",
+    "correct": {
+      "title": "Correct first",
+      "description": "Verified against published worked examples."
+    },
+    "explainable": {
+      "title": "Every number explained",
+      "description": "Trace any result back to its inputs and formula."
+    },
+    "offline": {
+      "title": "Yours, offline",
+      "description": "No accounts, no cloud. Your data stays on your computer."
+    }
+  }
+}

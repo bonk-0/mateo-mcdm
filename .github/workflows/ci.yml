@@ -41,5 +41,92 @@ jobs:
       - name: Format check
         run: pnpm format:check
 
+      - name: i18n check (missing or unused keys)
+        run: pnpm i18n:check
+
       - name: Test
         run: pnpm test
+
+  accessibility:
+    name: Lighthouse accessibility (web build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build web app
+        run: pnpm build
+
+      - name: Audit the shell (score must be at least 90)
+        run: |
+          pnpm --filter @mateo/web preview > /tmp/preview.log 2>&1 &
+          for i in $(seq 1 30); do curl -fs http://localhost:4173 > /dev/null && break; sleep 1; done
+          for route in "" "settings/language" "settings/appearance" "analysis/marcos"; do
+            report="/tmp/lighthouse-${route//\//-}.json"
+            npx --yes lighthouse@13.6.0 "http://localhost:4173/#/${route}" \
+              --only-categories=accessibility --quiet --output=json --output-path="$report" \
+              --chrome-flags="--headless=new --no-sandbox"
+            node -e '
+              const report = require(process.argv[1]);
+              const score = Math.round(report.categories.accessibility.score * 100);
+              console.log(`${process.argv[2] || "/"}: ${score}`);
+              if (score < 90) process.exit(1);
+            ' "$report" "$route"
+          done
+
+  desktop:
+    name: Desktop build (Linux)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install system libraries for Tauri
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: apps/desktop/src-tauri
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # generate_context! embeds the web build, so it must exist before cargo runs.
+      - name: Build web app
+        run: pnpm build
+
+      - name: Rust format, lint and tests
+        working-directory: apps/desktop/src-tauri
+        run: |
+          cargo fmt --check
+          cargo clippy --all-targets --locked -- -D warnings
+          cargo test --locked
+
+      - name: Build desktop app (.deb)
+        run: pnpm --filter @mateo/desktop build:ci
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mateo-linux-deb
+          path: apps/desktop/src-tauri/target/release/bundle/deb/*.deb
+          if-no-files-found: error
+          retention-days: 14

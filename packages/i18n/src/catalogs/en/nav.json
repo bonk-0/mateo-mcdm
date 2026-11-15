@@ -1,0 +1,95 @@
+{
+  "sections": {
+    "home": "Home",
+    "methods": "Methods",
+    "analysis": "Analysis",
+    "learn": "Learn",
+    "settings": "Settings"
+  },
+  "items": {
+    "home": {
+      "title": "Home",
+      "description": "Start a project, pick up recent work and see what Mateo can do."
+    },
+    "projects": {
+      "title": "Projects",
+      "description": "Create, open and save .mateo project files, and find your recent projects."
+    },
+    "dataCenter": {
+      "title": "Data Center",
+      "description": "Import Excel and CSV files, check their structure and reuse import profiles."
+    },
+    "weighting": {
+      "title": "Weighting",
+      "description": "Derive criteria weights with CRITIC, MEREC and SWARA."
+    },
+    "ranking": {
+      "title": "Ranking",
+      "description": "Rank alternatives with MARCOS and Fuzzy MARCOS."
+    },
+    "dematel": {
+      "title": "DEMATEL",
+      "description": "Map cause and effect between criteria and derive weights from it."
+    },
+    "riskAssessment": {
+      "title": "Risk Assessment",
+      "description": "Assess risks with FMEA and Fine-Kinney."
+    },
+    "hybridBuilder": {
+      "title": "Hybrid Builder",
+      "description": "Chain weighting and ranking methods into one visual pipeline."
+    },
+    "marcos": {
+      "title": "MARCOS Workspace",
+      "description": "Run classical and fuzzy MARCOS and follow every step of the calculation."
+    },
+    "results": {
+      "title": "Results",
+      "description": "Rankings, utility functions, weights and charts for your analyses."
+    },
+    "sensitivity": {
+      "title": "Sensitivity",
+      "description": "Move weights and watch the ranking respond in real time."
+    },
+    "comparison": {
+      "title": "Method Comparison",
+      "description": "Compare rankings across methods with rank correlation measures."
+    },
+    "groupDecisions": {
+      "title": "Group Decisions",
+      "description": "Combine the judgements of several experts into one decision."
+    },
+    "batch": {
+      "title": "Batch Analysis",
+      "description": "Run many analyses in one go."
+    },
+    "library": {
+      "title": "Method Library",
+      "description": "How each method works, its formulas and the paper it comes from."
+    },
+    "playground": {
+      "title": "Fuzzy Playground",
+      "description": "Drag triangular fuzzy numbers and see arithmetic and defuzzification update live."
+    },
+    "practice": {
+      "title": "Practice Center",
+      "description": "Guided exercises to practise each method step by step."
+    },
+    "languageFormats": {
+      "title": "Language and Formats",
+      "description": "Interface language and number formats for display and import."
+    },
+    "appearance": {
+      "title": "Appearance",
+      "description": "Theme and motion."
+    },
+    "scales": {
+      "title": "Scales and Templates",
+      "description": "Manage linguistic scales and preview their membership functions."
+    },
+    "about": {
+      "title": "About",
+      "description": "Version and runtime information."
+    }
+  }
+}

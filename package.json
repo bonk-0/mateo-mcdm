@@ -17,7 +17,11 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "verify": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test"
+    "i18n:check": "node tooling/check-i18n.ts",
+    "dev": "pnpm --filter @mateo/web dev",
+    "dev:desktop": "pnpm --filter @mateo/desktop dev",
+    "build": "pnpm --filter @mateo/web build",
+    "verify": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm i18n:check && pnpm test"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Mateo",
+  "version": "../package.json",
+  "identifier": "app.mateo.desktop",
+  "build": {
+    "beforeDevCommand": "pnpm --filter @mateo/web dev",
+    "devUrl": "http://localhost:5173",
+    "beforeBuildCommand": "pnpm --filter @mateo/web build",
+    "frontendDist": "../../web/dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Mateo",
+        "width": 1360,
+        "height": 860,
+        "minWidth": 960,
+        "minHeight": 640,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self' ipc: http://ipc.localhost; img-src 'self' data: asset: http://asset.localhost; style-src 'self' 'unsafe-inline'; font-src 'self' data:"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "category": "Productivity",
+    "shortDescription": "Classical and fuzzy multi-criteria decision making",
+    "longDescription": "Mateo is a local-first desktop application for classical and fuzzy multi-criteria decision making (MCDM).",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "fileAssociations": [
+      {
+        "ext": ["mateo"],
+        "name": "Mateo Project",
+        "description": "Mateo decision project",
+        "role": "Editor",
+        "mimeType": "application/x-mateo"
+      }
+    ]
+  }
+}

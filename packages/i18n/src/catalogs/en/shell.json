@@ -1,0 +1,69 @@
+{
+  "skipToContent": "Skip to content",
+  "mainNavigation": "Main navigation",
+  "breadcrumb": "Breadcrumb",
+  "collapseSidebar": "Collapse sidebar",
+  "expandSidebar": "Expand sidebar",
+  "noProject": "No project open",
+  "browserBuild": "Browser build",
+  "notifications": "Notifications",
+  "closeNotification": "Close notification",
+  "notFound": {
+    "title": "Page not found",
+    "description": "This page does not exist. It may have moved, or the link may be incomplete."
+  },
+  "placeholder": {
+    "comingSoon": "Coming soon",
+    "backHome": "Back to Home"
+  },
+  "language": {
+    "change": "Change language",
+    "label": "Language",
+    "system": "System ({language})"
+  },
+  "theme": {
+    "change": "Change theme",
+    "label": "Theme",
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "commands": {
+    "file": {
+      "new": "New project",
+      "open": "Open project",
+      "save": "Save project",
+      "saveAs": "Save project as",
+      "clearRecent": "Clear recent projects"
+    },
+    "comingSoon": "Project files are coming in the next steps of this release.",
+    "filesReceived": "{count, plural, one {Received # file. Opening projects is coming soon.} other {Received # files. Opening projects is coming soon.}}"
+  },
+  "menu": {
+    "file": "File",
+    "new": "New",
+    "open": "Open…",
+    "recent": "Open Recent",
+    "recentEmpty": "No recent projects",
+    "clearRecent": "Clear Recent",
+    "save": "Save",
+    "saveAs": "Save As…",
+    "quit": "Quit Mateo",
+    "edit": "Edit",
+    "undo": "Undo",
+    "redo": "Redo",
+    "cut": "Cut",
+    "copy": "Copy",
+    "paste": "Paste",
+    "selectAll": "Select All",
+    "window": "Window",
+    "minimize": "Minimize",
+    "fullscreen": "Toggle Full Screen",
+    "closeWindow": "Close Window",
+    "about": "About Mateo",
+    "services": "Services",
+    "hide": "Hide Mateo",
+    "hideOthers": "Hide Others",
+    "showAll": "Show All"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "skipToContent": "İçeriğe geç",
+  "mainNavigation": "Ana gezinme",
+  "breadcrumb": "Konum",
+  "collapseSidebar": "Kenar çubuğunu daralt",
+  "expandSidebar": "Kenar çubuğunu genişlet",
+  "noProject": "Açık proje yok",
+  "browserBuild": "Tarayıcı sürümü",
+  "notifications": "Bildirimler",
+  "closeNotification": "Bildirimi kapat",
+  "notFound": {
+    "title": "Sayfa bulunamadı",
+    "description": "Bu sayfa mevcut değil. Taşınmış olabilir ya da bağlantı eksik olabilir."
+  },
+  "placeholder": {
+    "comingSoon": "Yakında",
+    "backHome": "Ana Sayfa’ya dön"
+  },
+  "language": {
+    "change": "Dili değiştir",
+    "label": "Dil",
+    "system": "Sistem ({language})"
+  },
+  "theme": {
+    "change": "Temayı değiştir",
+    "label": "Tema",
+    "system": "Sistem",
+    "light": "Açık",
+    "dark": "Koyu"
+  },
+  "commands": {
+    "file": {
+      "new": "Yeni proje",
+      "open": "Proje aç",
+      "save": "Projeyi kaydet",
+      "saveAs": "Projeyi farklı kaydet",
+      "clearRecent": "Son projeleri temizle"
+    },
+    "comingSoon": "Proje dosyaları bu sürümün sonraki adımlarında geliyor.",
+    "filesReceived": "{count, plural, one {# dosya alındı. Proje açma yakında geliyor.} other {# dosya alındı. Proje açma yakında geliyor.}}"
+  },
+  "menu": {
+    "file": "Dosya",
+    "new": "Yeni",
+    "open": "Aç…",
+    "recent": "Son Kullanılanlar",
+    "recentEmpty": "Son proje yok",
+    "clearRecent": "Listeyi Temizle",
+    "save": "Kaydet",
+    "saveAs": "Farklı Kaydet…",
+    "quit": "Mateo’dan Çık",
+    "edit": "Düzen",
+    "undo": "Geri Al",
+    "redo": "Yinele",
+    "cut": "Kes",
+    "copy": "Kopyala",
+    "paste": "Yapıştır",
+    "selectAll": "Tümünü Seç",
+    "window": "Pencere",
+    "minimize": "Simge Durumuna Küçült",
+    "fullscreen": "Tam Ekranı Aç/Kapat",
+    "closeWindow": "Pencereyi Kapat",
+    "about": "Mateo Hakkında",
+    "services": "Servisler",
+    "hide": "Mateo’yu Gizle",
+    "hideOthers": "Diğerlerini Gizle",
+    "showAll": "Tümünü Göster"
+  }
+}

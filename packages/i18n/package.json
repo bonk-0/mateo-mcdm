@@ -10,5 +10,11 @@
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run"
+  },
+  "dependencies": {
+    "@formatjs/icu-messageformat-parser": "^3.5.23",
+    "i18next": "^27.1.2",
+    "i18next-icu": "^2.7.0",
+    "intl-messageformat": "^12.1.5"
   }
 }

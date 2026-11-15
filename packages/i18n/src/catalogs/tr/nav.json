@@ -1,0 +1,95 @@
+{
+  "sections": {
+    "home": "Ana Sayfa",
+    "methods": "Yöntemler",
+    "analysis": "Analiz",
+    "learn": "Öğren",
+    "settings": "Ayarlar"
+  },
+  "items": {
+    "home": {
+      "title": "Ana Sayfa",
+      "description": "Bir proje başlatın, son çalışmalarınıza dönün ve Mateo’nun neler yapabildiğini görün."
+    },
+    "projects": {
+      "title": "Projeler",
+      "description": ".mateo proje dosyaları oluşturun, açın, kaydedin ve son projelerinizi bulun."
+    },
+    "dataCenter": {
+      "title": "Veri Merkezi",
+      "description": "Excel ve CSV dosyalarını içe aktarın, yapılarını denetleyin ve içe aktarma profillerini yeniden kullanın."
+    },
+    "weighting": {
+      "title": "Ağırlıklandırma",
+      "description": "Kriter ağırlıklarını CRITIC, MEREC ve SWARA ile belirleyin."
+    },
+    "ranking": {
+      "title": "Sıralama",
+      "description": "Alternatifleri MARCOS ve bulanık MARCOS ile sıralayın."
+    },
+    "dematel": {
+      "title": "DEMATEL",
+      "description": "Kriterler arasındaki neden-sonuç ilişkilerini haritalayın ve bunlardan ağırlık türetin."
+    },
+    "riskAssessment": {
+      "title": "Risk Değerlendirme",
+      "description": "Riskleri FMEA ve Fine-Kinney ile değerlendirin."
+    },
+    "hybridBuilder": {
+      "title": "Hibrit Oluşturucu",
+      "description": "Ağırlıklandırma ve sıralama yöntemlerini tek bir görsel akışta birleştirin."
+    },
+    "marcos": {
+      "title": "MARCOS Çalışma Alanı",
+      "description": "Klasik ve bulanık MARCOS’u çalıştırın, hesaplamanın her adımını izleyin."
+    },
+    "results": {
+      "title": "Sonuçlar",
+      "description": "Analizlerinizin sıralamaları, fayda fonksiyonları, ağırlıkları ve grafikleri."
+    },
+    "sensitivity": {
+      "title": "Duyarlılık",
+      "description": "Ağırlıkları değiştirin, sıralamanın anında nasıl tepki verdiğini izleyin."
+    },
+    "comparison": {
+      "title": "Yöntem Karşılaştırma",
+      "description": "Yöntemlerin sıralamalarını sıra korelasyonu ölçüleriyle karşılaştırın."
+    },
+    "groupDecisions": {
+      "title": "Grup Kararları",
+      "description": "Birden çok uzmanın değerlendirmesini tek bir kararda birleştirin."
+    },
+    "batch": {
+      "title": "Toplu Analiz",
+      "description": "Birçok analizi tek seferde çalıştırın."
+    },
+    "library": {
+      "title": "Yöntem Kütüphanesi",
+      "description": "Her yöntemin nasıl çalıştığı, formülleri ve dayandığı makale."
+    },
+    "playground": {
+      "title": "Bulanık Deneme Alanı",
+      "description": "Üçgen bulanık sayıları sürükleyin, aritmetik ve durulaştırma sonuçlarının anında güncellendiğini görün."
+    },
+    "practice": {
+      "title": "Alıştırma Merkezi",
+      "description": "Her yöntemi adım adım çalışmanız için rehberli alıştırmalar."
+    },
+    "languageFormats": {
+      "title": "Dil ve Biçimler",
+      "description": "Arayüz dili ile gösterim ve içe aktarma için sayı biçimleri."
+    },
+    "appearance": {
+      "title": "Görünüm",
+      "description": "Tema ve hareket."
+    },
+    "scales": {
+      "title": "Ölçekler ve Şablonlar",
+      "description": "Dilsel ölçekleri yönetin ve üyelik fonksiyonlarını önizleyin."
+    },
+    "about": {
+      "title": "Hakkında",
+      "description": "Sürüm ve çalışma ortamı bilgileri."
+    }
+  }
+}
