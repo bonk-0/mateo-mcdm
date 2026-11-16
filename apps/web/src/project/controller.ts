@@ -1,5 +1,7 @@
 import {
+  createAutosave,
   createProjectRepository,
+  type Autosave,
   createRecentProjects,
   isProjectError,
   type ProjectRepository,
@@ -40,6 +42,11 @@ export interface ProjectControllerOptions {
   readonly untitledName: () => string;
   /** For tests. Defaults to `createProjectRepository` on the platform's storage. */
   readonly repository?: ProjectRepository;
+  /**
+   * Quiet time in milliseconds after the last edit before the open project is saved by
+   * itself. `false` turns autosave off. Default 1500.
+   */
+  readonly autosaveDelayMs?: number | false;
 }
 
 /** The open project as the UI shows it. */
@@ -91,6 +98,7 @@ export function createProjectController(options: ProjectControllerOptions): Proj
 
   let session: ProjectSession | null = null;
   let unsubscribeSession: (() => void) | undefined;
+  let autosave: Autosave | undefined;
   let busy = false;
   let state: ProjectState = { project: null, busy, recent: recent.list() };
   const listeners = new Set<() => void>();
@@ -133,8 +141,19 @@ export function createProjectController(options: ProjectControllerOptions): Proj
   function setSession(next: ProjectSession | null): void {
     unsubscribeSession?.();
     unsubscribeSession = undefined;
+    autosave?.dispose();
+    autosave = undefined;
     session = next;
-    if (next) unsubscribeSession = next.subscribe(refresh);
+    if (next) {
+      unsubscribeSession = next.subscribe(refresh);
+      if (options.autosaveDelayMs !== false) {
+        autosave = createAutosave(next, {
+          delayMs: options.autosaveDelayMs ?? 1500,
+          onSaved: refresh,
+          onError: (error) => fail('save', error, next.location),
+        });
+      }
+    }
     refresh();
   }
 
@@ -157,6 +176,13 @@ export function createProjectController(options: ProjectControllerOptions): Proj
    */
   async function settleUnsaved(): Promise<boolean> {
     if (!session?.isDirty) return true;
+    // With autosave on, pending edits are saved quietly; only a failure asks the user.
+    try {
+      await autosave?.flush();
+    } catch (error) {
+      notify({ kind: 'failed', action: 'save', error, location: session.location });
+    }
+    if (!session.isDirty) return true;
     const choice = await options.confirmUnsaved(session.document.info.name);
     if (choice === 'cancel') return false;
     if (choice === 'discard') return true;

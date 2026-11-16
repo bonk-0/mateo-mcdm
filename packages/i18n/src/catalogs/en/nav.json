@@ -19,6 +19,10 @@
       "title": "Data Center",
       "description": "Import Excel and CSV files, check their structure and reuse import profiles."
     },
+    "matrix": {
+      "title": "Decision Matrix",
+      "description": "Type, paste and edit alternatives, criteria and values in a spreadsheet-like grid."
+    },
     "weighting": {
       "title": "Weighting",
       "description": "Derive criteria weights with CRITIC, MEREC and SWARA."

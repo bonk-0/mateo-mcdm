@@ -7,7 +7,7 @@ import {
   type KeyValueStore,
   type Sqlite3Like,
 } from '@mateo/project';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import {
   createProjectController,
   type ProjectController,
@@ -37,7 +37,7 @@ interface Harness {
   readonly removed: string[];
 }
 
-function setup(): Harness {
+function setup(autosaveDelayMs: number | false = false): Harness {
   const files = memoryFileStore();
   const locations: (string | null)[] = [];
   const unsavedAnswers: UnsavedChoice[] = [];
@@ -65,6 +65,7 @@ function setup(): Harness {
     },
     notify: (notice) => notices.push(notice),
     untitledName: () => 'Untitled project',
+    autosaveDelayMs,
   });
   return { controller, files, notices, locations, unsavedAnswers, unsavedAsked, removed };
 }
@@ -278,5 +279,35 @@ describe('project controller', () => {
     stop();
     expect(calls).toBeGreaterThan(0);
     expect(controller.getState()).not.toBe(before);
+  });
+
+  describe('autosave', () => {
+    it('saves edits by itself after a quiet moment', async () => {
+      const { controller, locations } = setup(20);
+      locations.push('auto.mateo');
+      await controller.newProject();
+      edit(controller);
+      expect(controller.getState().project?.isDirty).toBe(true);
+      await vi.waitFor(() => expect(controller.getState().project?.isDirty).toBe(false));
+    });
+
+    it('saves quietly instead of asking when the project is closed', async () => {
+      const { controller, locations, unsavedAsked } = setup(60_000);
+      locations.push('auto.mateo');
+      await controller.newProject();
+      edit(controller);
+      expect(await controller.closeProject()).toBe(true);
+      expect(unsavedAsked).toEqual([]);
+      expect(controller.getState().project).toBeNull();
+    });
+
+    it('is off when asked to be', async () => {
+      const { controller, locations } = setup(false);
+      locations.push('manual.mateo');
+      await controller.newProject();
+      edit(controller);
+      await new Promise((resolve) => setTimeout(resolve, 60));
+      expect(controller.getState().project?.isDirty).toBe(true);
+    });
   });
 });

@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { runCommand } from '../commands/commands';
+import { registerCommand, runCommand } from '../commands/commands';
 import { getProjectController, useProjectState } from '../project/store';
 import { buildMenuModel } from './desktopMenu';
 import { isMac } from './runtime';
@@ -59,6 +59,17 @@ export function DesktopBridge() {
       unlisten?.();
     };
   }, []);
+
+  // Quit (menu and Cmd/Ctrl+Q) closes the window, so unsaved changes are asked about first.
+  useEffect(
+    () =>
+      registerCommand('app.quit', () => {
+        void import('@tauri-apps/api/window')
+          .then(({ getCurrentWindow }) => getCurrentWindow().close())
+          .catch((error: unknown) => console.error('Could not close the window', error));
+      }),
+    [],
+  );
 
   useEffect(() => {
     let unlisten: (() => void) | undefined;

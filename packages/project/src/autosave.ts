@@ -45,7 +45,12 @@ function platformScheduler(): Scheduler {
   if (!setTimeout || !clearTimeout) {
     throw new ProjectError('INVALID_ARGUMENT', 'No timers available; pass a scheduler.');
   }
-  return { set: (callback, delayMs) => setTimeout(callback, delayMs), clear: clearTimeout };
+  // Called through arrow functions: browsers throw "Illegal invocation" when a native timer
+  // function runs with the scheduler object as `this`.
+  return {
+    set: (callback, delayMs) => setTimeout(callback, delayMs),
+    clear: (handle) => clearTimeout(handle),
+  };
 }
 
 /**

@@ -32,6 +32,7 @@ import {
   type UnsavedChoice,
 } from './controller';
 import type { DialogLabels } from './desktop';
+import { autosaveSettings } from './autosaveSettings';
 import { fileNameOf, type ProjectPlatform } from './platform';
 import { getProjectController, setProjectController } from './store';
 
@@ -155,6 +156,7 @@ export function ProjectFiles({ load = loadPlatform }: { load?: PlatformLoader })
             ask<UnsavedChoice>((answer) => ({ kind: 'unsaved', name, answer })),
           notify: (notice) => showNotice(translate.current, notice),
           untitledName: () => translate.current('untitled'),
+          autosaveDelayMs: autosaveSettings.delayMs,
         });
         setProjectController(controller);
         return controller;
@@ -175,7 +177,7 @@ export function ProjectFiles({ load = loadPlatform }: { load?: PlatformLoader })
       (payload: CommandPayload) => {
         void ready.then((controller) => (controller ? run(controller, payload) : undefined));
       };
-    const handlers: Record<AppCommand, (payload: CommandPayload) => void> = {
+    const handlers: Record<Exclude<AppCommand, 'app.quit'>, (payload: CommandPayload) => void> = {
       'file.new': handle((c) => c.newProject()),
       'file.open': handle(async (c, { paths }) => {
         // One project at a time: the OS may pass several files, the first one is opened.

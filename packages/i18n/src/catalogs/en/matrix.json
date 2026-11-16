@@ -1,0 +1,248 @@
+{
+  "editor": {
+    "value": "Value",
+    "tfn": "Triangular fuzzy number",
+    "part": {
+      "l": "Lower value l",
+      "m": "Most likely value m",
+      "u": "Upper value u"
+    },
+    "term": "Linguistic term",
+    "noTerm": "No term",
+    "useTfn": "Enter a fuzzy number instead",
+    "useTerm": "Pick a linguistic term instead",
+    "problem": {
+      "number": "This is not a valid number.",
+      "tfn": "Enter three numbers: l, m and u.",
+      "incomplete": "Fill in all three values l, m and u, or clear all of them.",
+      "term": "This is not a term of the scale.",
+      "noScale": "This criterion has no linguistic scale."
+    }
+  },
+  "issue": {
+    "kindMismatch": {
+      "crisp": "This criterion takes plain numbers, but the cell holds a fuzzy value.",
+      "tfn": "This criterion takes fuzzy values, but the cell holds a plain number."
+    },
+    "noScale": "The cell holds a linguistic term, but the criterion has no scale.",
+    "unknownTerm": "“{term}” is not a term of this criterion’s scale.",
+    "label": "Problem"
+  },
+  "page": {
+    "noProject": {
+      "title": "No project is open",
+      "description": "Create or open a project to edit its decision matrix."
+    },
+    "new": "New project",
+    "open": "Open project",
+    "noDataset": {
+      "title": "This project has no decision problem yet",
+      "description": "Create one, then type or paste your alternatives, criteria and values."
+    },
+    "createDataset": "Create decision problem"
+  },
+  "dataset": {
+    "defaultName": "Decision problem",
+    "label": "Decision problem",
+    "name": "Name of the decision problem",
+    "add": "New decision problem",
+    "remove": "Delete decision problem",
+    "removed": "Deleted “{name}”"
+  },
+  "status": {
+    "saved": "All changes saved",
+    "pending": "Saving changes…"
+  },
+  "toolbar": {
+    "label": "Matrix tools",
+    "undo": "Undo",
+    "undoWith": "Undo: {label}",
+    "redo": "Redo",
+    "redoWith": "Redo: {label}",
+    "insertRowAbove": "Insert row above",
+    "insertRowBelow": "Insert row below",
+    "deleteRows": "Delete selected rows",
+    "insertColumnLeft": "Insert column to the left",
+    "insertColumnRight": "Insert column to the right",
+    "deleteColumns": "Delete selected columns",
+    "bulkEdit": "Bulk edit",
+    "hint": "Select a cell and paste from Excel with Ctrl+V. Shift+arrows extend the selection.",
+    "search": "Search the matrix",
+    "searchPlaceholder": "Search…",
+    "filters": "Column filters",
+    "onlyIssues": "Only rows with problems",
+    "clearView": "Clear sort and filters",
+    "viewActive": "The view is sorted or filtered, so rows cannot be dragged to a new position.",
+    "panel": {
+      "show": "Show criteria and alternatives",
+      "hide": "Hide criteria and alternatives"
+    }
+  },
+  "summary": {
+    "invalid": "{count, plural, one {# invalid cell} other {# invalid cells}}",
+    "empty": "{count, plural, one {# empty cell} other {# empty cells}}",
+    "duplicates": "{count, plural, one {# duplicate code} other {# duplicate codes}}",
+    "ok": "No problems found",
+    "size": "{alternatives, plural, one {# alternative} other {# alternatives}} × {criteria, plural, one {# criterion} other {# criteria}}"
+  },
+  "grid": {
+    "label": "Decision matrix",
+    "code": "Code",
+    "name": "Name",
+    "index": "Row number",
+    "dragRow": "Drag to reorder",
+    "empty": "No alternatives yet. Insert a row or paste data.",
+    "benefit": "Benefit: higher is better",
+    "cost": "Cost: lower is better",
+    "crisp": "Crisp number",
+    "fuzzy": "Triangular fuzzy number",
+    "locale": {
+      "filterOoo": "Filter…",
+      "contains": "Contains",
+      "notContains": "Does not contain",
+      "equals": "Equals",
+      "notEqual": "Does not equal",
+      "startsWith": "Starts with",
+      "endsWith": "Ends with",
+      "blank": "Empty",
+      "notBlank": "Not empty",
+      "greaterThan": "Greater than",
+      "greaterThanOrEqual": "Greater than or equal to",
+      "lessThan": "Less than",
+      "lessThanOrEqual": "Less than or equal to",
+      "inRange": "Between",
+      "andCondition": "AND",
+      "orCondition": "OR",
+      "applyFilter": "Apply",
+      "resetFilter": "Reset",
+      "clearFilter": "Clear",
+      "noRowsToShow": "Nothing to show",
+      "pinColumn": "Pin column",
+      "pinLeft": "Pin left",
+      "pinRight": "Pin right",
+      "noPin": "Do not pin",
+      "autosizeThisColumn": "Fit this column",
+      "autosizeAllColumns": "Fit all columns",
+      "resetColumns": "Reset columns",
+      "columns": "Columns",
+      "sortAscending": "Sort ascending",
+      "sortDescending": "Sort descending",
+      "filter": "Filter"
+    }
+  },
+  "panels": {
+    "tabs": "Criteria and alternatives",
+    "criteria": "Criteria",
+    "alternatives": "Alternatives",
+    "add": "Add",
+    "remove": "Delete",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "list": "{what} list",
+    "none": "Nothing selected"
+  },
+  "criteria": {
+    "empty": "No criteria yet.",
+    "code": "Code",
+    "name": "Name",
+    "description": "Description",
+    "direction": "Direction",
+    "unit": "Unit",
+    "numberType": "Number type",
+    "scale": "Linguistic scale",
+    "noScale": "No scale",
+    "manageScales": "Manage scales",
+    "add": "Add criterion",
+    "remove": "Delete criterion",
+    "benefit": "Benefit (higher is better)",
+    "cost": "Cost (lower is better)",
+    "crispToFuzzy": "Existing numbers were converted to fuzzy numbers (x, x, x)."
+  },
+  "alternatives": {
+    "empty": "No alternatives yet.",
+    "code": "Code",
+    "name": "Name",
+    "description": "Description",
+    "group": "Group",
+    "add": "Add alternative",
+    "remove": "Delete alternative"
+  },
+  "bulk": {
+    "title": "Bulk edit",
+    "description": "Change the {count, plural, one {# selected cell} other {# selected cells}} at once. Empty cells are never filled by adding or multiplying.",
+    "operation": "Operation",
+    "set": "Set to a value",
+    "clear": "Clear",
+    "add": "Add a number",
+    "multiply": "Multiply by a number",
+    "value": "Value",
+    "amount": "Number",
+    "apply": "Apply",
+    "cancel": "Cancel",
+    "invalidAmount": "Enter a number."
+  },
+  "toast": {
+    "pasted": "Pasted {applied, plural, one {# cell} other {# cells}}.",
+    "pastedGrown": "Pasted {applied, plural, one {# cell} other {# cells}} and added {rows, plural, one {# alternative} other {# alternatives}} and {columns, plural, one {# criterion} other {# criteria}}.",
+    "skipped": "{count, plural, one {# cell does} other {# cells do}} not fit the criterion and {count, plural, one {was} other {were}} left out.",
+    "nothingPasted": "Nothing was pasted.",
+    "rejected": {
+      "number": "That is not a valid number.",
+      "tfn": "Enter three numbers: l, m and u.",
+      "tfnOrder": "A triangular fuzzy number needs l ≤ m ≤ u.",
+      "term": "That is not a term of the scale.",
+      "noScale": "This criterion has no linguistic scale."
+    },
+    "bulk": "Changed {applied, plural, one {# cell} other {# cells}}.",
+    "removedRows": "Deleted {count, plural, one {# row} other {# rows}}",
+    "removedColumns": "Deleted {count, plural, one {# column} other {# columns}}",
+    "undo": "Undo",
+    "noSelection": "Select a cell first.",
+    "noCriterionSelected": "Select a criterion column first."
+  },
+  "commands": {
+    "paste": "Paste",
+    "bulk": "Bulk edit"
+  },
+  "scales": {
+    "description": "Linguistic scales turn words such as “Good” into triangular fuzzy numbers.",
+    "list": "Scales in this project",
+    "empty": "This project has no scales yet. Add a predefined scale or create your own.",
+    "addPredefined": "Add a predefined scale",
+    "pickPredefined": "Choose a predefined scale",
+    "alreadyAdded": "Already in the project",
+    "create": "Create a custom scale",
+    "defaultName": "New scale",
+    "defaultTerm": "Term {n}",
+    "name": "Scale name",
+    "predefined": "Predefined",
+    "custom": "Custom",
+    "usedBy": "Used by {count, plural, one {# criterion} other {# criteria}}",
+    "remove": "Delete scale",
+    "removed": "Deleted the scale “{name}”",
+    "terms": "Terms",
+    "termsHint": "List the terms from the lowest to the highest.",
+    "term": {
+      "abbreviation": "Abbreviation",
+      "label": "Name",
+      "l": "l",
+      "m": "m",
+      "u": "u",
+      "add": "Add term",
+      "remove": "Remove term",
+      "moveUp": "Move term up",
+      "moveDown": "Move term down"
+    },
+    "preview": "Membership functions",
+    "chart": {
+      "description": "Each triangle starts at l, peaks at m and ends at u.",
+      "alt": "Membership functions of the terms of {name}",
+      "empty": "Add terms with valid values to see their membership functions."
+    },
+    "valid": "The scale is valid.",
+    "problems": "Problems with this scale",
+    "select": "Scale",
+    "noScales": "No scales",
+    "sourceEdited": "Based on “{name}”"
+  }
+}

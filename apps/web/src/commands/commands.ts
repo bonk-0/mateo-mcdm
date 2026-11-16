@@ -2,11 +2,12 @@
  * App-level commands that can be triggered from several places: the native desktop menu,
  * buttons on screens and, later, keyboard shortcuts and a command palette.
  *
- * The File commands are handled by `project/ProjectFiles.tsx`. A command without a
+ * The File commands are handled by `project/ProjectFiles.tsx`, `app.quit` by the desktop
+ * bridge (it closes the window, so the unsaved-changes question is asked first). A command without a
  * handler goes to the fallback handler, which does nothing unless one is set.
  */
 export type AppCommand =
-  'file.new' | 'file.open' | 'file.save' | 'file.saveAs' | 'file.clearRecent';
+  'file.new' | 'file.open' | 'file.save' | 'file.saveAs' | 'file.clearRecent' | 'app.quit';
 
 export interface CommandPayload {
   /** File paths, for example from opening `.mateo` files through the OS. */

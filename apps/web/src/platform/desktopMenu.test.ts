@@ -22,8 +22,18 @@ describe('desktop menu', () => {
       'file.save',
       'file.saveAs',
       'predefined',
-      'predefined',
+      'app.quit',
     ]);
+  });
+
+  it('quits through the window, never with the predefined Quit item', () => {
+    // The predefined item ends the process and skips the unsaved-changes question.
+    for (const mac of [true, false]) {
+      const model = buildMenuModel({ t: t('en'), mac, recentProjects: [] });
+      const json = JSON.stringify(model);
+      expect(json).not.toContain('"Quit"');
+      expect(json).toContain('"command":"app.quit"');
+    }
   });
 
   it('translates every label', () => {

@@ -65,6 +65,15 @@ export function buildMenuModel({
   recentProjects,
   hasProject = false,
 }: MenuModelOptions): MenuNode[] {
+  // Not the predefined Quit item: that one ends the process without asking about unsaved
+  // changes. This one closes the window, which goes through the same question.
+  const quit: MenuNode = {
+    kind: 'command',
+    id: 'app.quit',
+    text: t('menu.quit'),
+    command: 'app.quit',
+    accelerator: 'CmdOrCtrl+Q',
+  };
   const recentItems: MenuNode[] =
     recentProjects.length === 0
       ? [{ kind: 'info', id: 'file.recent.empty', text: t('menu.recentEmpty') }]
@@ -122,12 +131,7 @@ export function buildMenuModel({
         accelerator: 'CmdOrCtrl+Shift+S',
         enabled: hasProject,
       },
-      ...(mac
-        ? []
-        : [
-            separator,
-            { kind: 'predefined', item: 'Quit', text: t('menu.quit') } satisfies MenuNode,
-          ]),
+      ...(mac ? [] : [separator, quit]),
     ],
   };
 
@@ -179,7 +183,7 @@ export function buildMenuModel({
       { kind: 'predefined', item: 'HideOthers', text: t('menu.hideOthers') },
       { kind: 'predefined', item: 'ShowAll', text: t('menu.showAll') },
       separator,
-      { kind: 'predefined', item: 'Quit', text: t('menu.quit') },
+      quit,
     ],
   };
   return [app, file, edit, window];
