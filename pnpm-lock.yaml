@@ -71,6 +71,9 @@ importers:
       '@mateo/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@mateo/io':
+        specifier: workspace:*
+        version: link:../../packages/io
       '@mateo/project':
         specifier: workspace:*
         version: link:../../packages/project

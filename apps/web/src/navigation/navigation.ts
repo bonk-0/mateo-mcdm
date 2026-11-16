@@ -78,7 +78,7 @@ export const NAVIGATION: readonly NavSection[] = [
     items: [
       { id: 'home', path: '/', icon: Home, phase: 1 },
       { id: 'projects', path: '/projects', icon: FolderOpen, phase: 1, plannedIn: 'P1.8' },
-      { id: 'dataCenter', path: '/data-center', icon: Database, phase: 1, plannedIn: 'P1.10' },
+      { id: 'dataCenter', path: '/data-center', icon: Database, phase: 1 },
       { id: 'matrix', path: '/matrix', icon: Table2, phase: 1 },
     ],
   },
