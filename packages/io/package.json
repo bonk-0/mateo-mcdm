@@ -15,11 +15,14 @@
   "dependencies": {
     "@mateo/engine": "workspace:*",
     "@mateo/fuzzy": "workspace:*",
+    "@mateo/project": "workspace:*",
+    "exceljs": "4.4.0",
     "papaparse": "5.5.3",
     "xlsx": "file:vendor/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
     "@mateo/i18n": "workspace:*",
+    "@mateo/methods": "workspace:*",
     "@types/papaparse": "5.5.2"
   }
 }

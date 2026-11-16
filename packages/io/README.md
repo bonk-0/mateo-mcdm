@@ -1,6 +1,6 @@
 # @mateo/io
 
-Excel and CSV import (sub-phase P1.9, `docs/plan.md` §9). Export arrives in P1.16. Pure
+Excel and CSV import (sub-phase P1.9, `docs/plan.md` §9). Export (P1.16) is in `src/export`. Pure
 TypeScript with no UI: the import wizard (P1.10) shows what this package decides and lets
 the user change it.
 
@@ -65,6 +65,25 @@ const profile = profileFromImport(result); // JSON-safe; stored by @mateo/projec
   (default: the predefined rating scales of `@mateo/fuzzy`).
 - **Missing markers**: empty cells, `-`, `N/A`, `yok`, `?`... are reported as missing.
 
+## Export (P1.16)
+
+`src/export` turns project data into **tables** (`ExportTable`: rows of numbers, text and empty cells) and writes them as XLSX, CSV or a ZIP of CSV files. Builders and writers are separate, so every table shown in the app can be exported the same way.
+
+```ts
+import { analysisTables, datasetTables, writeXlsx, writeCsv, writeCsvZip } from '@mateo/io';
+
+const tables = analysisTables({ analysis, dataset, scales, project, method }, info, t);
+const xlsx = await writeXlsx(tables, { creator: 'Mateo', createdAt: info.exportedAt });
+const zip = writeCsvZip(tables, 'tr'); // one CSV file per table
+```
+
+- `t` is a translator for the **export language** (`en` or `tr`), independent of the screen language. The texts are `EXPORT_MESSAGES`; step names, scale labels and parameter labels come from the other packages' messages.
+- `matrixTable` writes the decision matrix in the layout the import engine reads: header row (two rows with merged groups and `l / m / u` for fuzzy criteria), direction row, unit row when any unit exists, then the alternatives. Exporting and importing again gives the same model (tests for crisp, TFN, mixed and linguistic matrices, in both languages, XLSX and CSV). Empty cells stay empty and are reported again as missing by the import.
+- `analysisTables` gives the workbook of an analysis: info, original data (the snapshot the analysis ran on), criteria, alternatives, scales, method with parameters and version, references, results, weights, one sheet per trace step, then `extraTables` (the place for sensitivity scenarios).
+- Fuzzy numbers in trace steps are spread over `l`, `m`, `u` columns under a merged heading, so every number is a number in its own cell. Numbers are written at full precision (shortest text that reads back as the same number); nothing is a formula.
+- CSV is UTF-8 with a byte order mark. English: `,` delimiter and `.` decimal. Turkish: `;` delimiter and `,` decimal. Text that would be read as a formula is prefixed with `'`.
+- The ZIP writer is a small built-in one (stored entries), so no extra dependency is needed. ExcelJS is loaded on first use of `writeXlsx`.
+
 ## Fixtures
 
 `fixtures/files` holds 28 real-world-like files (TR and EN, CSV/TSV/TXT in UTF-8,
@@ -92,3 +111,4 @@ pnpm --filter @mateo/io test:coverage    # fails below 90 % coverage
     file, update the path in `package.json`, this section and the lockfile
     (`pnpm install`), and run the fixture tests.
 - `papaparse` for CSV/TSV.
+- `exceljs` 4.4.0 writes XLSX (export only; reading stays with SheetJS).

@@ -1,0 +1,28 @@
+{
+  "button": "Export",
+  "title": "Export",
+  "description": "Save the tables you see as a file. Numbers are written as numbers at full precision.",
+  "format": {
+    "label": "Format",
+    "xlsx": "Excel workbook (.xlsx), one sheet per table",
+    "csv": "One table as CSV",
+    "zip": "All tables as CSV files in a ZIP"
+  },
+  "language": {
+    "label": "Language of the file",
+    "hint": "Headings, direction words and decimal marks follow this language, whatever language the screen uses."
+  },
+  "table": "Table",
+  "tableCount": "{count, plural, one {# table} other {# tables}}",
+  "preparing": "Preparing the tables…",
+  "save": "Save file",
+  "saving": "Saving…",
+  "cancel": "Cancel",
+  "saved": "Exported {name}",
+  "failed": "The export failed: {message}",
+  "matrixHint": "The matrix sheet can be imported again in the Data Center.",
+  "fileName": {
+    "matrix": "{name} - matrix",
+    "analysis": "{name} - {method}"
+  }
+}

@@ -25,4 +25,5 @@ export type { LabelTexts, TermIndex } from './import/terms';
 export { DEFAULT_IMPORT_SCALES, buildTermIndex, scalesCovering, termOf } from './import/terms';
 export { cellAddress, columnLetters } from './import/text';
 export * from './import/types';
+export * from './export';
 export * from './messages';

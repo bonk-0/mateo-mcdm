@@ -1,0 +1,28 @@
+{
+  "button": "Dışa aktar",
+  "title": "Dışa aktar",
+  "description": "Ekrandaki tabloları dosya olarak kaydedin. Sayılar, tam duyarlılıkla sayı olarak yazılır.",
+  "format": {
+    "label": "Biçim",
+    "xlsx": "Excel çalışma kitabı (.xlsx), her tablo bir sayfa",
+    "csv": "Tek tablo, CSV",
+    "zip": "Tüm tablolar, ZIP içinde CSV dosyaları"
+  },
+  "language": {
+    "label": "Dosyanın dili",
+    "hint": "Başlıklar, yön sözcükleri ve ondalık ayracı, ekran hangi dilde olursa olsun bu dile uyar."
+  },
+  "table": "Tablo",
+  "tableCount": "{count, plural, one {# tablo} other {# tablo}}",
+  "preparing": "Tablolar hazırlanıyor…",
+  "save": "Dosyayı kaydet",
+  "saving": "Kaydediliyor…",
+  "cancel": "Vazgeç",
+  "saved": "{name} dışa aktarıldı",
+  "failed": "Dışa aktarma başarısız oldu: {message}",
+  "matrixHint": "Matris sayfası, Veri Merkezi'nde yeniden içe aktarılabilir.",
+  "fileName": {
+    "matrix": "{name} - matris",
+    "analysis": "{name} - {method}"
+  }
+}

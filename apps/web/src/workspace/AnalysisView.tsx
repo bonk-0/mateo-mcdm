@@ -5,6 +5,8 @@ import { TriangleAlert } from 'lucide-react';
 import { useMemo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMessage, useTextRef } from '../editor/messages';
+import { useSession } from '../editor/session';
+import { AnalysisExportButton } from '../export/buttons';
 import { useFormatters } from '../hooks/preferences';
 import { kindOfMethod } from './analyses';
 import { EChart } from './charts/EChart';
@@ -243,6 +245,7 @@ export function AnalysisView({
   const message = useMessage();
   const formatters = useFormatters();
   const kind = kindOfMethod(analysis.methodId);
+  const session = useSession();
   return (
     <div className="space-y-8" data-testid="analysis-view" data-method={analysis.methodId}>
       <header className="flex flex-wrap items-center justify-between gap-3">
@@ -257,7 +260,10 @@ export function AnalysisView({
             {stale && <Badge variant="accent">{t('result.stale')}</Badge>}
           </p>
         </div>
-        {actions}
+        <div className="flex flex-wrap items-center gap-2">
+          {session && <AnalysisExportButton session={session} analysis={analysis} stale={stale} />}
+          {actions}
+        </div>
       </header>
       <Warnings warnings={analysis.record.warnings} />
       {kind === 'weighting' && <WeightsSection analysis={analysis} />}

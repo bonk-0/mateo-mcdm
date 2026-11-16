@@ -6,6 +6,7 @@
  * below. To add a language, add a folder and register it here and in `locales.ts`.
  */
 import enDataCenter from './en/dataCenter.json';
+import enExport from './en/export.json';
 import enHome from './en/home.json';
 import enMatrix from './en/matrix.json';
 import enNav from './en/nav.json';
@@ -14,6 +15,7 @@ import enSettings from './en/settings.json';
 import enShell from './en/shell.json';
 import enWorkspace from './en/workspace.json';
 import trDataCenter from './tr/dataCenter.json';
+import trExport from './tr/export.json';
 import trHome from './tr/home.json';
 import trMatrix from './tr/matrix.json';
 import trNav from './tr/nav.json';
@@ -32,6 +34,7 @@ export const NAMESPACES = [
   'matrix',
   'workspace',
   'dataCenter',
+  'export',
 ] as const;
 export type Namespace = (typeof NAMESPACES)[number];
 
@@ -47,6 +50,7 @@ export const resources = {
     matrix: enMatrix,
     workspace: enWorkspace,
     dataCenter: enDataCenter,
+    export: enExport,
   },
   tr: {
     shell: trShell,
@@ -57,5 +61,6 @@ export const resources = {
     matrix: trMatrix,
     workspace: trWorkspace,
     dataCenter: trDataCenter,
+    export: trExport,
   },
 } as const satisfies Record<Language, Record<Namespace, object>>;

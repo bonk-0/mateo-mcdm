@@ -57,6 +57,7 @@ import { AlternativesPanel, CriteriaPanel } from './Panels';
 import { CODE_COLUMN, NAME_COLUMN, type ParseContext, type Range } from './plan';
 import { RowCache, summarize } from './rows';
 import { useDocument, useIsDirty, useSession } from './session';
+import { MatrixExportButton } from '../export/buttons';
 import { fieldClass, toolbarButtonClass } from './ui';
 
 export function EditorPage() {
@@ -557,9 +558,16 @@ function MatrixEditor({
             {t('toolbar.clearView')}
           </Button>
         )}
+        <span className="ml-auto" />
+        <MatrixExportButton
+          document={document}
+          dataset={dataset}
+          variant="ghost"
+          testId="export-matrix"
+        />
         <button
           type="button"
-          className={`${toolbarButtonClass} ml-auto`}
+          className={toolbarButtonClass}
           aria-label={panel ? t('toolbar.panel.hide') : t('toolbar.panel.show')}
           title={panel ? t('toolbar.panel.hide') : t('toolbar.panel.show')}
           aria-pressed={panel !== null}
