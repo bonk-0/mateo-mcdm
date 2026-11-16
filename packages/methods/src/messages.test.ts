@@ -10,13 +10,25 @@ import marcosFixture from '../marcos/fixtures/damjanovic-2022-s1.json';
 import fuzzyFixture from '../fuzzy-marcos/fixtures/stankovic-2020.json';
 import type { MethodsMessageKey } from './index';
 import {
+  CRITIC_ISSUE_CODES,
   FUZZY_MARCOS_ISSUE_CODES,
+  FUZZY_SWARA_ISSUE_CODES,
   MARCOS_ISSUE_CODES,
+  MEREC_ISSUE_CODES,
+  SWARA_ISSUE_CODES,
   METHODS_MESSAGES,
+  criticMethod,
   fuzzyMarcosMethod,
+  fuzzySwaraMethod,
   marcosMethod,
+  merecMethod,
+  swaraMethod,
 } from './index';
-import { crispInput, tfnInput } from './testing/inputs';
+import criticFixture from '../critic/fixtures/diakoulaki-1995.json';
+import merecFixture from '../merec/fixtures/keshavarz-ghorabaee-2021.json';
+import swaraFixture from '../swara/fixtures/kersuliene-2010.json';
+import imfFixture from '../swara/fixtures/imf-swara-damjanovic-2022-s1.json';
+import { crispInput, crispMatrixInput, orderedCriteria, tfnInput } from './testing/inputs';
 
 const known = new Set(Object.keys(METHODS_MESSAGES.en));
 
@@ -56,6 +68,10 @@ describe('method messages', () => {
     for (const code of [
       ...Object.values(MARCOS_ISSUE_CODES),
       ...Object.values(FUZZY_MARCOS_ISSUE_CODES),
+      ...Object.values(CRITIC_ISSUE_CODES),
+      ...Object.values(MEREC_ISSUE_CODES),
+      ...Object.values(SWARA_ISSUE_CODES),
+      ...Object.values(FUZZY_SWARA_ISSUE_CODES),
     ]) {
       expect(known.has(messageKeyForCode(code)), code).toBe(true);
     }
@@ -65,6 +81,23 @@ describe('method messages', () => {
     const traces = [
       runMethod(marcosMethod, crispInput(marcosFixture.input), { normalizeWeights: true }).trace,
       runMethod(fuzzyMarcosMethod, tfnInput(fuzzyFixture.input)).trace,
+      runMethod(criticMethod, crispMatrixInput(criticFixture.input)).trace,
+      runMethod(merecMethod, crispMatrixInput(merecFixture.input)).trace,
+      runMethod(swaraMethod, {
+        criteria: orderedCriteria(swaraFixture.input.criteria),
+        comparativeImportance: swaraFixture.input.comparativeImportance,
+      }).trace,
+      ...(['graded-mean', 'centroid'] as const).map(
+        (defuzzification) =>
+          runMethod(
+            fuzzySwaraMethod,
+            {
+              criteria: orderedCriteria(imfFixture.input.criteria),
+              assessments: imfFixture.input.assessments,
+            },
+            { defuzzification },
+          ).trace,
+      ),
       runMethod(
         fuzzyMarcosMethod,
         {
@@ -80,6 +113,10 @@ describe('method messages', () => {
     const methods: readonly { nameKey: string; parameters: ParameterSchema }[] = [
       marcosMethod,
       fuzzyMarcosMethod,
+      criticMethod,
+      merecMethod,
+      swaraMethod,
+      fuzzySwaraMethod,
     ];
     const definitionKeys = methods.flatMap((method) => [
       method.nameKey,

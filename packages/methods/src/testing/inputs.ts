@@ -7,7 +7,7 @@ interface FixtureInput<T> {
   readonly alternatives: readonly string[];
   readonly criteria: readonly {
     readonly id: string;
-    readonly name: string;
+    readonly name?: string;
     readonly direction: string;
   }[];
   readonly matrix: readonly (readonly T[])[];
@@ -16,7 +16,7 @@ interface FixtureInput<T> {
 
 /** Alternative ids are the fixture's alternative names, so fixture row labels address them. */
 function matrixFrom<T, U>(
-  input: FixtureInput<T>,
+  input: Omit<FixtureInput<T>, 'weights'>,
   numberType: NumberTypeId,
   convert: (value: T) => U,
 ): DecisionMatrix<U> {
@@ -24,7 +24,7 @@ function matrixFrom<T, U>(
     alternatives: input.alternatives.map((id) => ({ id, name: textLiteral(id) })),
     criteria: input.criteria.map((criterion) => ({
       id: criterion.id,
-      name: textLiteral(criterion.name),
+      name: textLiteral(criterion.name ?? criterion.id),
       direction: criterion.direction as 'benefit' | 'cost',
       numberType,
     })),
@@ -59,4 +59,14 @@ const toTfn = (tuple: readonly number[]): TFN => ({
 
 export function tfnInput(input: FixtureInput<readonly number[]>) {
   return { matrix: matrixFrom(input, 'tfn', toTfn), weights: weightsFrom(input, 'tfn', toTfn) };
+}
+
+/** The decision matrix of a weighting-method fixture, which has no weights. */
+export function crispMatrixInput(input: Omit<FixtureInput<number>, 'weights'>) {
+  return { matrix: matrixFrom(input, 'crisp', (x: number) => x) };
+}
+
+/** A SWARA input from a fixture: criteria in importance order and the expert assessments. */
+export function orderedCriteria(criteria: readonly { id: string; name: string }[]) {
+  return criteria.map(({ id, name }) => ({ id, name: textLiteral(name) }));
 }

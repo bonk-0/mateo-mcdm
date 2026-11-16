@@ -1,4 +1,4 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["src", "marcos", "fuzzy-marcos"]
+  "include": ["src", "critic", "merec", "swara", "marcos", "fuzzy-marcos"]
 }
