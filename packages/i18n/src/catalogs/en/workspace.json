@@ -140,6 +140,9 @@
     "results": {
       "title": "Intermediate tables and final ranking",
       "open": "Open in Results"
+    },
+    "sensitivity": {
+      "title": "Sensitivity analysis"
     }
   },
   "results": {
@@ -156,5 +159,50 @@
       "other": "Other"
     },
     "pick": "Choose an analysis to see its result."
+  },
+  "sensitivity": {
+    "hint": "Move a weight and the other weights change with it, so they always add up to 1. The ranking is recalculated by the MARCOS engine after every move.",
+    "unsupported": {
+      "not-ranking": "Sensitivity analysis works on MARCOS analyses.",
+      "unreadable": "The input of this analysis cannot be read.",
+      "fuzzy-weights": "This analysis uses fuzzy (TFN) weights. Sliders need crisp weights, so run Fuzzy MARCOS with crisp weights to analyse it."
+    },
+    "redistribution": {
+      "label": "When one weight changes, the rest of the weight is",
+      "proportional": "shared in proportion",
+      "equal": "shared equally"
+    },
+    "weights": {
+      "title": "Weights",
+      "slider": "Weight of {name}",
+      "reset": "Reset to the analysis weights"
+    },
+    "ranking": {
+      "title": "Live ranking",
+      "failed": "The method could not run with these weights."
+    },
+    "sweep": {
+      "title": "One criterion at a time",
+      "hint": "The weight of one criterion goes from 0 to 100 % and the others share the rest. Each point is a full run of the method.",
+      "criterion": "Criterion",
+      "axis": "Weight of {name}",
+      "rank": "Rank",
+      "chart": "Ranks of the alternatives as the weight of {name} changes",
+      "run": "Draw the chart"
+    },
+    "scenarios": {
+      "title": "Saved scenarios",
+      "name": "Scenario name",
+      "save": "Save current weights",
+      "empty": "No scenarios saved yet. Set the weights, give them a name and save.",
+      "load": "Use weights",
+      "delete": "Delete {name}",
+      "best": "Best: {name}"
+    }
+  },
+  "sensitivityPage": {
+    "choose": "Analysis",
+    "none": "There is no MARCOS analysis for this decision problem yet.",
+    "toMarcos": "Run MARCOS"
   }
 }

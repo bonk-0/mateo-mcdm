@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { barOption, FALLBACK_THEME, heatmapOption } from './options';
+import { barOption, FALLBACK_THEME, heatmapOption, rankLineOption } from './options';
 
 const format = (value: number) => value.toFixed(2);
 
@@ -45,5 +45,26 @@ describe('chart options', () => {
       [1, 1, 0.4],
     ]);
     expect(option.visualMap).toMatchObject({ min: 0.1, max: 0.4 });
+  });
+
+  it('draws ranks as lines with rank 1 on top and gaps for failed runs', () => {
+    const option = rankLineOption({
+      theme: FALLBACK_THEME,
+      weights: [0, 0.5, 1],
+      series: [
+        { name: 'A1', values: [1, null, 2] },
+        { name: 'A2', values: [2, null, 1] },
+      ],
+      format,
+      axisName: 'Weight',
+      rankName: 'Rank',
+    }) as {
+      xAxis: { data: string[] };
+      yAxis: { inverse: boolean; min: number; max: number };
+      series: { name: string; data: (number | null)[] }[];
+    };
+    expect(option.xAxis.data).toEqual(['0.00', '0.50', '1.00']);
+    expect(option.yAxis).toMatchObject({ inverse: true, min: 1, max: 2 });
+    expect(option.series[0]).toMatchObject({ name: 'A1', data: [1, null, 2] });
   });
 });

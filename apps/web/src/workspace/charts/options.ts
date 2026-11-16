@@ -159,3 +159,55 @@ export function heatmapOption(params: {
     ],
   };
 }
+
+/**
+ * Rank against weight, one line per alternative. Rank 1 is at the top, so a line that
+ * rises is an alternative that improves. A `null` is a point where the engine could not run.
+ */
+export function rankLineOption(params: {
+  readonly theme: ChartTheme;
+  readonly weights: readonly number[];
+  readonly series: readonly NamedSeries[];
+  readonly format: Format;
+  readonly axisName: string;
+  readonly rankName: string;
+}): EChartsCoreOption {
+  const { theme, weights, series, format, axisName, rankName } = params;
+  return {
+    ...base(theme),
+    color: [...theme.series],
+    grid: { left: 56, right: 16, top: 40, bottom: 48 },
+    legend: { top: 0, textStyle: { color: theme.muted } },
+    tooltip: {
+      ...(base(theme)['tooltip'] as object),
+      trigger: 'axis',
+      valueFormatter: (value: unknown) => (typeof value === 'number' ? String(value) : '–'),
+    },
+    xAxis: {
+      type: 'category',
+      name: axisName,
+      nameLocation: 'middle',
+      nameGap: 28,
+      nameTextStyle: { color: theme.muted },
+      data: weights.map((weight) => format(weight)),
+      ...axisStyle(theme),
+    },
+    yAxis: {
+      type: 'value',
+      name: rankName,
+      nameTextStyle: { color: theme.muted },
+      inverse: true,
+      min: 1,
+      max: Math.max(2, series.length),
+      interval: 1,
+      ...axisStyle(theme),
+    },
+    series: series.map((item) => ({
+      type: 'line',
+      name: item.name,
+      data: [...item.values],
+      symbolSize: 7,
+      connectNulls: false,
+    })),
+  };
+}
