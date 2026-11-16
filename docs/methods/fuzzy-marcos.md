@@ -53,3 +53,14 @@ Fixture: `packages/methods/fuzzy-marcos/fixtures/stankovic-2020.json`. 38 road s
 - In the worked f(K_1) the numerator is printed 0.446 + 3.445; K_1⁺ is 0.466 (the result 0.181 is right).
 - Eq. 25 writes the sum index as i = 1..n; it runs over criteria j.
 - Section 2 (crisp MARCOS) calls the ideal AI, while Section 3 uses Ã(AI) for the anti-ideal. See [marcos.md](marcos.md).
+
+## Implementation (P1.6)
+
+`packages/methods/fuzzy-marcos/fuzzy-marcos.ts`, method id `fuzzy-marcos`, version 1.0.0.
+
+- **Input**: a TFN decision matrix and TFN weights (the paper's case) or crisp weights, which enter Eq. 24 as (n^l·w, n^m·w, n^u·w), the same as the degenerate TFN (w, w, w). Linguistic ratings are converted to TFNs before the method runs (`linguisticMatrixToTfn` in `@mateo/fuzzy`).
+- **Parameters**: `defuzzification` (`graded-mean`, default, or `centroid`) for step 9, the only step whose formula the paper leaves open. df_crisp always uses the graded mean, as Eq. 29 prints it. `normalizeWeights` (default off) works as in crisp MARCOS and applies only to crisp weights; with TFN weights it is a validation error, because a fuzzy weight vector has no unique normalisation.
+- **Trace steps**: `initial-matrix`, `weights`, [`normalized-weights`], `extended-matrix` (rows `AAI`, the alternatives, `ID`), `normalized-matrix`, `weighted-matrix`, `sums`, `utility-degrees`, `utility-degree-sums` (T̃_i), `max-utility-degree-sum` (D̃), `max-utility-degree-sum-crisp` (df_crisp), `utility-functions`, `defuzzification`, `final-utility`, `ranking`. Fuzzy cells are stored as triples.
+- **Validation errors**: invalid or negative TFNs (`tfn.*`), l = 0 in a cost criterion (`fuzzy-marcos.zero-cost-value`), u of the ideal of a benefit criterion = 0 (`fuzzy-marcos.zero-ideal-value`), a zero component in S̃ of the anti-ideal or the ideal (`fuzzy-marcos.zero-anti-ideal-sum`, `fuzzy-marcos.zero-ideal-sum`), S̃_i = (0, 0, 0) (`fuzzy-marcos.zero-sum`), weights of another number type (`fuzzy-marcos.unsupported-weights`), alternative ids `AAI`/`ID` (`fuzzy-marcos.reserved-alternative-id`).
+- **Golden test**: `fuzzy-marcos/fuzzy-marcos.test.ts` reproduces every printed value of Stanković et al. (2020) to 3 decimals; the seven rank-numbering deviations listed in the fixture are checked against their recomputed values.
+- **Degenerate TFNs**: the same test runs the crisp MARCOS example with (x, x, x) inputs, with TFN and with crisp weights. The rankings agree with crisp MARCOS and S̃_i equals S_i, while the f(K_i) values differ, as derived above.

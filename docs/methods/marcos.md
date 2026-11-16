@@ -42,3 +42,13 @@ Fixture: `packages/methods/marcos/fixtures/damjanovic-2022-s1.json`. Scenario S1
 - Eq. 15 (Stanković et al.) and Eq. 13 (Damjanović et al.) write the sum index as i = 1..n; it runs over criteria j.
 - Damjanović et al. print the fourth weight as "0197" in the text; Table 7 confirms 0.197.
 - Naming clash between papers: the crisp MARCOS papers call the ideal solution AI, while the Fuzzy MARCOS paper uses Ã(AI) for the anti-ideal and Ã(ID) for the ideal. Mateo's trace uses `AAI` and `AI` for crisp and `AAI` and `ID` for fuzzy, and the UI should always spell out "anti-ideal" and "ideal".
+
+## Implementation (P1.6)
+
+`packages/methods/marcos/marcos.ts`, method id `marcos`, version 1.0.0.
+
+- **Input**: a crisp decision matrix and a crisp weight vector.
+- **Parameter** `normalizeWeights` (default off): divides the weights by their sum in an extra `normalized-weights` step. Without it, weights that do not sum to 1 give the warning `weights.not-normalized` and are used as entered; only the weighted matrix and S_i differ, the ranking is the same.
+- **Trace steps**, in the order of `docs/plan.md` §8.3: `initial-matrix`, `weights`, [`normalized-weights`], `extended-matrix` (rows `AAI`, the alternatives, `AI`), `normalized-matrix`, `weighted-matrix`, `sums`, `utility-degrees` (columns `k-minus`, `k-plus`), `utility-functions` (`f-k-minus`, `f-k-plus`), `final-utility`, `ranking`.
+- **Validation errors** (all zero denominators are caught before the run): negative values (`matrix.negative-value`), a zero in a cost criterion (`marcos.zero-cost-value`), a benefit criterion that is zero everywhere (`marcos.zero-ideal-value`), S_AAI = 0 (`marcos.zero-anti-ideal-sum`), S_i = 0 for an alternative (`marcos.zero-sum`), and alternative ids `AAI`/`AI` (`marcos.reserved-alternative-id`), plus the engine's matrix and weight checks.
+- **Golden test**: `marcos/marcos.test.ts` reproduces every cell of Tables 5–8 of Damjanović et al. (2022), scenario S1, to the printed 3 decimals (178 values, no deviations).
