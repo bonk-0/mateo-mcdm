@@ -25,6 +25,15 @@ const LAZY_SCREENS: Partial<Record<NavItemId, () => Promise<{ Component: Compone
   matrix: () => import('./editor/EditorPage').then((module) => ({ Component: module.EditorPage })),
   scales: () =>
     import('./editor/ScaleManager').then((module) => ({ Component: module.ScaleManagerPage })),
+  // The workspaces bring the charts with them.
+  weighting: () =>
+    import('./workspace/WeightingPage').then((module) => ({ Component: module.WeightingPage })),
+  ranking: () =>
+    import('./workspace/MarcosPage').then((module) => ({ Component: module.MarcosPage })),
+  marcos: () =>
+    import('./workspace/MarcosPage').then((module) => ({ Component: module.MarcosPage })),
+  results: () =>
+    import('./workspace/ResultsPage').then((module) => ({ Component: module.ResultsPage })),
 };
 
 export function buildRoutes(): RouteObject[] {
