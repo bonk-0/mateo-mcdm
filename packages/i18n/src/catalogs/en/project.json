@@ -1,0 +1,58 @@
+{
+  "untitled": "Untitled project",
+  "unsavedChanges": "Unsaved changes",
+  "dialogs": {
+    "filterName": "Mateo project",
+    "newTitle": "Create a new project",
+    "openTitle": "Open a project",
+    "saveAsTitle": "Save the project as"
+  },
+  "unsaved": {
+    "title": "Save the changes to “{name}”?",
+    "description": "Your changes will be lost if you don’t save them.",
+    "save": "Save",
+    "discard": "Don’t save",
+    "cancel": "Cancel"
+  },
+  "notices": {
+    "created": "Created “{name}”",
+    "opened": "Opened “{name}”",
+    "saved": "Saved “{name}”",
+    "alreadyOpen": "“{name}” is already open.",
+    "noProject": "There is no open project to save."
+  },
+  "failed": {
+    "new": "Could not create the project",
+    "open": "Could not open the project",
+    "save": "Could not save the project",
+    "saveAs": "Could not save a copy of the project",
+    "close": "Could not close the project properly"
+  },
+  "browser": {
+    "newTitle": "New project",
+    "saveAsTitle": "Save the project as",
+    "nameDescription": "Projects are stored in this browser. The desktop app saves them as files.",
+    "nameLabel": "Project name",
+    "create": "Create",
+    "save": "Save",
+    "cancel": "Cancel",
+    "openTitle": "Open a project",
+    "openDescription": "Projects stored in this browser.",
+    "openEmpty": "No projects are stored in this browser yet.",
+    "replaceTitle": "Replace “{name}”?",
+    "replaceDescription": "A project with this name is already stored in this browser. Replacing it deletes its content.",
+    "replace": "Replace"
+  },
+  "errors": {
+    "NOT_A_PROJECT_FILE": "This file is not a Mateo project.",
+    "NEWER_SCHEMA": "This project was saved with a newer version of Mateo (file format {fileVersion, number}; this version reads up to {supportedVersion, number}). Update Mateo to open it. The file was not changed.",
+    "CORRUPT_FILE": "This project file is damaged and cannot be opened.",
+    "MIGRATION_FAILED": "This project could not be upgraded to the current file format. The file was not changed.",
+    "LOCATION_NOT_EMPTY": "A file already exists at this location.",
+    "NOT_FOUND": "The file or item could not be found.",
+    "PROJECT_CLOSED": "The project is closed.",
+    "INVALID_ARGUMENT": "This change cannot be stored in the project.",
+    "STORAGE_FAILED": "The project could not be read or written. Check that the file is accessible and that there is enough free space.",
+    "UNKNOWN": "Something unexpected went wrong: {detail}"
+  }
+}

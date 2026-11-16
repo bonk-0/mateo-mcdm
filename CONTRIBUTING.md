@@ -68,7 +68,9 @@ Each workspace is an internal, source-first package: its `package.json` `exports
 
 The desktop app is a Tauri 2 wrapper around the web build (`apps/desktop/src-tauri`). It needs a Rust toolchain and the [Tauri system prerequisites](https://v2.tauri.app/start/prerequisites/) for your OS. `pnpm dev:desktop` starts the web dev server and opens it in a native window; `pnpm --filter @mateo/desktop build` builds installers. CI builds a Linux `.deb` on every pull request.
 
-The native menu (File: New, Open, Open Recent, Save, Save As) is built by the UI through the Tauri menu API, so its labels follow the UI language. Menu items and buttons trigger app commands (`apps/web/src/commands`); project file handling registers the real handlers in P1.8. Files opened through the `.mateo` association reach the UI as a `file.open` command.
+The native menu (File: New, Open, Open Recent, Save, Save As) is built by the UI through the Tauri menu API, so its labels follow the UI language. Menu items and buttons trigger app commands (`apps/web/src/commands`), which `apps/web/src/project` handles with `@mateo/project`: on the desktop each project is a `.mateo` file read and written through the Tauri SQL plugin and chosen with the native dialogs; in the browser build projects live in browser storage (SQLite WebAssembly). Files opened through the `.mateo` association reach the UI as a `file.open` command.
+
+`apps/desktop/src/sqlPlugin.test.ts` runs project files through the real SQL plugin: build its bridge first with `cargo build --example sql_bridge` in `apps/desktop/src-tauri`, otherwise the suite is skipped (CI requires it).
 
 The app icon comes from `apps/desktop/icons/source.svg`. After changing it, export a 1024×1024 `source.png` next to it and run `pnpm --filter @mateo/desktop icons`.
 

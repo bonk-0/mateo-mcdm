@@ -285,8 +285,8 @@ describe.skipIf(!AVAILABLE)('project files through the real Tauri SQL plugin', (
   });
 
   it('only lets the app delete .mateo files', async () => {
-    await expect(
-      invoke('remove_project_file', { path: join(dir, 'notes.txt') }),
-    ).rejects.toMatch(/not an absolute \.mateo path/);
+    await expect(invoke('remove_project_file', { path: join(dir, 'notes.txt') })).rejects.toMatch(
+      /not an absolute \.mateo path/,
+    );
   });
 });

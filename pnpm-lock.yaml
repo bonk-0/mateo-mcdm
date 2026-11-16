@@ -71,6 +71,9 @@ importers:
       '@mateo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@sqlite.org/sqlite-wasm':
+        specifier: 3.54.1-build1
+        version: 3.54.1-build1
       '@tauri-apps/api':
         specifier: ^2.12.4
         version: 2.12.4

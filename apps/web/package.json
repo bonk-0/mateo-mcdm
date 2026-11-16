@@ -16,6 +16,7 @@
     "@mateo/i18n": "workspace:*",
     "@mateo/project": "workspace:*",
     "@mateo/ui": "workspace:*",
+    "@sqlite.org/sqlite-wasm": "3.54.1-build1",
     "@tauri-apps/api": "^2.12.4",
     "@tauri-apps/plugin-dialog": "^2.8.4",
     "@tauri-apps/plugin-sql": "^2.6.0",

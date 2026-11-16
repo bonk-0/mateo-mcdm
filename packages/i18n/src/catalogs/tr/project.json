@@ -1,0 +1,58 @@
+{
+  "untitled": "Adsız proje",
+  "unsavedChanges": "Kaydedilmemiş değişiklikler",
+  "dialogs": {
+    "filterName": "Mateo projesi",
+    "newTitle": "Yeni proje oluştur",
+    "openTitle": "Proje aç",
+    "saveAsTitle": "Projeyi farklı kaydet"
+  },
+  "unsaved": {
+    "title": "“{name}” projesindeki değişiklikler kaydedilsin mi?",
+    "description": "Kaydetmezseniz değişiklikleriniz kaybolur.",
+    "save": "Kaydet",
+    "discard": "Kaydetme",
+    "cancel": "Vazgeç"
+  },
+  "notices": {
+    "created": "“{name}” oluşturuldu",
+    "opened": "“{name}” açıldı",
+    "saved": "“{name}” kaydedildi",
+    "alreadyOpen": "“{name}” zaten açık.",
+    "noProject": "Kaydedilecek açık bir proje yok."
+  },
+  "failed": {
+    "new": "Proje oluşturulamadı",
+    "open": "Proje açılamadı",
+    "save": "Proje kaydedilemedi",
+    "saveAs": "Projenin kopyası kaydedilemedi",
+    "close": "Proje düzgün kapatılamadı"
+  },
+  "browser": {
+    "newTitle": "Yeni proje",
+    "saveAsTitle": "Projeyi farklı kaydet",
+    "nameDescription": "Projeler bu tarayıcıda saklanır. Masaüstü uygulaması bunları dosya olarak kaydeder.",
+    "nameLabel": "Proje adı",
+    "create": "Oluştur",
+    "save": "Kaydet",
+    "cancel": "Vazgeç",
+    "openTitle": "Proje aç",
+    "openDescription": "Bu tarayıcıda saklanan projeler.",
+    "openEmpty": "Bu tarayıcıda henüz saklanan proje yok.",
+    "replaceTitle": "“{name}” değiştirilsin mi?",
+    "replaceDescription": "Bu adla bir proje zaten bu tarayıcıda saklanıyor. Değiştirirseniz içeriği silinir.",
+    "replace": "Değiştir"
+  },
+  "errors": {
+    "NOT_A_PROJECT_FILE": "Bu dosya bir Mateo projesi değil.",
+    "NEWER_SCHEMA": "Bu proje Mateo’nun daha yeni bir sürümüyle kaydedilmiş (dosya biçimi {fileVersion, number}; bu sürüm en fazla {supportedVersion, number} okuyabilir). Açmak için Mateo’yu güncelleyin. Dosya değiştirilmedi.",
+    "CORRUPT_FILE": "Bu proje dosyası bozuk ve açılamıyor.",
+    "MIGRATION_FAILED": "Bu proje güncel dosya biçimine yükseltilemedi. Dosya değiştirilmedi.",
+    "LOCATION_NOT_EMPTY": "Bu konumda zaten bir dosya var.",
+    "NOT_FOUND": "Dosya veya öğe bulunamadı.",
+    "PROJECT_CLOSED": "Proje kapalı.",
+    "INVALID_ARGUMENT": "Bu değişiklik projeye kaydedilemiyor.",
+    "STORAGE_FAILED": "Proje okunamadı veya yazılamadı. Dosyaya erişilebildiğinden ve yeterli boş alan olduğundan emin olun.",
+    "UNKNOWN": "Beklenmeyen bir hata oluştu: {detail}"
+  }
+}

@@ -55,9 +55,16 @@ export interface MenuModelOptions {
   readonly t: TFunction<'shell'>;
   readonly mac: boolean;
   readonly recentProjects: readonly string[];
+  /** Whether a project is open: Save and Save As need one. */
+  readonly hasProject?: boolean;
 }
 
-export function buildMenuModel({ t, mac, recentProjects }: MenuModelOptions): MenuNode[] {
+export function buildMenuModel({
+  t,
+  mac,
+  recentProjects,
+  hasProject = false,
+}: MenuModelOptions): MenuNode[] {
   const recentItems: MenuNode[] =
     recentProjects.length === 0
       ? [{ kind: 'info', id: 'file.recent.empty', text: t('menu.recentEmpty') }]
@@ -105,6 +112,7 @@ export function buildMenuModel({ t, mac, recentProjects }: MenuModelOptions): Me
         text: t('menu.save'),
         command: 'file.save',
         accelerator: 'CmdOrCtrl+S',
+        enabled: hasProject,
       },
       {
         kind: 'command',
@@ -112,6 +120,7 @@ export function buildMenuModel({ t, mac, recentProjects }: MenuModelOptions): Me
         text: t('menu.saveAs'),
         command: 'file.saveAs',
         accelerator: 'CmdOrCtrl+Shift+S',
+        enabled: hasProject,
       },
       ...(mac
         ? []

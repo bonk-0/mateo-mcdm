@@ -2,8 +2,8 @@
  * App-level commands that can be triggered from several places: the native desktop menu,
  * buttons on screens and, later, keyboard shortcuts and a command palette.
  *
- * P1.7 only provides the plumbing. Project file handling (P1.8) registers real handlers;
- * until then the default handler tells the user the feature is on its way.
+ * The File commands are handled by `project/ProjectFiles.tsx`. A command without a
+ * handler goes to the fallback handler, which does nothing unless one is set.
  */
 export type AppCommand =
   'file.new' | 'file.open' | 'file.save' | 'file.saveAs' | 'file.clearRecent';
