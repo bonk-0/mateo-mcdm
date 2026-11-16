@@ -62,7 +62,7 @@ Each workspace is an internal, source-first package: its `package.json` `exports
 
 ### Engine purity
 
-`engine`, `fuzzy`, `methods`, `io` and `project` must stay free of UI code (plan §4). ESLint rejects imports of `@mateo/ui`, `@mateo/explain`, the apps, React and Tauri from these packages, including relative paths that climb into them. [`tooling/lint-boundaries.test.ts`](tooling/lint-boundaries.test.ts) proves the rule keeps working. The calculation packages (`engine`, `fuzzy`, `methods`) are also deterministic: no I/O, no randomness, no clock. ESLint rejects `Math.random`, `Date` and similar sources there, and every method test calls `assertDeterministic` from `@mateo/engine`. See [`packages/engine/README.md`](packages/engine/README.md) for the guide to writing a method.
+`engine`, `fuzzy`, `methods`, `io` and `project` must stay free of UI code (plan §4). ESLint rejects imports of `@mateo/ui`, `@mateo/explain`, the apps, React and Tauri from these packages, including relative paths that climb into them. [`tooling/lint-boundaries.test.ts`](tooling/lint-boundaries.test.ts) proves the rule keeps working. The calculation packages (`engine`, `fuzzy`, `methods`) are also deterministic: no I/O, no randomness, no clock. ESLint rejects `Math.random`, `Date` and similar sources there, and every method test calls `assertDeterministic` from `@mateo/engine`. See [`packages/engine/README.md`](packages/engine/README.md) for the guide to writing a method. Fuzzy methods build on [`packages/fuzzy`](packages/fuzzy/README.md) for TFN arithmetic, defuzzification and linguistic scales.
 
 ## Desktop app
 
