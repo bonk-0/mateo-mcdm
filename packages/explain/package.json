@@ -9,6 +9,14 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@mateo/engine": "workspace:*"
+  },
+  "devDependencies": {
+    "@mateo/fuzzy": "workspace:*",
+    "@mateo/methods": "workspace:*"
   }
 }
