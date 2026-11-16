@@ -1,0 +1,250 @@
+{
+  "severity": {
+    "error": "Hata",
+    "warning": "Uyarı"
+  },
+  "status": {
+    "detected": "Algılandı",
+    "ambiguous": "Belirsiz",
+    "not-found": "Bulunamadı",
+    "override": "Sizin seçiminiz"
+  },
+  "page": {
+    "noProject": {
+      "title": "Veri içe aktarmak için bir proje açın",
+      "description": "İçe aktarılan dosyalar ve veri kümeleri proje dosyasında saklanır. Önce bir proje oluşturun veya açın."
+    },
+    "new": "Yeni proje",
+    "open": "Proje aç",
+    "importFile": "Dosya içe aktar",
+    "pasteTable": "Tablo yapıştır",
+    "pasteHint": "Excel’de bir aralığı kopyalayıp bu sayfanın herhangi bir yerinde Ctrl+V ile de yapıştırabilirsiniz.",
+    "datasets": {
+      "title": "Veri kümeleri",
+      "empty": "Bu projede henüz veri kümesi yok. Oluşturmak için bir dosya içe aktarın.",
+      "size": "{alternatives, plural, one {# alternatif} other {# alternatif}} · {criteria, plural, one {# kriter} other {# kriter}}",
+      "open": "Düzenleyicide aç",
+      "delete": "{name} veri kümesini sil"
+    },
+    "files": {
+      "title": "Özgün dosyalar",
+      "description": "İçe aktarılan her dosya projede bayt bayt aynen saklanır.",
+      "empty": "Henüz dosya içe aktarılmadı.",
+      "download": "{name} dosyasını indir",
+      "downloadShort": "İndir"
+    },
+    "history": {
+      "title": "İçe aktarma geçmişi",
+      "empty": "Henüz bir şey içe aktarılmadı.",
+      "fileGone": "Kaldırılmış dosya",
+      "datasetGone": "Silinmiş veri kümesi",
+      "noWarnings": "Uyarı olmadan içe aktarıldı.",
+      "warnings": "Bu içe aktarmada {count, plural, one {# uyarı} other {# uyarı}} bildirildi"
+    },
+    "profiles": {
+      "title": "İçe aktarma profilleri",
+      "description": "Profil, bir dosyanın nasıl okunduğunu hatırlar; benzer bir dosya tek tıkla içe aktarılabilir.",
+      "empty": "Henüz profil yok. İçe aktarma sihirbazının son adımında bir tane kaydedin.",
+      "delete": "{name} profilini sil"
+    }
+  },
+  "wizard": {
+    "title": "Veri içe aktar",
+    "description": "Mateo’nun dosyanızı nasıl okuduğunu kontrol edin, sonra onaylayın. Son adıma kadar projeye hiçbir şey eklenmez.",
+    "progress": "İçe aktarma adımları",
+    "steps": {
+      "upload": "Dosya",
+      "sheet": "Çalışma sayfası",
+      "structure": "Yapı",
+      "columns": "Sütunlar",
+      "types": "Veri türleri",
+      "missing": "Eksik değerler",
+      "validation": "Doğrulama",
+      "preview": "Önizleme",
+      "confirm": "Onay"
+    },
+    "back": "Geri",
+    "next": "İleri",
+    "cancel": "Vazgeç",
+    "import": "İçe aktar",
+    "blocked": "Bu içe aktarmada onaylanmadan önce düzeltilmesi gereken sorunlar var."
+  },
+  "upload": {
+    "description": "Bir Excel veya CSV dosyası seçin ya da bir tablodan kopyaladığınız aralığı yapıştırın.",
+    "drop": "Dosyayı buraya bırakın",
+    "choose": "Dosya seç",
+    "accepted": "XLSX, XLSM, XLS, CSV ve TSV dosyaları",
+    "selected": "{name} ({size})",
+    "paste": {
+      "label": "Tablo yapıştır",
+      "hint": "Excel’de bir aralığı kopyalayın, buraya tıklayın ve Ctrl+V’ye basın.",
+      "placeholder": "Hücreleri buraya yapıştırın",
+      "use": "Yapıştırılan tabloyu kullan",
+      "fileName": "Yapıştırılan tablo.tsv"
+    },
+    "profile": {
+      "label": "İçe aktarma profili",
+      "hint": "Kayıtlı bir profil aynı kararları bu dosyaya uygular.",
+      "none": "Profil yok (her şeyi algıla)",
+      "invalid": "Bu içe aktarma profili okunamıyor."
+    }
+  },
+  "sheet": {
+    "description": "Bu dosyada birden fazla çalışma sayfası var. Karar matrisini içeren sayfayı seçin.",
+    "label": "Çalışma sayfası",
+    "empty": "veri yok",
+    "resetNote": "Çalışma sayfasını değiştirmek yapı için yaptığınız seçimleri sıfırlar."
+  },
+  "structure": {
+    "description": "Mateo dosyanın düzenini bu şekilde okudu. Yanlış olanı değiştirin; sonuç hemen güncellenir.",
+    "row": "Satır {row}",
+    "header": {
+      "label": "Başlık satırı",
+      "none": "Başlık satırı yok"
+    },
+    "idColumn": {
+      "label": "Alternatif adları",
+      "none": "Böyle bir sütun yok"
+    },
+    "directionRow": {
+      "label": "Fayda/maliyet satırı",
+      "none": "Böyle bir satır yok"
+    },
+    "decision": {
+      "format": "Dosya türü",
+      "encoding": "Metin kodlaması",
+      "delimiter": "Ayraç",
+      "sheet": "Çalışma sayfası",
+      "header": "Başlık satırı",
+      "id-column": "Alternatif adları",
+      "direction-row": "Fayda/maliyet satırı",
+      "data-rows": "Bulunan alternatifler"
+    },
+    "excluded": {
+      "title": "Dışarıda bırakılan satırlar",
+      "hint": "Bu satırlar alternatif değil (başlık, toplam, ideal çözüm, not), bu yüzden içe aktarılmadı."
+    },
+    "reason": {
+      "title": "başlık",
+      "blank": "boş",
+      "direction": "yönler",
+      "units": "birimler",
+      "weights": "ağırlıklar",
+      "aggregate": "hesaplanmış satır",
+      "ideal": "ideal veya anti-ideal",
+      "footer": "not"
+    }
+  },
+  "columns": {
+    "description": "Hangi sütunların kriter olduğunu ve her birinin fayda (yüksek iyi) mı maliyet (düşük iyi) mi olduğunu seçin.",
+    "directionNeeded": "{count, plural, one {# kriterin} other {# kriterin}} dosyada fayda/maliyet yönü yok. Mateo tahmin etmez: her biri için birini seçin.",
+    "allBenefit": "Hepsi fayda",
+    "allCost": "Hepsi maliyet",
+    "alternatives": "Alternatif adlarının sütunu",
+    "criteria": "Kriterler",
+    "include": "İçe aktar",
+    "includeColumn": "{name} sütununu içe aktar",
+    "column": "Sütun",
+    "name": "Kriter",
+    "layout": "Değerler",
+    "direction": "Yön",
+    "directionOf": "{name} yönü",
+    "choose": "Seçin…",
+    "benefit": "Fayda",
+    "cost": "Maliyet",
+    "source": {
+      "direction-row": "dosyadan",
+      "header": "başlıktan"
+    },
+    "layouts": {
+      "crisp": "Sayılar",
+      "tfn-columns": "Bulanık (l, m, u sütunları)",
+      "tfn-text": "Bulanık (tek hücrede)",
+      "linguistic": "Dilsel terimler"
+    },
+    "ignored": {
+      "title": "İçe aktarılmayan sütunlar",
+      "restore": "{column} sütununu içe aktar",
+      "reason": {
+        "row-number": "satır numarası",
+        "text": "yalnızca metin",
+        "incomplete-tfn": "eksik bulanık sayı",
+        "override": "sizin tarafınızdan dışarıda bırakıldı"
+      }
+    }
+  },
+  "types": {
+    "description": "Dosyadaki sayıların, metinlerin ve dilsel terimlerin nasıl okunduğunu kontrol edin.",
+    "detected": "Algılanan: {value}",
+    "number": {
+      "title": "Sayı biçimi",
+      "auto": "Otomatik algıla",
+      "point": "Ondalık nokta (1,234.56)",
+      "comma": "Ondalık virgül (1.234,56)",
+      "status": {
+        "detected": "Dosyadaki sayılar tek bir biçim kullanıyor.",
+        "not-needed": "Dosyadaki hiçbir sayı biçime bağlı değil.",
+        "ambiguous": "Bazı sayılar iki biçimde farklı okunuyor ve dosyada karar verdiren bir ipucu yok. Biçimi seçin.",
+        "conflict": "Dosya iki biçimi birden karıştırıyor. Kullanılacak olanı seçin.",
+        "override": "Biçimi siz seçtiniz."
+      },
+      "samples": "Örnek değerlerin her iki biçimde okunuşu",
+      "sample": "Dosyada",
+      "asPoint": "Ondalık nokta ile",
+      "asComma": "Ondalık virgül ile",
+      "unreadable": "sayı değil"
+    },
+    "encoding": {
+      "label": "Metin kodlaması"
+    },
+    "delimiter": {
+      "label": "Ayraç",
+      "comma": "Virgül",
+      "semicolon": "Noktalı virgül",
+      "tab": "Sekme"
+    },
+    "scale": {
+      "label": "Dilsel ölçek",
+      "hint": "Dosyadaki dilsel terimlerin ait olduğu ölçek.",
+      "none": "Otomatik algıla"
+    }
+  },
+  "missing": {
+    "description": "Değeri olmayan hücreler. Mateo eksik bir değeri sizin yerinize asla doldurmaz.",
+    "none": "Eksik değer bulunamadı.",
+    "count": "{count, plural, one {# eksik değer} other {# eksik değer}}",
+    "fix": "Değerleri dosyaya ekleyip yeniden içe aktarın ya da boş satırı veya sütunu kaldırın."
+  },
+  "validation": {
+    "description": "Dosya okunurken bulunan sorunlar. Hatalar düzeltilmelidir; uyarılar veri kümesiyle birlikte saklanır.",
+    "ok": "Hata bulunmadı.",
+    "directionsMissing": "{count, plural, one {# kriterin} other {# kriterin}} henüz fayda/maliyet yönü yok. Sütunlar adımında seçin.",
+    "errors": "{count, plural, one {# hata} other {# hata}}",
+    "errorsHint": "Hatalar içe aktarmayı engeller.",
+    "warnings": "{count, plural, one {# uyarı} other {# uyarı}}",
+    "warningsHint": "Uyarılar içe aktarmayı engellemez. Veri kümesiyle birlikte saklanır."
+  },
+  "preview": {
+    "description": "{alternatives, plural, one {# alternatif} other {# alternatif}} ve {criteria, plural, one {# kriter} other {# kriter}} içe aktarılacak.",
+    "none": "Henüz önizlenecek bir şey yok.",
+    "caption": "İçe aktarılan karar matrisinin önizlemesi",
+    "alternative": "Alternatif",
+    "missing": "Eksik değer",
+    "truncated": "{total} alternatifin ilk {shown} tanesi gösteriliyor.",
+    "weights": "Dosyada bir ağırlık satırı var. İçe aktarılmaz; ağırlıklar bir yöntem çalıştırılırken belirlenir."
+  },
+  "confirm": {
+    "description": "Özeti kontrol edin ve veri kümesine bir ad verin. Özgün dosya projede saklanır.",
+    "file": "Dosya",
+    "alternatives": "Alternatifler",
+    "criteria": "Kriterler",
+    "blocked": "Hatalar sürerken içe aktarma onaylanamaz. Geri dönüp düzeltin.",
+    "warnings": "{count, plural, one {# uyarı} other {# uyarı}} veri kümesiyle birlikte saklanacak.",
+    "datasetName": "Veri kümesi adı",
+    "saveProfile": "Bu kararları içe aktarma profili olarak kaydet",
+    "profileName": "Profil adı",
+    "profileHint": "Aynı düzene sahip dosyalara daha sonra uygulayabilirsiniz.",
+    "done": "“{name}” içe aktarıldı",
+    "failed": "İçe aktarma başarısız oldu."
+  }
+}

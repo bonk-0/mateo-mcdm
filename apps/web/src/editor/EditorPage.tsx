@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router';
 import { toast } from 'sonner';
 import { runCommand } from '../commands/commands';
 import { useFormatters } from '../hooks/preferences';
@@ -134,7 +135,10 @@ function ProjectEditor({
   document: ProjectDocument;
 }) {
   const { t } = useTranslation('matrix');
-  const [datasetId, setDatasetId] = useState<string | null>(null);
+  // The Data Center opens the editor on the dataset it has just imported.
+  const location = useLocation();
+  const requested = (location.state as { datasetId?: string } | null)?.datasetId ?? null;
+  const [datasetId, setDatasetId] = useState<string | null>(requested);
   const datasets = document.model.datasets;
   const dataset = datasets.find((item) => item.id === datasetId) ?? datasets[0];
 

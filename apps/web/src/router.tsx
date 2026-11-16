@@ -22,6 +22,10 @@ const SCREENS: Partial<Record<NavItemId, () => React.JSX.Element>> = {
  * which would otherwise make every start of the app slower.
  */
 const LAZY_SCREENS: Partial<Record<NavItemId, () => Promise<{ Component: ComponentType }>>> = {
+  dataCenter: () =>
+    import('./dataCenter/DataCenterPage').then((module) => ({
+      Component: module.DataCenterPage,
+    })),
   matrix: () => import('./editor/EditorPage').then((module) => ({ Component: module.EditorPage })),
   scales: () =>
     import('./editor/ScaleManager').then((module) => ({ Component: module.ScaleManagerPage })),
