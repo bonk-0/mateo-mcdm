@@ -12,6 +12,7 @@ import enNav from './en/nav.json';
 import enProject from './en/project.json';
 import enSettings from './en/settings.json';
 import enShell from './en/shell.json';
+import enWorkspace from './en/workspace.json';
 import trDataCenter from './tr/dataCenter.json';
 import trHome from './tr/home.json';
 import trMatrix from './tr/matrix.json';
@@ -19,6 +20,7 @@ import trNav from './tr/nav.json';
 import trProject from './tr/project.json';
 import trSettings from './tr/settings.json';
 import trShell from './tr/shell.json';
+import trWorkspace from './tr/workspace.json';
 import type { Language } from '../locales';
 
 export const NAMESPACES = [
@@ -28,6 +30,7 @@ export const NAMESPACES = [
   'settings',
   'project',
   'matrix',
+  'workspace',
   'dataCenter',
 ] as const;
 export type Namespace = (typeof NAMESPACES)[number];
@@ -42,6 +45,7 @@ export const resources = {
     settings: enSettings,
     project: enProject,
     matrix: enMatrix,
+    workspace: enWorkspace,
     dataCenter: enDataCenter,
   },
   tr: {
@@ -51,6 +55,7 @@ export const resources = {
     settings: trSettings,
     project: trProject,
     matrix: trMatrix,
+    workspace: trWorkspace,
     dataCenter: trDataCenter,
   },
 } as const satisfies Record<Language, Record<Namespace, object>>;

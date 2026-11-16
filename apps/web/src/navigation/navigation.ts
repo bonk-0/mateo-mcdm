@@ -85,8 +85,8 @@ export const NAVIGATION: readonly NavSection[] = [
   {
     id: 'methods',
     items: [
-      { id: 'weighting', path: '/methods/weighting', icon: Scale, phase: 1, plannedIn: 'P1.12' },
-      { id: 'ranking', path: '/methods/ranking', icon: ListOrdered, phase: 1, plannedIn: 'P1.12' },
+      { id: 'weighting', path: '/methods/weighting', icon: Scale, phase: 1 },
+      { id: 'ranking', path: '/methods/ranking', icon: ListOrdered, phase: 1 },
       { id: 'dematel', path: '/methods/dematel', icon: Network, phase: 2, plannedIn: 'P2.8' },
       {
         id: 'riskAssessment',
@@ -107,8 +107,8 @@ export const NAVIGATION: readonly NavSection[] = [
   {
     id: 'analysis',
     items: [
-      { id: 'marcos', path: '/analysis/marcos', icon: Target, phase: 1, plannedIn: 'P1.12' },
-      { id: 'results', path: '/analysis/results', icon: Trophy, phase: 1, plannedIn: 'P1.12' },
+      { id: 'marcos', path: '/analysis/marcos', icon: Target, phase: 1 },
+      { id: 'results', path: '/analysis/results', icon: Trophy, phase: 1 },
       {
         id: 'sensitivity',
         path: '/analysis/sensitivity',
