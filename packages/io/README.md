@@ -81,8 +81,14 @@ pnpm --filter @mateo/io test:coverage    # fails below 90 % coverage
 
 ## Dependencies
 
-- `xlsx` is SheetJS 0.20.3 through the `@e965/xlsx` npm mirror, which republishes the
-  official SheetJS builds with npm provenance. The `xlsx` package on the npm registry stops
-  at 0.18.5, which has known vulnerabilities when reading untrusted files
-  (CVE-2023-30533, CVE-2024-22363); SheetJS distributes newer versions from its own CDN.
+- `xlsx` is SheetJS 0.20.3, vendored as the official tarball in
+  `vendor/xlsx-0.20.3.tgz` and installed with `file:`, so installs need neither the
+  SheetJS CDN nor a third-party mirror. The `xlsx` package on the npm registry stops at
+  0.18.5, which has known vulnerabilities when reading untrusted files (CVE-2023-30533,
+  CVE-2024-22363); SheetJS distributes newer versions only from its own CDN.
+  - Source: `https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz`
+  - SHA-256: `8dc73fc3b00203e72d176e85b50938627c7b086e607c682e8d3c22c02bb99fe8`
+  - To upgrade, download the new tarball from `https://cdn.sheetjs.com/`, replace the
+    file, update the path in `package.json`, this section and the lockfile
+    (`pnpm install`), and run the fixture tests.
 - `papaparse` for CSV/TSV.
