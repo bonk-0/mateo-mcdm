@@ -50,18 +50,16 @@ export function StoryView({ trace, plan }: { trace: Trace; plan: StoryPlan }) {
   );
   const fuzzy = story.drivers.some((driver) => typeof driver.winner.value === 'object');
 
-  const number = (entry: StoryValue) => {
+  const number = (entry: StoryValue, whole = false) => {
     const labels = labelsOf(entry.ref);
     return (
       <button
         type="button"
         className="rounded font-medium tabular-nums underline decoration-dotted underline-offset-4 hover:decoration-solid"
         aria-description={t('derivation.open', { cell: labels.cell })}
-        onClick={(event) =>
-          setDerivation({ cell: entry.ref, anchor: event.currentTarget })
-        }
+        onClick={(event) => setDerivation({ cell: entry.ref, anchor: event.currentTarget })}
       >
-        <Value value={entry.value} />
+        <Value value={entry.value} whole={whole} />
       </button>
     );
   };
@@ -95,7 +93,7 @@ export function StoryView({ trace, plan }: { trace: Trace; plan: StoryPlan }) {
             <dt className="text-muted-foreground">{t('story.score')}</dt>
             <dd>{number(winner.score)}</dd>
             <dt className="text-muted-foreground">{t('story.rank')}</dt>
-            <dd>{number(winner.rank)}</dd>
+            <dd>{number(winner.rank, true)}</dd>
           </dl>
         </Card>
 

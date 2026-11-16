@@ -121,11 +121,12 @@ function IconButton({
 function defaultExample(trace: Trace, scene: Scene): CellRef | null {
   if (scene.kind === 'formula') return scene.example;
   const step = getStep(trace, scene.stepId);
-  for (const [r, row] of step.output.cells.entries()) {
-    for (const [c, cell] of row.entries()) {
-      if (formulaOfCell(step, cell) !== null) {
-        return { step: step.id, row: step.output.rows[r]!.id, column: step.output.columns[c]!.id };
-      }
+  for (const preferRegular of [true, false]) {
+    for (const [r, row] of step.output.cells.entries()) {
+      const item = step.output.rows[r]!;
+      if (preferRegular && item.kind === 'reference') continue;
+      const c = row.findIndex((cell) => formulaOfCell(step, cell) !== null);
+      if (c >= 0) return { step: step.id, row: item.id, column: step.output.columns[c]!.id };
     }
   }
   return firstCell(step);
@@ -175,7 +176,7 @@ function FormulaPanel({
 
   return (
     <section
-      className="space-y-3 rounded-lg border border-border bg-surface p-4"
+      className="space-y-2 rounded-lg border border-border bg-surface px-4 py-3"
       aria-label={t('formula.title')}
       data-testid="explain-formula"
     >
@@ -230,23 +231,29 @@ function FormulaPanel({
 
       {formula ? (
         <>
-          {formula.condition && (
-            <p className="text-xs font-medium text-muted-foreground">{textOf(formula.condition)}</p>
-          )}
-          <Formula
-            display
-            latex={symbolicLatex(formula, markTerm(tones))}
-            activeTerm={activeTerm}
-            onTerm={onTerm}
-          />
-          {showSubstitution && substitution !== null && (
-            <div data-testid="explain-substitution">
-              <p className="text-xs font-medium text-muted-foreground">
-                {t('formula.withNumbers', { cell: labels.cell })}
-              </p>
-              <Formula display latex={substitution} activeTerm={activeTerm} onTerm={onTerm} />
+          <div className="grid items-center gap-x-6 gap-y-2 md:grid-cols-2">
+            <div>
+              {formula.condition && (
+                <p className="text-center text-xs text-muted-foreground">
+                  {textOf(formula.condition)}
+                </p>
+              )}
+              <Formula
+                display
+                latex={symbolicLatex(formula, markTerm(tones))}
+                activeTerm={activeTerm}
+                onTerm={onTerm}
+              />
             </div>
-          )}
+            {showSubstitution && substitution !== null && (
+              <div data-testid="explain-substitution">
+                <p className="text-center text-xs text-muted-foreground">
+                  {t('formula.withNumbers', { cell: labels.cell })}
+                </p>
+                <Formula display latex={substitution} activeTerm={activeTerm} onTerm={onTerm} />
+              </div>
+            )}
+          </div>
           <ul className="flex flex-wrap gap-2" aria-label={t('formula.terms')}>
             {explanation.bindings.map((binding) => {
               const single = binding.operands.length === 1 ? binding.operands[0] : undefined;
@@ -254,7 +261,7 @@ function FormulaPanel({
                 <li key={binding.term.name}>
                   <button
                     type="button"
-                    className="ex-term flex items-center gap-2 rounded-md border border-border px-2 py-1 text-sm"
+                    className="ex-term flex items-center gap-2 rounded-md border border-border px-2 py-0.5 text-sm"
                     data-tone={tones.get(binding.term.name)}
                     data-active={activeTerm === binding.term.name ? '' : undefined}
                     data-testid={`term-${binding.term.name}`}
@@ -267,9 +274,9 @@ function FormulaPanel({
                     <Formula latex={binding.term.latex} />
                     <span className="text-muted-foreground tabular-nums">
                       {single ? (
-                        <>
+                        <span translate="no">
                           = <Value value={single.value} />
-                        </>
+                        </span>
                       ) : (
                         t('formula.termValues', { count: binding.operands.length })
                       )}
@@ -308,6 +315,7 @@ export function ExplainPlayer({ trace, timeline }: { trace: Trace; timeline: Tim
   const { t } = useTranslation('explain');
   const message = useMessage();
   const textOf = useTextRef();
+  const formatters = useFormatters();
   const reducedMotion = useReducedMotion();
   const [wantsAnimation, setWantsAnimation] = useState(true);
   const animated = wantsAnimation && !reducedMotion;
@@ -619,7 +627,7 @@ export function ExplainPlayer({ trace, timeline }: { trace: Trace; timeline: Tim
             >
               {PLAYER_SPEEDS.map((speed) => (
                 <option key={speed} value={speed}>
-                  {t('player.speedValue', { speed })}
+                  {t('player.speedValue', { speed: formatters.number(speed) })}
                 </option>
               ))}
             </select>

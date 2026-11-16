@@ -4,7 +4,7 @@ import type { CellExplanation } from '@mateo/explain';
 import { cellKey, explainCell, substitutionLatex, symbolicLatex } from '@mateo/explain';
 import { Button, Popover, PopoverAnchor, PopoverContent } from '@mateo/ui';
 import { ArrowLeft, X } from 'lucide-react';
-import { useMemo, useState, type ReactNode } from 'react';
+import { useMemo, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMessage, useTextRef } from '../editor/messages';
 import { useFormatters } from '../hooks/preferences';
@@ -64,7 +64,11 @@ function Line({ children, value }: { children: ReactNode; value?: ReactNode }) {
   return (
     <span className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
       {children}
-      {value !== undefined && <span className="font-medium tabular-nums">= {value}</span>}
+      {value !== undefined && (
+        <span translate="no" className="font-medium tabular-nums">
+          = {value}
+        </span>
+      )}
     </span>
   );
 }
@@ -286,6 +290,9 @@ export function DerivationPopover({
     root: null,
     cells: [],
   });
+  // The cell that opened the popover gets the focus back, also after `target` is cleared.
+  const anchor = useRef<HTMLElement | null>(null);
+  if (target) anchor.current = target.anchor;
   // A new target starts a new trail.
   if (trail.root !== target) setTrail({ root: target, cells: [] });
   const shown = trail.root === target ? (trail.cells.at(-1) ?? target?.cell) : target?.cell;
@@ -297,7 +304,7 @@ export function DerivationPopover({
         aria-label={t('derivation.title')}
         onCloseAutoFocus={(event) => {
           event.preventDefault();
-          target?.anchor.focus({ preventScroll: true });
+          anchor.current?.focus({ preventScroll: true });
         }}
       >
         <div className="mb-2 flex items-center justify-between gap-2">

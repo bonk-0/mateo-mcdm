@@ -1,4 +1,4 @@
-import type { CellRef, Trace, TraceStep } from '@mateo/engine';
+import type { CellRef, Trace, TraceStep, TraceValue } from '@mateo/engine';
 import { findCell, findStep } from '@mateo/engine';
 import { cellKey, formulaOfCell, operandRefs } from './cell';
 import { ExplainError } from './errors';
@@ -115,6 +115,26 @@ function flightsInto(
   return flights;
 }
 
+/**
+ * While a whole table fills, one value per source table flies into each cell: the cell at
+ * the same place if there is one, otherwise the cells of the same row, otherwise all of
+ * them. The other operands (the ideal value every cell of a column is divided by, say)
+ * are shown in the formula scene, where a single cell is explained.
+ */
+function leadFlights(flights: readonly CellFlight[]): CellFlight[] {
+  const bySource = new Map<string, CellFlight[]>();
+  for (const flight of flights) {
+    const list = bySource.get(flight.from.step);
+    if (list === undefined) bySource.set(flight.from.step, [flight]);
+    else list.push(flight);
+  }
+  return [...bySource.values()].flatMap((group) => {
+    const sameRow = group.filter((flight) => flight.from.row === flight.to.row);
+    const samePlace = sameRow.filter((flight) => flight.from.column === flight.to.column);
+    return samePlace.length > 0 ? samePlace : sameRow.length > 0 ? sameRow : group;
+  });
+}
+
 /** Keeps a scene light: whole-range flights go first, then all of them. */
 function thin(flights: CellFlight[], direct: (flight: CellFlight) => boolean): CellFlight[] {
   if (flights.length <= MAX_FLIGHTS_PER_SCENE) return flights;
@@ -146,18 +166,21 @@ function formulaScenes(context: StepContext): Omit<FormulaScene, 'index'>[] {
   const shown = new Set(context.sources);
   const scenes: Omit<FormulaScene, 'index'>[] = [];
   for (const formula of step.formulas) {
+    // The first cell the formula produced, preferably of an alternative: the anti-ideal
+    // and ideal rows make poor examples.
     let example: CellRef | undefined;
-    let value;
-    search: for (const [r, row] of step.output.cells.entries()) {
-      for (const [c, cell] of row.entries()) {
-        if (formulaOfCell(step, cell)?.id !== formula.id) continue;
-        example = {
-          step: step.id,
-          row: step.output.rows[r]!.id,
-          column: step.output.columns[c]!.id,
-        };
-        value = cell.value;
-        break search;
+    let value: TraceValue | undefined;
+    for (const preferRegular of [true, false]) {
+      for (const [r, row] of step.output.cells.entries()) {
+        if (example !== undefined) break;
+        const item = step.output.rows[r]!;
+        if (preferRegular && item.kind === 'reference') continue;
+        for (const [c, cell] of row.entries()) {
+          if (formulaOfCell(step, cell)?.id !== formula.id) continue;
+          example = { step: step.id, row: item.id, column: step.output.columns[c]!.id };
+          value = cell.value;
+          break;
+        }
       }
     }
     // A formula no cell used (no cost criterion, say) has nothing to show.
@@ -195,7 +218,7 @@ function fillScene(context: StepContext): Omit<MatrixScene, 'index'> | Omit<Vect
       const at = fillSpan(r, c, output.rows.length, output.columns.length);
       reveals.push({ ref, value: cell.value, at });
       if (plan.flights === 'none') return;
-      all.push(...flightsInto(trace, ref, shown, plan.flights ?? 'all', at, direct));
+      all.push(...leadFlights(flightsInto(trace, ref, shown, plan.flights ?? 'all', at, direct)));
     }),
   );
   const flights = thin(all, (flight) => direct.has(flight));

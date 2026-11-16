@@ -153,7 +153,7 @@ function VectorOutput({
                   ref={(element) => register(entry.ref, element)}
                   className={`inline-block ${ranking ? 'min-w-6 rounded-full bg-accent px-2 text-center font-semibold text-accent-foreground' : ''}`}
                 >
-                  <Value value={entry.value} />
+                  <Value value={entry.value} whole={ranking} />
                 </span>
               </td>
               {!ranking && (
@@ -360,7 +360,7 @@ export function Stage({
   const caption = message(step.nameKey);
   return (
     <div className="overflow-x-auto rounded-lg border border-border bg-surface p-4">
-      <div ref={inner} className="relative w-max min-w-full">
+      <div ref={inner} className="relative">
         <div className="flex flex-wrap items-start gap-x-10 gap-y-6">
           {sources.length > 0 && (
             <div className="flex flex-col gap-4" data-testid="stage-sources">

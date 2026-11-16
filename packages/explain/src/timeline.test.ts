@@ -206,10 +206,18 @@ describe('the MARCOS sequence', () => {
     const into = normalized.flights.filter(
       (flight) => flight.to.row === 'a1' && flight.to.column === 'c2',
     );
-    expect(into.map((flight) => [flight.from.row, flight.term])).toEqual([
+    // While the table fills, only the value at the same place flies in...
+    expect(into.map((flight) => [flight.from.row, flight.term])).toEqual([['a1', 'x']]);
+    // ...and the formula scene shows every operand of its example cell.
+    expect(
+      scene('normalized-matrix/benefit').flights.map((flight) => [flight.from.row, flight.term]),
+    ).toEqual([
       ['a1', 'x'],
       ['AI', 'x_ai'],
     ]);
+    const degrees = scene('utility-degrees');
+    expect(degrees.flights.every((flight) => flight.from.row === flight.to.row)).toBe(true);
+    expect(scene('sums').flights.filter((flight) => flight.to.row === 'a1')).toHaveLength(3);
     expect(normalized.flights.every((flight) => flight.from.step === 'extended-matrix')).toBe(true);
 
     const weighted = scene('weighted-matrix');
