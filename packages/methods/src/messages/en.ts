@@ -119,6 +119,114 @@ export const en = {
   'methods.fuzzyMarcos.steps.ranking.explanation':
     'Alternatives ordered by final utility, highest first. Equal values share a rank.',
 
+  // ------------------------------------------------------------ CRITIC
+  'methods.critic.name': 'CRITIC',
+  'methods.critic.rows.weight': 'Weight w_j',
+  'methods.critic.steps.initial-matrix.name': 'Initial decision matrix',
+  'methods.critic.steps.initial-matrix.explanation':
+    'The performance of every alternative on every criterion, as entered.',
+  'methods.critic.steps.normalized-matrix.name': 'Normalized matrix',
+  'methods.critic.steps.normalized-matrix.explanation':
+    'Each criterion is rescaled to [0, 1]: the worst value becomes 0 and the best value 1. For a benefit criterion the best value is the largest; for a cost criterion it is the smallest.',
+  'methods.critic.steps.means.name': 'Column means',
+  'methods.critic.steps.means.explanation':
+    'The mean of each normalized column, needed for the deviations.',
+  'methods.critic.steps.standard-deviations.name': 'Standard deviations σ_j',
+  'methods.critic.steps.standard-deviations.explanation':
+    'The contrast intensity of each criterion: the population standard deviation of its normalized column. A criterion that separates the alternatives more carries more information.',
+  'methods.critic.steps.correlation-matrix.name': 'Correlation matrix',
+  'methods.critic.steps.correlation-matrix.explanation':
+    'The Pearson correlation between every pair of normalized columns. Strongly correlated criteria say the same thing, so they conflict less.',
+  'methods.critic.steps.conflict.name': 'Conflict',
+  'methods.critic.steps.conflict.explanation':
+    'The conflict of each criterion with all the others: the sum of (1 − r) over its row of the correlation matrix.',
+  'methods.critic.steps.information-content.name': 'Information content C_j',
+  'methods.critic.steps.information-content.explanation':
+    'Contrast intensity times conflict: a criterion is informative when it separates the alternatives and disagrees with the other criteria.',
+  'methods.critic.steps.weights.name': 'Criterion weights',
+  'methods.critic.steps.weights.explanation':
+    'Each information content divided by their sum, so the weights sum to 1.',
+
+  // ------------------------------------------------------------ MEREC
+  'methods.merec.name': 'MEREC',
+  'methods.merec.columns.S': 'Performance S_i',
+  'methods.merec.rows.weight': 'Weight w_j',
+  'methods.merec.steps.initial-matrix.name': 'Initial decision matrix',
+  'methods.merec.steps.initial-matrix.explanation':
+    'The performance of every alternative on every criterion, as entered. All values must be greater than zero.',
+  'methods.merec.steps.normalized-matrix.name': 'Normalized matrix',
+  'methods.merec.steps.normalized-matrix.explanation':
+    'Every criterion becomes a minimisation criterion, the reverse of the usual linear normalization: for a benefit criterion the smallest value of the column is divided by the value, for a cost criterion the value is divided by the largest value of the column.',
+  'methods.merec.steps.absolute-logs.name': 'Absolute logarithms',
+  'methods.merec.steps.absolute-logs.explanation':
+    'The absolute value of the natural logarithm of every normalized value. These are the terms that are summed in the next two steps.',
+  'methods.merec.steps.overall-performance.name': 'Overall performance S_i',
+  'methods.merec.steps.overall-performance.explanation':
+    'The performance of each alternative with all criteria: ln(1 + the sum of the absolute logarithms divided by the number of criteria).',
+  'methods.merec.steps.removal-performance.name': 'Performance with a criterion removed S′_ij',
+  'methods.merec.steps.removal-performance.explanation':
+    'The same calculation with one criterion left out. The divisor stays the number of criteria, not one less.',
+  'methods.merec.steps.removal-effects.name': 'Removal effects E_j',
+  'methods.merec.steps.removal-effects.explanation':
+    'How much removing a criterion changes the performances: the sum over the alternatives of |S′ − S|. A larger effect means a more important criterion.',
+  'methods.merec.steps.weights.name': 'Criterion weights',
+  'methods.merec.steps.weights.explanation':
+    'Each removal effect divided by their sum, so the weights sum to 1. The effects are not rounded before dividing.',
+
+  // ------------------------------------------------------------ SWARA
+  'methods.swara.name': 'SWARA',
+  'methods.swara.rows.s': 'Comparative importance s_j',
+  'methods.swara.rows.k': 'Coefficient k_j',
+  'methods.swara.rows.w': 'Recalculated weight w_j',
+  'methods.swara.rows.q': 'Weight q_j',
+  'methods.swara.steps.comparative-importance.name': 'Comparative importance s_j',
+  'methods.swara.steps.comparative-importance.explanation':
+    'How much more important each criterion is than the one ranked just below it, as stated by the experts. The criteria are in descending order of importance; the first has no value.',
+  'methods.swara.steps.coefficients.name': 'Coefficients k_j',
+  'methods.swara.steps.coefficients.explanation':
+    'k = 1 for the first criterion and s + 1 for the others.',
+  'methods.swara.steps.recalculated-weights.name': 'Recalculated weights w_j',
+  'methods.swara.steps.recalculated-weights.explanation':
+    'The first criterion gets 1; every other weight is the previous weight divided by its coefficient.',
+  'methods.swara.steps.weights.name': 'Criterion weights q_j',
+  'methods.swara.steps.weights.explanation':
+    'Each recalculated weight divided by their sum, so the weights sum to 1.',
+
+  // ------------------------------------------------------------ Fuzzy SWARA (IMF SWARA)
+  'methods.fuzzySwara.name': 'Fuzzy SWARA (IMF SWARA)',
+  'methods.fuzzySwara.rows.s': 'Comparative importance s̃_j',
+  'methods.fuzzySwara.rows.k': 'Coefficient k̃_j',
+  'methods.fuzzySwara.rows.q': 'Recalculated weight q̃_j',
+  'methods.fuzzySwara.rows.w': 'Fuzzy weight w̃_j',
+  'methods.fuzzySwara.rows.c': 'Crisp weight',
+  'methods.fuzzySwara.rows.weight': 'Weight w_j',
+  'methods.fuzzySwara.parameters.defuzzification.label': 'Defuzzification',
+  'methods.fuzzySwara.parameters.defuzzification.description':
+    'How each fuzzy weight is turned into a crisp number. The reference papers do not name the formula; the graded mean, which the same authors state explicitly in Fuzzy MARCOS, reproduces their printed values.',
+  'methods.fuzzySwara.parameters.defuzzification.gradedMean': 'Graded mean (l + 4m + u) / 6',
+  'methods.fuzzySwara.parameters.defuzzification.centroid': 'Centroid (l + m + u) / 3',
+  'methods.fuzzySwara.steps.assessments.name': 'Comparative importance s̃_j',
+  'methods.fuzzySwara.steps.assessments.explanation':
+    'The linguistic assessments of the experts, as triangular fuzzy numbers from the comparison scale: how much less significant each criterion is than the one ranked just above it. The first criterion has none.',
+  'methods.fuzzySwara.steps.coefficients.name': 'Fuzzy coefficients k̃_j',
+  'methods.fuzzySwara.steps.coefficients.explanation':
+    'k̃ = (1, 1, 1) for the first criterion and s̃ + 1 for the others. The reference paper’s equation omits the “+ 1”; every worked example, and this method, adds it.',
+  'methods.fuzzySwara.steps.recalculated-weights.name': 'Recalculated fuzzy weights q̃_j',
+  'methods.fuzzySwara.steps.recalculated-weights.explanation':
+    'The first criterion gets (1, 1, 1); every other weight is the previous one divided by its coefficient, using fuzzy division: l is divided by the other’s u, m by m, and u by l.',
+  'methods.fuzzySwara.steps.recalculated-weights-sum.name': 'Sum of the recalculated weights',
+  'methods.fuzzySwara.steps.recalculated-weights-sum.explanation':
+    'The fuzzy sum of all recalculated weights, component by component.',
+  'methods.fuzzySwara.steps.fuzzy-weights.name': 'Fuzzy weights w̃_j',
+  'methods.fuzzySwara.steps.fuzzy-weights.explanation':
+    'Each recalculated weight divided by the sum, with fuzzy division.',
+  'methods.fuzzySwara.steps.crisp-weights.name': 'Crisp weights',
+  'methods.fuzzySwara.steps.crisp-weights.explanation':
+    'Each fuzzy weight defuzzified with the {defuzzification, select, graded-mean {graded mean (l + 4m + u) / 6} centroid {centroid (l + m + u) / 3} other {selected formula}}. Defuzzification is not additive, so these values do not sum to exactly 1.',
+  'methods.fuzzySwara.steps.weights.name': 'Normalized crisp weights',
+  'methods.fuzzySwara.steps.weights.explanation':
+    'Each crisp weight divided by their sum, so the weights sum to 1 and can feed another method.',
+
   // ------------------------------------------------------------ validation
   'validation.marcos.reserved-alternative-id':
     'The alternative id "{id}" is reserved for the anti-ideal or ideal solution of MARCOS.',
@@ -146,6 +254,19 @@ export const en = {
     'The sum S̃ of this alternative is (0, 0, 0), so its utility functions cannot be calculated.',
   'validation.fuzzy-marcos.normalize-fuzzy-weights':
     'Fuzzy weights cannot be normalized by this option. Turn it off or enter crisp weights.',
+  'validation.critic.zero-information':
+    'Every information content C_j is 0 (for example, two criteria that are perfectly correlated), so the weights cannot be calculated.',
+  'validation.merec.zero-removal-effects':
+    'Every removal effect E_j is 0 (for example, all alternatives are identical), so the weights cannot be calculated.',
+  'validation.swara.negative-importance':
+    'The comparative importance {value} is negative. List the criteria in descending order of importance, so that each is at least as important as the next.',
+  'validation.swara.first-importance-ignored':
+    'The first criterion has no comparative importance. The value is ignored.',
+  'validation.fuzzy-swara.unknown-term': '"{term}" is not a term of the comparison scale.',
+  'validation.fuzzy-swara.negative-scale-value':
+    'The scale term "{term}" has a negative component, so its coefficient could fall below 1.',
+  'validation.fuzzy-swara.first-assessment-ignored':
+    'The first criterion has no assessment. The value is ignored.',
 } as const;
 
 export type MethodsMessageKey = keyof typeof en;
