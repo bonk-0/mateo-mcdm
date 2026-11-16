@@ -52,6 +52,7 @@ test('paste 10×6, edit, undo, redo, autosave and reopen without losing data', a
 
   // Edit one cell by typing a number with a decimal comma.
   await cellAt(page, 2, 1).dblclick();
+  await expect(page.locator('.ag-popup input')).toBeFocused();
   await page.keyboard.press('Control+A');
   await page.keyboard.type('99,5');
   await page.keyboard.press('Enter');
