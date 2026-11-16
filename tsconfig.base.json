@@ -23,7 +23,8 @@
 
     "types": [],
     "paths": {
-      "@mateo/*": ["./packages/*/src/index.ts"]
+      "@mateo/*": ["./packages/*/src/index.ts"],
+      "@mateo/project/testing": ["./packages/project/src/testing/sample.ts"]
     }
   }
 }
