@@ -5,7 +5,8 @@
   "description": ".mateo project file format, schema, migrations and history.",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./testing": "./src/testing/sample.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",

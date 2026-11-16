@@ -50,7 +50,9 @@
   "recent": {
     "title": "Son projeler",
     "emptyTitle": "Henüz son proje yok",
-    "emptyDescription": "Açtığınız ya da kaydettiğiniz projeler burada görünecek."
+    "emptyDescription": "Açtığınız ya da kaydettiğiniz projeler burada görünecek.",
+    "clear": "Listeyi temizle",
+    "open": "{name} projesini aç"
   },
   "principles": {
     "label": "İlkeler",

@@ -8,10 +8,10 @@ import { useResolvedTheme, useReducedMotion } from '../hooks/preferences';
 import { findNavItem } from '../navigation/navigation';
 import { DesktopBridge } from '../platform/DesktopBridge';
 import { isDesktop } from '../platform/runtime';
+import { ProjectFiles } from '../project/ProjectFiles';
 import { Sidebar } from './Sidebar';
 import { SkipLink } from './SkipLink';
 import { TopBar } from './TopBar';
-import { useFallbackCommands } from './useFallbackCommands';
 
 export function AppShell() {
   const { t } = useTranslation(['nav', 'shell']);
@@ -21,7 +21,6 @@ export function AppShell() {
   const theme = useResolvedTheme();
   const mainRef = useRef<HTMLElement>(null);
   const firstRender = useRef(true);
-  useFallbackCommands();
 
   const pageTitle = match ? t(`nav:items.${match.item.id}.title`) : t('shell:notFound.title');
   useEffect(() => {
@@ -77,6 +76,7 @@ export function AppShell() {
           containerAriaLabel={t('shell:notifications')}
           toastOptions={{ closeButtonAriaLabel: t('shell:closeNotification') }}
         />
+        <ProjectFiles />
         {isDesktop() && <DesktopBridge />}
       </TooltipProvider>
     </MotionConfig>

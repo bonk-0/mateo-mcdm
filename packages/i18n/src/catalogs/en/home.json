@@ -50,7 +50,9 @@
   "recent": {
     "title": "Recent projects",
     "emptyTitle": "No recent projects yet",
-    "emptyDescription": "Projects you open or save will show up here."
+    "emptyDescription": "Projects you open or save will show up here.",
+    "clear": "Clear the list",
+    "open": "Open {name}"
   },
   "principles": {
     "label": "Principles",

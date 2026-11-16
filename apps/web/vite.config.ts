@@ -13,6 +13,8 @@ export default defineConfig({
   },
   // Tauri expects a fixed port and must see Rust errors in the terminal.
   clearScreen: false,
+  // SQLite WebAssembly (browser project storage) loads its .wasm file itself.
+  optimizeDeps: { exclude: ['@sqlite.org/sqlite-wasm'] },
   server: {
     port: 5173,
     strictPort: true,

@@ -28,17 +28,6 @@
     "light": "Açık",
     "dark": "Koyu"
   },
-  "commands": {
-    "file": {
-      "new": "Yeni proje",
-      "open": "Proje aç",
-      "save": "Projeyi kaydet",
-      "saveAs": "Projeyi farklı kaydet",
-      "clearRecent": "Son projeleri temizle"
-    },
-    "comingSoon": "Proje dosyaları bu sürümün sonraki adımlarında geliyor.",
-    "filesReceived": "{count, plural, one {# dosya alındı. Proje açma yakında geliyor.} other {# dosya alındı. Proje açma yakında geliyor.}}"
-  },
   "menu": {
     "file": "Dosya",
     "new": "Yeni",

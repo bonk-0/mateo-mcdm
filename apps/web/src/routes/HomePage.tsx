@@ -11,6 +11,7 @@ import {
   ArrowRight,
   Database,
   FilePlus2,
+  FileText,
   FolderOpen,
   History,
   ListOrdered,
@@ -24,6 +25,8 @@ import { motion } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { runCommand } from '../commands/commands';
+import { useProjectState } from '../project/store';
+import { fileNameOf } from '../project/platform';
 import { HeroIllustration } from './HeroIllustration';
 
 type DayPart = 'morning' | 'afternoon' | 'evening';
@@ -61,6 +64,7 @@ const rise = (i: number) => ({
 export function HomePage() {
   const { t } = useTranslation('home');
   const part = dayPart(new Date().getHours());
+  const { recent } = useProjectState();
 
   return (
     <div className="flex flex-col gap-6">
@@ -184,11 +188,45 @@ export function HomePage() {
               <CardTitle>{t('recent.title')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-border px-4 py-8 text-center">
-                <History className="size-6 text-muted-foreground" aria-hidden />
-                <p className="text-sm font-medium">{t('recent.emptyTitle')}</p>
-                <p className="text-sm text-muted-foreground">{t('recent.emptyDescription')}</p>
-              </div>
+              {recent.length === 0 ? (
+                <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-border px-4 py-8 text-center">
+                  <History className="size-6 text-muted-foreground" aria-hidden />
+                  <p className="text-sm font-medium">{t('recent.emptyTitle')}</p>
+                  <p className="text-sm text-muted-foreground">{t('recent.emptyDescription')}</p>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  <ul className="-mx-2 flex flex-col">
+                    {recent.slice(0, 5).map((item) => (
+                      <li key={item.location}>
+                        <button
+                          type="button"
+                          onClick={() => runCommand('file.open', { paths: [item.location] })}
+                          aria-label={t('recent.open', { name: item.name })}
+                          title={item.location}
+                          className="flex w-full items-center gap-3 rounded-md px-2 py-2 text-left hover:bg-muted focus-visible:bg-muted focus-visible:outline-none"
+                        >
+                          <FileText className="size-4 shrink-0 text-primary" aria-hidden />
+                          <span className="min-w-0">
+                            <span className="block truncate text-sm font-medium">{item.name}</span>
+                            <span className="block truncate text-xs text-muted-foreground">
+                              {fileNameOf(item.location)}
+                            </span>
+                          </span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                  <Button
+                    variant="link"
+                    size="sm"
+                    className="self-start px-0"
+                    onClick={() => runCommand('file.clearRecent')}
+                  >
+                    {t('recent.clear')}
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
         </motion.div>

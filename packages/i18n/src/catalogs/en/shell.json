@@ -28,17 +28,6 @@
     "light": "Light",
     "dark": "Dark"
   },
-  "commands": {
-    "file": {
-      "new": "New project",
-      "open": "Open project",
-      "save": "Save project",
-      "saveAs": "Save project as",
-      "clearRecent": "Clear recent projects"
-    },
-    "comingSoon": "Project files are coming in the next steps of this release.",
-    "filesReceived": "{count, plural, one {Received # file. Opening projects is coming soon.} other {Received # files. Opening projects is coming soon.}}"
-  },
   "menu": {
     "file": "File",
     "new": "New",

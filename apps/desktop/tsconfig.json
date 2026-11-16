@@ -1,4 +1,8 @@
 {
   "extends": "../../tsconfig.dom.json",
+  "compilerOptions": {
+    // The tests start the `sql_bridge` example as a child process.
+    "types": ["node"]
+  },
   "include": ["src"]
 }
