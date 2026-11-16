@@ -10,5 +10,8 @@
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run"
+  },
+  "dependencies": {
+    "@mateo/fuzzy": "workspace:*"
   }
 }
