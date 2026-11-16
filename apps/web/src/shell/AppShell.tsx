@@ -60,7 +60,7 @@ export function AppShell() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.18, ease: [0.2, 0, 0, 1] }}
-                  className="mx-auto w-full max-w-6xl px-6 py-8"
+                  className={`mx-auto w-full px-6 py-8 ${match?.item.id === 'matrix' ? 'max-w-[110rem]' : 'max-w-6xl'}`}
                 >
                   <Outlet />
                 </motion.div>

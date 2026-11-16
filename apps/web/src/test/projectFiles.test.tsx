@@ -3,10 +3,11 @@ import { resources } from '@mateo/i18n';
 import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { toast } from 'sonner';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { runCommand } from '../commands/commands';
 import { useSettings } from '../settings/store';
 import type * as BrowserModule from '../project/browser';
+import { autosaveSettings } from '../project/autosaveSettings';
 import { getProjectController } from '../project/store';
 import { renderApp } from './renderApp';
 
@@ -40,8 +41,14 @@ function makeDirty(): void {
 }
 
 describe('project files in the app (browser build)', () => {
+  afterEach(() => {
+    autosaveSettings.delayMs = 1500;
+  });
+
   beforeEach(() => {
     store.files = memoryFileStore();
+    // These tests are about the questions asked for unsaved changes.
+    autosaveSettings.delayMs = false;
     // Toasts live in a module-level queue that outlives a rendered app.
     toast.dismiss();
   });

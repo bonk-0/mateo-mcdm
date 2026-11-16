@@ -1,3 +1,4 @@
+import type { ComponentType } from 'react';
 import { createHashRouter, type RouteObject } from 'react-router';
 import { visibleNavigation, type NavItemId } from './navigation/navigation';
 import { HomePage } from './routes/HomePage';
@@ -16,10 +17,22 @@ const SCREENS: Partial<Record<NavItemId, () => React.JSX.Element>> = {
   about: AboutPage,
 };
 
+/**
+ * Screens loaded on first visit. The matrix editor brings the spreadsheet grid with it,
+ * which would otherwise make every start of the app slower.
+ */
+const LAZY_SCREENS: Partial<Record<NavItemId, () => Promise<{ Component: ComponentType }>>> = {
+  matrix: () => import('./editor/EditorPage').then((module) => ({ Component: module.EditorPage })),
+  scales: () =>
+    import('./editor/ScaleManager').then((module) => ({ Component: module.ScaleManagerPage })),
+};
+
 export function buildRoutes(): RouteObject[] {
   const children: RouteObject[] = visibleNavigation().flatMap((section) =>
     section.items.map((item) => {
       const Screen = SCREENS[item.id];
+      const lazy = LAZY_SCREENS[item.id];
+      if (lazy) return { path: item.path, lazy };
       return {
         path: item.path,
         element: Screen ? <Screen /> : <PlaceholderPage item={item} />,
@@ -27,7 +40,11 @@ export function buildRoutes(): RouteObject[] {
     }),
   );
   return [
-    { element: <AppShell />, children: [...children, { path: '*', element: <NotFoundPage /> }] },
+    {
+      element: <AppShell />,
+      HydrateFallback: () => null,
+      children: [...children, { path: '*', element: <NotFoundPage /> }],
+    },
   ];
 }
 

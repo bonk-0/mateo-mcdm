@@ -18,6 +18,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "pnpm -r --if-present run test:coverage",
+    "e2e": "pnpm build && pnpm --filter @mateo/web e2e",
     "i18n:check": "node tooling/check-i18n.ts",
     "dev": "pnpm --filter @mateo/web dev",
     "dev:desktop": "pnpm --filter @mateo/desktop dev",

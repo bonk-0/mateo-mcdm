@@ -63,6 +63,34 @@ function fakeTarget() {
 }
 
 describe('autosave', () => {
+  it('calls the platform timers the way browsers require', () => {
+    // Browsers throw "Illegal invocation" when a timer function runs with another `this`.
+    const platform = globalThis as unknown as Record<'setTimeout' | 'clearTimeout', unknown>;
+    const original = { set: platform.setTimeout, clear: platform.clearTimeout };
+    const calls: string[] = [];
+    function strict(name: string, result: unknown): unknown {
+      return function (this: unknown) {
+        if (this !== globalThis && this !== undefined) throw new TypeError('Illegal invocation');
+        calls.push(name);
+        return result;
+      };
+    }
+    platform.setTimeout = strict('set', 1);
+    platform.clearTimeout = strict('clear', undefined);
+    try {
+      const target = fakeTarget();
+      const autosave = createAutosave(target, { onError: vi.fn() });
+      target.edit();
+      target.edit();
+      autosave.dispose();
+      expect(calls).toContain('set');
+      expect(calls).toContain('clear');
+    } finally {
+      platform.setTimeout = original.set;
+      platform.clearTimeout = original.clear;
+    }
+  });
+
   it('saves once after edits stop', async () => {
     const timers = manualScheduler();
     const target = fakeTarget();

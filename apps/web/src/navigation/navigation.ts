@@ -11,6 +11,7 @@ import {
   ListOrdered,
   type LucideIcon,
   Network,
+  Table2,
   Palette,
   Ruler,
   Scale,
@@ -35,6 +36,7 @@ export type NavItemId =
   | 'home'
   | 'projects'
   | 'dataCenter'
+  | 'matrix'
   | 'weighting'
   | 'ranking'
   | 'dematel'
@@ -77,6 +79,7 @@ export const NAVIGATION: readonly NavSection[] = [
       { id: 'home', path: '/', icon: Home, phase: 1 },
       { id: 'projects', path: '/projects', icon: FolderOpen, phase: 1, plannedIn: 'P1.8' },
       { id: 'dataCenter', path: '/data-center', icon: Database, phase: 1, plannedIn: 'P1.10' },
+      { id: 'matrix', path: '/matrix', icon: Table2, phase: 1 },
     ],
   },
   {
@@ -149,7 +152,7 @@ export const NAVIGATION: readonly NavSection[] = [
     items: [
       { id: 'languageFormats', path: '/settings/language', icon: Languages, phase: 1 },
       { id: 'appearance', path: '/settings/appearance', icon: Palette, phase: 1 },
-      { id: 'scales', path: '/settings/scales', icon: Ruler, phase: 1, plannedIn: 'P1.11' },
+      { id: 'scales', path: '/settings/scales', icon: Ruler, phase: 1 },
       { id: 'about', path: '/settings/about', icon: Info, phase: 1 },
     ],
   },

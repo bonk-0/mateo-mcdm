@@ -1,0 +1,248 @@
+{
+  "editor": {
+    "value": "Değer",
+    "tfn": "Üçgensel bulanık sayı",
+    "part": {
+      "l": "Alt değer l",
+      "m": "En olası değer m",
+      "u": "Üst değer u"
+    },
+    "term": "Dilsel terim",
+    "noTerm": "Terim yok",
+    "useTfn": "Bunun yerine bulanık sayı gir",
+    "useTerm": "Bunun yerine dilsel terim seç",
+    "problem": {
+      "number": "Bu geçerli bir sayı değil.",
+      "tfn": "Üç sayı girin: l, m ve u.",
+      "incomplete": "l, m ve u değerlerinin üçünü de doldurun ya da hepsini silin.",
+      "term": "Bu, ölçeğin bir terimi değil.",
+      "noScale": "Bu kriterin dilsel ölçeği yok."
+    }
+  },
+  "issue": {
+    "kindMismatch": {
+      "crisp": "Bu kriter düz sayı alır, ancak hücrede bulanık bir değer var.",
+      "tfn": "Bu kriter bulanık değer alır, ancak hücrede düz bir sayı var."
+    },
+    "noScale": "Hücrede bir dilsel terim var, ancak kriterin ölçeği yok.",
+    "unknownTerm": "“{term}”, bu kriterin ölçeğinde bir terim değil.",
+    "label": "Sorun"
+  },
+  "page": {
+    "noProject": {
+      "title": "Açık bir proje yok",
+      "description": "Karar matrisini düzenlemek için bir proje oluşturun veya açın."
+    },
+    "new": "Yeni proje",
+    "open": "Proje aç",
+    "noDataset": {
+      "title": "Bu projede henüz bir karar problemi yok",
+      "description": "Bir tane oluşturun, ardından alternatifleri, kriterleri ve değerleri yazın ya da yapıştırın."
+    },
+    "createDataset": "Karar problemi oluştur"
+  },
+  "dataset": {
+    "defaultName": "Karar problemi",
+    "label": "Karar problemi",
+    "name": "Karar probleminin adı",
+    "add": "Yeni karar problemi",
+    "remove": "Karar problemini sil",
+    "removed": "“{name}” silindi"
+  },
+  "status": {
+    "saved": "Tüm değişiklikler kaydedildi",
+    "pending": "Değişiklikler kaydediliyor…"
+  },
+  "toolbar": {
+    "label": "Matris araçları",
+    "undo": "Geri al",
+    "undoWith": "Geri al: {label}",
+    "redo": "Yinele",
+    "redoWith": "Yinele: {label}",
+    "insertRowAbove": "Üste satır ekle",
+    "insertRowBelow": "Alta satır ekle",
+    "deleteRows": "Seçili satırları sil",
+    "insertColumnLeft": "Sola sütun ekle",
+    "insertColumnRight": "Sağa sütun ekle",
+    "deleteColumns": "Seçili sütunları sil",
+    "bulkEdit": "Toplu düzenle",
+    "hint": "Bir hücre seçip Excel’den Ctrl+V ile yapıştırın. Shift+oklar seçimi genişletir.",
+    "search": "Matriste ara",
+    "searchPlaceholder": "Ara…",
+    "filters": "Sütun filtreleri",
+    "onlyIssues": "Yalnızca sorunlu satırlar",
+    "clearView": "Sıralama ve filtreleri temizle",
+    "viewActive": "Görünüm sıralı veya filtreli olduğundan satırlar sürüklenerek yeniden konumlandırılamaz.",
+    "panel": {
+      "show": "Kriterleri ve alternatifleri göster",
+      "hide": "Kriterleri ve alternatifleri gizle"
+    }
+  },
+  "summary": {
+    "invalid": "{count, plural, other {# geçersiz hücre}}",
+    "empty": "{count, plural, other {# boş hücre}}",
+    "duplicates": "{count, plural, other {# yinelenen kod}}",
+    "ok": "Sorun bulunmadı",
+    "size": "{alternatives, plural, other {# alternatif}} × {criteria, plural, other {# kriter}}"
+  },
+  "grid": {
+    "label": "Karar matrisi",
+    "code": "Kod",
+    "name": "Ad",
+    "index": "Satır numarası",
+    "dragRow": "Sıralamak için sürükleyin",
+    "empty": "Henüz alternatif yok. Bir satır ekleyin ya da veri yapıştırın.",
+    "benefit": "Fayda: yüksek daha iyi",
+    "cost": "Maliyet: düşük daha iyi",
+    "crisp": "Kesin sayı",
+    "fuzzy": "Üçgensel bulanık sayı",
+    "locale": {
+      "filterOoo": "Filtrele…",
+      "contains": "İçerir",
+      "notContains": "İçermez",
+      "equals": "Eşittir",
+      "notEqual": "Eşit değildir",
+      "startsWith": "İle başlar",
+      "endsWith": "İle biter",
+      "blank": "Boş",
+      "notBlank": "Boş değil",
+      "greaterThan": "Büyüktür",
+      "greaterThanOrEqual": "Büyük veya eşittir",
+      "lessThan": "Küçüktür",
+      "lessThanOrEqual": "Küçük veya eşittir",
+      "inRange": "Arasında",
+      "andCondition": "VE",
+      "orCondition": "VEYA",
+      "applyFilter": "Uygula",
+      "resetFilter": "Sıfırla",
+      "clearFilter": "Temizle",
+      "noRowsToShow": "Gösterilecek bir şey yok",
+      "pinColumn": "Sütunu sabitle",
+      "pinLeft": "Sola sabitle",
+      "pinRight": "Sağa sabitle",
+      "noPin": "Sabitleme",
+      "autosizeThisColumn": "Bu sütunu sığdır",
+      "autosizeAllColumns": "Tüm sütunları sığdır",
+      "resetColumns": "Sütunları sıfırla",
+      "columns": "Sütunlar",
+      "sortAscending": "Artan sırala",
+      "sortDescending": "Azalan sırala",
+      "filter": "Filtre"
+    }
+  },
+  "panels": {
+    "tabs": "Kriterler ve alternatifler",
+    "criteria": "Kriterler",
+    "alternatives": "Alternatifler",
+    "add": "Ekle",
+    "remove": "Sil",
+    "moveUp": "Yukarı taşı",
+    "moveDown": "Aşağı taşı",
+    "list": "{what} listesi",
+    "none": "Seçili öğe yok"
+  },
+  "criteria": {
+    "empty": "Henüz kriter yok.",
+    "code": "Kod",
+    "name": "Ad",
+    "description": "Açıklama",
+    "direction": "Yön",
+    "unit": "Birim",
+    "numberType": "Sayı türü",
+    "scale": "Dilsel ölçek",
+    "noScale": "Ölçek yok",
+    "manageScales": "Ölçekleri yönet",
+    "add": "Kriter ekle",
+    "remove": "Kriteri sil",
+    "benefit": "Fayda (yüksek daha iyi)",
+    "cost": "Maliyet (düşük daha iyi)",
+    "crispToFuzzy": "Mevcut sayılar bulanık sayılara (x, x, x) dönüştürüldü."
+  },
+  "alternatives": {
+    "empty": "Henüz alternatif yok.",
+    "code": "Kod",
+    "name": "Ad",
+    "description": "Açıklama",
+    "group": "Grup",
+    "add": "Alternatif ekle",
+    "remove": "Alternatifi sil"
+  },
+  "bulk": {
+    "title": "Toplu düzenleme",
+    "description": "Seçili {count, plural, other {# hücreyi}} tek seferde değiştirin. Toplama ve çarpma boş hücreleri doldurmaz.",
+    "operation": "İşlem",
+    "set": "Bir değere ayarla",
+    "clear": "Temizle",
+    "add": "Sayı ekle",
+    "multiply": "Bir sayıyla çarp",
+    "value": "Değer",
+    "amount": "Sayı",
+    "apply": "Uygula",
+    "cancel": "Vazgeç",
+    "invalidAmount": "Bir sayı girin."
+  },
+  "toast": {
+    "pasted": "{applied, plural, other {# hücre}} yapıştırıldı.",
+    "pastedGrown": "{applied, plural, other {# hücre}} yapıştırıldı; {rows, plural, other {# alternatif}} ve {columns, plural, other {# kriter}} eklendi.",
+    "skipped": "{count, plural, other {# hücre}} kritere uymadığı için dışarıda bırakıldı.",
+    "nothingPasted": "Hiçbir şey yapıştırılmadı.",
+    "rejected": {
+      "number": "Bu geçerli bir sayı değil.",
+      "tfn": "Üç sayı girin: l, m ve u.",
+      "tfnOrder": "Üçgensel bulanık sayı için l ≤ m ≤ u olmalıdır.",
+      "term": "Bu, ölçeğin bir terimi değil.",
+      "noScale": "Bu kriterin dilsel ölçeği yok."
+    },
+    "bulk": "{applied, plural, other {# hücre}} değiştirildi.",
+    "removedRows": "{count, plural, other {# satır}} silindi",
+    "removedColumns": "{count, plural, other {# sütun}} silindi",
+    "undo": "Geri al",
+    "noSelection": "Önce bir hücre seçin.",
+    "noCriterionSelected": "Önce bir kriter sütunu seçin."
+  },
+  "commands": {
+    "paste": "Yapıştır",
+    "bulk": "Toplu düzenleme"
+  },
+  "scales": {
+    "description": "Dilsel ölçekler “İyi” gibi sözcükleri üçgensel bulanık sayılara çevirir.",
+    "list": "Bu projedeki ölçekler",
+    "empty": "Bu projede henüz ölçek yok. Hazır bir ölçek ekleyin ya da kendi ölçeğinizi oluşturun.",
+    "addPredefined": "Hazır ölçek ekle",
+    "pickPredefined": "Hazır ölçek seçin",
+    "alreadyAdded": "Projede zaten var",
+    "create": "Özel ölçek oluştur",
+    "defaultName": "Yeni ölçek",
+    "defaultTerm": "Terim {n}",
+    "name": "Ölçek adı",
+    "predefined": "Hazır",
+    "custom": "Özel",
+    "usedBy": "{count, plural, other {# kriter}} tarafından kullanılıyor",
+    "remove": "Ölçeği sil",
+    "removed": "“{name}” ölçeği silindi",
+    "terms": "Terimler",
+    "termsHint": "Terimleri en düşükten en yükseğe doğru sıralayın.",
+    "term": {
+      "abbreviation": "Kısaltma",
+      "label": "Ad",
+      "l": "l",
+      "m": "m",
+      "u": "u",
+      "add": "Terim ekle",
+      "remove": "Terimi kaldır",
+      "moveUp": "Terimi yukarı taşı",
+      "moveDown": "Terimi aşağı taşı"
+    },
+    "preview": "Üyelik fonksiyonları",
+    "chart": {
+      "description": "Her üçgen l’de başlar, m’de tepe yapar ve u’da biter.",
+      "alt": "{name} ölçeğinin terimlerinin üyelik fonksiyonları",
+      "empty": "Üyelik fonksiyonlarını görmek için geçerli değerleri olan terimler ekleyin."
+    },
+    "valid": "Ölçek geçerli.",
+    "problems": "Bu ölçekle ilgili sorunlar",
+    "select": "Ölçek",
+    "noScales": "Ölçek yok",
+    "sourceEdited": "“{name}” temel alınmıştır"
+  }
+}

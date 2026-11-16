@@ -3,3 +3,51 @@
 
 /* Shared components live in packages/ui; let Tailwind see their classes. */
 @source '../../../packages/ui/src';
+
+/* Decision matrix editor (AG Grid) ------------------------------------------------- */
+.mt-grid {
+  --ag-cell-horizontal-padding: 8px;
+}
+.mt-grid .ag-cell.mt-num,
+.mt-grid .ag-cell.mt-crisp {
+  justify-content: flex-end;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.mt-grid .ag-cell.mt-tfn,
+.mt-grid .ag-cell.mt-term {
+  justify-content: center;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.mt-grid .ag-cell.mt-index {
+  color: var(--muted-foreground);
+  background: var(--muted);
+  font-size: 12px;
+}
+.mt-grid .ag-cell.mt-selected {
+  background: color-mix(in srgb, var(--primary) 16%, var(--surface));
+}
+.mt-grid .ag-cell.mt-invalid {
+  box-shadow: inset 0 0 0 1.5px var(--danger);
+  color: var(--danger);
+}
+.mt-grid .ag-cell.mt-invalid::after {
+  content: '!';
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  display: grid;
+  place-items: center;
+  width: 13px;
+  height: 13px;
+  border-radius: 9999px;
+  background: var(--danger);
+  color: var(--surface);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+.mt-grid .ag-header-cell-label {
+  font-weight: 600;
+}

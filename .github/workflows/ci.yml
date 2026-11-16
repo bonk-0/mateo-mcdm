@@ -51,6 +51,31 @@ jobs:
       - name: Coverage
         run: pnpm test:coverage
 
+  e2e:
+    name: End-to-end tests (Playwright, web build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Install the browser
+        run: pnpm --filter @mateo/web exec playwright install --with-deps chromium
+
+      - name: Build web app
+        run: pnpm build
+
+      # Starts `vite preview` itself (apps/web/playwright.config.ts).
+      - name: Run end-to-end tests
+        run: pnpm --filter @mateo/web e2e
+
   accessibility:
     name: Lighthouse accessibility (web build)
     runs-on: ubuntu-latest
@@ -73,7 +98,7 @@ jobs:
         run: |
           pnpm --filter @mateo/web preview > /tmp/preview.log 2>&1 &
           for i in $(seq 1 30); do curl -fs http://localhost:4173 > /dev/null && break; sleep 1; done
-          for route in "" "settings/language" "settings/appearance" "analysis/marcos"; do
+          for route in "" "settings/language" "settings/appearance" "analysis/marcos" "matrix" "settings/scales"; do
             report="/tmp/lighthouse-${route//\//-}.json"
             npx --yes lighthouse@13.6.0 "http://localhost:4173/#/${route}" \
               --only-categories=accessibility --quiet --output=json --output-path="$report" \

@@ -19,6 +19,10 @@
       "title": "Veri Merkezi",
       "description": "Excel ve CSV dosyalarını içe aktarın, yapılarını denetleyin ve içe aktarma profillerini yeniden kullanın."
     },
+    "matrix": {
+      "title": "Karar Matrisi",
+      "description": "Alternatifleri, kriterleri ve değerleri tablo benzeri bir ızgarada yazın, yapıştırın ve düzenleyin."
+    },
     "weighting": {
       "title": "Ağırlıklandırma",
       "description": "Kriter ağırlıklarını CRITIC, MEREC ve SWARA ile belirleyin."
