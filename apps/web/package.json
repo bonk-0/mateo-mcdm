@@ -17,6 +17,7 @@
     "@mateo/engine": "workspace:*",
     "@mateo/fuzzy": "workspace:*",
     "@mateo/i18n": "workspace:*",
+    "@mateo/io": "workspace:*",
     "@mateo/methods": "workspace:*",
     "@mateo/project": "workspace:*",
     "@mateo/ui": "workspace:*",

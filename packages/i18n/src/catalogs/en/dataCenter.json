@@ -1,0 +1,250 @@
+{
+  "severity": {
+    "error": "Error",
+    "warning": "Warning"
+  },
+  "status": {
+    "detected": "Detected",
+    "ambiguous": "Unclear",
+    "not-found": "Not found",
+    "override": "Set by you"
+  },
+  "page": {
+    "noProject": {
+      "title": "Open a project to import data",
+      "description": "Imported files and datasets are stored in the project file. Create or open a project first."
+    },
+    "new": "New project",
+    "open": "Open project",
+    "importFile": "Import a file",
+    "pasteTable": "Paste a table",
+    "pasteHint": "You can also copy a range in Excel and paste it anywhere on this page with Ctrl+V.",
+    "datasets": {
+      "title": "Datasets",
+      "empty": "This project has no datasets yet. Import a file to create one.",
+      "size": "{alternatives, plural, one {# alternative} other {# alternatives}} · {criteria, plural, one {# criterion} other {# criteria}}",
+      "open": "Open in editor",
+      "delete": "Delete dataset {name}"
+    },
+    "files": {
+      "title": "Original files",
+      "description": "Every imported file is kept in the project byte for byte.",
+      "empty": "No files have been imported yet.",
+      "download": "Download {name}",
+      "downloadShort": "Download"
+    },
+    "history": {
+      "title": "Import history",
+      "empty": "Nothing has been imported yet.",
+      "fileGone": "Removed file",
+      "datasetGone": "Deleted dataset",
+      "noWarnings": "Imported without warnings.",
+      "warnings": "{count, plural, one {# warning} other {# warnings}} reported by this import"
+    },
+    "profiles": {
+      "title": "Import profiles",
+      "description": "A profile remembers how a file was read, so a similar file can be imported in one click.",
+      "empty": "No import profiles yet. Save one in the last step of the import wizard.",
+      "delete": "Delete profile {name}"
+    }
+  },
+  "wizard": {
+    "title": "Import data",
+    "description": "Check how Mateo reads your file, then confirm. Nothing is added to the project until the last step.",
+    "progress": "Import steps",
+    "steps": {
+      "upload": "File",
+      "sheet": "Worksheet",
+      "structure": "Structure",
+      "columns": "Columns",
+      "types": "Data types",
+      "missing": "Missing values",
+      "validation": "Validation",
+      "preview": "Preview",
+      "confirm": "Confirm"
+    },
+    "back": "Back",
+    "next": "Next",
+    "cancel": "Cancel",
+    "import": "Import",
+    "blocked": "This import has problems that must be fixed before it can be confirmed."
+  },
+  "upload": {
+    "description": "Choose an Excel or CSV file, or paste a range copied from a spreadsheet.",
+    "drop": "Drop a file here",
+    "choose": "Choose a file",
+    "accepted": "XLSX, XLSM, XLS, CSV and TSV files",
+    "selected": "{name} ({size})",
+    "paste": {
+      "label": "Paste a table",
+      "hint": "Copy a range in Excel, click here and press Ctrl+V.",
+      "placeholder": "Paste cells here",
+      "use": "Use the pasted table",
+      "fileName": "Pasted table.tsv"
+    },
+    "profile": {
+      "label": "Import profile",
+      "hint": "A saved profile applies the same decisions to this file.",
+      "none": "No profile (detect everything)",
+      "invalid": "This import profile cannot be read."
+    }
+  },
+  "sheet": {
+    "description": "This file has more than one worksheet. Choose the one that holds the decision matrix.",
+    "label": "Worksheet",
+    "empty": "no data",
+    "resetNote": "Changing the worksheet resets the choices made for the structure."
+  },
+  "structure": {
+    "description": "This is how Mateo read the layout of the file. Change anything that is wrong; the result updates at once.",
+    "row": "Row {row}",
+    "header": {
+      "label": "Header row",
+      "none": "No header row"
+    },
+    "idColumn": {
+      "label": "Alternative names",
+      "none": "No such column"
+    },
+    "directionRow": {
+      "label": "Benefit/cost row",
+      "none": "No such row"
+    },
+    "decision": {
+      "format": "File type",
+      "encoding": "Text encoding",
+      "delimiter": "Delimiter",
+      "sheet": "Worksheet",
+      "header": "Header row",
+      "id-column": "Alternative names",
+      "direction-row": "Benefit/cost row",
+      "data-rows": "Alternatives found"
+    },
+    "excluded": {
+      "title": "Rows that were left out",
+      "hint": "These rows are not alternatives (titles, totals, ideal solutions, notes), so they were not imported."
+    },
+    "reason": {
+      "title": "title",
+      "blank": "blank",
+      "direction": "directions",
+      "units": "units",
+      "weights": "weights",
+      "aggregate": "computed row",
+      "ideal": "ideal or anti-ideal",
+      "footer": "note"
+    }
+  },
+  "columns": {
+    "description": "Choose which columns are criteria and whether each one is a benefit (higher is better) or a cost (lower is better).",
+    "directionNeeded": "{count, plural, one {# criterion has} other {# criteria have}} no benefit/cost direction in the file. Mateo does not guess it: choose one for each.",
+    "allBenefit": "All benefit",
+    "allCost": "All cost",
+    "alternatives": "Alternative names in column",
+    "criteria": "Criteria",
+    "include": "Import",
+    "includeColumn": "Import {name}",
+    "column": "Column",
+    "name": "Criterion",
+    "layout": "Values",
+    "direction": "Direction",
+    "directionOf": "Direction of {name}",
+    "choose": "Choose…",
+    "benefit": "Benefit",
+    "cost": "Cost",
+    "source": {
+      "direction-row": "from the file",
+      "header": "from the header"
+    },
+    "layouts": {
+      "crisp": "Numbers",
+      "tfn-columns": "Fuzzy (l, m, u columns)",
+      "tfn-text": "Fuzzy (in one cell)",
+      "linguistic": "Linguistic terms"
+    },
+    "ignored": {
+      "title": "Columns that are not imported",
+      "restore": "Import column {column}",
+      "reason": {
+        "row-number": "row number",
+        "text": "text only",
+        "incomplete-tfn": "incomplete fuzzy number",
+        "override": "left out by you"
+      }
+    }
+  },
+  "types": {
+    "description": "Check how numbers, text and linguistic terms in the file are read.",
+    "detected": "Detected: {value}",
+    "number": {
+      "title": "Number format",
+      "auto": "Detect automatically",
+      "point": "Decimal point (1,234.56)",
+      "comma": "Decimal comma (1.234,56)",
+      "status": {
+        "detected": "The numbers in the file use one format.",
+        "not-needed": "No number in the file depends on the format.",
+        "ambiguous": "Some numbers read differently in the two formats and nothing in the file decides. Choose the format.",
+        "conflict": "The file mixes both formats. Choose the one to use.",
+        "override": "You chose the format."
+      },
+      "samples": "Sample values read in each format",
+      "sample": "In the file",
+      "asPoint": "Read with decimal point",
+      "asComma": "Read with decimal comma",
+      "unreadable": "not a number"
+    },
+    "encoding": {
+      "label": "Text encoding"
+    },
+    "delimiter": {
+      "label": "Delimiter",
+      "comma": "Comma",
+      "semicolon": "Semicolon",
+      "tab": "Tab"
+    },
+    "scale": {
+      "label": "Linguistic scale",
+      "hint": "The scale that the linguistic terms in the file belong to.",
+      "none": "Detect automatically"
+    }
+  },
+  "missing": {
+    "description": "Cells without a value. Mateo never fills a missing value in for you.",
+    "none": "No missing values were found.",
+    "count": "{count, plural, one {# missing value} other {# missing values}}",
+    "fix": "Add the values in the file and import it again, or remove the empty row or column."
+  },
+  "validation": {
+    "description": "Problems found while reading the file. Errors must be fixed; warnings are saved with the dataset.",
+    "ok": "No errors were found.",
+    "directionsMissing": "{count, plural, one {# criterion has} other {# criteria have}} no benefit/cost direction yet. Choose it in the Columns step.",
+    "errors": "{count, plural, one {# error} other {# errors}}",
+    "errorsHint": "Errors block the import.",
+    "warnings": "{count, plural, one {# warning} other {# warnings}}",
+    "warningsHint": "Warnings do not block the import. They are saved with the dataset."
+  },
+  "preview": {
+    "description": "{alternatives, plural, one {# alternative} other {# alternatives}} and {criteria, plural, one {# criterion} other {# criteria}} will be imported.",
+    "none": "There is nothing to preview yet.",
+    "caption": "Preview of the imported decision matrix",
+    "alternative": "Alternative",
+    "missing": "Missing value",
+    "truncated": "Showing the first {shown} of {total} alternatives.",
+    "weights": "The file has a row of weights. It is not imported; weights are set when a method is run."
+  },
+  "confirm": {
+    "description": "Check the summary and name the dataset. The original file is saved in the project.",
+    "file": "File",
+    "alternatives": "Alternatives",
+    "criteria": "Criteria",
+    "blocked": "The import cannot be confirmed while errors remain. Go back and fix them.",
+    "warnings": "{count, plural, one {# warning} other {# warnings}} will be saved with the dataset.",
+    "datasetName": "Dataset name",
+    "saveProfile": "Save these decisions as an import profile",
+    "profileName": "Profile name",
+    "profileHint": "Apply it later to files with the same layout.",
+    "done": "Imported “{name}”",
+    "failed": "The import failed."
+  }
+}

@@ -3,6 +3,7 @@ import { createI18n, type CreateI18nOptions, type Language, type resources } fro
 import { ENGINE_MESSAGES } from '@mateo/engine';
 import { FUZZY_MESSAGES } from '@mateo/fuzzy';
 import { METHODS_MESSAGES } from '@mateo/methods';
+import { IO_MESSAGES } from '@mateo/io';
 import { PROJECT_MESSAGES } from '@mateo/project';
 import { initReactI18next } from 'react-i18next';
 
@@ -36,6 +37,8 @@ export function createAppI18n(
         ...FUZZY_MESSAGES[code],
         ...METHODS_MESSAGES[code],
         ...PROJECT_MESSAGES[code],
+        ...PROJECT_MESSAGES[code],
+        ...IO_MESSAGES[code],
       },
       false,
       true,

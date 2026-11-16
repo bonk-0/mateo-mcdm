@@ -71,6 +71,9 @@ importers:
       '@mateo/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@mateo/io':
+        specifier: workspace:*
+        version: link:../../packages/io
       '@mateo/methods':
         specifier: workspace:*
         version: link:../../packages/methods
@@ -204,8 +207,8 @@ importers:
         specifier: 5.5.3
         version: 5.5.3
       xlsx:
-        specifier: npm:@e965/xlsx@0.20.3
-        version: '@e965/xlsx@0.20.3'
+        specifier: file:vendor/xlsx-0.20.3.tgz
+        version: file:packages/io/vendor/xlsx-0.20.3.tgz
     devDependencies:
       '@mateo/i18n':
         specifier: workspace:*
@@ -303,11 +306,6 @@ packages:
 
   '@cacheable/utils@2.5.0':
     resolution: {integrity: sha512-buipgOVDkkPXNR5+xBpDw7Zk2n1EvU7qBJCNUcL7rhQ//kfpOXPAvQ511Os0vpLYJ1pZnvudNytkQt2hst3wqA==}
-
-  '@e965/xlsx@0.20.3':
-    resolution: {integrity: sha512-703RN/3OdsRD5mtse2HBX7Um7xwaP9tlswEG6svOtjqokXoX7rJdQj7DyabD2I+xk22RgaIIU+R6BHgkpZGB/w==}
-    engines: {node: '>=0.8'}
-    hasBin: true
 
   '@emnapi/core@2.0.0-beta.2':
     resolution: {integrity: sha512-MzCVoWtcg4Pm2B3je5mMvYMvj3MmBKw+fU7vbsJc9/iT8ip6/eYIHo/Dsm/mr+wsHB6SEyJDuxB09Yy6r/8+4A==}
@@ -2522,6 +2520,12 @@ packages:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
     engines: {node: '>=0.10.0'}
 
+  xlsx@file:packages/io/vendor/xlsx-0.20.3.tgz:
+    resolution: {integrity: sha512-oLDq3jw7AcLqKWH2AhCpVTZl8mf6X2YReP+Neh0SJUzV/BdZYjth94tG5toiMB1PPrYtxOCfaoUCkvtuH+3AJA==, tarball: file:packages/io/vendor/xlsx-0.20.3.tgz}
+    version: 0.20.3
+    engines: {node: '>=0.8'}
+    hasBin: true
+
   xml-name-validator@5.0.0:
     resolution: {integrity: sha512-EvGK8EJ3DhaHfbRlETOWAS5pO9MZITeauHKJyb8wyajUfQUenkIg2MvLDTZ4T/TgIcm3HU0TFBgWWboAZ30UHg==}
     engines: {node: '>=18'}
@@ -2590,8 +2594,6 @@ snapshots:
     dependencies:
       hashery: 1.5.1
       keyv: 5.6.0
-
-  '@e965/xlsx@0.20.3': {}
 
   '@emnapi/core@2.0.0-beta.2':
     dependencies:
@@ -4691,6 +4693,8 @@ snapshots:
   why-is-node-running@3.2.1: {}
 
   word-wrap@1.2.5: {}
+
+  xlsx@file:packages/io/vendor/xlsx-0.20.3.tgz: {}
 
   xml-name-validator@5.0.0: {}
 

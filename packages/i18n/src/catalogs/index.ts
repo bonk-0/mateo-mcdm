@@ -5,6 +5,7 @@
  * To add a namespace, add `<namespace>.json` to every language folder and register it
  * below. To add a language, add a folder and register it here and in `locales.ts`.
  */
+import enDataCenter from './en/dataCenter.json';
 import enHome from './en/home.json';
 import enMatrix from './en/matrix.json';
 import enNav from './en/nav.json';
@@ -12,6 +13,7 @@ import enProject from './en/project.json';
 import enSettings from './en/settings.json';
 import enShell from './en/shell.json';
 import enWorkspace from './en/workspace.json';
+import trDataCenter from './tr/dataCenter.json';
 import trHome from './tr/home.json';
 import trMatrix from './tr/matrix.json';
 import trNav from './tr/nav.json';
@@ -29,6 +31,7 @@ export const NAMESPACES = [
   'project',
   'matrix',
   'workspace',
+  'dataCenter',
 ] as const;
 export type Namespace = (typeof NAMESPACES)[number];
 
@@ -43,6 +46,7 @@ export const resources = {
     project: enProject,
     matrix: enMatrix,
     workspace: enWorkspace,
+    dataCenter: enDataCenter,
   },
   tr: {
     shell: trShell,
@@ -52,5 +56,6 @@ export const resources = {
     project: trProject,
     matrix: trMatrix,
     workspace: trWorkspace,
+    dataCenter: trDataCenter,
   },
 } as const satisfies Record<Language, Record<Namespace, object>>;
