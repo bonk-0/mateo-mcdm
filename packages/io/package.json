@@ -9,6 +9,17 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@mateo/engine": "workspace:*",
+    "@mateo/fuzzy": "workspace:*",
+    "papaparse": "5.5.3",
+    "xlsx": "npm:@e965/xlsx@0.20.3"
+  },
+  "devDependencies": {
+    "@mateo/i18n": "workspace:*",
+    "@types/papaparse": "5.5.2"
   }
 }

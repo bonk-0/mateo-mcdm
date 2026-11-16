@@ -1,0 +1,5 @@
+,max,min,max
+Robot,Payload (kg),Cost (k$),Repeatability
+R1,60,95,8
+R2,40,70,6
+R3,80,120,9

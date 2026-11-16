@@ -1,0 +1,6 @@
+Supplier,Price (USD),Quality score,Delivery time (days),Warranty (years)
+Direction,cost,benefit,cost,benefit
+Alpha Ltd,1250.50,7.5,14,2
+Beta Inc,980.00,6.8,21,1
+Gamma Co,1430.25,8.9,10,3
+Delta LLC,1105.75,7.1,18,2
