@@ -1,4 +1,4 @@
-# Explain mode (P1.13)
+# Explain mode (P1.13, P1.14)
 
 The UI of `@mateo/explain`. It is shown in the **Explain** tab of a stored analysis (`workspace/AnalysisView.tsx`), next to the results.
 
@@ -19,3 +19,8 @@ Rules:
 - Nothing here calculates a method value. Bar lengths are drawing; every shown number is rendered by `Value` or `markNumber` and is checked against the trace in `test/explain.test.tsx`.
 - With reduced motion (OS or app setting) the player is in static-steps mode: every scene is shown complete, there is no play button and no flight.
 - Tables larger than `FOCUS_LIMITS` (12 rows, 10 columns) show a focused view around the example cell.
+- Fuzzy cells are drawn with `TfnGlyph` (`../tfn`), a membership triangle without any text, so the provenance test still sees only the numbers of `Value`. Weighting methods (CRITIC, MEREC, SWARA, Fuzzy SWARA) have a timeline but no ranking story.
+
+# TFN components (P1.14)
+
+`src/tfn` holds the triangular fuzzy number visuals: `TfnChart` (triangles, linguistic scale overlay, markers, draggable and keyboard-operable points), `TfnGlyph` (small triangle for cells and bars), `geometry.ts` (clamping a dragged point so `l ≤ m ≤ u`, ticks) and the Fuzzy Playground (`FuzzyPlayground.tsx`, route `/learn/playground`). The playground does no arithmetic: operations and defuzzification come from `@mateo/fuzzy` (`playground.ts`).

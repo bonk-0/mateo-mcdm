@@ -2,7 +2,14 @@ import type { DecisionMatrix, Trace } from '@mateo/engine';
 import { crispWeights, runMethod, textLiteral } from '@mateo/engine';
 import { traceNumbers } from '@mateo/explain';
 import { formatNumber } from '@mateo/i18n';
-import { fuzzyMarcosMethod, marcosMethod } from '@mateo/methods';
+import {
+  criticMethod,
+  fuzzyMarcosMethod,
+  fuzzySwaraMethod,
+  marcosMethod,
+  merecMethod,
+  swaraMethod,
+} from '@mateo/methods';
 import { TooltipProvider } from '@mateo/ui';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -52,6 +59,17 @@ const fuzzyTrace = () =>
       'tfn',
     ),
     weights: weights(3),
+  }).trace;
+
+const ordered = ['c1', 'c2', 'c3', 'c4'].map((id) => ({ id, name: textLiteral(id.toUpperCase()) }));
+const criticTrace = () => runMethod(criticMethod, { matrix: matrixOf(PHONES, 'crisp') }).trace;
+const merecTrace = () => runMethod(merecMethod, { matrix: matrixOf(PHONES, 'crisp') }).trace;
+const swaraTrace = () =>
+  runMethod(swaraMethod, { criteria: ordered, comparativeImportance: [null, 0.3, 0.2, 0.1] }).trace;
+const fuzzySwaraTrace = () =>
+  runMethod(fuzzySwaraMethod, {
+    criteria: ordered,
+    assessments: [null, 'WLS', 'ES', 'WLS'],
   }).trace;
 
 function largeTrace(): Trace {
@@ -147,6 +165,50 @@ describe.each([
     expect(screen.getByTestId('explain-story')).toBeTruthy();
     check();
     expect(checked).toBeGreaterThan(500);
+  });
+});
+
+describe.each([
+  ['CRITIC', criticTrace],
+  ['MEREC', merecTrace],
+  ['SWARA', swaraTrace],
+  ['Fuzzy SWARA', fuzzySwaraTrace],
+])('every number shown in the %s timeline', (_name, traceOf) => {
+  it('equals a value of the engine trace, in every scene', async () => {
+    const user = userEvent.setup();
+    const trace = traceOf();
+    const known = traceNumbers(trace);
+    const { explanation } = renderPanel(trace);
+    // Weighting methods have no ranking story: the timeline is the whole explanation.
+    expect(screen.queryByTestId('explain-tab-story')).toBeNull();
+    const format = (value: number) => formatNumber(value, 'en-US', { fractionDigits: 4 });
+    let checked = 0;
+    const visited: (string | null)[] = [];
+    for (let i = 0; i < explanation.timeline.scenes.length; i += 1) {
+      visited.push(sceneId());
+      const { marked, unmarked } = shownNumbers(document.body);
+      expect(unmarked).toEqual([]);
+      for (const { value, text } of marked) {
+        expect(known.has(value)).toBe(true);
+        expect([format(value), formatNumber(value, 'en-US', { fractionDigits: 0 })]).toContain(
+          text,
+        );
+        checked += 1;
+      }
+      await user.click(screen.getByTestId('explain-next'));
+    }
+    expect(visited).toEqual(explanation.timeline.scenes.map((scene) => scene.id));
+    expect(checked).toBeGreaterThan(50);
+  });
+});
+
+describe('fuzzy cells in the Explain stage', () => {
+  it('are drawn with the TFN component, which shows no numbers of its own', () => {
+    renderPanel(fuzzyTrace());
+    // The first scene of Fuzzy MARCOS is the initial matrix of TFN cells.
+    const glyphs = screen.getAllByTestId('tfn-glyph');
+    expect(glyphs.length).toBeGreaterThanOrEqual(12);
+    for (const glyph of glyphs) expect(glyph.textContent).toBe('');
   });
 });
 
@@ -448,7 +510,7 @@ describe('the Explain player', () => {
 
   it('has no explanation for methods without a sequence', () => {
     const trace = marcosTrace();
-    expect(explanationOf({ ...trace, methodId: 'critic' })).toBeNull();
+    expect(explanationOf({ ...trace, methodId: 'topsis' })).toBeNull();
     // A trace from a method version with other steps is not explained either.
     expect(explanationOf({ ...trace, steps: trace.steps.slice(0, 4) })).toBeNull();
   });

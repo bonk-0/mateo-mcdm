@@ -10,7 +10,7 @@ Turns an engine step trace into an animation timeline (docs/plan.md §8). Pure T
 | `player.ts`   | `playerReducer`: play, pause, step, seek, speed and static mode as a pure state machine. The UI owns the clock.                                                                                            |
 | `story.ts`    | `buildRankingStory`: winner, top drivers and the comparison with the runner-up. Orders and compares values, never calculates.                                                                              |
 | `focus.ts`    | Which rows and columns of a large table are shown.                                                                                                                                                         |
-| `sequences/`  | The explain sequence of each method: MARCOS and Fuzzy MARCOS (weighting methods follow in P1.14).                                                                                                          |
+| `sequences/`  | The explain sequence of each method: MARCOS, Fuzzy MARCOS, CRITIC, MEREC, SWARA and Fuzzy SWARA: every Phase 1 method.                                                                                     |
 
 ## Adding a sequence
 
@@ -18,4 +18,4 @@ A sequence has one `StepPlan` per step id of the method's trace: how the output 
 
 ## The provenance guarantee
 
-`timeline.test.ts` asserts for MARCOS and Fuzzy MARCOS that every number in a timeline is a value of the trace (`traceNumbers`), and `apps/web/src/test/explain.test.tsx` asserts the same for every number rendered on screen in every scene.
+`timeline.test.ts` asserts for every sequence (the two ranking and the four weighting methods) that every number in a timeline is a value of the trace (`traceNumbers`), and `apps/web/src/test/explain.test.tsx` asserts the same for every number rendered on screen in every scene.

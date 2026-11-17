@@ -232,6 +232,142 @@
       "final-utility": {
         "final-utility": "The final utility combines the crisp utility degrees and utility functions into one number. The highest value wins."
       }
+    },
+    "critic": {
+      "normalized-matrix": {
+        "benefit": "Each value of a benefit criterion is rescaled to the range 0 to 1: the worst value of the column becomes 0 and the best becomes 1.",
+        "cost": "Each value of a cost criterion is rescaled to the range 0 to 1: the lowest value of the column becomes 1 and the highest becomes 0."
+      },
+      "means": {
+        "mean": "The mean of each normalized column is the centre the deviations of the next step are measured from."
+      },
+      "standard-deviations": {
+        "sigma": "The standard deviation of a normalized column measures its contrast intensity: the more the alternatives differ on a criterion, the larger it is."
+      },
+      "correlation-matrix": {
+        "pearson": "The Pearson correlation of two criteria is the sum of the products of their deviations from the mean, divided by n times both standard deviations."
+      },
+      "conflict": {
+        "conflict": "The conflict of a criterion adds up one minus its correlation with every criterion. A criterion that correlates little with the others carries more conflict."
+      },
+      "information-content": {
+        "information": "The information content of a criterion is its standard deviation multiplied by its conflict."
+      },
+      "weights": {
+        "weight": "Each information content is divided by the sum of all of them, so that the weights add up to 1."
+      }
+    },
+    "merec": {
+      "normalized-matrix": {
+        "benefit": "For a benefit criterion the smallest value of the column is divided by the value, so the best performance gets 1 and smaller values get less.",
+        "cost": "For a cost criterion the value is divided by the largest value of the column, so the best performance gets the smallest ratio."
+      },
+      "absolute-logs": {
+        "abs-ln": "The absolute value of the natural logarithm of each normalized value measures how far it is from 1."
+      },
+      "overall-performance": {
+        "overall": "The overall performance of an alternative is the logarithm of one plus the mean of its absolute logarithms."
+      },
+      "removal-performance": {
+        "removal": "The performance is calculated again with one criterion left out. This is done for every alternative and every criterion."
+      },
+      "removal-effects": {
+        "effect": "The removal effect of a criterion adds up how much the performance of each alternative changes when that criterion is left out."
+      },
+      "weights": {
+        "weight": "Each removal effect is divided by the sum of all of them, so that the weights add up to 1."
+      }
+    },
+    "swara": {
+      "coefficients": {
+        "first": "The most important criterion has the coefficient 1.",
+        "coefficient": "The coefficient of a criterion is its comparative importance, compared to the criterion before it, plus 1."
+      },
+      "recalculated-weights": {
+        "first": "The most important criterion starts with the value 1.",
+        "recalculated": "Each value is the value of the criterion before it divided by the coefficient of this criterion."
+      },
+      "weights": {
+        "weight": "Each recalculated value is divided by the sum of all of them, so that the weights add up to 1."
+      }
+    },
+    "fuzzySwara": {
+      "coefficients": {
+        "first": "The most important criterion has the coefficient (1, 1, 1).",
+        "coefficient": "The coefficient of a criterion is its fuzzy comparative importance plus 1. Adding 1 moves the whole triangle to the right."
+      },
+      "recalculated-weights": {
+        "first": "The most important criterion starts with the value (1, 1, 1).",
+        "recalculated": "Each fuzzy value is the value of the criterion before it divided by the coefficient of this criterion."
+      },
+      "recalculated-weights-sum": {
+        "sum": "The fuzzy values of all criteria are added up, component by component."
+      },
+      "fuzzy-weights": {
+        "weight": "Each fuzzy value is divided by the fuzzy sum, so that the weights are fuzzy numbers that add up to about 1."
+      },
+      "crisp-weights": {
+        "defuzzify": "Each fuzzy weight is turned into one number with the chosen defuzzification method."
+      },
+      "weights": {
+        "normalized": "The defuzzified weights are divided by their sum, so that the crisp weights add up to 1."
+      }
+    }
+  },
+  "playground": {
+    "title": "Fuzzy Playground",
+    "reset": "Reset",
+    "hint": "Drag the round handles of A and B, or use the arrow keys on a focused handle (Shift for bigger steps). Everything below is calculated by the fuzzy package.",
+    "result": "Result",
+    "handle": "{name}, point {point}",
+    "terms": "Terms for {name}",
+    "scalar": "Crisp number k",
+    "point": {
+      "l": "l",
+      "m": "m",
+      "u": "u"
+    },
+    "chart": {
+      "operands": "Triangular fuzzy numbers A and B on the number line",
+      "result": "The result of the operation on the number line",
+      "resultTitle": "Result"
+    },
+    "operation": {
+      "label": "Operation",
+      "add": "Addition  A ⊕ B",
+      "subtract": "Subtraction  A ⊖ B",
+      "multiply": "Multiplication  A ⊗ B",
+      "divide": "Division  A ⊘ B",
+      "scale": "Multiply by a number  k · A",
+      "shift": "Add a number  A + k"
+    },
+    "rule": {
+      "add": "The l, m and u values are added one by one.",
+      "subtract": "The lower value of A minus the upper value of B, the middle values subtracted, and the upper value of A minus the lower value of B.",
+      "multiply": "For positive numbers the l, m and u values are multiplied one by one.",
+      "divide": "For positive numbers: l of A divided by u of B, m by m, and u of A divided by l of B. B must not contain zero.",
+      "scale": "The l, m and u values are each multiplied by k.",
+      "shift": "The number k is added to l, m and u."
+    },
+    "scale": {
+      "label": "Linguistic scale",
+      "none": "No scale"
+    },
+    "defuzzification": {
+      "graded-mean": "Graded mean",
+      "centroid": "Centroid"
+    },
+    "table": {
+      "caption": "Values of the numbers and their defuzzified values",
+      "number": "Number"
+    },
+    "error": {
+      "zero-divisor": "B contains zero, so the quotient is not defined. Move B away from zero.",
+      "invalid": "The result is not a valid triangular fuzzy number."
+    },
+    "name": {
+      "a": "A",
+      "b": "B"
     }
   }
 }
