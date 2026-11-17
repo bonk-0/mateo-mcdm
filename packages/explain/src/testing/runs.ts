@@ -2,7 +2,14 @@
 import type { DecisionMatrix, WeightVector } from '@mateo/engine';
 import { crispWeights, runMethod, textLiteral } from '@mateo/engine';
 import type { TFN } from '@mateo/fuzzy';
-import { fuzzyMarcosMethod, marcosMethod } from '@mateo/methods';
+import {
+  criticMethod,
+  fuzzyMarcosMethod,
+  fuzzySwaraMethod,
+  marcosMethod,
+  merecMethod,
+  swaraMethod,
+} from '@mateo/methods';
 
 /** Four phones on price (cost), memory and camera (benefit). */
 export const PHONES = [
@@ -85,5 +92,34 @@ export function fuzzyMarcosRun(
       ...(options.normalizeWeights ? { normalizeWeights: true } : {}),
       ...(options.centroid ? { defuzzification: 'centroid' as const } : {}),
     },
+  );
+}
+
+/** The phone matrix as input of the objective weighting methods. */
+const weightingInput = () => ({ matrix: matrixOf(PHONES, DIRECTIONS, 'crisp') });
+
+export function criticRun() {
+  return runMethod(criticMethod, weightingInput(), {});
+}
+
+export function merecRun() {
+  return runMethod(merecMethod, weightingInput(), {});
+}
+
+const ORDERED = ['c1', 'c2', 'c3', 'c4'].map((id) => ({ id, name: textLiteral(id.toUpperCase()) }));
+
+export function swaraRun() {
+  return runMethod(
+    swaraMethod,
+    { criteria: ORDERED, comparativeImportance: [null, 0.3, 0.2, 0.1] },
+    {},
+  );
+}
+
+export function fuzzySwaraRun(options: { centroid?: boolean } = {}) {
+  return runMethod(
+    fuzzySwaraMethod,
+    { criteria: ORDERED, assessments: [null, 'WLS', 'ES', 'WLS'] },
+    options.centroid ? { defuzzification: 'centroid' as const } : {},
   );
 }

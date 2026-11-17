@@ -1,6 +1,7 @@
 import type { CellRef, TraceStep } from '@mateo/engine';
 import { useMemo, useState, type KeyboardEvent } from 'react';
 import { useTextRef } from '../editor/messages';
+import { TfnGlyph, tfnOfValue } from '../tfn/TfnGlyph';
 import { Value } from './Value';
 
 /** How a cell is drawn: the colour of the formula term it stands for, and emphasis. */
@@ -71,6 +72,11 @@ export function TraceTable({
         .filter(({ item }) => columns === undefined || columns.includes(item.id)),
     [output.columns, columns],
   );
+  // Fuzzy cells get a membership triangle; all of the table share one number line.
+  const fuzzyEnd = useMemo(
+    () => Math.max(0, ...output.cells.flat().map((cell) => tfnOfValue(cell.value)?.u ?? 0)),
+    [output.cells],
+  );
   // One cell per table is in the tab order; the arrow keys move it (roving tabindex).
   const [cursor, setCursor] = useState<readonly [number, number]>([0, 0]);
   const cursorRow = Math.min(cursor[0], shownRows.length - 1);
@@ -140,6 +146,11 @@ export function TraceTable({
                   className="inline-block"
                 >
                   <Value value={cell.value} />
+                  {fuzzyEnd > 0 && tfnOfValue(cell.value) && (
+                    <span className="mt-0.5 block">
+                      <TfnGlyph value={tfnOfValue(cell.value)!} to={fuzzyEnd} />
+                    </span>
+                  )}
                 </span>
               );
               return (

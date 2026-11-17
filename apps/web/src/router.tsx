@@ -45,6 +45,8 @@ const LAZY_SCREENS: Partial<Record<NavItemId, () => Promise<{ Component: Compone
     import('./workspace/SensitivityPage').then((module) => ({
       Component: module.SensitivityPage,
     })),
+  playground: () =>
+    import('./tfn/FuzzyPlayground').then((module) => ({ Component: module.FuzzyPlayground })),
   results: () =>
     import('./workspace/ResultsPage').then((module) => ({ Component: module.ResultsPage })),
 };

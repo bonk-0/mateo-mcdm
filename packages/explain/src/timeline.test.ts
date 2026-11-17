@@ -4,8 +4,24 @@ import { describe, expect, it } from 'vitest';
 import { formulaOfCell } from './cell';
 import { ExplainError } from './errors';
 import { numbersOf, traceNumbers } from './numbers';
-import { fuzzyMarcosSequence, marcosSequence, sequenceFor } from './sequences';
-import { fuzzyMarcosRun, largeMarcosRun, marcosRun } from './testing/runs';
+import {
+  criticSequence,
+  fuzzyMarcosSequence,
+  fuzzySwaraSequence,
+  marcosSequence,
+  merecSequence,
+  sequenceFor,
+  swaraSequence,
+} from './sequences';
+import {
+  criticRun,
+  fuzzyMarcosRun,
+  fuzzySwaraRun,
+  largeMarcosRun,
+  marcosRun,
+  merecRun,
+  swaraRun,
+} from './testing/runs';
 import { MAX_FLIGHTS_PER_SCENE, buildTimeline, scenesOfStep } from './timeline';
 import type { ExplainSequence, Timeline } from './types';
 
@@ -27,6 +43,15 @@ const RUNS: readonly (readonly [string, () => Trace, ExplainSequence])[] = [
     'Fuzzy MARCOS with normalized weights',
     () => fuzzyMarcosRun({ normalizeWeights: true }).trace,
     fuzzyMarcosSequence,
+  ],
+  ['CRITIC', () => criticRun().trace, criticSequence],
+  ['MEREC', () => merecRun().trace, merecSequence],
+  ['SWARA', () => swaraRun().trace, swaraSequence],
+  ['Fuzzy SWARA', () => fuzzySwaraRun().trace, fuzzySwaraSequence],
+  [
+    'Fuzzy SWARA with the centroid',
+    () => fuzzySwaraRun({ centroid: true }).trace,
+    fuzzySwaraSequence,
   ],
 ];
 
@@ -349,10 +374,62 @@ describe('a sequence that does not fit the trace', () => {
   });
 });
 
+describe('the weighting sequences', () => {
+  it('cover every step of the method, in the order of its formulation', () => {
+    const order = (trace: Trace) =>
+      buildTimeline(trace, sequenceFor(trace.methodId)!).steps.map((s) => s.stepId);
+    expect(order(criticRun().trace)).toEqual([
+      'initial-matrix',
+      'normalized-matrix',
+      'means',
+      'standard-deviations',
+      'correlation-matrix',
+      'conflict',
+      'information-content',
+      'weights',
+    ]);
+    expect(order(merecRun().trace)).toEqual([
+      'initial-matrix',
+      'normalized-matrix',
+      'absolute-logs',
+      'overall-performance',
+      'removal-performance',
+      'removal-effects',
+      'weights',
+    ]);
+    expect(order(swaraRun().trace)).toEqual([
+      'comparative-importance',
+      'coefficients',
+      'recalculated-weights',
+      'weights',
+    ]);
+    expect(order(fuzzySwaraRun().trace)).toEqual([
+      'assessments',
+      'coefficients',
+      'recalculated-weights',
+      'recalculated-weights-sum',
+      'fuzzy-weights',
+      'crisp-weights',
+      'weights',
+    ]);
+  });
+
+  it('flies the correlation of two criteria from the normalized matrix', () => {
+    const timeline = buildTimeline(criticRun().trace, criticSequence);
+    const scene = timeline.scenes.find((item) => item.id === 'correlation-matrix/pearson')!;
+    expect(scene.flights.length).toBeGreaterThan(0);
+    expect(scene.flights.every((flight) => flight.from.step !== 'correlation-matrix')).toBe(true);
+  });
+});
+
 describe('sequenceFor', () => {
-  it('knows MARCOS and Fuzzy MARCOS, and nothing else yet', () => {
+  it('knows every Phase 1 method', () => {
     expect(sequenceFor('marcos')).toBe(marcosSequence);
     expect(sequenceFor('fuzzy-marcos')).toBe(fuzzyMarcosSequence);
-    expect(sequenceFor('critic')).toBeUndefined();
+    expect(sequenceFor('critic')).toBe(criticSequence);
+    expect(sequenceFor('merec')).toBe(merecSequence);
+    expect(sequenceFor('swara')).toBe(swaraSequence);
+    expect(sequenceFor('fuzzy-swara')).toBe(fuzzySwaraSequence);
+    expect(sequenceFor('topsis')).toBeUndefined();
   });
 });

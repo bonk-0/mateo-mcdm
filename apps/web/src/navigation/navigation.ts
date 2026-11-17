@@ -141,7 +141,6 @@ export const NAVIGATION: readonly NavSection[] = [
         path: '/learn/playground',
         icon: Sparkles,
         phase: 1,
-        plannedIn: 'P1.14',
       },
       { id: 'practice', path: '/learn/practice', icon: Calculator, phase: 4, plannedIn: 'P4.5' },
     ],
