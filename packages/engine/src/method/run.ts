@@ -1,6 +1,7 @@
 import { EngineError } from '../errors';
 import type { Trace } from '../trace/types';
 import type { VerifyTraceOptions } from '../trace/verify';
+import { withoutTraceRecording } from '../trace/builder';
 import { assertValidTrace } from '../trace/verify';
 import { mergeValidation } from '../validation/collector';
 import type { ValidationIssue, ValidationResult } from '../validation/types';
@@ -55,6 +56,13 @@ export function validateMethodRun<TInput, TSchema extends ParameterSchema, TResu
 
 export interface RunMethodOptions {
   /**
+   * Record the trace (default). With `false` the method still computes everything, but its
+   * trace builder stores nothing: the record's trace has no steps, and the result is
+   * identical to a traced run. For callers that only read the result, such as a
+   * sensitivity sweep. Cannot be combined with `verifyTrace`.
+   */
+  readonly recordTrace?: boolean;
+  /**
    * Audit the produced trace with `verifyTrace` and throw if it is inconsistent. Meant for
    * tests and debugging; off by default because it roughly doubles the work.
    */
@@ -78,7 +86,16 @@ export function runMethod<TInput, TSchema extends ParameterSchema, TResult>(
     : resolved.validation;
   if (!validation.ok) throw new MethodValidationError(method.id, validation);
 
-  const { result, trace } = method.run(input, resolved.values);
+  const recordTrace = options.recordTrace !== false;
+  if (!recordTrace && options.verifyTrace !== undefined && options.verifyTrace !== false) {
+    throw new EngineError(
+      'INVALID_ARGUMENT',
+      'verifyTrace needs a recorded trace; it cannot be combined with recordTrace: false.',
+    );
+  }
+  const { result, trace } = recordTrace
+    ? method.run(input, resolved.values)
+    : withoutTraceRecording(() => method.run(input, resolved.values));
   if (trace.methodId !== method.id || trace.methodVersion !== method.version) {
     throw new EngineError(
       'INVALID_TRACE',

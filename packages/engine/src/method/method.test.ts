@@ -318,6 +318,20 @@ describe('runMethod', () => {
     );
   });
 
+  it('skips the trace with recordTrace: false and keeps the result', () => {
+    const traced = runMethod(weightedSumMethod, sampleInput());
+    const untraced = runMethod(weightedSumMethod, sampleInput(), {}, { recordTrace: false });
+    expect(traced.trace.steps.length).toBeGreaterThan(0);
+    expect(untraced.trace.steps).toEqual([]);
+    expect(untraced.trace.methodId).toBe(traced.trace.methodId);
+    expect(untraced.result).toStrictEqual(traced.result);
+    // The mode ends with the run: the next run records again.
+    expect(runMethod(weightedSumMethod, sampleInput()).trace.steps).toEqual(traced.trace.steps);
+    expect(() =>
+      runMethod(weightedSumMethod, sampleInput(), {}, { recordTrace: false, verifyTrace: true }),
+    ).toThrow(expect.objectContaining({ code: 'INVALID_ARGUMENT' }) as Error);
+  });
+
   it('can audit the trace it returns', () => {
     expect(() =>
       runMethod(weightedSumMethod, sampleInput(), {}, { verifyTrace: true }),
