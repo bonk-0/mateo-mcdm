@@ -25,7 +25,7 @@ function matrix() {
     criteria: Array.from({ length: CRITERIA }, (_, j) => ({
       id: `c${j}`,
       name: textLiteral(`C${j + 1}`),
-      direction: (j % 3 === 0 ? 'cost' : 'benefit'),
+      direction: j % 3 === 0 ? ('cost' as const) : ('benefit' as const),
       numberType: 'crisp' as const,
     })),
     values: Array.from({ length: ALTERNATIVES }, () =>
