@@ -1,0 +1,187 @@
+{
+  "index": {
+    "weightingTitle": "Ağırlıklandırma yöntemleri",
+    "weightingText": "Kriterlerin önemini veriden ya da uzman yargısından türetir.",
+    "rankingTitle": "Sıralama yöntemleri",
+    "rankingText": "Kriter ağırlıklarını kullanarak alternatifleri sıralar.",
+    "open": "Başvuru sayfasını oku"
+  },
+  "page": {
+    "back": "Yöntem Kütüphanesi",
+    "section": {
+      "introduction": "Giriş",
+      "purpose": "Amaç",
+      "inputs": "Girdiler",
+      "numberTypes": "Desteklenen sayı türleri",
+      "steps": "Adımlar ve formüller",
+      "example": "Animasyonlu örnek",
+      "sample": "Örnek veri",
+      "notes": "Özellikler ve sınır durumlar",
+      "references": "Kaynaklar",
+      "related": "İlişkili yöntemler"
+    },
+    "variant": "Yöntemin türü",
+    "stepsText": "Aşağıdaki formüller motorun kullandığı formüllerdir: bu sayfa onları başvuru örneğinin hesap izinden okur, bu yüzden uygulamadan farklı olamazlar. Her adım, izdeki bir tablodur.",
+    "formulaWhen": "Geçerli olduğu durum: {condition}"
+  },
+  "family": {
+    "weighting": "Ağırlıklandırma yöntemi",
+    "ranking": "Sıralama yöntemi"
+  },
+  "numberType": {
+    "crisp": "Kesin sayılar",
+    "tfn": "Üçgensel bulanık sayılar"
+  },
+  "example": {
+    "text": "Başvuru örneği bu sayfa her açıldığında gerçek yöntemle çalıştırılır. Kaynağı: {citation}",
+    "source": {
+      "original": "yöntemin özgün makalesi.",
+      "substitute": "yöntemin yazarlarından birinin açık erişimli bir uygulaması; özgün makale tam olarak okunamadığı için (bkz. docs/methods)."
+    },
+    "location": "Basıldığı yer: {location}.",
+    "noAnimation": "Bu yöntem için adım adım animasyon henüz yok. Aşağıdaki tablolar aynı hesabı gösterir: bir hücreyi açarak nasıl hesaplandığını görebilirsiniz."
+  },
+  "sample": {
+    "text": "Örnek, başvuru örneğinin kendisidir: makaledeki sayıların aynısı, böylece çalışma alanı basılı sonucu yeniden üretir.",
+    "textOrdered": "Örnek, kriterleri önem sırasıyla ve makaledeki değerlendirmelerle listeler. Çalışma alanı bunları sizin için doldurur.",
+    "download": "Örnek veriyi indir (CSV)",
+    "open": "Örnek veriyle çalışma alanında aç",
+    "openNew": "Proje oluştur ve örneği aç",
+    "noProject": "Örnek, açık projeye yeni bir karar problemi olarak eklenir. Henüz açık bir proje yok.",
+    "added": "Örnek veri projeye eklendi.",
+    "failed": "Örnek eklenemedi: {message}",
+    "datasetName": "{method}: başvuru örneği",
+    "datasetDescription": "Yöntem kütüphanesinden çalışılmış örnek. Kaynak: {doi}",
+    "csv": {
+      "alternative": "Alternatif",
+      "weight": "Ağırlık",
+      "criterion": "Kriter",
+      "importance": "Karşılaştırmalı önem s_j",
+      "terms": "Değerlendirme"
+    }
+  },
+  "role": {
+    "method": "Yöntem",
+    "formulation": "Formülasyon",
+    "example": "Çalışılmış örnek",
+    "related": "İlgili okuma"
+  },
+  "pages": {
+    "marcos": {
+      "title": "MARCOS",
+      "summary": "Alternatifleri, kesin sayılarla, ideal ve anti-ideal çözüme uzaklıklarına göre sıralar.",
+      "introduction": "MARCOS (Measurement of Alternatives and Ranking according to COmpromise Solution), tedarikçi seçimi için önerildi. Karar matrisine bir ideal ve bir anti-ideal alternatif ekler ve her alternatifi ikisine karşı ölçer. Son puan, ideale yakın olmak ile anti-ideale uzak olmak arasındaki bir uzlaşmadır.",
+      "purpose": "Her kriterin ağırlığı bilindiğinde ve her değer bir sayı olduğunda alternatifleri sıralamak için kullanın. İkili karşılaştırma gerektirmez; başka alternatifler eklendiğinde, yeni ideal ya da anti-ideal olmadıkları sürece bir alternatifin puanı değişmez."
+    },
+    "fuzzy-marcos": {
+      "title": "Bulanık MARCOS",
+      "summary": "Dilsel ölçekle verilen değerlendirmeler için, üçgensel bulanık sayılarla MARCOS.",
+      "introduction": "Bulanık MARCOS, MARCOS'un yapısını korur ama üçgensel bulanık sayılarla (l, m, u) hesap yapar. Matris ve ağırlıklar bulanık olabilir; örneğin uzmanların dilsel değerlendirmeleri bir ölçekle dönüştürülür. Bulanık fayda dereceleri sonda tek bir kesin puana çevrilir.",
+      "purpose": "Değerler yargı ya da belirsiz tahminlerse kullanın. Karar vericiler dilsel bir ölçekte değerlendirir, ölçek her terimi üçgensel bulanık sayıya çevirir ve sıralama kesin faydadan çıkar."
+    },
+    "critic": {
+      "title": "CRITIC",
+      "summary": "Kriterler arasındaki karşıtlık ve çelişkiden nesnel ağırlıklar.",
+      "introduction": "CRITIC (CRiteria Importance Through Intercriteria Correlation), ağırlıkları karar matrisinin kendisinden türetir. Bir kriterin değerleri alternatifler arasında güçlü biçimde farklılaşıyorsa (karşıtlık şiddeti) ve diğer kriterlerle az ilişkiliyse (çelişki) daha çok ağırlık alır.",
+      "purpose": "Kriterlerin önemi hakkında uzman yargısı yoksa ya da yargıya dayalı ağırlıkları çapraz kontrol etmek için kullanın. Alternatif kümesine duyarlıdır: bir alternatif eklemek ya da çıkarmak ağırlıkları değiştirir."
+    },
+    "merec": {
+      "title": "MEREC",
+      "summary": "Her kriterin çıkarılmasının alternatiflerin performansına etkisinden nesnel ağırlıklar.",
+      "introduction": "MEREC (MEthod based on the Removal Effects of Criteria), bir kriter çıkarıldığında alternatiflerin toplam performansının ne kadar değiştiğini ölçer. Değişim ne kadar büyükse kriterin ağırlığı o kadar büyüktür.",
+      "purpose": "Tüm değerler pozitifken nesnel ağırlık için kullanın. CRITIC gibi yalnızca veriden çalışır, ancak kriterler arasındaki korelasyonlara bakmaz."
+    },
+    "swara": {
+      "title": "SWARA",
+      "summary": "Komşu kriterlerin adım adım karşılaştırılmasından öznel ağırlıklar; kesin ya da bulanık.",
+      "introduction": "SWARA (Step-wise Weight Assessment Ratio Analysis), uzmanlardan kriterleri önem sırasına koymalarını ve her kriter için bir öncekinden ne kadar daha az önemli olduğunu belirtmelerini ister. Ağırlıklar bu adımlardan çıkar. Mateo, sayılarla çalışan klasik yöntemi ve dilsel terimlerle çalışan bulanık türü IMF SWARA'yı sunar.",
+      "purpose": "Uzmanlar kriterleri sıralayıp komşular arasındaki farkı yargılayabiliyorsa kullanın. Sonuç veriyi değil uzmanların yargısını yansıtır ve kriterlerin sırası önemlidir."
+    }
+  },
+  "variants": {
+    "marcos": {
+      "label": "MARCOS",
+      "numberTypes": "Kesin sayılar: matrisin her değeri ve her ağırlık bir gerçel sayıdır. Maliyet kriterinde sıfır olamaz, fayda kriteri de her yerde sıfır olmamalıdır. Üçgensel bulanık sayılar için Bulanık MARCOS'u kullanın.",
+      "inputs": {
+        "matrix": "m alternatif ve n kriterli karar matrisi. Her kriter fayda (yüksek iyi) ya da maliyet (düşük iyi) olarak işaretlenir.",
+        "weights": "Kriter başına bir ağırlık. Toplamlarının 1 olması gerekmez: tüm ağırlıkları ölçeklemek S_i'yi değiştirir, K'yı, f(K)'yı ve sıralamayı değiştirmez. İsterseniz Mateo bunları izli bir adımda normalleştirir."
+      },
+      "notes": {
+        "crossover": "Fayda fonksiyonlarında f(K⁻)'nin payında K⁺, f(K⁺)'nın payında K⁻ vardır; yazarlar böyle basar. Bu çapraz yerleşim yöntemin parçasıdır.",
+        "constants": "f(K⁻) ve f(K⁺) her alternatif için aynıdır, çünkü K⁻ / K⁺ tüm alternatiflerde S_AI / S_AAI'ye eşittir. Çalışılmış örnek her satırda 0,365 ve 0,635 gösterir; bu bir tesadüf değildir.",
+        "weightsScale": "Toplamı 1 olmayan ağırlıklar yalnızca toplamları ölçekler. Sıralama değişmez.",
+        "zeros": "Maliyet kriterinde sıfır, her yerde sıfır olan fayda kriteri ve negatif değerler, hücreyi ya da kriteri adlandıran bir hatayla çalışmayı durdurur.",
+        "ties": "Satırları aynı olan alternatifler aynı puanı ve aynı sırayı alır (standart yarışma sıralaması: 1, 2, 2, 4)."
+      }
+    },
+    "fuzzy-marcos": {
+      "label": "Bulanık MARCOS",
+      "numberTypes": "Matriste üçgensel bulanık sayılar (l, m, u). Ağırlıklar üçgensel bulanık ya da kesin sayıdır; kesin bir w ağırlığı (w, w, w) sayısıdır. Dilsel değerlendirmeler, yöntem çalışmadan önce bir ölçekle üçgensel bulanık sayılara çevrilir.",
+      "inputs": {
+        "matrix": "m alternatif ve n kriterli bulanık karar matrisi; her hücre üçgensel bir bulanık sayı. Her kriter fayda ya da maliyet olarak işaretlenir.",
+        "weights": "Kriter başına bir ağırlık, bulanık ya da kesin.",
+        "scale": "Değerlendirmeler terim olarak verildiğinde bir dilsel ölçek: her terimi üçgensel bir bulanık sayıya eşler. Makalenin ölçeği, çok zayıftan çok iyiye dokuz terimden oluşur."
+      },
+      "notes": {
+        "componentwise": "İdeal ve anti-ideal satırlar, çalışılmış örneğin yaptığı gibi l, m ve u'nun en küçüğünü ya da en büyüğünü ayrı ayrı alır.",
+        "sharedDenominator": "Normalleştirme her bileşeni idealin tek bir sayısına böler (fayda kriterlerinde üst değer, maliyet kriterlerinde alt değer). Son bulanık faydalar tüm alternatifler için tek bir kesin sayıya bölünür; bu yüzden değerleri, dejenere bulanık sayılarda bile kesin MARCOS'tan farklıdır.",
+        "crispWeights": "(x, x, x) olarak yazılmış kesin girdilerde Bulanık MARCOS ve MARCOS farklı puanlar ama aynı sıralamayı verir.",
+        "rankOrder": "Makale bir eşitlikten sonra sıraları tek tek numaralandırır; Mateo standart yarışma sıralaması kullanır. Alternatiflerin sırası aynıdır.",
+        "zeros": "Bir bileşeni sıfır olan maliyet kriteri, idealinin üst değeri sıfır olan fayda kriteri ve anti-ideal toplamında sıfır bileşen, çalışmayı bir hatayla durdurur."
+      }
+    },
+    "critic": {
+      "label": "CRITIC",
+      "numberTypes": "Yalnızca kesin sayılar. Normalleştirme her gerçel sayıyla çalıştığı için negatif değerlere izin verilir.",
+      "inputs": {
+        "matrix": "En az iki alternatif ve n kriterli karar matrisi. Her kriter fayda ya da maliyet olarak işaretlenir; bu, normalleştirmede kullanılan ideal ve anti-ideal değeri belirler."
+      },
+      "notes": {
+        "population": "Standart sapma, makaledeki gibi anakütle standart sapmasıdır (alternatif sayısına bölünür). Örneklem standart sapması aynı ağırlıkları verir, çünkü çarpan sadeleşir.",
+        "constant": "Her alternatifte aynı değere sahip bir kriterin karşıtlığı ve tanımlı bir korelasyonu yoktur. Kriteri adlandıran bir hatayla reddedilir.",
+        "negative": "Negatif değerlere izin verilir.",
+        "conflict": "Kriterler arasındaki korelasyon Pearson korelasyonudur. Makale alternatif olarak Spearman sıra korelasyonundan söz eder; Mateo bunu sunmaz."
+      }
+    },
+    "merec": {
+      "label": "MEREC",
+      "numberTypes": "Yalnızca kesin sayılar. Yöntem logaritma aldığı için her değer sıfırdan büyük olmalıdır.",
+      "inputs": {
+        "matrix": "n alternatif ve m kriterli karar matrisi; tüm değerler sıfırdan büyük. Her kriter yararlı ya da yararlı olmayan olarak işaretlenir."
+      },
+      "notes": {
+        "reverse": "Normalleştirme olağan olanın tersidir: her kriter bir minimizasyon kriteri olur (yararlı kriterlerde en küçük değerin x'e oranı, yararlı olmayan kriterlerde x'in en büyük değere oranı).",
+        "divisor": "Bir kriter çıkarıldığında toplam yine kriter sayısı m'ye bölünür, m − 1'e değil.",
+        "positive": "Sıfır ya da negatif değerler reddedilir. Veriyi pozitif sayılara kaydırmak sizin kararınızdır ve matris düzenleyicisinde yapılır.",
+        "rounding": "Ağırlıklar, yuvarlanmamış çıkarma etkilerinin toplamlarına bölünmesidir. Makaledeki yuvarlanmış etkileri bölmek ilk kriter için 0,5752 yerine 0,5758 verir."
+      }
+    },
+    "swara": {
+      "label": "SWARA",
+      "numberTypes": "Kesin sayılar: her kriterin karşılaştırmalı önemi sıfıra eşit ya da sıfırdan büyük bir sayıdır.",
+      "inputs": {
+        "criteria": "En önemliden en az önemliye sıralanmış kriterler. Sıra girdinin parçasıdır.",
+        "importance": "İlki dışındaki her kriter için karşılaştırmalı önem s_j: kendinden önceki kriterin ne kadar daha önemli olduğu. Sıfır, eşit önem demektir. Makale uzmanların ortalamasını kullanır."
+      },
+      "notes": {
+        "naming": "Makale yeniden hesaplanan ağırlığa w_j, son ağırlığa q_j der. Sonraki birçok makale iki harfi değiştirir. Mateo harflere değil adım adlarına dayanır.",
+        "order": "Negatif s_j reddedilir, çünkü kriterler azalan önem sırasında olmalıdır.",
+        "first": "İlk kriterin karşılaştırmalı önemi yoktur. Katsayısı 1, yeniden hesaplanan ağırlığı 1'dir."
+      }
+    },
+    "fuzzy-swara": {
+      "label": "Bulanık SWARA (IMF SWARA)",
+      "numberTypes": "Üçgensel bulanık sayılar: her değerlendirme, iyileştirilmiş bulanık ölçeğin bir terimidir ve üçgensel bir bulanık sayıya eşlenir. Son ağırlıklar bulanık ve kesin sayı olarak verilir.",
+      "inputs": {
+        "criteria": "En önemliden en az önemliye sıralanmış kriterler.",
+        "terms": "İlki dışındaki her kriter için, kendinden önceki kriterden ne kadar daha az önemli olduğunu söyleyen bir ölçek terimi: eşit önemliden mutlak olarak daha az önemliye kadar. Ölçek veridir, bu yüzden başka bir ölçek kullanılabilir."
+      },
+      "notes": {
+        "variant": "Mateo, sık anılan Chang ölçeği yerine iyileştirilmiş ölçeği, yani IMF SWARA'yı kullanır. O ölçek tutarsız ağırlıklar verir: eşit önemli kriterler eşit ağırlık alamaz.",
+        "erratum": "Makalenin katsayı denklemi + 1 olmadan k = s yazar. Eşit önemli terimi (0, 0, 0) ile bu sıfıra bölmeye yol açardı ve her çalışılmış örnek k = s + 1 kullanır; Mateo da öyle yapar.",
+        "defuzzification": "İki makale de son ağırlıkların nasıl kesinleştirileceğini belirtmez. Mateo, basılı her değeri yeniden üreten ağırlıklı ortalamayı (l + 4m + u) / 6 kullanır ve ağırlık merkezini parametre olarak sunar.",
+        "sum": "Ham kesin ağırlıkların toplamı tam 1 değildir, çünkü durulaştırma normalleştirilmiş bulanık ağırlıklar üzerinde toplamsal değildir. Bu yüzden Mateo açık, izlenen bir normalleştirme adımı ekler ve son ağırlıkların toplamı 1'dir."
+      }
+    }
+  }
+}

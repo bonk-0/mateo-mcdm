@@ -111,7 +111,8 @@
       "title": "Ağırlık yapılandırması",
       "source": {
         "manual": "Ağırlıkları gireceğim",
-        "analysis": "Bir ağırlıklandırma analizini kullan"
+        "analysis": "Bir ağırlıklandırma analizini kullan",
+        "sample": "Yöntem kütüphanesi örneğinin ağırlıkları"
       },
       "sum": "Ağırlıkların toplamı: {sum}",
       "equal": "Eşit ağırlıklarla doldur",
