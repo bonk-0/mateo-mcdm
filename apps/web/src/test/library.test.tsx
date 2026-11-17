@@ -102,14 +102,15 @@ describe('Method Library', () => {
     expect(within(page).getByRole('heading', { name: 'Kaynaklar' })).toBeTruthy();
   });
 
-  it('shows the example of a weighting method as tables until it has an animation', async () => {
-    renderApp('/learn/library/critic');
-    await screen.findByTestId('library-page-critic');
-    const animated = screen.queryByTestId('explain-panel');
-    if (animated) return; // P1.14 added the animation: the player takes the place of the tables.
-    expect(screen.getByTestId('library-no-animation')).toBeTruthy();
-    expect(screen.getByTestId('trace-step-weights')).toBeTruthy();
-  });
+  it.each(['critic', 'merec', 'swara', 'fuzzy-marcos'])(
+    'shows the Explain player in the example of %s',
+    async (id) => {
+      renderApp(`/learn/library/${id}`);
+      await screen.findByTestId(`library-page-${id}`);
+      expect(screen.getByTestId('explain-panel')).toBeTruthy();
+      expect(screen.queryByTestId('library-no-animation')).toBeNull();
+    },
+  );
 
   it('puts classical and fuzzy SWARA on one page', async () => {
     const user = userEvent.setup();
