@@ -15,10 +15,8 @@ import type {
   TraceTableShape,
   TraceValue,
 } from './types';
-import { TRACE_FORMAT_VERSION } from './types';
 
 export type TraceProblemCode =
-  | 'format-version'
   | 'duplicate-step'
   | 'step-index'
   | 'table-shape'
@@ -121,13 +119,6 @@ function isFiniteValue(value: TraceValue): boolean {
 export function verifyTrace(trace: Trace, options: VerifyTraceOptions = {}): TraceProblem[] {
   const problems: TraceProblem[] = [];
   const evaluators = { ...options.operations, ...CRISP_EVALUATORS };
-
-  if (trace.formatVersion !== TRACE_FORMAT_VERSION) {
-    problems.push({
-      code: 'format-version',
-      message: `Unsupported trace format version ${String(trace.formatVersion)}.`,
-    });
-  }
 
   const stepPosition = new Map<string, number>();
   trace.steps.forEach((step, position) => {

@@ -23,7 +23,6 @@ import type {
   ValueNode,
   VisualizationHint,
 } from './types';
-import { TRACE_FORMAT_VERSION } from './types';
 
 /** What every step records besides its output. */
 export interface StepMeta {
@@ -694,7 +693,6 @@ export function createTraceBuilder(options: {
       return record(spec, 'scalar', [item], [item], 'intermediate', () => spec.value);
     },
     build: () => ({
-      formatVersion: TRACE_FORMAT_VERSION,
       methodId: options.methodId,
       methodVersion: options.methodVersion,
       steps: [...steps],

@@ -2,14 +2,14 @@
 
 A Mateo project is one file with the extension `.mateo`. It is an ordinary SQLite database, so it is transactional, can be inspected with any SQLite tool, and can be copied or sent like any other document. This page describes the format. The code is in [`packages/project`](../packages/project/README.md).
 
-**Status:** schema version 1 (sub-phase P1.8).
+**Status:** schema version 2. Version 1 came with sub-phase P1.8; version 2 changes no table and marks files that may hold traces in format 2 (see [Traces](#traces)).
 
 ## Identification and versioning
 
 | What | Where | Value |
 |---|---|---|
 | File type | `PRAGMA application_id` | `0x4D415445` (ASCII `MATE`) |
-| Schema version | `PRAGMA user_version` | `1` |
+| Schema version | `PRAGMA user_version` | `2` |
 | Journal | file header | rollback journal (never WAL), so the file never depends on side files |
 
 Opening a file follows these rules, in this order, and nothing is written before the file is accepted:
@@ -101,9 +101,20 @@ One row per run, as required by `docs/plan.md` §13:
 | `parameters` | Every parameter with the value used, defaults included. |
 | `method_input` | The exact input given to the engine, so a re-run needs no reconstruction. |
 | `configuration` | How the input was assembled (which matrix, weight source…). Owned by the workspace. |
-| `result`, `warnings`, `trace` | From the engine's run record. `trace_format_version` is the engine's `TRACE_FORMAT_VERSION`. |
+| `result`, `warnings`, `trace` | From the engine's run record. `trace` is the stored form of the trace, see below; `trace_format_version` is its format. |
 | `app_version`, `created_at` | Which Mateo ran it and when. |
 | `name` | The only column that may change. A trigger rejects every other update. |
+
+### Traces
+
+A trace records, for every cell of every step, how its value was derived. Derivations share a lot: one column maximum is an operand of every cell of its column, and a reference to an earlier cell carries that cell's value. The trace is written by `encodeTrace` and read by `decodeTrace` (`packages/engine/src/trace/codec.ts`, which documents the layout):
+
+| `trace_format_version` | Written by | Content |
+|---|---|---|
+| `1` | Mateo 0.1 (schema version 1) | The engine's trace as plain JSON. Every shared node is repeated wherever it is used: 25–50 MB for a 500 × 50 analysis. |
+| `2` | schema version 2 on | Every distinct derivation node once, in a node table, referred to by position; references to cells leave out the value they point to; names are kept in a string table. 5–12 MB for the same analyses, and the nodes are shared again when read. |
+
+The JSON document names its format too (`formatVersion`); a reader refuses a document whose format differs from the column. Analyses written in format 1 stay in format 1 (records are never rewritten) and are read as they are. A file at schema version 2 may hold both. Mateo 0.1 cannot read format 2, which is why format 2 came with a schema version: Mateo 0.1 refuses the whole file as written by a newer version instead of failing on each new analysis.
 
 ## Storage
 

@@ -162,10 +162,6 @@ describe('verifyTrace', () => {
 
   it('detects structural damage', () => {
     let trace = freshTrace();
-    (trace as { formatVersion: number }).formatVersion = 99;
-    expect(problemCodes(trace)).toEqual(['format-version']);
-
-    trace = freshTrace();
     step(trace, 'weights').id = 'initial-matrix';
     expect(problemCodes(trace)).toContain('duplicate-step');
 

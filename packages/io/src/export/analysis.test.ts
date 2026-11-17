@@ -1,4 +1,10 @@
-import { crispWeights, runMethod, textLiteral, type DecisionMatrix } from '@mateo/engine';
+import {
+  crispWeights,
+  runMethod,
+  textLiteral,
+  TRACE_FORMAT_VERSION,
+  type DecisionMatrix,
+} from '@mateo/engine';
 import { fuzzyMarcosMethod, marcosMethod } from '@mateo/methods';
 import type { Dataset, StoredAnalysis } from '@mateo/project';
 import { describe, expect, it } from 'vitest';
@@ -60,7 +66,7 @@ function stored(
     methodVersion: record.methodVersion,
     numberType,
     variant: null,
-    traceFormatVersion: record.trace.formatVersion,
+    traceFormatVersion: TRACE_FORMAT_VERSION,
     appVersion: '0.0.0',
     createdAt: '2026-11-16T10:00:00.000Z',
     record,

@@ -34,6 +34,15 @@ export const MIGRATIONS: readonly Migration[] = [
     name: 'initial-schema',
     up: () => SCHEMA_V1.map((sql) => statement(sql)),
   },
+  {
+    // Analyses are now written with trace format 2 (shared derivation nodes, see
+    // `encodeTrace` in @mateo/engine). No SQL changes: existing analyses keep format 1
+    // and are read as they are. The bump makes a Mateo that only reads format 1 refuse
+    // the file as newer instead of failing on each new analysis.
+    version: 2,
+    name: 'trace-format-2',
+    up: () => [],
+  },
 ];
 
 /** The schema version this build reads and writes. */
