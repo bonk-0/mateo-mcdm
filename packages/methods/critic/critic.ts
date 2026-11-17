@@ -5,9 +5,9 @@
  * Eqs. 2-6. The paper prints population standard deviations and Pearson correlations;
  * Mateo does the same.
  *
- * Steps: initial matrix → normalized matrix (Eq. 2) → column means → standard deviations σ_j
- * → correlation matrix r_jk → conflict Σ(1 − r_jk) → information content C_j (Eq. 5) →
- * weights w_j (Eq. 6).
+ * Steps: initial matrix → normalized matrix (Eq. 2) → column means → deviations from the
+ * mean d_ij → standard deviations σ_j → correlation matrix r_jk → conflict Σ(1 − r_jk) →
+ * information content C_j (Eq. 5) → weights w_j (Eq. 6).
  */
 import type {
   DecisionMatrix,
@@ -30,7 +30,7 @@ import {
 import { FOR_BENEFIT, FOR_COST, formula, quantity } from '../src/common';
 
 export const CRITIC_ID = 'critic';
-export const CRITIC_VERSION = '1.0.0';
+export const CRITIC_VERSION = '1.1.0';
 
 export const CRITIC_ISSUE_CODES = {
   /** Every C_j is 0 (for example two perfectly correlated criteria), so the weights are 0 / 0. */
@@ -107,10 +107,15 @@ function validateCritic(input: CriticInput, v: ValidationCollector) {
   }
 }
 
+const MEAN_TERMS = [
+  ['mu', String.raw`\bar{x}_j`],
+  ['x', String.raw`x_{ij}`],
+  ['n', 'n'],
+] as const;
+
 const SIGMA_TERMS = [
   ['sigma', String.raw`\sigma_j`],
-  ['x', String.raw`x_{ij}`],
-  ['mu', String.raw`\bar{x}_j`],
+  ['d', String.raw`d_{ij}`],
   ['n', 'n'],
 ] as const;
 
@@ -141,6 +146,12 @@ export const criticMethod = defineMethod({
     const criteria = criterionAxis(matrix.criteria);
     const alternatives = x.rows;
 
+    // Column extremes, once per column: every cell of the column shares them.
+    const bounds = criteria.map((_, j) => ({
+      hi: term(crisp.max(x.column(j)), 'f_max'),
+      lo: term(crisp.min(x.column(j)), 'f_min'),
+    }));
+
     // Eq. 2: x_ij = (f_j(a_i) − f_j⁻) / (f_j* − f_j⁻).
     const norm = tb.table<number>({
       ...step('normalized-matrix'),
@@ -164,8 +175,7 @@ export const criticMethod = defineMethod({
       cell: (row, column) => {
         const direction = matrix.criteria[column.index]!.direction;
         const value = term(x.cell(row.index, column.index), 'f');
-        const hi = term(crisp.max(x.column(column.index)), 'f_max');
-        const lo = term(crisp.min(x.column(column.index)), 'f_min');
+        const { hi, lo } = bounds[column.index]!;
         const tracked =
           direction === 'benefit'
             ? crisp.divide(crisp.subtract(value, lo), crisp.subtract(hi, lo))
@@ -177,10 +187,32 @@ export const criticMethod = defineMethod({
     const mean = tb.rowVector<number>({
       ...step('means'),
       formulas: [
-        formula('mean', String.raw`{{mu}} = \frac{1}{n} \sum_{i=1}^{n} {{x}}`, SIGMA_TERMS),
+        formula('mean', String.raw`{{mu}} = \frac{1}{n} \sum_{i=1}^{n} {{x}}`, MEAN_TERMS),
       ],
       items: criteria,
       cell: (column) => crisp.mean(term(norm.column(column.index), 'x')),
+    });
+
+    // Deviations from the column mean, the building block of σ_j and r_jk. Recording them
+    // once lets σ_j and r_jk reference whole columns instead of repeating n subtractions
+    // in every cell (the correlation matrix alone would otherwise hold m² · n of them).
+    const dev = tb.table<number>({
+      ...step('deviations'),
+      formulas: [
+        formula('deviation', String.raw`{{d}} = {{x}} - {{mu}}`, [
+          ['d', 'd_{ij}'],
+          ['x', 'x_{ij}'],
+          ['mu', String.raw`\bar{x}_j`],
+        ]),
+      ],
+      rows: alternatives,
+      columns: criteria,
+      visualization: { view: 'matrix', basedOn: norm.id },
+      cell: (row, column) =>
+        crisp.subtract(
+          term(norm.cell(row.index, column.index), 'x'),
+          term(mean.at(column.index), 'mu'),
+        ),
     });
 
     // Contrast intensity: population standard deviation of each normalized column.
@@ -189,33 +221,26 @@ export const criticMethod = defineMethod({
       formulas: [
         formula(
           'sigma',
-          String.raw`{{sigma}} = \sqrt{ \frac{1}{n} \sum_{i=1}^{n} ( {{x}} - {{mu}} )^2 }`,
+          String.raw`{{sigma}} = \sqrt{ \frac{1}{n} \sum_{i=1}^{n} {{d}}^2 }`,
           SIGMA_TERMS,
         ),
       ],
       items: criteria,
-      cell: (column) => {
-        const mu = term(mean.at(column.index), 'mu');
-        const deviations = alternatives.map((_, i) =>
-          crisp.subtract(term(norm.cell(i, column.index), 'x'), mu),
-        );
-        return crisp.sqrt(crisp.divide(crisp.sumOfSquares(deviations), n));
-      },
+      cell: (column) =>
+        crisp.sqrt(crisp.divide(crisp.sumOfSquares(term(dev.column(column.index), 'd')), n)),
     });
 
-    // Conflict: Pearson correlation r_jk = Σ(x_ij − x̄_j)(x_ik − x̄_k) / (n σ_j σ_k).
+    // Conflict: Pearson correlation r_jk = Σ d_ij · d_ik / (n σ_j σ_k).
     const r = tb.table<number>({
       ...step('correlation-matrix'),
       formulas: [
         formula(
           'pearson',
-          String.raw`{{r}} = \frac{ \sum_{i=1}^{n} ( {{x_j}} - {{mu_j}} )( {{x_k}} - {{mu_k}} ) }{ n \, {{sigma_j}} \, {{sigma_k}} }`,
+          String.raw`{{r}} = \frac{ \sum_{i=1}^{n} {{d_j}} \, {{d_k}} }{ n \, {{sigma_j}} \, {{sigma_k}} }`,
           [
             ['r', 'r_{jk}'],
-            ['x_j', 'x_{ij}'],
-            ['x_k', 'x_{ik}'],
-            ['mu_j', String.raw`\bar{x}_j`],
-            ['mu_k', String.raw`\bar{x}_k`],
+            ['d_j', 'd_{ij}'],
+            ['d_k', 'd_{ik}'],
             ['sigma_j', String.raw`\sigma_j`],
             ['sigma_k', String.raw`\sigma_k`],
             ['n', 'n'],
@@ -224,25 +249,18 @@ export const criticMethod = defineMethod({
       ],
       rows: criteria,
       columns: criteria,
-      visualization: { view: 'matrix', basedOn: norm.id },
-      cell: (row, column) => {
-        const products = alternatives.map((_, i) =>
-          crisp.multiply(
-            crisp.subtract(term(norm.cell(i, row.index), 'x_j'), term(mean.at(row.index), 'mu_j')),
-            crisp.subtract(
-              term(norm.cell(i, column.index), 'x_k'),
-              term(mean.at(column.index), 'mu_k'),
-            ),
+      visualization: { view: 'matrix', basedOn: dev.id },
+      cell: (row, column) =>
+        crisp.divide(
+          crisp.sumOfProducts(
+            term(dev.column(row.index), 'd_j'),
+            term(dev.column(column.index), 'd_k'),
           ),
-        );
-        return crisp.divide(
-          crisp.sum(products),
           crisp.multiply(
             crisp.multiply(n, term(sigma.at(row.index), 'sigma_j')),
             term(sigma.at(column.index), 'sigma_k'),
           ),
-        );
-      },
+        ),
     });
 
     const conflict = tb.rowVector<number>({

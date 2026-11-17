@@ -131,6 +131,9 @@ export const en = {
   'methods.critic.steps.means.name': 'Column means',
   'methods.critic.steps.means.explanation':
     'The mean of each normalized column, needed for the deviations.',
+  'methods.critic.steps.deviations.name': 'Deviations from the mean d_ij',
+  'methods.critic.steps.deviations.explanation':
+    'Each normalized value minus the mean of its column. The standard deviations and the correlations are both calculated from these deviations.',
   'methods.critic.steps.standard-deviations.name': 'Standard deviations σ_j',
   'methods.critic.steps.standard-deviations.explanation':
     'The contrast intensity of each criterion: the population standard deviation of its normalized column. A criterion that separates the alternatives more carries more information.',

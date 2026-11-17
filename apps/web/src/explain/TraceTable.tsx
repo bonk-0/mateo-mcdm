@@ -1,5 +1,6 @@
 import type { CellRef, TraceStep } from '@mateo/engine';
 import { useMemo, useState, type KeyboardEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useTextRef } from '../editor/messages';
 import { TfnGlyph, tfnOfValue } from '../tfn/TfnGlyph';
 import { Value } from './Value';
@@ -30,6 +31,11 @@ export interface TraceTableProps {
   /** Receives the element that holds the value of each cell (for the cell flights). */
   readonly register?: (ref: CellRef, element: HTMLElement | null) => void;
   readonly testId?: string;
+  /**
+   * Rows drawn at first; a button draws more. A 500 × 50 step is 25 000 cells, and
+   * drawing every step of a large analysis at once froze the page for seconds.
+   */
+  readonly rowLimit?: number;
 }
 
 const MOVES: Readonly<Record<string, readonly [number, number]>> = {
@@ -55,10 +61,12 @@ export function TraceTable({
   onHover,
   register,
   testId,
+  rowLimit,
 }: TraceTableProps) {
   const textOf = useTextRef();
+  const { t } = useTranslation('explain');
   const { output } = step;
-  const shownRows = useMemo(
+  const matchingRows = useMemo(
     () =>
       output.rows
         .map((item, index) => ({ item, index }))
@@ -72,11 +80,16 @@ export function TraceTable({
         .filter(({ item }) => columns === undefined || columns.includes(item.id)),
     [output.columns, columns],
   );
+  const [limit, setLimit] = useState(rowLimit);
+  const shownRows = limit === undefined ? matchingRows : matchingRows.slice(0, limit);
   // Fuzzy cells get a membership triangle; all of the table share one number line.
-  const fuzzyEnd = useMemo(
-    () => Math.max(0, ...output.cells.flat().map((cell) => tfnOfValue(cell.value)?.u ?? 0)),
-    [output.cells],
-  );
+  const fuzzyEnd = useMemo(() => {
+    let end = 0;
+    for (const cells of output.cells) {
+      for (const cell of cells) end = Math.max(end, tfnOfValue(cell.value)?.u ?? 0);
+    }
+    return end;
+  }, [output.cells]);
   // One cell per table is in the tab order; the arrow keys move it (roving tabindex).
   const [cursor, setCursor] = useState<readonly [number, number]>([0, 0]);
   const cursorRow = Math.min(cursor[0], shownRows.length - 1);
@@ -104,7 +117,8 @@ export function TraceTable({
   };
 
   const pad = compact ? 'px-2 py-1' : 'px-3 py-1.5';
-  return (
+  const hidden = matchingRows.length - shownRows.length;
+  const table = (
     <table
       className={`border-collapse ${compact ? 'text-xs' : 'text-sm'}`}
       data-testid={testId}
@@ -186,5 +200,30 @@ export function TraceTable({
         ))}
       </tbody>
     </table>
+  );
+  if (hidden <= 0 || limit === undefined) return table;
+  return (
+    <div className="space-y-2">
+      {table}
+      <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+        <span>{t('table.rowsShown', { shown: shownRows.length, total: matchingRows.length })}</span>
+        <button
+          type="button"
+          className="font-medium text-primary underline-offset-4 hover:underline"
+          onClick={() => setLimit(limit + (rowLimit ?? limit))}
+          data-testid="trace-table-more"
+        >
+          {t('table.showMore', { count: Math.min(hidden, rowLimit ?? limit) })}
+        </button>
+        <button
+          type="button"
+          className="font-medium text-primary underline-offset-4 hover:underline"
+          onClick={() => setLimit(matchingRows.length)}
+          data-testid="trace-table-all"
+        >
+          {t('table.showAll')}
+        </button>
+      </div>
+    </div>
   );
 }

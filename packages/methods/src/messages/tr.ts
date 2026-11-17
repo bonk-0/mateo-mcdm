@@ -131,6 +131,9 @@ export const tr: Readonly<Record<MethodsMessageKey, string>> = {
   'methods.critic.steps.means.name': 'Sütun ortalamaları',
   'methods.critic.steps.means.explanation':
     'Her normalize sütunun ortalaması; sapmaları hesaplamak için gerekir.',
+  'methods.critic.steps.deviations.name': 'Ortalamadan sapmalar d_ij',
+  'methods.critic.steps.deviations.explanation':
+    'Her normalize değerden sütununun ortalaması çıkarılır. Standart sapmalar ve korelasyonlar bu sapmalardan hesaplanır.',
   'methods.critic.steps.standard-deviations.name': 'Standart sapmalar σ_j',
   'methods.critic.steps.standard-deviations.explanation':
     'Her kriterin kontrast şiddeti: normalize sütunun anakütle standart sapması. Alternatifleri daha çok ayıran kriter daha fazla bilgi taşır.',

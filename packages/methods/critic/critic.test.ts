@@ -81,6 +81,7 @@ describe('CRITIC: golden test (Diakoulaki et al. 1995)', () => {
       'initial-matrix',
       'normalized-matrix',
       'means',
+      'deviations',
       'standard-deviations',
       'correlation-matrix',
       'conflict',

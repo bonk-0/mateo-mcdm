@@ -93,6 +93,9 @@ export function barOption(params: {
   };
 }
 
+/** Above this many cells the heatmap shows colours only. */
+export const HEATMAP_LABEL_LIMIT = 600;
+
 /** Rows (alternatives) by columns (criteria), darker is a larger contribution. */
 export function heatmapOption(params: {
   readonly theme: ChartTheme;
@@ -150,7 +153,9 @@ export function heatmapOption(params: {
         type: 'heatmap',
         data: cells,
         label: {
-          show: true,
+          // Thousands of numbers cannot be read in the chart and cost seconds to draw; the
+          // tooltip still gives every value.
+          show: cells.length <= HEATMAP_LABEL_LIMIT,
           color: theme.text,
           formatter: (item: { value: [number, number, number] }) => format(item.value[2]),
         },

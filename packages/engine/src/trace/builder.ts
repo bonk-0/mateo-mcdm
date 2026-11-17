@@ -7,10 +7,10 @@ import { textKey } from '../model/text';
 import type { WeightVector } from '../model/weights';
 import { alignWeights } from '../model/weights';
 import { formulaProblems } from './formula';
-import { walkDerivation } from './inspect';
 import type { Encoder, Tracked, TrackedRange } from './tracked';
 import { encodeCrisp, isTracked } from './tracked';
 import type {
+  DerivationNode,
   StepRole,
   StepSource,
   Trace,
@@ -192,6 +192,15 @@ class Handle<T> implements StepHandle<T> {
   readonly #encoded: readonly (readonly TraceValue[])[];
   readonly #rowIndex: ReadonlyMap<string, number>;
   readonly #columnIndex: ReadonlyMap<string, number>;
+  /**
+   * Whole rows, whole columns and the whole table, built once. Methods read them inside
+   * cell callbacks (a column maximum for every cell of the column), so building them anew
+   * on every call made a step cost rows × columns × rows.
+   */
+  readonly #rowRanges = new Map<number, TrackedRange<T>>();
+  readonly #columnRanges = new Map<number, TrackedRange<T>>();
+  #allRange: TrackedRange<T> | undefined;
+  readonly #cells: (Tracked<T> | undefined)[][] = [];
 
   constructor(step: TraceStep, raw: readonly (readonly T[])[]) {
     this.id = step.id;
@@ -221,6 +230,21 @@ class Handle<T> implements StepHandle<T> {
   }
 
   #tracked(row: number, column: number): Tracked<T> {
+    // One operand object per cell, shared by every later cell that reads it. Ranges
+    // (a row without one column, say) would otherwise allocate a fresh object per item.
+    let cached = this.#cells[row];
+    if (cached === undefined) {
+      cached = new Array<Tracked<T> | undefined>(this.columns.length);
+      this.#cells[row] = cached;
+    }
+    const hit = cached[column];
+    if (hit !== undefined) return hit;
+    const created = this.#createTracked(row, column);
+    cached[column] = created;
+    return created;
+  }
+
+  #createTracked(row: number, column: number): Tracked<T> {
     return {
       value: (this.#raw[row] as readonly T[])[column] as T,
       node: {
@@ -270,15 +294,28 @@ class Handle<T> implements StepHandle<T> {
   }
 
   row(row: AxisSelector): TrackedRange<T> {
-    return this.#block([this.#resolve('row', row)], 'all');
+    const index = this.#resolve('row', row);
+    let range = this.#rowRanges.get(index);
+    if (range === undefined) {
+      range = this.#block([index], 'all');
+      this.#rowRanges.set(index, range);
+    }
+    return range;
   }
 
   column(column: AxisSelector): TrackedRange<T> {
-    return this.#block('all', [this.#resolve('column', column)]);
+    const index = this.#resolve('column', column);
+    let range = this.#columnRanges.get(index);
+    if (range === undefined) {
+      range = this.#block('all', [index]);
+      this.#columnRanges.set(index, range);
+    }
+    return range;
   }
 
   all(): TrackedRange<T> {
-    return this.#block('all', 'all');
+    this.#allRange ??= this.#block('all', 'all');
+    return this.#allRange;
   }
 
   range(selection: {
@@ -369,9 +406,10 @@ export function createTraceBuilder(options: {
       sources.push(source);
     };
     // Aggregates such as a column maximum are shared by many cells; visit each node once.
+    // A visited node's operands were visited with it, so the walk stops there.
     const visited = new WeakSet<object>();
     const inspect = (root: ValueNode, row: string, column: string): void => {
-      walkDerivation(root, (node) => {
+      const walk = (node: DerivationNode): void => {
         if (visited.has(node)) return;
         visited.add(node);
         if (node.term !== undefined && formulas.length > 0 && !termNames.has(node.term)) {
@@ -398,8 +436,11 @@ export function createTraceBuilder(options: {
           addSource({ kind: 'input', input: node.source.input }, `input:${node.source.input}`);
         } else if (node.kind === 'parameter') {
           addSource({ kind: 'parameter', name: node.name }, `parameter:${node.name}`);
+        } else if (node.kind === 'operation') {
+          for (const operand of node.operands) walk(operand);
         }
-      });
+      };
+      walk(root);
     };
 
     const raw: T[][] = [];

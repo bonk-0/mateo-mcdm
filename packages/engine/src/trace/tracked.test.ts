@@ -193,6 +193,7 @@ describe('crisp operations', () => {
         'sqrt',
         'subtract',
         'sum',
+        'sum-of-products',
         'sum-of-reciprocals',
         'sum-of-squares',
       ].sort(),

@@ -1,6 +1,6 @@
 import type { Trace } from '@mateo/engine';
 import type { ExplainSequence, Timeline } from '@mateo/explain';
-import { ExplainError, buildTimeline, sequenceFor } from '@mateo/explain';
+import { ExplainError, buildTimeline, checkTimeline, sequenceFor } from '@mateo/explain';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@mateo/ui';
 import { BookOpenText, ListOrdered } from 'lucide-react';
 import { useMemo } from 'react';
@@ -22,11 +22,21 @@ export function explanationOf(trace: Trace): Explanation | null {
   const sequence = sequenceFor(trace.methodId);
   if (!sequence) return null;
   try {
-    return { sequence, timeline: buildTimeline(trace, sequence) };
+    checkTimeline(trace, sequence);
   } catch (error) {
     if (error instanceof ExplainError) return null;
     throw error;
   }
+  // Built on first use: the results page asks whether a trace can be explained on every
+  // analysis, and building the timeline of a large one takes a while.
+  let timeline: Timeline | undefined;
+  return {
+    sequence,
+    get timeline() {
+      timeline ??= buildTimeline(trace, sequence);
+      return timeline;
+    },
+  };
 }
 
 /** Explain mode of one analysis: the step-by-step player and the story of the result. */

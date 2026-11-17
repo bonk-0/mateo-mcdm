@@ -382,6 +382,7 @@ describe('the weighting sequences', () => {
       'initial-matrix',
       'normalized-matrix',
       'means',
+      'deviations',
       'standard-deviations',
       'correlation-matrix',
       'conflict',

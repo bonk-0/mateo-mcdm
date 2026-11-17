@@ -1,5 +1,12 @@
-import type { CellRef, Trace, TraceStep, TraceValue } from '@mateo/engine';
-import { findCell, findStep } from '@mateo/engine';
+import type {
+  CellRef,
+  DerivationNode,
+  RangeRef,
+  Trace,
+  TraceStep,
+  TraceValue,
+} from '@mateo/engine';
+import { expandRange, findCell, findStep, getStep } from '@mateo/engine';
 import { cellKey, formulaOfCell, operandRefs } from './cell';
 import { ExplainError } from './errors';
 import type {
@@ -135,14 +142,261 @@ function leadFlights(flights: readonly CellFlight[]): CellFlight[] {
   });
 }
 
-/** Keeps a scene light: whole-range flights go first, then all of them. */
-function thin(flights: CellFlight[], direct: (flight: CellFlight) => boolean): CellFlight[] {
-  if (flights.length <= MAX_FLIGHTS_PER_SCENE) return flights;
-  const kept = flights.filter(direct);
-  return kept.length <= MAX_FLIGHTS_PER_SCENE ? kept : [];
+/** An operand of a derivation as written: a single cell or a whole range, unexpanded. */
+type Operand =
+  | { readonly kind: 'ref'; readonly ref: CellRef; readonly term: string | undefined }
+  | { readonly kind: 'range'; readonly ref: RangeRef; readonly term: string | undefined };
+
+/** The cell and range operands of a derivation, in the order `operandRefs` visits them. */
+function operandsOf(derivation: DerivationNode): Operand[] {
+  const result: Operand[] = [];
+  const visit = (node: DerivationNode, inherited: string | undefined) => {
+    const term = node.term ?? inherited;
+    if (node.kind === 'ref') result.push({ kind: 'ref', ref: node.ref, term });
+    else if (node.kind === 'range') result.push({ kind: 'range', ref: node.ref, term });
+    else if (node.kind === 'operation') {
+      for (const operand of node.operands) visit(operand, term);
+    }
+  };
+  visit(derivation, undefined);
+  return result;
+}
+
+const axisCache = new WeakMap<Trace, Map<string, Record<'rows' | 'columns', Set<string>>>>();
+
+/** The row and column ids of a step, as sets; `undefined` for an unknown step. */
+function axesOf(trace: Trace, stepId: string): Record<'rows' | 'columns', Set<string>> | undefined {
+  let byStep = axisCache.get(trace);
+  if (byStep === undefined) {
+    byStep = new Map();
+    axisCache.set(trace, byStep);
+  }
+  let axes = byStep.get(stepId);
+  if (axes === undefined) {
+    const step = findStep(trace, stepId);
+    if (step === undefined) return undefined;
+    axes = {
+      rows: new Set(step.output.rows.map((item) => item.id)),
+      columns: new Set(step.output.columns.map((item) => item.id)),
+    };
+    byStep.set(stepId, axes);
+  }
+  return axes;
+}
+
+/** Whether a row (column) id is on the axis a range selects, as `expandRange` lists it. */
+function onAxis(trace: Trace, ref: RangeRef, axis: 'rows' | 'columns', id: string): boolean {
+  const selected = ref[axis];
+  if (selected !== 'all') return selected.includes(id);
+  const axes = axesOf(trace, ref.step);
+  if (axes === undefined) getStep(trace, ref.step); // throws, as expandRange does
+  return axes![axis].has(id);
+}
+
+function covers(trace: Trace, operand: Operand, cell: CellRef): boolean {
+  if (operand.ref.step !== cell.step) return false;
+  if (operand.kind === 'ref') {
+    return operand.ref.row === cell.row && operand.ref.column === cell.column;
+  }
+  return (
+    onAxis(trace, operand.ref, 'rows', cell.row) &&
+    onAxis(trace, operand.ref, 'columns', cell.column)
+  );
+}
+
+/** The existing column ids of a range, in the order `expandRange` lists them. */
+function rangeColumns(trace: Trace, ref: RangeRef): string[] {
+  const step = getStep(trace, ref.step);
+  const columns = axesOf(trace, ref.step)!.columns;
+  return ref.columns === 'all'
+    ? step.output.columns.map((item) => item.id)
+    : ref.columns.filter((id) => columns.has(id));
+}
+
+/** Whether a range has a cell that exists in row `row` (any row when `row` is undefined). */
+function rangeHasCellIn(trace: Trace, ref: RangeRef, row: string | undefined): boolean {
+  const axes = axesOf(trace, ref.step);
+  if (axes === undefined) return false;
+  const hasRow =
+    row === undefined
+      ? ref.rows === 'all'
+        ? axes.rows.size > 0
+        : ref.rows.some((id) => axes.rows.has(id))
+      : axes.rows.has(row) && (ref.rows === 'all' || ref.rows.includes(row));
+  if (!hasRow) return false;
+  return ref.columns === 'all' || ref.columns.some((id) => axes.columns.has(id));
+}
+
+/**
+ * `flightsInto(trace, target, sources, 'direct', at)` without expanding ranges: a range
+ * only matters here for hiding a later single cell with the same term, as in `operandRefs`.
+ * (A rank cell reads every score of the ranking as one range.)
+ */
+function directFlightsInto(
+  trace: Trace,
+  target: CellRef,
+  sources: ReadonlySet<string>,
+  at: Span,
+  directOut: Set<CellFlight>,
+): CellFlight[] {
+  const cell = findCell(trace, target);
+  if (cell === undefined) return [];
+  const carried = cell.derivation.kind === 'ref';
+  const operands = operandsOf(cell.derivation);
+  const flights: CellFlight[] = [];
+  operands.forEach((operand, index) => {
+    if (operand.kind !== 'ref' || !sources.has(operand.ref.step)) return;
+    const { ref, term } = operand;
+    const hidden = operands
+      .slice(0, index)
+      .some((other) => other.term === term && covers(trace, other, ref));
+    if (hidden) return;
+    if (
+      flights.some(
+        (f) => f.from.step === ref.step && f.from.row === ref.row && f.from.column === ref.column,
+      )
+    ) {
+      return;
+    }
+    const from = findCell(trace, ref);
+    if (from === undefined) return;
+    const flight: CellFlight = {
+      from: ref,
+      to: target,
+      value: from.value,
+      carried,
+      at,
+      ...(term === undefined ? {} : { term }),
+    };
+    flights.push(flight);
+    directOut.add(flight);
+  });
+  return flights;
+}
+
+/**
+ * `leadFlights(flightsInto(trace, target, sources, 'all', at, direct))`, without expanding
+ * a range when only one of its rows can fly: a cell of a 500-row column used to list 500
+ * flights only to keep the one in its own row. With `onlyDirect`, gives just the flights
+ * that start at a single cell, which is all a fill scene past its flight limit keeps.
+ */
+function leadFlightsAll(
+  trace: Trace,
+  target: CellRef,
+  sources: ReadonlySet<string>,
+  at: Span,
+  direct: Set<CellFlight> | undefined,
+  onlyDirect: boolean,
+): CellFlight[] {
+  const cell = findCell(trace, target);
+  if (cell === undefined) return [];
+  const carried = cell.derivation.kind === 'ref';
+  const flight = (ref: CellRef, term: string | undefined, isDirect: boolean): CellFlight => {
+    const created: CellFlight = {
+      from: ref,
+      to: target,
+      value: findCell(trace, ref)!.value,
+      carried,
+      at,
+      ...(term === undefined ? {} : { term }),
+    };
+    if (isDirect) direct?.add(created);
+    return created;
+  };
+
+  // Group the operands by source step, in order of first appearance of a cell that exists,
+  // and note whether a group has a cell at the place or in the row of the target.
+  interface Group {
+    readonly operands: Operand[];
+    samePlace: boolean;
+    sameRow: boolean;
+  }
+  const groups = new Map<string, Group>();
+  for (const operand of operandsOf(cell.derivation)) {
+    const stepId = operand.ref.step;
+    if (!sources.has(stepId)) continue;
+    const exists =
+      operand.kind === 'ref'
+        ? findCell(trace, operand.ref) !== undefined
+        : rangeHasCellIn(trace, operand.ref, undefined);
+    if (!exists) continue;
+    let group = groups.get(stepId);
+    if (group === undefined) {
+      group = { operands: [], samePlace: false, sameRow: false };
+      groups.set(stepId, group);
+    }
+    group.operands.push(operand);
+    const place = { step: stepId, row: target.row, column: target.column };
+    const inRow =
+      operand.kind === 'ref'
+        ? operand.ref.row === target.row
+        : rangeHasCellIn(trace, operand.ref, target.row);
+    if (inRow) {
+      group.sameRow = true;
+      if (findCell(trace, place) !== undefined && covers(trace, operand, place)) {
+        group.samePlace = true;
+      }
+    }
+  }
+
+  const result: CellFlight[] = [];
+  for (const [stepId, group] of groups) {
+    const { operands } = group;
+    // A cell flies once, from the first operand that has it.
+    const firstCover = (ref: CellRef, before: number) =>
+      operands.slice(0, before).some((other) => covers(trace, other, ref));
+    if (group.samePlace) {
+      const place = { step: stepId, row: target.row, column: target.column };
+      const first = operands.find((operand) => covers(trace, operand, place))!;
+      const isDirect = first.kind === 'ref';
+      if (isDirect || !onlyDirect) {
+        result.push(flight(isDirect ? first.ref : place, first.term, isDirect));
+      }
+      continue;
+    }
+    if (group.sameRow) {
+      const seen = new Set<string>();
+      operands.forEach((operand) => {
+        if (operand.kind === 'ref') {
+          if (operand.ref.row !== target.row || seen.has(operand.ref.column)) return;
+          seen.add(operand.ref.column);
+          result.push(flight(operand.ref, operand.term, true));
+          return;
+        }
+        if (!rangeHasCellIn(trace, operand.ref, target.row)) return;
+        for (const column of rangeColumns(trace, operand.ref)) {
+          if (seen.has(column)) continue;
+          seen.add(column);
+          if (!onlyDirect) {
+            result.push(flight({ step: stepId, row: target.row, column }, operand.term, false));
+          }
+        }
+      });
+      continue;
+    }
+    // No cell of the row: every cell of the group flies.
+    operands.forEach((operand, index) => {
+      if (operand.kind === 'ref') {
+        if (!firstCover(operand.ref, index)) result.push(flight(operand.ref, operand.term, true));
+        return;
+      }
+      if (onlyDirect) return;
+      const seen = new Set<string>();
+      for (const ref of expandRange(trace, operand.ref)) {
+        const key = `${ref.row}\u0000${ref.column}`;
+        if (seen.has(key) || findCell(trace, ref) === undefined || firstCover(ref, index)) {
+          continue;
+        }
+        seen.add(key);
+        result.push(flight(ref, operand.term, false));
+      }
+    });
+  }
+  return result;
 }
 
 interface StepContext {
+  readonly maxFlights: number;
   readonly trace: Trace;
   readonly step: TraceStep;
   readonly plan: StepPlan;
@@ -210,18 +464,36 @@ function fillScene(context: StepContext): Omit<MatrixScene, 'index'> | Omit<Vect
   const view = viewOf(step, plan);
   const shown = new Set(context.sources);
   const reveals: CellReveal[] = [];
+  const mode = plan.flights ?? 'all';
+  // A scene keeps all its flights up to MAX_FLIGHTS_PER_SCENE. Past that it keeps only the
+  // flights that start at a single cell, and none if those are still too many. Once the
+  // limit is passed, only those flights are collected, without expanding ranges.
   const all: CellFlight[] = [];
   const direct = new Set<CellFlight>();
+  let kept: CellFlight[] | undefined;
+  let overflow = false;
   output.cells.forEach((row, r) =>
     row.forEach((cell, c) => {
       const ref = { step: step.id, row: output.rows[r]!.id, column: output.columns[c]!.id };
       const at = fillSpan(r, c, output.rows.length, output.columns.length);
       reveals.push({ ref, value: cell.value, at });
-      if (plan.flights === 'none') return;
-      all.push(...leadFlights(flightsInto(trace, ref, shown, plan.flights ?? 'all', at, direct)));
+      if (mode === 'none' || overflow) return;
+      if (kept === undefined) {
+        all.push(
+          ...(mode === 'all'
+            ? leadFlightsAll(trace, ref, shown, at, direct, false)
+            : leadFlights(directFlightsInto(trace, ref, shown, at, direct))),
+        );
+        if (all.length > context.maxFlights) kept = all.filter((f) => direct.has(f));
+      } else {
+        // Only reached in the `all` mode: in the `direct` mode every flight is direct, so
+        // passing the limit means passing it with direct flights too.
+        kept.push(...leadFlightsAll(trace, ref, shown, at, undefined, true));
+      }
+      if (kept !== undefined && kept.length > context.maxFlights) overflow = true;
     }),
   );
-  const flights = thin(all, (flight) => direct.has(flight));
+  const flights = kept === undefined ? all : overflow ? [] : kept;
   const lines = output.rows.length > 1 ? output.rows.length : output.columns.length;
   const base = {
     ...sceneBase(context),
@@ -272,32 +544,23 @@ function fillScene(context: StepContext): Omit<MatrixScene, 'index'> | Omit<Vect
  * table. Throws {@link ExplainError} when the sequence and the trace do not fit, so a new
  * step of a method can never be silently left unexplained.
  */
-export function buildTimeline(trace: Trace, sequence: ExplainSequence): Timeline {
-  if (trace.methodId !== sequence.methodId) {
-    throw new ExplainError(
-      'METHOD_MISMATCH',
-      `The sequence of "${sequence.methodId}" cannot explain a trace of "${trace.methodId}".`,
-      { sequence: sequence.methodId, trace: trace.methodId },
-    );
-  }
-  for (const [id, plan] of Object.entries(sequence.steps)) {
-    if (plan.optional !== true && findStep(trace, id) === undefined) {
-      throw new ExplainError('MISSING_STEP', `The trace has no step "${id}".`, { step: id });
-    }
-  }
-
+export function buildTimeline(
+  trace: Trace,
+  sequence: ExplainSequence,
+  options: { readonly maxFlightsPerScene?: number } = {},
+): Timeline {
+  checkTimeline(trace, sequence);
   const scenes: Scene[] = [];
   const steps: TimelineStep[] = [];
   for (const step of trace.steps) {
-    const plan = sequence.steps[step.id];
-    if (plan === undefined) {
-      throw new ExplainError(
-        'UNPLANNED_STEP',
-        `The sequence of "${sequence.methodId}" has no plan for the step "${step.id}".`,
-        { step: step.id },
-      );
-    }
-    const context = { trace, step, plan, sources: sourcesOf(trace, step, plan) };
+    const plan = sequence.steps[step.id]!;
+    const context = {
+      trace,
+      step,
+      plan,
+      sources: sourcesOf(trace, step, plan),
+      maxFlights: options.maxFlightsPerScene ?? MAX_FLIGHTS_PER_SCENE,
+    };
     const firstScene = scenes.length;
     for (const scene of [...formulaScenes(context), fillScene(context)]) {
       scenes.push({ ...scene, index: scenes.length });
@@ -311,6 +574,38 @@ export function buildTimeline(trace: Trace, sequence: ExplainSequence): Timeline
     });
   }
   return { methodId: trace.methodId, methodVersion: trace.methodVersion, scenes, steps };
+}
+
+/**
+ * Throws the {@link ExplainError} that {@link buildTimeline} would throw for this trace and
+ * sequence, without building the scenes. Lets a page decide whether a trace can be
+ * explained and build the timeline only when it is shown.
+ */
+export function checkTimeline(trace: Trace, sequence: ExplainSequence): void {
+  if (trace.methodId !== sequence.methodId) {
+    throw new ExplainError(
+      'METHOD_MISMATCH',
+      `The sequence of "${sequence.methodId}" cannot explain a trace of "${trace.methodId}".`,
+      { sequence: sequence.methodId, trace: trace.methodId },
+    );
+  }
+  for (const [id, plan] of Object.entries(sequence.steps)) {
+    if (plan.optional !== true && findStep(trace, id) === undefined) {
+      throw new ExplainError('MISSING_STEP', `The trace has no step "${id}".`, { step: id });
+    }
+  }
+  for (const step of trace.steps) {
+    const plan = sequence.steps[step.id];
+    if (plan === undefined) {
+      throw new ExplainError(
+        'UNPLANNED_STEP',
+        `The sequence of "${sequence.methodId}" has no plan for the step "${step.id}".`,
+        { step: step.id },
+      );
+    }
+    sourcesOf(trace, step, plan);
+    viewOf(step, plan);
+  }
 }
 
 /** The scenes of one step, in order. */

@@ -2,12 +2,15 @@ import { EngineError } from '../errors';
 import type { CrispOperationSpec } from './crisp-ops';
 import { CRISP_OPERATIONS } from './crisp-ops';
 import { formulaProblems } from './formula';
-import { expandRange, findCell, traceValuesEqual } from './inspect';
+import { expandRange, findCell, findStep, traceValuesEqual } from './inspect';
 import type {
+  CellRef,
   DerivationNode,
   OperationNode,
   OperationOptions,
+  RangeRef,
   Trace,
+  TraceCell,
   TraceStep,
   TraceTableShape,
   TraceValue,
@@ -142,10 +145,33 @@ export function verifyTrace(trace: Trace, options: VerifyTraceOptions = {}): Tra
     }
   });
 
+  const ranges = rangeCells(trace);
   trace.steps.forEach((step, position) => {
-    verifyStep(trace, step, position, stepPosition, evaluators, options, problems);
+    verifyStep(trace, step, position, stepPosition, evaluators, options, problems, ranges);
   });
   return problems;
+}
+
+type RangeCells = (ref: RangeRef) => readonly { ref: CellRef; cell: TraceCell | undefined }[];
+
+/**
+ * The cells of a range, looked up once per distinct range: a column maximum is the operand
+ * of every cell of its column, and each of them would otherwise expand it again.
+ */
+function rangeCells(trace: Trace): RangeCells {
+  const cache = new Map<string, { ref: CellRef; cell: TraceCell | undefined }[]>();
+  return (ref) => {
+    const key = JSON.stringify([ref.step, ref.rows, ref.columns]);
+    let cells = cache.get(key);
+    if (cells === undefined) {
+      cells = expandRange(trace, ref).map((cellRef) => ({
+        ref: cellRef,
+        cell: findCell(trace, cellRef),
+      }));
+      cache.set(key, cells);
+    }
+    return cells;
+  };
 }
 
 function verifyStep(
@@ -156,6 +182,7 @@ function verifyStep(
   evaluators: Readonly<Record<string, OperationEvaluator>>,
   options: VerifyTraceOptions,
   problems: TraceProblem[],
+  ranges: RangeCells,
 ): void {
   const { rows, columns, cells, shape } = step.output;
   const at = { step: step.id };
@@ -281,9 +308,11 @@ function verifyStep(
               ...where,
             });
           }
-          const refs = node.kind === 'ref' ? [node.ref] : expandRange(trace, node.ref);
-          for (const ref of refs) {
-            const referenced = findCell(trace, ref);
+          const targets =
+            node.kind === 'ref'
+              ? [{ ref: node.ref, cell: findCell(trace, node.ref) }]
+              : ranges(node.ref);
+          for (const { ref, cell: referenced } of targets) {
             if (referenced === undefined) {
               problems.push({
                 code: 'unknown-reference',
@@ -302,7 +331,7 @@ function verifyStep(
         }
         if (node.kind === 'operation') {
           node.operands.forEach(visit);
-          verifyOperation(trace, node, evaluators, options, where, problems);
+          verifyOperation(trace, node, evaluators, options, where, problems, ranges);
         }
       };
       visit(derivation);
@@ -310,16 +339,19 @@ function verifyStep(
   });
 }
 
-function operandValues(trace: Trace, node: OperationNode): TraceValue[] | undefined {
+function operandValues(
+  trace: Trace,
+  node: OperationNode,
+  ranges: RangeCells,
+): TraceValue[] | undefined {
   const values: TraceValue[] = [];
   for (const operand of node.operands) {
     if (operand.kind !== 'range') {
       values.push(operand.value);
       continue;
     }
-    if (!trace.steps.some((step) => step.id === operand.ref.step)) return undefined;
-    for (const ref of expandRange(trace, operand.ref)) {
-      const cell = findCell(trace, ref);
+    if (findStep(trace, operand.ref.step) === undefined) return undefined;
+    for (const { cell } of ranges(operand.ref)) {
       if (cell === undefined) return undefined;
       values.push(cell.value);
     }
@@ -334,6 +366,7 @@ function verifyOperation(
   options: VerifyTraceOptions,
   where: { step: string; row: string; column: string },
   problems: TraceProblem[],
+  ranges: RangeCells,
 ): void {
   const evaluate = Object.hasOwn(evaluators, node.operation)
     ? evaluators[node.operation]
@@ -348,7 +381,7 @@ function verifyOperation(
     }
     return;
   }
-  const args = operandValues(trace, node);
+  const args = operandValues(trace, node, ranges);
   if (args === undefined) return; // the broken reference is already reported
   const outcome = evaluate(args, node.options ?? {});
   if ('problem' in outcome) {

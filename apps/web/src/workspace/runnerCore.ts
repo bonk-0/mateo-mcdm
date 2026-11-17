@@ -15,10 +15,19 @@ export interface RunJob {
   readonly parameters: ParameterValues;
 }
 
-export type RunOutcome =
-  | { readonly ok: true; readonly record: MethodRunRecord<unknown> }
+type RunFailure =
   | { readonly ok: false; readonly kind: 'validation'; readonly validation: ValidationResult }
   | { readonly ok: false; readonly kind: 'error'; readonly message: string };
+
+export type RunOutcome =
+  { readonly ok: true; readonly record: MethodRunRecord<unknown> } | RunFailure;
+
+/**
+ * The outcome of a run whose caller only reads the result (a sensitivity scenario). The
+ * engine still runs the method in full; only the trace is not sent back, because copying
+ * it out of the worker costs more than the run on a large matrix.
+ */
+export type ResultOutcome = { readonly ok: true; readonly result: unknown } | RunFailure;
 
 /**
  * Runs a job through the engine's `runMethod`. Used in the worker, and directly where
@@ -39,4 +48,10 @@ export function executeJob(job: RunJob): RunOutcome {
       message: error instanceof Error ? error.message : String(error),
     };
   }
+}
+
+/** {@link executeJob} for callers that only need the result. */
+export function executeResultJob(job: RunJob): ResultOutcome {
+  const outcome = executeJob(job);
+  return outcome.ok ? { ok: true, result: outcome.record.result } : outcome;
 }

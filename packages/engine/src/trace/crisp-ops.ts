@@ -9,6 +9,7 @@ import {
   sum as sumOf,
   sumOfReciprocals as sumOfReciprocalsOf,
   sumOfSquares as sumOfSquaresOf,
+  weightedSum as weightedSumOf,
 } from '../math/reduce';
 import type { Tracked, TrackedRange } from './tracked';
 import { constant, derive, encodeCrisp, isTrackedRange } from './tracked';
@@ -50,6 +51,18 @@ export const CRISP_OPERATIONS = {
   product: { arity: 'variadic', evaluate: (a) => productOf(a) },
   'sum-of-squares': { arity: 'variadic', evaluate: (a) => sumOfSquaresOf(a) },
   'sum-of-reciprocals': { arity: 'variadic', evaluate: (a) => sumOfReciprocalsOf(a) },
+  /**
+   * Operands: two ranges of the same length, `a` then `b`; the value is `Σ a[i] · b[i]`.
+   * One node per cell instead of one product per pair, which keeps a dot product over the
+   * rows of a large matrix (a correlation, say) small in the trace.
+   */
+  'sum-of-products': {
+    arity: 'variadic',
+    evaluate: (a) =>
+      a.length % 2 === 0
+        ? weightedSumOf(a.slice(0, a.length / 2), a.slice(a.length / 2))
+        : Number.NaN,
+  },
   mean: { arity: 'variadic', evaluate: (a) => meanOf(a) },
   min: { arity: 'variadic', evaluate: (a) => minimum(a) },
   max: { arity: 'variadic', evaluate: (a) => maximum(a) },
@@ -121,11 +134,36 @@ function weightedSum(values: readonly Operand[], weights: readonly Operand[]): T
   return crisp.sum(values.map((value, index) => crisp.multiply(value, weights[index] as Operand)));
 }
 
+/**
+ * `Σ a[i] · b[i]` over two ranges of the same length, recorded as one `sum-of-products`
+ * node that references both ranges. Same value, bit for bit, as `sum` of the `multiply`s.
+ */
+function sumOfProducts(a: TrackedRange<number>, b: TrackedRange<number>): Tracked<number> {
+  if (a.items.length !== b.items.length || a.items.length === 0) {
+    throw new EngineError(
+      'INVALID_ARGUMENT',
+      'A sum of products needs two ranges of the same, non-zero length.',
+      { a: a.items.length, b: b.items.length },
+    );
+  }
+  return apply('sum-of-products', [a, b]);
+}
+
 function rank(scores: Operands, options: RankOptions = {}): Tracked<number>[] {
   const resolved = resolveRankOptions(options);
   const items = isTrackedRange(scores) ? scores.items : scores.map(lift);
   const all = isTrackedRange(scores) ? [scores] : items;
-  return items.map((own, index) => apply('rank', [own, ...all], { ...resolved, index }));
+  // Every rank node records all scores, but the ranking itself is computed once: computing
+  // it per item made ranking n alternatives cost n sorts. The value is exactly what the
+  // `rank` evaluator gives for the node (verifyTrace recomputes it).
+  const ranks = rankValues(
+    items.map((item) => item.value),
+    resolved,
+  );
+  return items.map((own, index) => {
+    const options = { ...resolved, index };
+    return derive('rank', [own, ...all], ranks[index] as number, encodeCrisp, options);
+  });
 }
 
 /**
@@ -156,6 +194,8 @@ export const crisp = {
   max: aggregate('max'),
   /** `Σ values[i] · weights[i]`, recorded as a sum of products. */
   weightedSum,
+  /** `Σ a[i] · b[i]` over two equally long ranges, recorded as one node. */
+  sumOfProducts,
   /** Rank of every score among all of them, in input order. See `rankValues`. */
   rank,
 } as const;

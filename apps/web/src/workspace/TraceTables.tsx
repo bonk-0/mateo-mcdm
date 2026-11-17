@@ -17,6 +17,9 @@ export function formatTraceValue(value: TraceValue, formatters: Formatters): str
   return `(${parts.join(', ')})`;
 }
 
+/** Rows of a step drawn before "Show more": a large analysis has many 500-row steps. */
+export const TRACE_ROW_LIMIT = 50;
+
 function StepTable({
   step,
   onCell,
@@ -50,6 +53,7 @@ function StepTable({
             caption={message(step.nameKey)}
             onCell={onCell}
             cellDescription={cellDescription}
+            rowLimit={TRACE_ROW_LIMIT}
           />
         </div>
       </div>
