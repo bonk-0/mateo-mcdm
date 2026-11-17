@@ -24,7 +24,15 @@ export type JsonObject = { readonly [key: string]: JsonValue };
 export function encodeJson(value: unknown): string {
   // Validation pass first; the common case (no -0 anywhere) can then use the fast
   // built-in serializer.
-  const needsExactWriter = inspect(value, '$', new Set());
+  let needsExactWriter: boolean;
+  try {
+    needsExactWriter = check(value, new Set());
+  } catch (error) {
+    if (error !== UNSTORABLE) throw error;
+    // Walk again, building paths this time, for the message.
+    inspect(value, '$', new Set());
+    throw error;
+  }
   return needsExactWriter ? write(value) : JSON.stringify(value);
 }
 
@@ -45,6 +53,48 @@ export function decodeJson(text: string, what: string): unknown {
 function isPlainObject(value: object): boolean {
   const prototype: unknown = Object.getPrototypeOf(value);
   return prototype === Object.prototype || prototype === null;
+}
+
+// Thrown by `check` and caught by `encodeJson`; never leaves this module.
+const UNSTORABLE = new Error('unstorable');
+
+/**
+ * {@link inspect} without paths: a trace has millions of nodes, and building the path
+ * text of each one cost more than serializing it. Throws `UNSTORABLE` where `inspect`
+ * would throw, so `inspect` is only run to describe a value that cannot be stored.
+ */
+function check(value: unknown, ancestors: Set<object>): boolean {
+  switch (typeof value) {
+    case 'string':
+    case 'boolean':
+      return false;
+    case 'number':
+      if (!Number.isFinite(value)) throw UNSTORABLE;
+      return Object.is(value, -0);
+    case 'object':
+      break;
+    default:
+      throw UNSTORABLE;
+  }
+  if (value === null) return false;
+  if (ancestors.has(value)) throw UNSTORABLE;
+  ancestors.add(value);
+  let negativeZero = false;
+  if (Array.isArray(value)) {
+    for (let index = 0; index < value.length; index += 1) {
+      if (check(value[index], ancestors)) negativeZero = true;
+    }
+  } else {
+    if (!isPlainObject(value)) throw UNSTORABLE;
+    const record = value as Record<string, unknown>;
+    for (const key of Object.keys(record)) {
+      const member = record[key];
+      if (member === undefined) continue;
+      if (check(member, ancestors)) negativeZero = true;
+    }
+  }
+  ancestors.delete(value);
+  return negativeZero;
 }
 
 /** Throws on anything that cannot be stored exactly. Returns true when `-0` occurs. */

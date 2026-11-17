@@ -1,0 +1,2154 @@
+{
+  "formatVersion": 1,
+  "methodId": "merec",
+  "methodVersion": "1.0.0",
+  "steps": [
+    {
+      "id": "initial-matrix",
+      "index": 0,
+      "role": "input",
+      "nameKey": "methods.merec.steps.initial-matrix.name",
+      "explanationKey": "methods.merec.steps.initial-matrix.explanation",
+      "formulas": [],
+      "sources": [{ "kind": "input", "input": "matrix" }],
+      "output": {
+        "shape": "matrix",
+        "rows": [
+          { "id": "a1", "label": { "text": "Phone 1" }, "kind": "alternative" },
+          { "id": "a2", "label": { "text": "Phone 2" }, "kind": "alternative" },
+          { "id": "a3", "label": { "text": "Phone 3" }, "kind": "alternative" },
+          { "id": "a4", "label": { "text": "Phone 4" }, "kind": "alternative" }
+        ],
+        "columns": [
+          { "id": "c1", "label": { "text": "C1" }, "kind": "criterion" },
+          { "id": "c2", "label": { "text": "C2" }, "kind": "criterion" },
+          { "id": "c3", "label": { "text": "C3" }, "kind": "criterion" }
+        ],
+        "cells": [
+          [
+            {
+              "value": 250,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a1", "column": "c1" },
+                "value": 250
+              }
+            },
+            {
+              "value": 16,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a1", "column": "c2" },
+                "value": 16
+              }
+            },
+            {
+              "value": 12,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a1", "column": "c3" },
+                "value": 12
+              }
+            }
+          ],
+          [
+            {
+              "value": 200,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a2", "column": "c1" },
+                "value": 200
+              }
+            },
+            {
+              "value": 16,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a2", "column": "c2" },
+                "value": 16
+              }
+            },
+            {
+              "value": 8,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a2", "column": "c3" },
+                "value": 8
+              }
+            }
+          ],
+          [
+            {
+              "value": 300,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a3", "column": "c1" },
+                "value": 300
+              }
+            },
+            {
+              "value": 32,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a3", "column": "c2" },
+                "value": 32
+              }
+            },
+            {
+              "value": 16,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a3", "column": "c3" },
+                "value": 16
+              }
+            }
+          ],
+          [
+            {
+              "value": 275,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a4", "column": "c1" },
+                "value": 275
+              }
+            },
+            {
+              "value": 32,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a4", "column": "c2" },
+                "value": 32
+              }
+            },
+            {
+              "value": 8,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a4", "column": "c3" },
+                "value": 8
+              }
+            }
+          ]
+        ]
+      },
+      "visualization": { "view": "matrix" }
+    },
+    {
+      "id": "normalized-matrix",
+      "index": 1,
+      "role": "intermediate",
+      "nameKey": "methods.merec.steps.normalized-matrix.name",
+      "explanationKey": "methods.merec.steps.normalized-matrix.explanation",
+      "formulas": [
+        {
+          "id": "benefit",
+          "template": "{{n}} = \\frac{ \\min_k {{x_k}} }{ {{x}} }",
+          "terms": [
+            { "name": "n", "latex": "n_{ij}" },
+            { "name": "x", "latex": "x_{ij}" },
+            { "name": "x_k", "latex": "x_{kj}" }
+          ],
+          "condition": { "key": "methods.common.forBenefitCriteria" }
+        },
+        {
+          "id": "cost",
+          "template": "{{n}} = \\frac{ {{x}} }{ \\max_k {{x_k}} }",
+          "terms": [
+            { "name": "n", "latex": "n_{ij}" },
+            { "name": "x", "latex": "x_{ij}" },
+            { "name": "x_k", "latex": "x_{kj}" }
+          ],
+          "condition": { "key": "methods.common.forCostCriteria" }
+        }
+      ],
+      "sources": [{ "kind": "step", "step": "initial-matrix" }],
+      "output": {
+        "shape": "matrix",
+        "rows": [
+          { "id": "a1", "label": { "text": "Phone 1" }, "kind": "alternative" },
+          { "id": "a2", "label": { "text": "Phone 2" }, "kind": "alternative" },
+          { "id": "a3", "label": { "text": "Phone 3" }, "kind": "alternative" },
+          { "id": "a4", "label": { "text": "Phone 4" }, "kind": "alternative" }
+        ],
+        "columns": [
+          { "id": "c1", "label": { "text": "C1" }, "kind": "criterion" },
+          { "id": "c2", "label": { "text": "C2" }, "kind": "criterion" },
+          { "id": "c3", "label": { "text": "C3" }, "kind": "criterion" }
+        ],
+        "cells": [
+          [
+            {
+              "value": 0.8333333333333334,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "ref",
+                    "ref": { "step": "initial-matrix", "row": "a1", "column": "c1" },
+                    "value": 250,
+                    "term": "x"
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "max",
+                    "operands": [
+                      {
+                        "kind": "range",
+                        "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c1"] },
+                        "term": "x_k"
+                      }
+                    ],
+                    "value": 300
+                  }
+                ],
+                "value": 0.8333333333333334
+              },
+              "formula": "cost"
+            },
+            {
+              "value": 1,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "min",
+                    "operands": [
+                      {
+                        "kind": "range",
+                        "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c2"] },
+                        "term": "x_k"
+                      }
+                    ],
+                    "value": 16
+                  },
+                  {
+                    "kind": "ref",
+                    "ref": { "step": "initial-matrix", "row": "a1", "column": "c2" },
+                    "value": 16,
+                    "term": "x"
+                  }
+                ],
+                "value": 1
+              },
+              "formula": "benefit"
+            },
+            {
+              "value": 0.6666666666666666,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "min",
+                    "operands": [
+                      {
+                        "kind": "range",
+                        "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c3"] },
+                        "term": "x_k"
+                      }
+                    ],
+                    "value": 8
+                  },
+                  {
+                    "kind": "ref",
+                    "ref": { "step": "initial-matrix", "row": "a1", "column": "c3" },
+                    "value": 12,
+                    "term": "x"
+                  }
+                ],
+                "value": 0.6666666666666666
+              },
+              "formula": "benefit"
+            }
+          ],
+          [
+            {
+              "value": 0.6666666666666666,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "ref",
+                    "ref": { "step": "initial-matrix", "row": "a2", "column": "c1" },
+                    "value": 200,
+                    "term": "x"
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "max",
+                    "operands": [
+                      {
+                        "kind": "range",
+                        "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c1"] },
+                        "term": "x_k"
+                      }
+                    ],
+                    "value": 300
+                  }
+                ],
+                "value": 0.6666666666666666
+              },
+              "formula": "cost"
+            },
+            {
+              "value": 1,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "min",
+                    "operands": [
+                      {
+                        "kind": "range",
+                        "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c2"] },
+                        "term": "x_k"
+                      }
+                    ],
+                    "value": 16
+                  },
+                  {
+                    "kind": "ref",
+                    "ref": { "step": "initial-matrix", "row": "a2", "column": "c2" },
+                    "value": 16,
+                    "term": "x"
+                  }
+                ],
+                "value": 1
+              },
+              "formula": "benefit"
+            },
+            {
+              "value": 1,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "min",
+                    "operands": [
+                      {
+                        "kind": "range",
+                        "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c3"] },
+                        "term": "x_k"
+                      }
+                    ],
+                    "value": 8
+                  },
+                  {
+                    "kind": "ref",
+                    "ref": { "step": "initial-matrix", "row": "a2", "column": "c3" },
+                    "value": 8,
+                    "term": "x"
+                  }
+                ],
+                "value": 1
+              },
+              "formula": "benefit"
+            }
+          ],
+          [
+            {
+              "value": 1,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "ref",
+                    "ref": { "step": "initial-matrix", "row": "a3", "column": "c1" },
+                    "value": 300,
+                    "term": "x"
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "max",
+                    "operands": [
+                      {
+                        "kind": "range",
+                        "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c1"] },
+                        "term": "x_k"
+                      }
+                    ],
+                    "value": 300
+                  }
+                ],
+                "value": 1
+              },
+              "formula": "cost"
+            },
+            {
+              "value": 0.5,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "min",
+                    "operands": [
+                      {
+                        "kind": "range",
+                        "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c2"] },
+                        "term": "x_k"
+                      }
+                    ],
+                    "value": 16
+                  },
+                  {
+                    "kind": "ref",
+                    "ref": { "step": "initial-matrix", "row": "a3", "column": "c2" },
+                    "value": 32,
+                    "term": "x"
+                  }
+                ],
+                "value": 0.5
+              },
+              "formula": "benefit"
+            },
+            {
+              "value": 0.5,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "min",
+                    "operands": [
+                      {
+                        "kind": "range",
+                        "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c3"] },
+                        "term": "x_k"
+                      }
+                    ],
+                    "value": 8
+                  },
+                  {
+                    "kind": "ref",
+                    "ref": { "step": "initial-matrix", "row": "a3", "column": "c3" },
+                    "value": 16,
+                    "term": "x"
+                  }
+                ],
+                "value": 0.5
+              },
+              "formula": "benefit"
+            }
+          ],
+          [
+            {
+              "value": 0.9166666666666666,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "ref",
+                    "ref": { "step": "initial-matrix", "row": "a4", "column": "c1" },
+                    "value": 275,
+                    "term": "x"
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "max",
+                    "operands": [
+                      {
+                        "kind": "range",
+                        "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c1"] },
+                        "term": "x_k"
+                      }
+                    ],
+                    "value": 300
+                  }
+                ],
+                "value": 0.9166666666666666
+              },
+              "formula": "cost"
+            },
+            {
+              "value": 0.5,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "min",
+                    "operands": [
+                      {
+                        "kind": "range",
+                        "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c2"] },
+                        "term": "x_k"
+                      }
+                    ],
+                    "value": 16
+                  },
+                  {
+                    "kind": "ref",
+                    "ref": { "step": "initial-matrix", "row": "a4", "column": "c2" },
+                    "value": 32,
+                    "term": "x"
+                  }
+                ],
+                "value": 0.5
+              },
+              "formula": "benefit"
+            },
+            {
+              "value": 1,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "min",
+                    "operands": [
+                      {
+                        "kind": "range",
+                        "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c3"] },
+                        "term": "x_k"
+                      }
+                    ],
+                    "value": 8
+                  },
+                  {
+                    "kind": "ref",
+                    "ref": { "step": "initial-matrix", "row": "a4", "column": "c3" },
+                    "value": 8,
+                    "term": "x"
+                  }
+                ],
+                "value": 1
+              },
+              "formula": "benefit"
+            }
+          ]
+        ]
+      },
+      "visualization": { "view": "matrix", "basedOn": "initial-matrix" }
+    },
+    {
+      "id": "absolute-logs",
+      "index": 2,
+      "role": "intermediate",
+      "nameKey": "methods.merec.steps.absolute-logs.name",
+      "explanationKey": "methods.merec.steps.absolute-logs.explanation",
+      "formulas": [
+        {
+          "id": "abs-ln",
+          "template": "{{a}} = \\left| \\ln {{n}} \\right|",
+          "terms": [
+            { "name": "a", "latex": "\\left| \\ln n_{ij} \\right|" },
+            { "name": "n", "latex": "n_{ij}" }
+          ]
+        }
+      ],
+      "sources": [{ "kind": "step", "step": "normalized-matrix" }],
+      "output": {
+        "shape": "matrix",
+        "rows": [
+          { "id": "a1", "label": { "text": "Phone 1" }, "kind": "alternative" },
+          { "id": "a2", "label": { "text": "Phone 2" }, "kind": "alternative" },
+          { "id": "a3", "label": { "text": "Phone 3" }, "kind": "alternative" },
+          { "id": "a4", "label": { "text": "Phone 4" }, "kind": "alternative" }
+        ],
+        "columns": [
+          { "id": "c1", "label": { "text": "C1" }, "kind": "criterion" },
+          { "id": "c2", "label": { "text": "C2" }, "kind": "criterion" },
+          { "id": "c3", "label": { "text": "C3" }, "kind": "criterion" }
+        ],
+        "cells": [
+          [
+            {
+              "value": 0.1823215567939546,
+              "derivation": {
+                "kind": "operation",
+                "operation": "abs",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "ln",
+                    "operands": [
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "normalized-matrix", "row": "a1", "column": "c1" },
+                        "value": 0.8333333333333334,
+                        "term": "n"
+                      }
+                    ],
+                    "value": -0.1823215567939546
+                  }
+                ],
+                "value": 0.1823215567939546
+              }
+            },
+            {
+              "value": 0,
+              "derivation": {
+                "kind": "operation",
+                "operation": "abs",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "ln",
+                    "operands": [
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "normalized-matrix", "row": "a1", "column": "c2" },
+                        "value": 1,
+                        "term": "n"
+                      }
+                    ],
+                    "value": 0
+                  }
+                ],
+                "value": 0
+              }
+            },
+            {
+              "value": 0.40546510810816444,
+              "derivation": {
+                "kind": "operation",
+                "operation": "abs",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "ln",
+                    "operands": [
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "normalized-matrix", "row": "a1", "column": "c3" },
+                        "value": 0.6666666666666666,
+                        "term": "n"
+                      }
+                    ],
+                    "value": -0.40546510810816444
+                  }
+                ],
+                "value": 0.40546510810816444
+              }
+            }
+          ],
+          [
+            {
+              "value": 0.40546510810816444,
+              "derivation": {
+                "kind": "operation",
+                "operation": "abs",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "ln",
+                    "operands": [
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "normalized-matrix", "row": "a2", "column": "c1" },
+                        "value": 0.6666666666666666,
+                        "term": "n"
+                      }
+                    ],
+                    "value": -0.40546510810816444
+                  }
+                ],
+                "value": 0.40546510810816444
+              }
+            },
+            {
+              "value": 0,
+              "derivation": {
+                "kind": "operation",
+                "operation": "abs",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "ln",
+                    "operands": [
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "normalized-matrix", "row": "a2", "column": "c2" },
+                        "value": 1,
+                        "term": "n"
+                      }
+                    ],
+                    "value": 0
+                  }
+                ],
+                "value": 0
+              }
+            },
+            {
+              "value": 0,
+              "derivation": {
+                "kind": "operation",
+                "operation": "abs",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "ln",
+                    "operands": [
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "normalized-matrix", "row": "a2", "column": "c3" },
+                        "value": 1,
+                        "term": "n"
+                      }
+                    ],
+                    "value": 0
+                  }
+                ],
+                "value": 0
+              }
+            }
+          ],
+          [
+            {
+              "value": 0,
+              "derivation": {
+                "kind": "operation",
+                "operation": "abs",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "ln",
+                    "operands": [
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "normalized-matrix", "row": "a3", "column": "c1" },
+                        "value": 1,
+                        "term": "n"
+                      }
+                    ],
+                    "value": 0
+                  }
+                ],
+                "value": 0
+              }
+            },
+            {
+              "value": 0.6931471805599453,
+              "derivation": {
+                "kind": "operation",
+                "operation": "abs",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "ln",
+                    "operands": [
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "normalized-matrix", "row": "a3", "column": "c2" },
+                        "value": 0.5,
+                        "term": "n"
+                      }
+                    ],
+                    "value": -0.6931471805599453
+                  }
+                ],
+                "value": 0.6931471805599453
+              }
+            },
+            {
+              "value": 0.6931471805599453,
+              "derivation": {
+                "kind": "operation",
+                "operation": "abs",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "ln",
+                    "operands": [
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "normalized-matrix", "row": "a3", "column": "c3" },
+                        "value": 0.5,
+                        "term": "n"
+                      }
+                    ],
+                    "value": -0.6931471805599453
+                  }
+                ],
+                "value": 0.6931471805599453
+              }
+            }
+          ],
+          [
+            {
+              "value": 0.08701137698962981,
+              "derivation": {
+                "kind": "operation",
+                "operation": "abs",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "ln",
+                    "operands": [
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "normalized-matrix", "row": "a4", "column": "c1" },
+                        "value": 0.9166666666666666,
+                        "term": "n"
+                      }
+                    ],
+                    "value": -0.08701137698962981
+                  }
+                ],
+                "value": 0.08701137698962981
+              }
+            },
+            {
+              "value": 0.6931471805599453,
+              "derivation": {
+                "kind": "operation",
+                "operation": "abs",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "ln",
+                    "operands": [
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "normalized-matrix", "row": "a4", "column": "c2" },
+                        "value": 0.5,
+                        "term": "n"
+                      }
+                    ],
+                    "value": -0.6931471805599453
+                  }
+                ],
+                "value": 0.6931471805599453
+              }
+            },
+            {
+              "value": 0,
+              "derivation": {
+                "kind": "operation",
+                "operation": "abs",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "ln",
+                    "operands": [
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "normalized-matrix", "row": "a4", "column": "c3" },
+                        "value": 1,
+                        "term": "n"
+                      }
+                    ],
+                    "value": 0
+                  }
+                ],
+                "value": 0
+              }
+            }
+          ]
+        ]
+      },
+      "visualization": { "view": "matrix", "basedOn": "normalized-matrix" }
+    },
+    {
+      "id": "overall-performance",
+      "index": 3,
+      "role": "intermediate",
+      "nameKey": "methods.merec.steps.overall-performance.name",
+      "explanationKey": "methods.merec.steps.overall-performance.explanation",
+      "formulas": [
+        {
+          "id": "overall",
+          "template": "{{S}} = \\ln \\left( 1 + \\frac{1}{m} \\sum_{j=1}^{m} {{a}} \\right)",
+          "terms": [
+            { "name": "S", "latex": "S_i" },
+            { "name": "a", "latex": "\\left| \\ln n_{ij} \\right|" }
+          ]
+        }
+      ],
+      "sources": [{ "kind": "step", "step": "absolute-logs" }],
+      "output": {
+        "shape": "column-vector",
+        "rows": [
+          { "id": "a1", "label": { "text": "Phone 1" }, "kind": "alternative" },
+          { "id": "a2", "label": { "text": "Phone 2" }, "kind": "alternative" },
+          { "id": "a3", "label": { "text": "Phone 3" }, "kind": "alternative" },
+          { "id": "a4", "label": { "text": "Phone 4" }, "kind": "alternative" }
+        ],
+        "columns": [
+          { "id": "S", "label": { "key": "methods.merec.columns.S" }, "kind": "quantity" }
+        ],
+        "cells": [
+          [
+            {
+              "value": 0.1789231958181933,
+              "derivation": {
+                "kind": "operation",
+                "operation": "ln",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "add",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "operation",
+                        "operation": "divide",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "sum",
+                            "operands": [
+                              {
+                                "kind": "range",
+                                "ref": {
+                                  "step": "absolute-logs",
+                                  "rows": ["a1"],
+                                  "columns": "all"
+                                },
+                                "term": "a"
+                              }
+                            ],
+                            "value": 0.5877866649021191
+                          },
+                          { "kind": "constant", "value": 3 }
+                        ],
+                        "value": 0.19592888830070634
+                      }
+                    ],
+                    "value": 1.1959288883007064
+                  }
+                ],
+                "value": 0.1789231958181933
+              }
+            }
+          ],
+          [
+            {
+              "value": 0.12676923723151282,
+              "derivation": {
+                "kind": "operation",
+                "operation": "ln",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "add",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "operation",
+                        "operation": "divide",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "sum",
+                            "operands": [
+                              {
+                                "kind": "range",
+                                "ref": {
+                                  "step": "absolute-logs",
+                                  "rows": ["a2"],
+                                  "columns": "all"
+                                },
+                                "term": "a"
+                              }
+                            ],
+                            "value": 0.40546510810816444
+                          },
+                          { "kind": "constant", "value": 3 }
+                        ],
+                        "value": 0.1351550360360548
+                      }
+                    ],
+                    "value": 1.1351550360360547
+                  }
+                ],
+                "value": 0.12676923723151282
+              }
+            }
+          ],
+          [
+            {
+              "value": 0.3798724728739812,
+              "derivation": {
+                "kind": "operation",
+                "operation": "ln",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "add",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "operation",
+                        "operation": "divide",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "sum",
+                            "operands": [
+                              {
+                                "kind": "range",
+                                "ref": {
+                                  "step": "absolute-logs",
+                                  "rows": ["a3"],
+                                  "columns": "all"
+                                },
+                                "term": "a"
+                              }
+                            ],
+                            "value": 1.3862943611198906
+                          },
+                          { "kind": "constant", "value": 3 }
+                        ],
+                        "value": 0.46209812037329684
+                      }
+                    ],
+                    "value": 1.4620981203732968
+                  }
+                ],
+                "value": 0.3798724728739812
+              }
+            }
+          ],
+          [
+            {
+              "value": 0.23115366652534583,
+              "derivation": {
+                "kind": "operation",
+                "operation": "ln",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "add",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "operation",
+                        "operation": "divide",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "sum",
+                            "operands": [
+                              {
+                                "kind": "range",
+                                "ref": {
+                                  "step": "absolute-logs",
+                                  "rows": ["a4"],
+                                  "columns": "all"
+                                },
+                                "term": "a"
+                              }
+                            ],
+                            "value": 0.7801585575495751
+                          },
+                          { "kind": "constant", "value": 3 }
+                        ],
+                        "value": 0.26005285251652505
+                      }
+                    ],
+                    "value": 1.260052852516525
+                  }
+                ],
+                "value": 0.23115366652534583
+              }
+            }
+          ]
+        ]
+      },
+      "visualization": { "view": "bars" }
+    },
+    {
+      "id": "removal-performance",
+      "index": 4,
+      "role": "intermediate",
+      "nameKey": "methods.merec.steps.removal-performance.name",
+      "explanationKey": "methods.merec.steps.removal-performance.explanation",
+      "formulas": [
+        {
+          "id": "removal",
+          "template": "{{S_r}} = \\ln \\left( 1 + \\frac{1}{m} \\sum_{k \\neq j} {{a}} \\right)",
+          "terms": [
+            { "name": "S_r", "latex": "S'_{ij}" },
+            { "name": "a", "latex": "\\left| \\ln n_{ik} \\right|" }
+          ]
+        }
+      ],
+      "sources": [{ "kind": "step", "step": "absolute-logs" }],
+      "output": {
+        "shape": "matrix",
+        "rows": [
+          { "id": "a1", "label": { "text": "Phone 1" }, "kind": "alternative" },
+          { "id": "a2", "label": { "text": "Phone 2" }, "kind": "alternative" },
+          { "id": "a3", "label": { "text": "Phone 3" }, "kind": "alternative" },
+          { "id": "a4", "label": { "text": "Phone 4" }, "kind": "alternative" }
+        ],
+        "columns": [
+          { "id": "c1", "label": { "text": "C1" }, "kind": "criterion" },
+          { "id": "c2", "label": { "text": "C2" }, "kind": "criterion" },
+          { "id": "c3", "label": { "text": "C3" }, "kind": "criterion" }
+        ],
+        "cells": [
+          [
+            {
+              "value": 0.12676923723151282,
+              "derivation": {
+                "kind": "operation",
+                "operation": "ln",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "add",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "operation",
+                        "operation": "divide",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "sum",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a1", "column": "c2" },
+                                "value": 0,
+                                "term": "a"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a1", "column": "c3" },
+                                "value": 0.40546510810816444,
+                                "term": "a"
+                              }
+                            ],
+                            "value": 0.40546510810816444
+                          },
+                          { "kind": "constant", "value": 3 }
+                        ],
+                        "value": 0.1351550360360548
+                      }
+                    ],
+                    "value": 1.1351550360360547
+                  }
+                ],
+                "value": 0.12676923723151282
+              }
+            },
+            {
+              "value": 0.1789231958181933,
+              "derivation": {
+                "kind": "operation",
+                "operation": "ln",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "add",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "operation",
+                        "operation": "divide",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "sum",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a1", "column": "c1" },
+                                "value": 0.1823215567939546,
+                                "term": "a"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a1", "column": "c3" },
+                                "value": 0.40546510810816444,
+                                "term": "a"
+                              }
+                            ],
+                            "value": 0.5877866649021191
+                          },
+                          { "kind": "constant", "value": 3 }
+                        ],
+                        "value": 0.19592888830070634
+                      }
+                    ],
+                    "value": 1.1959288883007064
+                  }
+                ],
+                "value": 0.1789231958181933
+              }
+            },
+            {
+              "value": 0.0589986910738836,
+              "derivation": {
+                "kind": "operation",
+                "operation": "ln",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "add",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "operation",
+                        "operation": "divide",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "sum",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a1", "column": "c1" },
+                                "value": 0.1823215567939546,
+                                "term": "a"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a1", "column": "c2" },
+                                "value": 0,
+                                "term": "a"
+                              }
+                            ],
+                            "value": 0.1823215567939546
+                          },
+                          { "kind": "constant", "value": 3 }
+                        ],
+                        "value": 0.06077385226465153
+                      }
+                    ],
+                    "value": 1.0607738522646515
+                  }
+                ],
+                "value": 0.0589986910738836
+              }
+            }
+          ],
+          [
+            {
+              "value": 0,
+              "derivation": {
+                "kind": "operation",
+                "operation": "ln",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "add",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "operation",
+                        "operation": "divide",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "sum",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a2", "column": "c2" },
+                                "value": 0,
+                                "term": "a"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a2", "column": "c3" },
+                                "value": 0,
+                                "term": "a"
+                              }
+                            ],
+                            "value": 0
+                          },
+                          { "kind": "constant", "value": 3 }
+                        ],
+                        "value": 0
+                      }
+                    ],
+                    "value": 1
+                  }
+                ],
+                "value": 0
+              }
+            },
+            {
+              "value": 0.12676923723151282,
+              "derivation": {
+                "kind": "operation",
+                "operation": "ln",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "add",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "operation",
+                        "operation": "divide",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "sum",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a2", "column": "c1" },
+                                "value": 0.40546510810816444,
+                                "term": "a"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a2", "column": "c3" },
+                                "value": 0,
+                                "term": "a"
+                              }
+                            ],
+                            "value": 0.40546510810816444
+                          },
+                          { "kind": "constant", "value": 3 }
+                        ],
+                        "value": 0.1351550360360548
+                      }
+                    ],
+                    "value": 1.1351550360360547
+                  }
+                ],
+                "value": 0.12676923723151282
+              }
+            },
+            {
+              "value": 0.12676923723151282,
+              "derivation": {
+                "kind": "operation",
+                "operation": "ln",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "add",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "operation",
+                        "operation": "divide",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "sum",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a2", "column": "c1" },
+                                "value": 0.40546510810816444,
+                                "term": "a"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a2", "column": "c2" },
+                                "value": 0,
+                                "term": "a"
+                              }
+                            ],
+                            "value": 0.40546510810816444
+                          },
+                          { "kind": "constant", "value": 3 }
+                        ],
+                        "value": 0.1351550360360548
+                      }
+                    ],
+                    "value": 1.1351550360360547
+                  }
+                ],
+                "value": 0.12676923723151282
+              }
+            }
+          ],
+          [
+            {
+              "value": 0.3798724728739812,
+              "derivation": {
+                "kind": "operation",
+                "operation": "ln",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "add",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "operation",
+                        "operation": "divide",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "sum",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a3", "column": "c2" },
+                                "value": 0.6931471805599453,
+                                "term": "a"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a3", "column": "c3" },
+                                "value": 0.6931471805599453,
+                                "term": "a"
+                              }
+                            ],
+                            "value": 1.3862943611198906
+                          },
+                          { "kind": "constant", "value": 3 }
+                        ],
+                        "value": 0.46209812037329684
+                      }
+                    ],
+                    "value": 1.4620981203732968
+                  }
+                ],
+                "value": 0.3798724728739812
+              }
+            },
+            {
+              "value": 0.20786670033720986,
+              "derivation": {
+                "kind": "operation",
+                "operation": "ln",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "add",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "operation",
+                        "operation": "divide",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "sum",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a3", "column": "c1" },
+                                "value": 0,
+                                "term": "a"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a3", "column": "c3" },
+                                "value": 0.6931471805599453,
+                                "term": "a"
+                              }
+                            ],
+                            "value": 0.6931471805599453
+                          },
+                          { "kind": "constant", "value": 3 }
+                        ],
+                        "value": 0.23104906018664842
+                      }
+                    ],
+                    "value": 1.2310490601866484
+                  }
+                ],
+                "value": 0.20786670033720986
+              }
+            },
+            {
+              "value": 0.20786670033720986,
+              "derivation": {
+                "kind": "operation",
+                "operation": "ln",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "add",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "operation",
+                        "operation": "divide",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "sum",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a3", "column": "c1" },
+                                "value": 0,
+                                "term": "a"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a3", "column": "c2" },
+                                "value": 0.6931471805599453,
+                                "term": "a"
+                              }
+                            ],
+                            "value": 0.6931471805599453
+                          },
+                          { "kind": "constant", "value": 3 }
+                        ],
+                        "value": 0.23104906018664842
+                      }
+                    ],
+                    "value": 1.2310490601866484
+                  }
+                ],
+                "value": 0.20786670033720986
+              }
+            }
+          ],
+          [
+            {
+              "value": 0.20786670033720986,
+              "derivation": {
+                "kind": "operation",
+                "operation": "ln",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "add",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "operation",
+                        "operation": "divide",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "sum",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a4", "column": "c2" },
+                                "value": 0.6931471805599453,
+                                "term": "a"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a4", "column": "c3" },
+                                "value": 0,
+                                "term": "a"
+                              }
+                            ],
+                            "value": 0.6931471805599453
+                          },
+                          { "kind": "constant", "value": 3 }
+                        ],
+                        "value": 0.23104906018664842
+                      }
+                    ],
+                    "value": 1.2310490601866484
+                  }
+                ],
+                "value": 0.20786670033720986
+              }
+            },
+            {
+              "value": 0.02859114229689652,
+              "derivation": {
+                "kind": "operation",
+                "operation": "ln",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "add",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "operation",
+                        "operation": "divide",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "sum",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a4", "column": "c1" },
+                                "value": 0.08701137698962981,
+                                "term": "a"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a4", "column": "c3" },
+                                "value": 0,
+                                "term": "a"
+                              }
+                            ],
+                            "value": 0.08701137698962981
+                          },
+                          { "kind": "constant", "value": 3 }
+                        ],
+                        "value": 0.029003792329876602
+                      }
+                    ],
+                    "value": 1.0290037923298767
+                  }
+                ],
+                "value": 0.02859114229689652
+              }
+            },
+            {
+              "value": 0.23115366652534583,
+              "derivation": {
+                "kind": "operation",
+                "operation": "ln",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "add",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "operation",
+                        "operation": "divide",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "sum",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a4", "column": "c1" },
+                                "value": 0.08701137698962981,
+                                "term": "a"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "absolute-logs", "row": "a4", "column": "c2" },
+                                "value": 0.6931471805599453,
+                                "term": "a"
+                              }
+                            ],
+                            "value": 0.7801585575495751
+                          },
+                          { "kind": "constant", "value": 3 }
+                        ],
+                        "value": 0.26005285251652505
+                      }
+                    ],
+                    "value": 1.260052852516525
+                  }
+                ],
+                "value": 0.23115366652534583
+              }
+            }
+          ]
+        ]
+      },
+      "visualization": { "view": "matrix", "basedOn": "absolute-logs" }
+    },
+    {
+      "id": "removal-effects",
+      "index": 5,
+      "role": "intermediate",
+      "nameKey": "methods.merec.steps.removal-effects.name",
+      "explanationKey": "methods.merec.steps.removal-effects.explanation",
+      "formulas": [
+        {
+          "id": "effect",
+          "template": "{{E}} = \\sum_{i=1}^{n} \\left| {{S_r}} - {{S}} \\right|",
+          "terms": [
+            { "name": "E", "latex": "E_j" },
+            { "name": "S_r", "latex": "S'_{ij}" },
+            { "name": "S", "latex": "S_i" }
+          ]
+        }
+      ],
+      "sources": [
+        { "kind": "step", "step": "removal-performance" },
+        { "kind": "step", "step": "overall-performance" }
+      ],
+      "output": {
+        "shape": "row-vector",
+        "rows": [
+          {
+            "id": "removal-effects",
+            "label": { "key": "methods.merec.steps.removal-effects.name" },
+            "kind": "quantity"
+          }
+        ],
+        "columns": [
+          { "id": "c1", "label": { "text": "C1" }, "kind": "criterion" },
+          { "id": "c2", "label": { "text": "C2" }, "kind": "criterion" },
+          { "id": "c3", "label": { "text": "C3" }, "kind": "criterion" }
+        ],
+        "cells": [
+          [
+            {
+              "value": 0.20221016200632927,
+              "derivation": {
+                "kind": "operation",
+                "operation": "sum",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "abs",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "subtract",
+                        "operands": [
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "removal-performance", "row": "a1", "column": "c1" },
+                            "value": 0.12676923723151282,
+                            "term": "S_r"
+                          },
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "overall-performance", "row": "a1", "column": "S" },
+                            "value": 0.1789231958181933,
+                            "term": "S"
+                          }
+                        ],
+                        "value": -0.05215395858668048
+                      }
+                    ],
+                    "value": 0.05215395858668048
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "abs",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "subtract",
+                        "operands": [
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "removal-performance", "row": "a2", "column": "c1" },
+                            "value": 0,
+                            "term": "S_r"
+                          },
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "overall-performance", "row": "a2", "column": "S" },
+                            "value": 0.12676923723151282,
+                            "term": "S"
+                          }
+                        ],
+                        "value": -0.12676923723151282
+                      }
+                    ],
+                    "value": 0.12676923723151282
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "abs",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "subtract",
+                        "operands": [
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "removal-performance", "row": "a3", "column": "c1" },
+                            "value": 0.3798724728739812,
+                            "term": "S_r"
+                          },
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "overall-performance", "row": "a3", "column": "S" },
+                            "value": 0.3798724728739812,
+                            "term": "S"
+                          }
+                        ],
+                        "value": 0
+                      }
+                    ],
+                    "value": 0
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "abs",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "subtract",
+                        "operands": [
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "removal-performance", "row": "a4", "column": "c1" },
+                            "value": 0.20786670033720986,
+                            "term": "S_r"
+                          },
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "overall-performance", "row": "a4", "column": "S" },
+                            "value": 0.23115366652534583,
+                            "term": "S"
+                          }
+                        ],
+                        "value": -0.02328696618813597
+                      }
+                    ],
+                    "value": 0.02328696618813597
+                  }
+                ],
+                "value": 0.20221016200632927
+              }
+            },
+            {
+              "value": 0.37456829676522063,
+              "derivation": {
+                "kind": "operation",
+                "operation": "sum",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "abs",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "subtract",
+                        "operands": [
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "removal-performance", "row": "a1", "column": "c2" },
+                            "value": 0.1789231958181933,
+                            "term": "S_r"
+                          },
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "overall-performance", "row": "a1", "column": "S" },
+                            "value": 0.1789231958181933,
+                            "term": "S"
+                          }
+                        ],
+                        "value": 0
+                      }
+                    ],
+                    "value": 0
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "abs",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "subtract",
+                        "operands": [
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "removal-performance", "row": "a2", "column": "c2" },
+                            "value": 0.12676923723151282,
+                            "term": "S_r"
+                          },
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "overall-performance", "row": "a2", "column": "S" },
+                            "value": 0.12676923723151282,
+                            "term": "S"
+                          }
+                        ],
+                        "value": 0
+                      }
+                    ],
+                    "value": 0
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "abs",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "subtract",
+                        "operands": [
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "removal-performance", "row": "a3", "column": "c2" },
+                            "value": 0.20786670033720986,
+                            "term": "S_r"
+                          },
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "overall-performance", "row": "a3", "column": "S" },
+                            "value": 0.3798724728739812,
+                            "term": "S"
+                          }
+                        ],
+                        "value": -0.17200577253677132
+                      }
+                    ],
+                    "value": 0.17200577253677132
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "abs",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "subtract",
+                        "operands": [
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "removal-performance", "row": "a4", "column": "c2" },
+                            "value": 0.02859114229689652,
+                            "term": "S_r"
+                          },
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "overall-performance", "row": "a4", "column": "S" },
+                            "value": 0.23115366652534583,
+                            "term": "S"
+                          }
+                        ],
+                        "value": -0.2025625242284493
+                      }
+                    ],
+                    "value": 0.2025625242284493
+                  }
+                ],
+                "value": 0.37456829676522063
+              }
+            },
+            {
+              "value": 0.291930277281081,
+              "derivation": {
+                "kind": "operation",
+                "operation": "sum",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "abs",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "subtract",
+                        "operands": [
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "removal-performance", "row": "a1", "column": "c3" },
+                            "value": 0.0589986910738836,
+                            "term": "S_r"
+                          },
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "overall-performance", "row": "a1", "column": "S" },
+                            "value": 0.1789231958181933,
+                            "term": "S"
+                          }
+                        ],
+                        "value": -0.1199245047443097
+                      }
+                    ],
+                    "value": 0.1199245047443097
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "abs",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "subtract",
+                        "operands": [
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "removal-performance", "row": "a2", "column": "c3" },
+                            "value": 0.12676923723151282,
+                            "term": "S_r"
+                          },
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "overall-performance", "row": "a2", "column": "S" },
+                            "value": 0.12676923723151282,
+                            "term": "S"
+                          }
+                        ],
+                        "value": 0
+                      }
+                    ],
+                    "value": 0
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "abs",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "subtract",
+                        "operands": [
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "removal-performance", "row": "a3", "column": "c3" },
+                            "value": 0.20786670033720986,
+                            "term": "S_r"
+                          },
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "overall-performance", "row": "a3", "column": "S" },
+                            "value": 0.3798724728739812,
+                            "term": "S"
+                          }
+                        ],
+                        "value": -0.17200577253677132
+                      }
+                    ],
+                    "value": 0.17200577253677132
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "abs",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "subtract",
+                        "operands": [
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "removal-performance", "row": "a4", "column": "c3" },
+                            "value": 0.23115366652534583,
+                            "term": "S_r"
+                          },
+                          {
+                            "kind": "ref",
+                            "ref": { "step": "overall-performance", "row": "a4", "column": "S" },
+                            "value": 0.23115366652534583,
+                            "term": "S"
+                          }
+                        ],
+                        "value": 0
+                      }
+                    ],
+                    "value": 0
+                  }
+                ],
+                "value": 0.291930277281081
+              }
+            }
+          ]
+        ]
+      },
+      "visualization": { "view": "bars" }
+    },
+    {
+      "id": "weights",
+      "index": 6,
+      "role": "result",
+      "nameKey": "methods.merec.steps.weights.name",
+      "explanationKey": "methods.merec.steps.weights.explanation",
+      "formulas": [
+        {
+          "id": "weight",
+          "template": "{{w}} = \\frac{ {{E}} }{ {{E_sum}} }",
+          "terms": [
+            { "name": "w", "latex": "w_j" },
+            { "name": "E", "latex": "E_j" },
+            { "name": "E_sum", "latex": "\\sum_{k=1}^{m} E_k" }
+          ]
+        }
+      ],
+      "sources": [{ "kind": "step", "step": "removal-effects" }],
+      "output": {
+        "shape": "row-vector",
+        "rows": [
+          { "id": "w", "label": { "key": "methods.merec.rows.weight" }, "kind": "quantity" }
+        ],
+        "columns": [
+          { "id": "c1", "label": { "text": "C1" }, "kind": "criterion" },
+          { "id": "c2", "label": { "text": "C2" }, "kind": "criterion" },
+          { "id": "c3", "label": { "text": "C3" }, "kind": "criterion" }
+        ],
+        "cells": [
+          [
+            {
+              "value": 0.2327709548831777,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "ref",
+                    "ref": { "step": "removal-effects", "row": "removal-effects", "column": "c1" },
+                    "value": 0.20221016200632927,
+                    "term": "E"
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "sum",
+                    "operands": [
+                      {
+                        "kind": "range",
+                        "ref": { "step": "removal-effects", "rows": "all", "columns": "all" }
+                      }
+                    ],
+                    "value": 0.8687087360526309,
+                    "term": "E_sum"
+                  }
+                ],
+                "value": 0.2327709548831777
+              }
+            },
+            {
+              "value": 0.43117823180556497,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "ref",
+                    "ref": { "step": "removal-effects", "row": "removal-effects", "column": "c2" },
+                    "value": 0.37456829676522063,
+                    "term": "E"
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "sum",
+                    "operands": [
+                      {
+                        "kind": "range",
+                        "ref": { "step": "removal-effects", "rows": "all", "columns": "all" }
+                      }
+                    ],
+                    "value": 0.8687087360526309,
+                    "term": "E_sum"
+                  }
+                ],
+                "value": 0.43117823180556497
+              }
+            },
+            {
+              "value": 0.33605081331125736,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "ref",
+                    "ref": { "step": "removal-effects", "row": "removal-effects", "column": "c3" },
+                    "value": 0.291930277281081,
+                    "term": "E"
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "sum",
+                    "operands": [
+                      {
+                        "kind": "range",
+                        "ref": { "step": "removal-effects", "rows": "all", "columns": "all" }
+                      }
+                    ],
+                    "value": 0.8687087360526309,
+                    "term": "E_sum"
+                  }
+                ],
+                "value": 0.33605081331125736
+              }
+            }
+          ]
+        ]
+      },
+      "visualization": { "view": "bars", "basedOn": "removal-effects" }
+    }
+  ]
+}

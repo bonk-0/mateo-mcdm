@@ -61,6 +61,11 @@
     "item": "Item",
     "value": "Value"
   },
+  "table": {
+    "rowsShown": "{shown} of {total} rows are shown.",
+    "showMore": "Show {count} more rows",
+    "showAll": "Show all rows"
+  },
   "derivation": {
     "title": "How was this calculated?",
     "open": "How was {cell} calculated?",
@@ -240,6 +245,9 @@
       },
       "means": {
         "mean": "The mean of each normalized column is the centre the deviations of the next step are measured from."
+      },
+      "deviations": {
+        "deviation": "Each normalized value minus the mean of its column. The next two steps use these deviations."
       },
       "standard-deviations": {
         "sigma": "The standard deviation of a normalized column measures its contrast intensity: the more the alternatives differ on a criterion, the larger it is."

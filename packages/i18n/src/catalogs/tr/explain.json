@@ -61,6 +61,11 @@
     "item": "Öğe",
     "value": "Değer"
   },
+  "table": {
+    "rowsShown": "{total} satırın {shown} tanesi gösteriliyor.",
+    "showMore": "{count} satır daha göster",
+    "showAll": "Tüm satırları göster"
+  },
   "derivation": {
     "title": "Bu nasıl hesaplandı?",
     "open": "{cell} nasıl hesaplandı?",
@@ -240,6 +245,9 @@
       },
       "means": {
         "mean": "Normalleştirilmiş her sütunun ortalaması, sonraki adımdaki sapmaların ölçüldüğü merkezdir."
+      },
+      "deviations": {
+        "deviation": "Her normalleştirilmiş değerden sütununun ortalaması çıkarılır. Sonraki iki adım bu sapmaları kullanır."
       },
       "standard-deviations": {
         "sigma": "Normalleştirilmiş bir sütunun standart sapması kontrast yoğunluğunu ölçer: alternatifler bir kriterde ne kadar farklıysa o kadar büyüktür."

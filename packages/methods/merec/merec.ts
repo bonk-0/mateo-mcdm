@@ -28,7 +28,7 @@ import {
 import { FOR_BENEFIT, FOR_COST, formula, quantity } from '../src/common';
 
 export const MEREC_ID = 'merec';
-export const MEREC_VERSION = '1.0.0';
+export const MEREC_VERSION = '1.1.0';
 
 export const MEREC_ISSUE_CODES = {
   /** Every removal effect E_j is 0 (for example identical alternatives): w_j = 0 / 0. */
@@ -73,11 +73,17 @@ const step = (id: string) => ({
 /** Untraced E_j, for validation only. */
 function plainEffects(matrix: DecisionMatrix<number>): number[] {
   const m = matrix.criteria.length;
+  // Column extremes once per column, not once per cell.
+  const extremes = matrix.criteria.map((criterion, j) => {
+    const col = matrix.values.map((r) => r[j] as number);
+    return criterion.direction === 'benefit' ? Math.min(...col) : Math.max(...col);
+  });
   const logs = matrix.values.map((row) =>
     row.map((x, j) => {
-      const col = matrix.values.map((r) => r[j] as number);
       const n =
-        matrix.criteria[j]!.direction === 'benefit' ? Math.min(...col) / x : x / Math.max(...col);
+        matrix.criteria[j]!.direction === 'benefit'
+          ? (extremes[j] as number) / x
+          : x / (extremes[j] as number);
       return Math.abs(Math.log(n));
     }),
   );
@@ -133,6 +139,12 @@ export const merecMethod = defineMethod({
     const alternatives = alternativeAxis(matrix.alternatives);
     const criteria = criterionAxis(matrix.criteria);
 
+    // The column minimum (benefit) or maximum (cost), once per column.
+    const extremes = matrix.criteria.map((criterion, j) => {
+      const column = term(x.column(j), 'x_k');
+      return criterion.direction === 'benefit' ? crisp.min(column) : crisp.max(column);
+    });
+
     // Eq. 2: n_ij = min_k x_kj / x_ij (benefit), n_ij = x_ij / max_k x_kj (cost).
     const n = tb.table<number>({
       ...step('normalized-matrix'),
@@ -151,10 +163,9 @@ export const merecMethod = defineMethod({
       cell: (row, column) => {
         const direction = matrix.criteria[column.index]!.direction;
         const value = term(x.cell(row.index, column.index), 'x');
-        const column_ = term(x.column(column.index), 'x_k');
         return direction === 'benefit'
-          ? { tracked: crisp.divide(crisp.min(column_), value), formula: 'benefit' }
-          : { tracked: crisp.divide(value, crisp.max(column_)), formula: 'cost' };
+          ? { tracked: crisp.divide(extremes[column.index]!, value), formula: 'benefit' }
+          : { tracked: crisp.divide(value, extremes[column.index]!), formula: 'cost' };
       },
     });
 
@@ -193,6 +204,9 @@ export const merecMethod = defineMethod({
     });
 
     // Eq. 4: S′_ij = ln(1 + (1/m) Σ_{k≠j} |ln n_ik|). The divisor stays m.
+    const otherColumns = criteria.map((_, j) =>
+      criteria.map((_item, k) => k).filter((k) => k !== j),
+    );
     const sPrime = tb.table<number>({
       ...step('removal-performance'),
       formulas: [
@@ -209,10 +223,12 @@ export const merecMethod = defineMethod({
       columns: criteria,
       visualization: { view: 'matrix', basedOn: logs.id },
       cell: (row, column) => {
-        const others = criteria
-          .map((_, k) => k)
-          .filter((k) => k !== column.index)
-          .map((k) => term(logs.cell(row.index, k), 'a'));
+        // The row without column j, as one range: listing the m − 1 cells one by one made
+        // this step hold n · m² references.
+        const others = term(
+          logs.range({ rows: [row.index], columns: otherColumns[column.index]! }),
+          'a',
+        );
         return crisp.ln(crisp.add(1, crisp.divide(crisp.sum(others), m)));
       },
     });

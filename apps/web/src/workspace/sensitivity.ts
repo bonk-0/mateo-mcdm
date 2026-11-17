@@ -8,10 +8,18 @@ import {
 } from '@mateo/engine';
 import type { JsonValue, ProjectSettings, StoredAnalysis } from '@mateo/project';
 import { isRankingMethod } from './registry';
-import { executeJob, type ParameterValues, type RunJob, type RunOutcome } from './runnerCore';
+import {
+  executeResultJob,
+  type ParameterValues,
+  type ResultOutcome,
+  type RunJob,
+} from './runnerCore';
 
-/** Runs one job. The page passes the worker runner, tests pass `executeJob`. */
-export type JobRunner = (job: RunJob) => Promise<RunOutcome> | RunOutcome;
+/**
+ * Runs one job and returns its result. The page passes the worker runner, tests pass
+ * `executeResultJob`. A scenario only needs the ranking, so the trace is not sent back.
+ */
+export type JobRunner = (job: RunJob) => Promise<ResultOutcome> | ResultOutcome;
 
 /** What a sensitivity analysis varies: a MARCOS run with crisp weights. */
 export interface SensitivityBase {
@@ -94,11 +102,11 @@ function isRankedList(value: unknown): value is readonly RankedAlternative[] {
 export async function rankWithWeights(
   base: SensitivityBase,
   weights: readonly number[],
-  run: JobRunner = executeJob,
+  run: JobRunner = executeResultJob,
 ): Promise<Ranking | null> {
   const outcome = await run(jobWithWeights(base, weights));
   if (!outcome.ok) return null;
-  const list = (outcome.record.result as { ranking?: unknown }).ranking;
+  const list = (outcome.result as { ranking?: unknown }).ranking;
   if (!isRankedList(list)) return null;
   const byId = new Map(list.map((entry) => [entry.alternativeId, entry]));
   const entries = base.alternativeIds.map((id) => byId.get(id));

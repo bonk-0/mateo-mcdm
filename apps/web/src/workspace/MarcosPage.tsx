@@ -55,6 +55,9 @@ function Step({
 
 const cellClass = 'border-b border-border px-3 py-1.5 whitespace-nowrap';
 
+/** Rows of the input matrix drawn before "Show all rows". */
+const INPUT_ROW_LIMIT = 50;
+
 function InputData({
   dataset,
   scales,
@@ -63,8 +66,11 @@ function InputData({
   scales: WorkspaceContext['document']['model']['scales'];
 }) {
   const { t } = useTranslation('workspace');
+  const { t: tExplain } = useTranslation('explain');
   const formatters = useFormatters();
   const syntax = useMemo(() => syntaxForLocale(formatters.numberLocale), [formatters.numberLocale]);
+  // The editor holds the whole matrix; this preview draws the first rows of a large one.
+  const [limit, setLimit] = useState(INPUT_ROW_LIMIT);
   const matrix = dataset.matrices[0];
   if (!matrix || dataset.alternatives.length === 0 || dataset.criteria.length === 0) {
     return <p className="text-sm text-muted-foreground">{t('marcos.input.empty')}</p>;
@@ -84,7 +90,7 @@ function InputData({
           </tr>
         </thead>
         <tbody>
-          {dataset.alternatives.map((alternative) => (
+          {dataset.alternatives.slice(0, limit).map((alternative) => (
             <tr key={alternative.id}>
               <th scope="row" className={`${cellClass} text-left font-medium`}>
                 {alternative.name || alternative.code}
@@ -103,6 +109,21 @@ function InputData({
           ))}
         </tbody>
       </table>
+      {dataset.alternatives.length > limit && (
+        <div className="flex flex-wrap items-center gap-3 px-3 py-2 text-sm text-muted-foreground">
+          <span>
+            {tExplain('table.rowsShown', { shown: limit, total: dataset.alternatives.length })}
+          </span>
+          <button
+            type="button"
+            className="font-medium text-primary underline-offset-4 hover:underline"
+            onClick={() => setLimit(dataset.alternatives.length)}
+            data-testid="input-matrix-all"
+          >
+            {tExplain('table.showAll')}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

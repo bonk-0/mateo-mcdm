@@ -14,7 +14,7 @@ import { fieldClass, labelClass } from '../editor/ui';
 import { useFormatters, useReducedMotion } from '../hooks/preferences';
 import { EChart } from './charts/EChart';
 import { rankLineOption } from './charts/options';
-import { runJob } from './runner';
+import { runResultJob } from './runner';
 import {
   baseOfAnalysis,
   makeScenario,
@@ -116,7 +116,7 @@ function PanelBody({
     if (!touched.current) return;
     let cancelled = false;
     const timer = setTimeout(() => {
-      void rankWithWeights(base, weights, runJob).then((next) => {
+      void rankWithWeights(base, weights, runResultJob).then((next) => {
         if (cancelled) return;
         setFailed(next === null);
         if (next) setRanking(next);
@@ -153,7 +153,7 @@ function PanelBody({
       base,
       criterionIndex: sweepIndex,
       redistribution,
-      run: runJob,
+      run: runResultJob,
       isCancelled: () => cancelled,
     }).then((points) => {
       if (!cancelled) setSweep(points);

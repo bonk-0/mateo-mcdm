@@ -1,0 +1,4012 @@
+{
+  "formatVersion": 1,
+  "methodId": "critic",
+  "methodVersion": "1.0.0",
+  "steps": [
+    {
+      "id": "initial-matrix",
+      "index": 0,
+      "role": "input",
+      "nameKey": "methods.critic.steps.initial-matrix.name",
+      "explanationKey": "methods.critic.steps.initial-matrix.explanation",
+      "formulas": [],
+      "sources": [{ "kind": "input", "input": "matrix" }],
+      "output": {
+        "shape": "matrix",
+        "rows": [
+          { "id": "a1", "label": { "text": "Phone 1" }, "kind": "alternative" },
+          { "id": "a2", "label": { "text": "Phone 2" }, "kind": "alternative" },
+          { "id": "a3", "label": { "text": "Phone 3" }, "kind": "alternative" },
+          { "id": "a4", "label": { "text": "Phone 4" }, "kind": "alternative" }
+        ],
+        "columns": [
+          { "id": "c1", "label": { "text": "C1" }, "kind": "criterion" },
+          { "id": "c2", "label": { "text": "C2" }, "kind": "criterion" },
+          { "id": "c3", "label": { "text": "C3" }, "kind": "criterion" }
+        ],
+        "cells": [
+          [
+            {
+              "value": 250,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a1", "column": "c1" },
+                "value": 250
+              }
+            },
+            {
+              "value": 16,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a1", "column": "c2" },
+                "value": 16
+              }
+            },
+            {
+              "value": 12,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a1", "column": "c3" },
+                "value": 12
+              }
+            }
+          ],
+          [
+            {
+              "value": 200,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a2", "column": "c1" },
+                "value": 200
+              }
+            },
+            {
+              "value": 16,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a2", "column": "c2" },
+                "value": 16
+              }
+            },
+            {
+              "value": 8,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a2", "column": "c3" },
+                "value": 8
+              }
+            }
+          ],
+          [
+            {
+              "value": 300,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a3", "column": "c1" },
+                "value": 300
+              }
+            },
+            {
+              "value": 32,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a3", "column": "c2" },
+                "value": 32
+              }
+            },
+            {
+              "value": 16,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a3", "column": "c3" },
+                "value": 16
+              }
+            }
+          ],
+          [
+            {
+              "value": 275,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a4", "column": "c1" },
+                "value": 275
+              }
+            },
+            {
+              "value": 32,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a4", "column": "c2" },
+                "value": 32
+              }
+            },
+            {
+              "value": 8,
+              "derivation": {
+                "kind": "input",
+                "source": { "input": "matrix", "row": "a4", "column": "c3" },
+                "value": 8
+              }
+            }
+          ]
+        ]
+      },
+      "visualization": { "view": "matrix" }
+    },
+    {
+      "id": "normalized-matrix",
+      "index": 1,
+      "role": "intermediate",
+      "nameKey": "methods.critic.steps.normalized-matrix.name",
+      "explanationKey": "methods.critic.steps.normalized-matrix.explanation",
+      "formulas": [
+        {
+          "id": "benefit",
+          "template": "{{r}} = \\frac{ {{f}} - {{f_min}} }{ {{f_max}} - {{f_min}} }",
+          "terms": [
+            { "name": "r", "latex": "x_{ij}" },
+            { "name": "f", "latex": "f_j(a_i)" },
+            { "name": "f_max", "latex": "\\max_i f_j(a_i)" },
+            { "name": "f_min", "latex": "\\min_i f_j(a_i)" }
+          ],
+          "condition": { "key": "methods.common.forBenefitCriteria" }
+        },
+        {
+          "id": "cost",
+          "template": "{{r}} = \\frac{ {{f_max}} - {{f}} }{ {{f_max}} - {{f_min}} }",
+          "terms": [
+            { "name": "r", "latex": "x_{ij}" },
+            { "name": "f", "latex": "f_j(a_i)" },
+            { "name": "f_max", "latex": "\\max_i f_j(a_i)" },
+            { "name": "f_min", "latex": "\\min_i f_j(a_i)" }
+          ],
+          "condition": { "key": "methods.common.forCostCriteria" }
+        }
+      ],
+      "sources": [{ "kind": "step", "step": "initial-matrix" }],
+      "output": {
+        "shape": "matrix",
+        "rows": [
+          { "id": "a1", "label": { "text": "Phone 1" }, "kind": "alternative" },
+          { "id": "a2", "label": { "text": "Phone 2" }, "kind": "alternative" },
+          { "id": "a3", "label": { "text": "Phone 3" }, "kind": "alternative" },
+          { "id": "a4", "label": { "text": "Phone 4" }, "kind": "alternative" }
+        ],
+        "columns": [
+          { "id": "c1", "label": { "text": "C1" }, "kind": "criterion" },
+          { "id": "c2", "label": { "text": "C2" }, "kind": "criterion" },
+          { "id": "c3", "label": { "text": "C3" }, "kind": "criterion" }
+        ],
+        "cells": [
+          [
+            {
+              "value": 0.5,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "max",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c1"] }
+                          }
+                        ],
+                        "value": 300,
+                        "term": "f_max"
+                      },
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "initial-matrix", "row": "a1", "column": "c1" },
+                        "value": 250,
+                        "term": "f"
+                      }
+                    ],
+                    "value": 50
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "max",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c1"] }
+                          }
+                        ],
+                        "value": 300,
+                        "term": "f_max"
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "min",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c1"] }
+                          }
+                        ],
+                        "value": 200,
+                        "term": "f_min"
+                      }
+                    ],
+                    "value": 100
+                  }
+                ],
+                "value": 0.5
+              },
+              "formula": "cost"
+            },
+            {
+              "value": 0,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "initial-matrix", "row": "a1", "column": "c2" },
+                        "value": 16,
+                        "term": "f"
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "min",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c2"] }
+                          }
+                        ],
+                        "value": 16,
+                        "term": "f_min"
+                      }
+                    ],
+                    "value": 0
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "max",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c2"] }
+                          }
+                        ],
+                        "value": 32,
+                        "term": "f_max"
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "min",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c2"] }
+                          }
+                        ],
+                        "value": 16,
+                        "term": "f_min"
+                      }
+                    ],
+                    "value": 16
+                  }
+                ],
+                "value": 0
+              },
+              "formula": "benefit"
+            },
+            {
+              "value": 0.5,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "initial-matrix", "row": "a1", "column": "c3" },
+                        "value": 12,
+                        "term": "f"
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "min",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c3"] }
+                          }
+                        ],
+                        "value": 8,
+                        "term": "f_min"
+                      }
+                    ],
+                    "value": 4
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "max",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c3"] }
+                          }
+                        ],
+                        "value": 16,
+                        "term": "f_max"
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "min",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c3"] }
+                          }
+                        ],
+                        "value": 8,
+                        "term": "f_min"
+                      }
+                    ],
+                    "value": 8
+                  }
+                ],
+                "value": 0.5
+              },
+              "formula": "benefit"
+            }
+          ],
+          [
+            {
+              "value": 1,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "max",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c1"] }
+                          }
+                        ],
+                        "value": 300,
+                        "term": "f_max"
+                      },
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "initial-matrix", "row": "a2", "column": "c1" },
+                        "value": 200,
+                        "term": "f"
+                      }
+                    ],
+                    "value": 100
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "max",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c1"] }
+                          }
+                        ],
+                        "value": 300,
+                        "term": "f_max"
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "min",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c1"] }
+                          }
+                        ],
+                        "value": 200,
+                        "term": "f_min"
+                      }
+                    ],
+                    "value": 100
+                  }
+                ],
+                "value": 1
+              },
+              "formula": "cost"
+            },
+            {
+              "value": 0,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "initial-matrix", "row": "a2", "column": "c2" },
+                        "value": 16,
+                        "term": "f"
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "min",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c2"] }
+                          }
+                        ],
+                        "value": 16,
+                        "term": "f_min"
+                      }
+                    ],
+                    "value": 0
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "max",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c2"] }
+                          }
+                        ],
+                        "value": 32,
+                        "term": "f_max"
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "min",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c2"] }
+                          }
+                        ],
+                        "value": 16,
+                        "term": "f_min"
+                      }
+                    ],
+                    "value": 16
+                  }
+                ],
+                "value": 0
+              },
+              "formula": "benefit"
+            },
+            {
+              "value": 0,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "initial-matrix", "row": "a2", "column": "c3" },
+                        "value": 8,
+                        "term": "f"
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "min",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c3"] }
+                          }
+                        ],
+                        "value": 8,
+                        "term": "f_min"
+                      }
+                    ],
+                    "value": 0
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "max",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c3"] }
+                          }
+                        ],
+                        "value": 16,
+                        "term": "f_max"
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "min",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c3"] }
+                          }
+                        ],
+                        "value": 8,
+                        "term": "f_min"
+                      }
+                    ],
+                    "value": 8
+                  }
+                ],
+                "value": 0
+              },
+              "formula": "benefit"
+            }
+          ],
+          [
+            {
+              "value": 0,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "max",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c1"] }
+                          }
+                        ],
+                        "value": 300,
+                        "term": "f_max"
+                      },
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "initial-matrix", "row": "a3", "column": "c1" },
+                        "value": 300,
+                        "term": "f"
+                      }
+                    ],
+                    "value": 0
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "max",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c1"] }
+                          }
+                        ],
+                        "value": 300,
+                        "term": "f_max"
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "min",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c1"] }
+                          }
+                        ],
+                        "value": 200,
+                        "term": "f_min"
+                      }
+                    ],
+                    "value": 100
+                  }
+                ],
+                "value": 0
+              },
+              "formula": "cost"
+            },
+            {
+              "value": 1,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "initial-matrix", "row": "a3", "column": "c2" },
+                        "value": 32,
+                        "term": "f"
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "min",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c2"] }
+                          }
+                        ],
+                        "value": 16,
+                        "term": "f_min"
+                      }
+                    ],
+                    "value": 16
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "max",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c2"] }
+                          }
+                        ],
+                        "value": 32,
+                        "term": "f_max"
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "min",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c2"] }
+                          }
+                        ],
+                        "value": 16,
+                        "term": "f_min"
+                      }
+                    ],
+                    "value": 16
+                  }
+                ],
+                "value": 1
+              },
+              "formula": "benefit"
+            },
+            {
+              "value": 1,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "initial-matrix", "row": "a3", "column": "c3" },
+                        "value": 16,
+                        "term": "f"
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "min",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c3"] }
+                          }
+                        ],
+                        "value": 8,
+                        "term": "f_min"
+                      }
+                    ],
+                    "value": 8
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "max",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c3"] }
+                          }
+                        ],
+                        "value": 16,
+                        "term": "f_max"
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "min",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c3"] }
+                          }
+                        ],
+                        "value": 8,
+                        "term": "f_min"
+                      }
+                    ],
+                    "value": 8
+                  }
+                ],
+                "value": 1
+              },
+              "formula": "benefit"
+            }
+          ],
+          [
+            {
+              "value": 0.25,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "max",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c1"] }
+                          }
+                        ],
+                        "value": 300,
+                        "term": "f_max"
+                      },
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "initial-matrix", "row": "a4", "column": "c1" },
+                        "value": 275,
+                        "term": "f"
+                      }
+                    ],
+                    "value": 25
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "max",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c1"] }
+                          }
+                        ],
+                        "value": 300,
+                        "term": "f_max"
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "min",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c1"] }
+                          }
+                        ],
+                        "value": 200,
+                        "term": "f_min"
+                      }
+                    ],
+                    "value": 100
+                  }
+                ],
+                "value": 0.25
+              },
+              "formula": "cost"
+            },
+            {
+              "value": 1,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "initial-matrix", "row": "a4", "column": "c2" },
+                        "value": 32,
+                        "term": "f"
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "min",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c2"] }
+                          }
+                        ],
+                        "value": 16,
+                        "term": "f_min"
+                      }
+                    ],
+                    "value": 16
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "max",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c2"] }
+                          }
+                        ],
+                        "value": 32,
+                        "term": "f_max"
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "min",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c2"] }
+                          }
+                        ],
+                        "value": 16,
+                        "term": "f_min"
+                      }
+                    ],
+                    "value": 16
+                  }
+                ],
+                "value": 1
+              },
+              "formula": "benefit"
+            },
+            {
+              "value": 0,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "initial-matrix", "row": "a4", "column": "c3" },
+                        "value": 8,
+                        "term": "f"
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "min",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c3"] }
+                          }
+                        ],
+                        "value": 8,
+                        "term": "f_min"
+                      }
+                    ],
+                    "value": 0
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "max",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c3"] }
+                          }
+                        ],
+                        "value": 16,
+                        "term": "f_max"
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "min",
+                        "operands": [
+                          {
+                            "kind": "range",
+                            "ref": { "step": "initial-matrix", "rows": "all", "columns": ["c3"] }
+                          }
+                        ],
+                        "value": 8,
+                        "term": "f_min"
+                      }
+                    ],
+                    "value": 8
+                  }
+                ],
+                "value": 0
+              },
+              "formula": "benefit"
+            }
+          ]
+        ]
+      },
+      "visualization": { "view": "matrix", "basedOn": "initial-matrix" }
+    },
+    {
+      "id": "means",
+      "index": 2,
+      "role": "intermediate",
+      "nameKey": "methods.critic.steps.means.name",
+      "explanationKey": "methods.critic.steps.means.explanation",
+      "formulas": [
+        {
+          "id": "mean",
+          "template": "{{mu}} = \\frac{1}{n} \\sum_{i=1}^{n} {{x}}",
+          "terms": [
+            { "name": "sigma", "latex": "\\sigma_j" },
+            { "name": "x", "latex": "x_{ij}" },
+            { "name": "mu", "latex": "\\bar{x}_j" },
+            { "name": "n", "latex": "n" }
+          ]
+        }
+      ],
+      "sources": [{ "kind": "step", "step": "normalized-matrix" }],
+      "output": {
+        "shape": "row-vector",
+        "rows": [
+          {
+            "id": "means",
+            "label": { "key": "methods.critic.steps.means.name" },
+            "kind": "quantity"
+          }
+        ],
+        "columns": [
+          { "id": "c1", "label": { "text": "C1" }, "kind": "criterion" },
+          { "id": "c2", "label": { "text": "C2" }, "kind": "criterion" },
+          { "id": "c3", "label": { "text": "C3" }, "kind": "criterion" }
+        ],
+        "cells": [
+          [
+            {
+              "value": 0.4375,
+              "derivation": {
+                "kind": "operation",
+                "operation": "mean",
+                "operands": [
+                  {
+                    "kind": "range",
+                    "ref": { "step": "normalized-matrix", "rows": "all", "columns": ["c1"] },
+                    "term": "x"
+                  }
+                ],
+                "value": 0.4375
+              }
+            },
+            {
+              "value": 0.5,
+              "derivation": {
+                "kind": "operation",
+                "operation": "mean",
+                "operands": [
+                  {
+                    "kind": "range",
+                    "ref": { "step": "normalized-matrix", "rows": "all", "columns": ["c2"] },
+                    "term": "x"
+                  }
+                ],
+                "value": 0.5
+              }
+            },
+            {
+              "value": 0.375,
+              "derivation": {
+                "kind": "operation",
+                "operation": "mean",
+                "operands": [
+                  {
+                    "kind": "range",
+                    "ref": { "step": "normalized-matrix", "rows": "all", "columns": ["c3"] },
+                    "term": "x"
+                  }
+                ],
+                "value": 0.375
+              }
+            }
+          ]
+        ]
+      },
+      "visualization": { "view": "bars" }
+    },
+    {
+      "id": "standard-deviations",
+      "index": 3,
+      "role": "intermediate",
+      "nameKey": "methods.critic.steps.standard-deviations.name",
+      "explanationKey": "methods.critic.steps.standard-deviations.explanation",
+      "formulas": [
+        {
+          "id": "sigma",
+          "template": "{{sigma}} = \\sqrt{ \\frac{1}{n} \\sum_{i=1}^{n} ( {{x}} - {{mu}} )^2 }",
+          "terms": [
+            { "name": "sigma", "latex": "\\sigma_j" },
+            { "name": "x", "latex": "x_{ij}" },
+            { "name": "mu", "latex": "\\bar{x}_j" },
+            { "name": "n", "latex": "n" }
+          ]
+        }
+      ],
+      "sources": [
+        { "kind": "step", "step": "normalized-matrix" },
+        { "kind": "step", "step": "means" }
+      ],
+      "output": {
+        "shape": "row-vector",
+        "rows": [
+          {
+            "id": "standard-deviations",
+            "label": { "key": "methods.critic.steps.standard-deviations.name" },
+            "kind": "quantity"
+          }
+        ],
+        "columns": [
+          { "id": "c1", "label": { "text": "C1" }, "kind": "criterion" },
+          { "id": "c2", "label": { "text": "C2" }, "kind": "criterion" },
+          { "id": "c3", "label": { "text": "C3" }, "kind": "criterion" }
+        ],
+        "cells": [
+          [
+            {
+              "value": 0.369754986443726,
+              "derivation": {
+                "kind": "operation",
+                "operation": "sqrt",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "divide",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "sum-of-squares",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a1", "column": "c1" },
+                                "value": 0.5,
+                                "term": "x"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu"
+                              }
+                            ],
+                            "value": 0.0625
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a2", "column": "c1" },
+                                "value": 1,
+                                "term": "x"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu"
+                              }
+                            ],
+                            "value": 0.5625
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a3", "column": "c1" },
+                                "value": 0,
+                                "term": "x"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu"
+                              }
+                            ],
+                            "value": -0.4375
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a4", "column": "c1" },
+                                "value": 0.25,
+                                "term": "x"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu"
+                              }
+                            ],
+                            "value": -0.1875
+                          }
+                        ],
+                        "value": 0.546875
+                      },
+                      { "kind": "constant", "value": 4 }
+                    ],
+                    "value": 0.13671875
+                  }
+                ],
+                "value": 0.369754986443726
+              }
+            },
+            {
+              "value": 0.5,
+              "derivation": {
+                "kind": "operation",
+                "operation": "sqrt",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "divide",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "sum-of-squares",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a1", "column": "c2" },
+                                "value": 0,
+                                "term": "x"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu"
+                              }
+                            ],
+                            "value": -0.5
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a2", "column": "c2" },
+                                "value": 0,
+                                "term": "x"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu"
+                              }
+                            ],
+                            "value": -0.5
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a3", "column": "c2" },
+                                "value": 1,
+                                "term": "x"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu"
+                              }
+                            ],
+                            "value": 0.5
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a4", "column": "c2" },
+                                "value": 1,
+                                "term": "x"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu"
+                              }
+                            ],
+                            "value": 0.5
+                          }
+                        ],
+                        "value": 1
+                      },
+                      { "kind": "constant", "value": 4 }
+                    ],
+                    "value": 0.25
+                  }
+                ],
+                "value": 0.5
+              }
+            },
+            {
+              "value": 0.414578098794425,
+              "derivation": {
+                "kind": "operation",
+                "operation": "sqrt",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "divide",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "sum-of-squares",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a1", "column": "c3" },
+                                "value": 0.5,
+                                "term": "x"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu"
+                              }
+                            ],
+                            "value": 0.125
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a2", "column": "c3" },
+                                "value": 0,
+                                "term": "x"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu"
+                              }
+                            ],
+                            "value": -0.375
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a3", "column": "c3" },
+                                "value": 1,
+                                "term": "x"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu"
+                              }
+                            ],
+                            "value": 0.625
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a4", "column": "c3" },
+                                "value": 0,
+                                "term": "x"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu"
+                              }
+                            ],
+                            "value": -0.375
+                          }
+                        ],
+                        "value": 0.6875
+                      },
+                      { "kind": "constant", "value": 4 }
+                    ],
+                    "value": 0.171875
+                  }
+                ],
+                "value": 0.414578098794425
+              }
+            }
+          ]
+        ]
+      },
+      "visualization": { "view": "bars" }
+    },
+    {
+      "id": "correlation-matrix",
+      "index": 4,
+      "role": "intermediate",
+      "nameKey": "methods.critic.steps.correlation-matrix.name",
+      "explanationKey": "methods.critic.steps.correlation-matrix.explanation",
+      "formulas": [
+        {
+          "id": "pearson",
+          "template": "{{r}} = \\frac{ \\sum_{i=1}^{n} ( {{x_j}} - {{mu_j}} )( {{x_k}} - {{mu_k}} ) }{ n \\, {{sigma_j}} \\, {{sigma_k}} }",
+          "terms": [
+            { "name": "r", "latex": "r_{jk}" },
+            { "name": "x_j", "latex": "x_{ij}" },
+            { "name": "x_k", "latex": "x_{ik}" },
+            { "name": "mu_j", "latex": "\\bar{x}_j" },
+            { "name": "mu_k", "latex": "\\bar{x}_k" },
+            { "name": "sigma_j", "latex": "\\sigma_j" },
+            { "name": "sigma_k", "latex": "\\sigma_k" },
+            { "name": "n", "latex": "n" }
+          ]
+        }
+      ],
+      "sources": [
+        { "kind": "step", "step": "normalized-matrix" },
+        { "kind": "step", "step": "means" },
+        { "kind": "step", "step": "standard-deviations" }
+      ],
+      "output": {
+        "shape": "matrix",
+        "rows": [
+          { "id": "c1", "label": { "text": "C1" }, "kind": "criterion" },
+          { "id": "c2", "label": { "text": "C2" }, "kind": "criterion" },
+          { "id": "c3", "label": { "text": "C3" }, "kind": "criterion" }
+        ],
+        "columns": [
+          { "id": "c1", "label": { "text": "C1" }, "kind": "criterion" },
+          { "id": "c2", "label": { "text": "C2" }, "kind": "criterion" },
+          { "id": "c3", "label": { "text": "C3" }, "kind": "criterion" }
+        ],
+        "cells": [
+          [
+            {
+              "value": 1,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "sum",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a1", "column": "c1" },
+                                "value": 0.5,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": 0.0625
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a1", "column": "c1" },
+                                "value": 0.5,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": 0.0625
+                          }
+                        ],
+                        "value": 0.00390625
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a2", "column": "c1" },
+                                "value": 1,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": 0.5625
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a2", "column": "c1" },
+                                "value": 1,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": 0.5625
+                          }
+                        ],
+                        "value": 0.31640625
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a3", "column": "c1" },
+                                "value": 0,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": -0.4375
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a3", "column": "c1" },
+                                "value": 0,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": -0.4375
+                          }
+                        ],
+                        "value": 0.19140625
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a4", "column": "c1" },
+                                "value": 0.25,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": -0.1875
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a4", "column": "c1" },
+                                "value": 0.25,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": -0.1875
+                          }
+                        ],
+                        "value": 0.03515625
+                      }
+                    ],
+                    "value": 0.546875
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "multiply",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          { "kind": "constant", "value": 4 },
+                          {
+                            "kind": "ref",
+                            "ref": {
+                              "step": "standard-deviations",
+                              "row": "standard-deviations",
+                              "column": "c1"
+                            },
+                            "value": 0.369754986443726,
+                            "term": "sigma_j"
+                          }
+                        ],
+                        "value": 1.479019945774904
+                      },
+                      {
+                        "kind": "ref",
+                        "ref": {
+                          "step": "standard-deviations",
+                          "row": "standard-deviations",
+                          "column": "c1"
+                        },
+                        "value": 0.369754986443726,
+                        "term": "sigma_k"
+                      }
+                    ],
+                    "value": 0.546875
+                  }
+                ],
+                "value": 1
+              }
+            },
+            {
+              "value": -0.8451542547285166,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "sum",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a1", "column": "c1" },
+                                "value": 0.5,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": 0.0625
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a1", "column": "c2" },
+                                "value": 0,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": -0.5
+                          }
+                        ],
+                        "value": -0.03125
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a2", "column": "c1" },
+                                "value": 1,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": 0.5625
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a2", "column": "c2" },
+                                "value": 0,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": -0.5
+                          }
+                        ],
+                        "value": -0.28125
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a3", "column": "c1" },
+                                "value": 0,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": -0.4375
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a3", "column": "c2" },
+                                "value": 1,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": 0.5
+                          }
+                        ],
+                        "value": -0.21875
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a4", "column": "c1" },
+                                "value": 0.25,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": -0.1875
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a4", "column": "c2" },
+                                "value": 1,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": 0.5
+                          }
+                        ],
+                        "value": -0.09375
+                      }
+                    ],
+                    "value": -0.625
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "multiply",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          { "kind": "constant", "value": 4 },
+                          {
+                            "kind": "ref",
+                            "ref": {
+                              "step": "standard-deviations",
+                              "row": "standard-deviations",
+                              "column": "c1"
+                            },
+                            "value": 0.369754986443726,
+                            "term": "sigma_j"
+                          }
+                        ],
+                        "value": 1.479019945774904
+                      },
+                      {
+                        "kind": "ref",
+                        "ref": {
+                          "step": "standard-deviations",
+                          "row": "standard-deviations",
+                          "column": "c2"
+                        },
+                        "value": 0.5,
+                        "term": "sigma_k"
+                      }
+                    ],
+                    "value": 0.739509972887452
+                  }
+                ],
+                "value": -0.8451542547285166
+              }
+            },
+            {
+              "value": -0.6625413488689132,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "sum",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a1", "column": "c1" },
+                                "value": 0.5,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": 0.0625
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a1", "column": "c3" },
+                                "value": 0.5,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": 0.125
+                          }
+                        ],
+                        "value": 0.0078125
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a2", "column": "c1" },
+                                "value": 1,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": 0.5625
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a2", "column": "c3" },
+                                "value": 0,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": -0.375
+                          }
+                        ],
+                        "value": -0.2109375
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a3", "column": "c1" },
+                                "value": 0,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": -0.4375
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a3", "column": "c3" },
+                                "value": 1,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": 0.625
+                          }
+                        ],
+                        "value": -0.2734375
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a4", "column": "c1" },
+                                "value": 0.25,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": -0.1875
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a4", "column": "c3" },
+                                "value": 0,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": -0.375
+                          }
+                        ],
+                        "value": 0.0703125
+                      }
+                    ],
+                    "value": -0.40625
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "multiply",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          { "kind": "constant", "value": 4 },
+                          {
+                            "kind": "ref",
+                            "ref": {
+                              "step": "standard-deviations",
+                              "row": "standard-deviations",
+                              "column": "c1"
+                            },
+                            "value": 0.369754986443726,
+                            "term": "sigma_j"
+                          }
+                        ],
+                        "value": 1.479019945774904
+                      },
+                      {
+                        "kind": "ref",
+                        "ref": {
+                          "step": "standard-deviations",
+                          "row": "standard-deviations",
+                          "column": "c3"
+                        },
+                        "value": 0.414578098794425,
+                        "term": "sigma_k"
+                      }
+                    ],
+                    "value": 0.6131692771983932
+                  }
+                ],
+                "value": -0.6625413488689132
+              }
+            }
+          ],
+          [
+            {
+              "value": -0.8451542547285166,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "sum",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a1", "column": "c2" },
+                                "value": 0,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": -0.5
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a1", "column": "c1" },
+                                "value": 0.5,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": 0.0625
+                          }
+                        ],
+                        "value": -0.03125
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a2", "column": "c2" },
+                                "value": 0,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": -0.5
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a2", "column": "c1" },
+                                "value": 1,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": 0.5625
+                          }
+                        ],
+                        "value": -0.28125
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a3", "column": "c2" },
+                                "value": 1,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": 0.5
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a3", "column": "c1" },
+                                "value": 0,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": -0.4375
+                          }
+                        ],
+                        "value": -0.21875
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a4", "column": "c2" },
+                                "value": 1,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": 0.5
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a4", "column": "c1" },
+                                "value": 0.25,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": -0.1875
+                          }
+                        ],
+                        "value": -0.09375
+                      }
+                    ],
+                    "value": -0.625
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "multiply",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          { "kind": "constant", "value": 4 },
+                          {
+                            "kind": "ref",
+                            "ref": {
+                              "step": "standard-deviations",
+                              "row": "standard-deviations",
+                              "column": "c2"
+                            },
+                            "value": 0.5,
+                            "term": "sigma_j"
+                          }
+                        ],
+                        "value": 2
+                      },
+                      {
+                        "kind": "ref",
+                        "ref": {
+                          "step": "standard-deviations",
+                          "row": "standard-deviations",
+                          "column": "c1"
+                        },
+                        "value": 0.369754986443726,
+                        "term": "sigma_k"
+                      }
+                    ],
+                    "value": 0.739509972887452
+                  }
+                ],
+                "value": -0.8451542547285166
+              }
+            },
+            {
+              "value": 1,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "sum",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a1", "column": "c2" },
+                                "value": 0,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": -0.5
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a1", "column": "c2" },
+                                "value": 0,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": -0.5
+                          }
+                        ],
+                        "value": 0.25
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a2", "column": "c2" },
+                                "value": 0,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": -0.5
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a2", "column": "c2" },
+                                "value": 0,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": -0.5
+                          }
+                        ],
+                        "value": 0.25
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a3", "column": "c2" },
+                                "value": 1,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": 0.5
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a3", "column": "c2" },
+                                "value": 1,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": 0.5
+                          }
+                        ],
+                        "value": 0.25
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a4", "column": "c2" },
+                                "value": 1,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": 0.5
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a4", "column": "c2" },
+                                "value": 1,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": 0.5
+                          }
+                        ],
+                        "value": 0.25
+                      }
+                    ],
+                    "value": 1
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "multiply",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          { "kind": "constant", "value": 4 },
+                          {
+                            "kind": "ref",
+                            "ref": {
+                              "step": "standard-deviations",
+                              "row": "standard-deviations",
+                              "column": "c2"
+                            },
+                            "value": 0.5,
+                            "term": "sigma_j"
+                          }
+                        ],
+                        "value": 2
+                      },
+                      {
+                        "kind": "ref",
+                        "ref": {
+                          "step": "standard-deviations",
+                          "row": "standard-deviations",
+                          "column": "c2"
+                        },
+                        "value": 0.5,
+                        "term": "sigma_k"
+                      }
+                    ],
+                    "value": 1
+                  }
+                ],
+                "value": 1
+              }
+            },
+            {
+              "value": 0.30151134457776363,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "sum",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a1", "column": "c2" },
+                                "value": 0,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": -0.5
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a1", "column": "c3" },
+                                "value": 0.5,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": 0.125
+                          }
+                        ],
+                        "value": -0.0625
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a2", "column": "c2" },
+                                "value": 0,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": -0.5
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a2", "column": "c3" },
+                                "value": 0,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": -0.375
+                          }
+                        ],
+                        "value": 0.1875
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a3", "column": "c2" },
+                                "value": 1,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": 0.5
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a3", "column": "c3" },
+                                "value": 1,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": 0.625
+                          }
+                        ],
+                        "value": 0.3125
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a4", "column": "c2" },
+                                "value": 1,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": 0.5
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a4", "column": "c3" },
+                                "value": 0,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": -0.375
+                          }
+                        ],
+                        "value": -0.1875
+                      }
+                    ],
+                    "value": 0.25
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "multiply",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          { "kind": "constant", "value": 4 },
+                          {
+                            "kind": "ref",
+                            "ref": {
+                              "step": "standard-deviations",
+                              "row": "standard-deviations",
+                              "column": "c2"
+                            },
+                            "value": 0.5,
+                            "term": "sigma_j"
+                          }
+                        ],
+                        "value": 2
+                      },
+                      {
+                        "kind": "ref",
+                        "ref": {
+                          "step": "standard-deviations",
+                          "row": "standard-deviations",
+                          "column": "c3"
+                        },
+                        "value": 0.414578098794425,
+                        "term": "sigma_k"
+                      }
+                    ],
+                    "value": 0.82915619758885
+                  }
+                ],
+                "value": 0.30151134457776363
+              }
+            }
+          ],
+          [
+            {
+              "value": -0.6625413488689132,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "sum",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a1", "column": "c3" },
+                                "value": 0.5,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": 0.125
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a1", "column": "c1" },
+                                "value": 0.5,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": 0.0625
+                          }
+                        ],
+                        "value": 0.0078125
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a2", "column": "c3" },
+                                "value": 0,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": -0.375
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a2", "column": "c1" },
+                                "value": 1,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": 0.5625
+                          }
+                        ],
+                        "value": -0.2109375
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a3", "column": "c3" },
+                                "value": 1,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": 0.625
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a3", "column": "c1" },
+                                "value": 0,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": -0.4375
+                          }
+                        ],
+                        "value": -0.2734375
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a4", "column": "c3" },
+                                "value": 0,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": -0.375
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a4", "column": "c1" },
+                                "value": 0.25,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c1" },
+                                "value": 0.4375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": -0.1875
+                          }
+                        ],
+                        "value": 0.0703125
+                      }
+                    ],
+                    "value": -0.40625
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "multiply",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          { "kind": "constant", "value": 4 },
+                          {
+                            "kind": "ref",
+                            "ref": {
+                              "step": "standard-deviations",
+                              "row": "standard-deviations",
+                              "column": "c3"
+                            },
+                            "value": 0.414578098794425,
+                            "term": "sigma_j"
+                          }
+                        ],
+                        "value": 1.6583123951777
+                      },
+                      {
+                        "kind": "ref",
+                        "ref": {
+                          "step": "standard-deviations",
+                          "row": "standard-deviations",
+                          "column": "c1"
+                        },
+                        "value": 0.369754986443726,
+                        "term": "sigma_k"
+                      }
+                    ],
+                    "value": 0.6131692771983932
+                  }
+                ],
+                "value": -0.6625413488689132
+              }
+            },
+            {
+              "value": 0.30151134457776363,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "sum",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a1", "column": "c3" },
+                                "value": 0.5,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": 0.125
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a1", "column": "c2" },
+                                "value": 0,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": -0.5
+                          }
+                        ],
+                        "value": -0.0625
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a2", "column": "c3" },
+                                "value": 0,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": -0.375
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a2", "column": "c2" },
+                                "value": 0,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": -0.5
+                          }
+                        ],
+                        "value": 0.1875
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a3", "column": "c3" },
+                                "value": 1,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": 0.625
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a3", "column": "c2" },
+                                "value": 1,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": 0.5
+                          }
+                        ],
+                        "value": 0.3125
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a4", "column": "c3" },
+                                "value": 0,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": -0.375
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a4", "column": "c2" },
+                                "value": 1,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c2" },
+                                "value": 0.5,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": 0.5
+                          }
+                        ],
+                        "value": -0.1875
+                      }
+                    ],
+                    "value": 0.25
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "multiply",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          { "kind": "constant", "value": 4 },
+                          {
+                            "kind": "ref",
+                            "ref": {
+                              "step": "standard-deviations",
+                              "row": "standard-deviations",
+                              "column": "c3"
+                            },
+                            "value": 0.414578098794425,
+                            "term": "sigma_j"
+                          }
+                        ],
+                        "value": 1.6583123951777
+                      },
+                      {
+                        "kind": "ref",
+                        "ref": {
+                          "step": "standard-deviations",
+                          "row": "standard-deviations",
+                          "column": "c2"
+                        },
+                        "value": 0.5,
+                        "term": "sigma_k"
+                      }
+                    ],
+                    "value": 0.82915619758885
+                  }
+                ],
+                "value": 0.30151134457776363
+              }
+            },
+            {
+              "value": 1,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "sum",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a1", "column": "c3" },
+                                "value": 0.5,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": 0.125
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a1", "column": "c3" },
+                                "value": 0.5,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": 0.125
+                          }
+                        ],
+                        "value": 0.015625
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a2", "column": "c3" },
+                                "value": 0,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": -0.375
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a2", "column": "c3" },
+                                "value": 0,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": -0.375
+                          }
+                        ],
+                        "value": 0.140625
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a3", "column": "c3" },
+                                "value": 1,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": 0.625
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a3", "column": "c3" },
+                                "value": 1,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": 0.625
+                          }
+                        ],
+                        "value": 0.390625
+                      },
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a4", "column": "c3" },
+                                "value": 0,
+                                "term": "x_j"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_j"
+                              }
+                            ],
+                            "value": -0.375
+                          },
+                          {
+                            "kind": "operation",
+                            "operation": "subtract",
+                            "operands": [
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "normalized-matrix", "row": "a4", "column": "c3" },
+                                "value": 0,
+                                "term": "x_k"
+                              },
+                              {
+                                "kind": "ref",
+                                "ref": { "step": "means", "row": "means", "column": "c3" },
+                                "value": 0.375,
+                                "term": "mu_k"
+                              }
+                            ],
+                            "value": -0.375
+                          }
+                        ],
+                        "value": 0.140625
+                      }
+                    ],
+                    "value": 0.6875
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "multiply",
+                    "operands": [
+                      {
+                        "kind": "operation",
+                        "operation": "multiply",
+                        "operands": [
+                          { "kind": "constant", "value": 4 },
+                          {
+                            "kind": "ref",
+                            "ref": {
+                              "step": "standard-deviations",
+                              "row": "standard-deviations",
+                              "column": "c3"
+                            },
+                            "value": 0.414578098794425,
+                            "term": "sigma_j"
+                          }
+                        ],
+                        "value": 1.6583123951777
+                      },
+                      {
+                        "kind": "ref",
+                        "ref": {
+                          "step": "standard-deviations",
+                          "row": "standard-deviations",
+                          "column": "c3"
+                        },
+                        "value": 0.414578098794425,
+                        "term": "sigma_k"
+                      }
+                    ],
+                    "value": 0.6875
+                  }
+                ],
+                "value": 1
+              }
+            }
+          ]
+        ]
+      },
+      "visualization": { "view": "matrix", "basedOn": "normalized-matrix" }
+    },
+    {
+      "id": "conflict",
+      "index": 5,
+      "role": "intermediate",
+      "nameKey": "methods.critic.steps.conflict.name",
+      "explanationKey": "methods.critic.steps.conflict.explanation",
+      "formulas": [
+        {
+          "id": "conflict",
+          "template": "{{c}} = \\sum_{k=1}^{m} ( 1 - {{r}} )",
+          "terms": [
+            { "name": "c", "latex": "\\sum_{k}(1 - r_{jk})" },
+            { "name": "r", "latex": "r_{jk}" }
+          ]
+        }
+      ],
+      "sources": [{ "kind": "step", "step": "correlation-matrix" }],
+      "output": {
+        "shape": "row-vector",
+        "rows": [
+          {
+            "id": "conflict",
+            "label": { "key": "methods.critic.steps.conflict.name" },
+            "kind": "quantity"
+          }
+        ],
+        "columns": [
+          { "id": "c1", "label": { "text": "C1" }, "kind": "criterion" },
+          { "id": "c2", "label": { "text": "C2" }, "kind": "criterion" },
+          { "id": "c3", "label": { "text": "C3" }, "kind": "criterion" }
+        ],
+        "cells": [
+          [
+            {
+              "value": 3.50769560359743,
+              "derivation": {
+                "kind": "operation",
+                "operation": "sum",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "correlation-matrix", "row": "c1", "column": "c1" },
+                        "value": 1,
+                        "term": "r"
+                      }
+                    ],
+                    "value": 0
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "correlation-matrix", "row": "c1", "column": "c2" },
+                        "value": -0.8451542547285166,
+                        "term": "r"
+                      }
+                    ],
+                    "value": 1.8451542547285165
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "correlation-matrix", "row": "c1", "column": "c3" },
+                        "value": -0.6625413488689132,
+                        "term": "r"
+                      }
+                    ],
+                    "value": 1.6625413488689134
+                  }
+                ],
+                "value": 3.50769560359743
+              }
+            },
+            {
+              "value": 2.5436429101507527,
+              "derivation": {
+                "kind": "operation",
+                "operation": "sum",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "correlation-matrix", "row": "c2", "column": "c1" },
+                        "value": -0.8451542547285166,
+                        "term": "r"
+                      }
+                    ],
+                    "value": 1.8451542547285165
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "correlation-matrix", "row": "c2", "column": "c2" },
+                        "value": 1,
+                        "term": "r"
+                      }
+                    ],
+                    "value": 0
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "correlation-matrix", "row": "c2", "column": "c3" },
+                        "value": 0.30151134457776363,
+                        "term": "r"
+                      }
+                    ],
+                    "value": 0.6984886554222364
+                  }
+                ],
+                "value": 2.5436429101507527
+              }
+            },
+            {
+              "value": 2.3610300042911496,
+              "derivation": {
+                "kind": "operation",
+                "operation": "sum",
+                "operands": [
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "correlation-matrix", "row": "c3", "column": "c1" },
+                        "value": -0.6625413488689132,
+                        "term": "r"
+                      }
+                    ],
+                    "value": 1.6625413488689134
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "correlation-matrix", "row": "c3", "column": "c2" },
+                        "value": 0.30151134457776363,
+                        "term": "r"
+                      }
+                    ],
+                    "value": 0.6984886554222364
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "subtract",
+                    "operands": [
+                      { "kind": "constant", "value": 1 },
+                      {
+                        "kind": "ref",
+                        "ref": { "step": "correlation-matrix", "row": "c3", "column": "c3" },
+                        "value": 1,
+                        "term": "r"
+                      }
+                    ],
+                    "value": 0
+                  }
+                ],
+                "value": 2.3610300042911496
+              }
+            }
+          ]
+        ]
+      },
+      "visualization": { "view": "bars" }
+    },
+    {
+      "id": "information-content",
+      "index": 6,
+      "role": "intermediate",
+      "nameKey": "methods.critic.steps.information-content.name",
+      "explanationKey": "methods.critic.steps.information-content.explanation",
+      "formulas": [
+        {
+          "id": "information",
+          "template": "{{C}} = {{sigma}} \\cdot {{conflict}}",
+          "terms": [
+            { "name": "C", "latex": "C_j" },
+            { "name": "sigma", "latex": "\\sigma_j" },
+            { "name": "conflict", "latex": "\\sum_{k}(1 - r_{jk})" }
+          ]
+        }
+      ],
+      "sources": [
+        { "kind": "step", "step": "standard-deviations" },
+        { "kind": "step", "step": "conflict" }
+      ],
+      "output": {
+        "shape": "row-vector",
+        "rows": [
+          {
+            "id": "information-content",
+            "label": { "key": "methods.critic.steps.information-content.name" },
+            "kind": "quantity"
+          }
+        ],
+        "columns": [
+          { "id": "c1", "label": { "text": "C1" }, "kind": "criterion" },
+          { "id": "c2", "label": { "text": "C2" }, "kind": "criterion" },
+          { "id": "c3", "label": { "text": "C3" }, "kind": "criterion" }
+        ],
+        "cells": [
+          [
+            {
+              "value": 1.296987940356885,
+              "derivation": {
+                "kind": "operation",
+                "operation": "multiply",
+                "operands": [
+                  {
+                    "kind": "ref",
+                    "ref": {
+                      "step": "standard-deviations",
+                      "row": "standard-deviations",
+                      "column": "c1"
+                    },
+                    "value": 0.369754986443726,
+                    "term": "sigma"
+                  },
+                  {
+                    "kind": "ref",
+                    "ref": { "step": "conflict", "row": "conflict", "column": "c1" },
+                    "value": 3.50769560359743,
+                    "term": "conflict"
+                  }
+                ],
+                "value": 1.296987940356885
+              }
+            },
+            {
+              "value": 1.2718214550753764,
+              "derivation": {
+                "kind": "operation",
+                "operation": "multiply",
+                "operands": [
+                  {
+                    "kind": "ref",
+                    "ref": {
+                      "step": "standard-deviations",
+                      "row": "standard-deviations",
+                      "column": "c2"
+                    },
+                    "value": 0.5,
+                    "term": "sigma"
+                  },
+                  {
+                    "kind": "ref",
+                    "ref": { "step": "conflict", "row": "conflict", "column": "c2" },
+                    "value": 2.5436429101507527,
+                    "term": "conflict"
+                  }
+                ],
+                "value": 1.2718214550753764
+              }
+            },
+            {
+              "value": 0.9788313303756179,
+              "derivation": {
+                "kind": "operation",
+                "operation": "multiply",
+                "operands": [
+                  {
+                    "kind": "ref",
+                    "ref": {
+                      "step": "standard-deviations",
+                      "row": "standard-deviations",
+                      "column": "c3"
+                    },
+                    "value": 0.414578098794425,
+                    "term": "sigma"
+                  },
+                  {
+                    "kind": "ref",
+                    "ref": { "step": "conflict", "row": "conflict", "column": "c3" },
+                    "value": 2.3610300042911496,
+                    "term": "conflict"
+                  }
+                ],
+                "value": 0.9788313303756179
+              }
+            }
+          ]
+        ]
+      },
+      "visualization": { "view": "bars" }
+    },
+    {
+      "id": "weights",
+      "index": 7,
+      "role": "result",
+      "nameKey": "methods.critic.steps.weights.name",
+      "explanationKey": "methods.critic.steps.weights.explanation",
+      "formulas": [
+        {
+          "id": "weight",
+          "template": "{{w}} = \\frac{ {{C}} }{ {{C_sum}} }",
+          "terms": [
+            { "name": "w", "latex": "w_j" },
+            { "name": "C", "latex": "C_j" },
+            { "name": "C_sum", "latex": "\\sum_{k=1}^{m} C_k" }
+          ]
+        }
+      ],
+      "sources": [{ "kind": "step", "step": "information-content" }],
+      "output": {
+        "shape": "row-vector",
+        "rows": [
+          { "id": "w", "label": { "key": "methods.critic.rows.weight" }, "kind": "quantity" }
+        ],
+        "columns": [
+          { "id": "c1", "label": { "text": "C1" }, "kind": "criterion" },
+          { "id": "c2", "label": { "text": "C2" }, "kind": "criterion" },
+          { "id": "c3", "label": { "text": "C3" }, "kind": "criterion" }
+        ],
+        "cells": [
+          [
+            {
+              "value": 0.36559168207810305,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "ref",
+                    "ref": {
+                      "step": "information-content",
+                      "row": "information-content",
+                      "column": "c1"
+                    },
+                    "value": 1.296987940356885,
+                    "term": "C"
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "sum",
+                    "operands": [
+                      {
+                        "kind": "range",
+                        "ref": { "step": "information-content", "rows": "all", "columns": "all" }
+                      }
+                    ],
+                    "value": 3.547640725807879,
+                    "term": "C_sum"
+                  }
+                ],
+                "value": 0.36559168207810305
+              }
+            },
+            {
+              "value": 0.3584978168232505,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "ref",
+                    "ref": {
+                      "step": "information-content",
+                      "row": "information-content",
+                      "column": "c2"
+                    },
+                    "value": 1.2718214550753764,
+                    "term": "C"
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "sum",
+                    "operands": [
+                      {
+                        "kind": "range",
+                        "ref": { "step": "information-content", "rows": "all", "columns": "all" }
+                      }
+                    ],
+                    "value": 3.547640725807879,
+                    "term": "C_sum"
+                  }
+                ],
+                "value": 0.3584978168232505
+              }
+            },
+            {
+              "value": 0.2759105010986465,
+              "derivation": {
+                "kind": "operation",
+                "operation": "divide",
+                "operands": [
+                  {
+                    "kind": "ref",
+                    "ref": {
+                      "step": "information-content",
+                      "row": "information-content",
+                      "column": "c3"
+                    },
+                    "value": 0.9788313303756179,
+                    "term": "C"
+                  },
+                  {
+                    "kind": "operation",
+                    "operation": "sum",
+                    "operands": [
+                      {
+                        "kind": "range",
+                        "ref": { "step": "information-content", "rows": "all", "columns": "all" }
+                      }
+                    ],
+                    "value": 3.547640725807879,
+                    "term": "C_sum"
+                  }
+                ],
+                "value": 0.2759105010986465
+              }
+            }
+          ]
+        ]
+      },
+      "visualization": { "view": "bars", "basedOn": "information-content" }
+    }
+  ]
+}

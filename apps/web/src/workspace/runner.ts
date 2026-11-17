@@ -1,10 +1,16 @@
-import { executeJob, type RunJob, type RunOutcome } from './runnerCore';
+import {
+  executeJob,
+  executeResultJob,
+  type ResultOutcome,
+  type RunJob,
+  type RunOutcome,
+} from './runnerCore';
 import type { WorkerRequest, WorkerResponse } from './runner.worker';
 
-export type { ParameterValues, RunJob, RunOutcome } from './runnerCore';
+export type { ParameterValues, ResultOutcome, RunJob, RunOutcome } from './runnerCore';
 
 interface Pending {
-  readonly resolve: (outcome: RunOutcome) => void;
+  readonly resolve: (outcome: RunOutcome | ResultOutcome) => void;
 }
 
 let worker: Worker | undefined;
@@ -37,6 +43,19 @@ function startWorker(): Worker | undefined {
   return created;
 }
 
+function post<T extends RunOutcome | ResultOutcome>(
+  target: Worker,
+  job: RunJob,
+  resultOnly: boolean,
+): Promise<T> {
+  return new Promise((resolve) => {
+    const id = nextId++;
+    pending.set(id, { resolve: resolve as (outcome: RunOutcome | ResultOutcome) => void });
+    const request: WorkerRequest = { id, job, ...(resultOnly ? { resultOnly } : {}) };
+    target.postMessage(request);
+  });
+}
+
 /**
  * Runs a method in a Web Worker. Without Worker support (unit tests) it runs in place, so
  * both paths use the same `executeJob`.
@@ -44,10 +63,12 @@ function startWorker(): Worker | undefined {
 export function runJob(job: RunJob): Promise<RunOutcome> {
   const target = startWorker();
   if (!target) return Promise.resolve(executeJob(job));
-  return new Promise((resolve) => {
-    const id = nextId++;
-    pending.set(id, { resolve });
-    const request: WorkerRequest = { id, job };
-    target.postMessage(request);
-  });
+  return post<RunOutcome>(target, job, false);
+}
+
+/** {@link runJob} for callers that only read the result: the trace stays in the worker. */
+export function runResultJob(job: RunJob): Promise<ResultOutcome> {
+  const target = startWorker();
+  if (!target) return Promise.resolve(executeResultJob(job));
+  return post<ResultOutcome>(target, job, true);
 }

@@ -76,6 +76,7 @@ export class ProjectSession {
   private closed = false;
   private queue: Promise<unknown> = Promise.resolve();
   private readonly listeners = new Set<() => void>();
+  private readonly snapshotIds = new WeakMap<object, Map<string, string>>();
 
   /** Sessions are made by `ProjectRepository.create` and `open`. */
   constructor(
@@ -294,7 +295,20 @@ export class ProjectSession {
    * to `AnalysisSummary.snapshotId` exactly when the analysis was run on the same data.
    */
   snapshotIdOf(datasetId: string): string {
-    return prepareSnapshot(this.current.model, datasetId).id;
+    // Pages ask on every render whether an analysis is current, and hashing a large
+    // dataset takes a while. The model is immutable, so its ids are kept with it.
+    const { model } = this.current;
+    let ids = this.snapshotIds.get(model);
+    if (ids === undefined) {
+      ids = new Map();
+      this.snapshotIds.set(model, ids);
+    }
+    let id = ids.get(datasetId);
+    if (id === undefined) {
+      id = prepareSnapshot(model, datasetId).id;
+      ids.set(datasetId, id);
+    }
+    return id;
   }
 
   listSnapshots(datasetId?: string): Promise<SnapshotInfo[]> {
