@@ -39,7 +39,15 @@ export {
   DialogTrigger,
 } from './components/dialog';
 export { Kbd } from './components/kbd';
+export {
+  Popover,
+  PopoverAnchor,
+  PopoverClose,
+  PopoverContent,
+  PopoverTrigger,
+} from './components/popover';
 export { RadioCard, RadioCards } from './components/radio-cards';
 export { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './components/select';
 export { Separator } from './components/separator';
+export { Tabs, TabsContent, TabsList, TabsTrigger } from './components/tabs';
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './components/tooltip';

@@ -1,8 +1,12 @@
-import type { Trace, TraceStep, TraceValue } from '@mateo/engine';
+import type { CellRef, Trace, TraceStep, TraceValue } from '@mateo/engine';
 import { Badge } from '@mateo/ui';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useFormatters, type Formatters } from '../hooks/preferences';
-import { useMessage, useTextRef } from '../editor/messages';
+import { useMessage } from '../editor/messages';
+import { DerivationPopover, type DerivationTarget } from '../explain/Derivation';
+import { useCellLabels } from '../explain/labels';
+import { TraceTable } from '../explain/TraceTable';
+import type { Formatters } from '../hooks/preferences';
 
 /** A value of a trace cell as text: numbers at display precision, fuzzy numbers as (l, m, u). */
 export function formatTraceValue(value: TraceValue, formatters: Formatters): string {
@@ -13,12 +17,17 @@ export function formatTraceValue(value: TraceValue, formatters: Formatters): str
   return `(${parts.join(', ')})`;
 }
 
-function StepTable({ step }: { step: TraceStep }) {
+function StepTable({
+  step,
+  onCell,
+  cellDescription,
+}: {
+  step: TraceStep;
+  onCell: (ref: CellRef, element: HTMLElement) => void;
+  cellDescription: (ref: CellRef) => string;
+}) {
   const { t } = useTranslation('workspace');
   const message = useMessage();
-  const textOf = useTextRef();
-  const formatters = useFormatters();
-  const { output } = step;
   const params = step.explanationParams;
   return (
     <details
@@ -36,56 +45,40 @@ function StepTable({ step }: { step: TraceStep }) {
           {message(step.explanationKey, params)}
         </p>
         <div className="overflow-x-auto">
-          <table className="min-w-full border-collapse text-sm">
-            <caption className="sr-only">{message(step.nameKey)}</caption>
-            <thead>
-              <tr>
-                <td className="border-b border-border px-3 py-1.5" />
-                {output.columns.map((column) => (
-                  <th
-                    key={column.id}
-                    scope="col"
-                    className="border-b border-border px-3 py-1.5 text-right font-medium whitespace-nowrap"
-                  >
-                    {textOf(column.label)}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {output.rows.map((row, r) => (
-                <tr key={row.id} className={row.kind === 'reference' ? 'bg-muted' : undefined}>
-                  <th
-                    scope="row"
-                    className="border-b border-border px-3 py-1.5 text-left font-medium whitespace-nowrap"
-                  >
-                    {textOf(row.label)}
-                  </th>
-                  {output.cells[r]!.map((cell, c) => (
-                    <td
-                      key={output.columns[c]!.id}
-                      className="border-b border-border px-3 py-1.5 text-right tabular-nums whitespace-nowrap"
-                    >
-                      {formatTraceValue(cell.value, formatters)}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <TraceTable
+            step={step}
+            caption={message(step.nameKey)}
+            onCell={onCell}
+            cellDescription={cellDescription}
+          />
         </div>
       </div>
     </details>
   );
 }
 
-/** Every step of a method's trace as a table, in the order the method calculated them. */
+/**
+ * Every step of a method's trace as a table, in the order the method calculated them.
+ * Every cell answers "How was this calculated?" from the stored trace.
+ */
 export function TraceTables({ trace }: { trace: Trace }) {
+  const { t } = useTranslation('explain');
+  const labelsOf = useCellLabels(trace);
+  const [derivation, setDerivation] = useState<DerivationTarget | null>(null);
+  const onCell = useCallback(
+    (cell: CellRef, anchor: HTMLElement) => setDerivation({ cell, anchor }),
+    [],
+  );
+  const cellDescription = useCallback(
+    (ref: CellRef) => t('derivation.open', { cell: labelsOf(ref).cell }),
+    [t, labelsOf],
+  );
   return (
     <div className="space-y-3">
       {trace.steps.map((step) => (
-        <StepTable key={step.id} step={step} />
+        <StepTable key={step.id} step={step} onCell={onCell} cellDescription={cellDescription} />
       ))}
+      <DerivationPopover trace={trace} target={derivation} onClose={() => setDerivation(null)} />
     </div>
   );
 }

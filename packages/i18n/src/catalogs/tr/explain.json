@@ -1,0 +1,237 @@
+{
+  "view": {
+    "label": "Analiz görünümü",
+    "results": "Sonuçlar",
+    "explain": "Açıkla"
+  },
+  "panel": {
+    "label": "Açıklama",
+    "timeline": "Adım adım",
+    "story": "Sonucun hikâyesi"
+  },
+  "player": {
+    "label": "Adım adım açıklama",
+    "steps": "Adımlar",
+    "stepOf": "Adım {current} / {total}",
+    "sceneOf": "Sahne {current} / {total}",
+    "kind": {
+      "formula": "Formül, tek örnek üzerinde",
+      "fill": "Tüm değerler"
+    },
+    "play": "Oynat",
+    "pause": "Duraklat",
+    "replay": "Baştan oynat",
+    "previous": "Önceki sahne",
+    "next": "Sonraki sahne",
+    "first": "Başa git",
+    "last": "Sona git",
+    "position": "Açıklamadaki konum",
+    "positionText": "Sahne {current} / {total}: {name}",
+    "speed": "Hız",
+    "speedValue": "{speed}×",
+    "show": "Göster",
+    "formula": "Formül",
+    "substitution": "Sayılar",
+    "explanation": "Açıklama",
+    "animations": "Animasyonlar",
+    "reducedMotion": "Azaltılmış hareket açık olduğu için her adım tamamlanmış olarak gösterilir ve hiçbir şey hareket etmez.",
+    "shortcuts": "Klavye: Boşluk oynatır veya duraklatır, sol ve sağ ok tuşları adım atar, Home ve End başa ve sona gider.",
+    "announce": "{step}: {kind}"
+  },
+  "formula": {
+    "title": "Formül",
+    "exampleRow": "Örnek satır",
+    "exampleColumn": "Örnek sütun",
+    "withNumbers": "{cell} hücresinin sayılarıyla",
+    "entered": "{cell} girdi olarak girildi. Onu bir formül üretmedi.",
+    "carried": "{cell}, {source} hücresinden değişmeden aktarıldı.",
+    "noFormula": "Motor {cell} için bir formül kaydetmedi. İşlenenlerini görmek için hesaplamayı açın.",
+    "terms": "Formülün terimleri",
+    "termValues": "{count, plural, one {# değer} other {# değer}}",
+    "highlight": "{term} terimini tablolarda vurgula",
+    "howCalculated": "Bu nasıl hesaplandı?"
+  },
+  "stage": {
+    "sources": "Şunlardan hesaplandı",
+    "output": "Bu adımın sonucu",
+    "cellName": "{row}, {column}",
+    "focused": "Büyük tablo: {totalRows} satırdan {rows} tanesi ve {totalColumns} sütundan {columns} tanesi gösteriliyor. Başka bir örnek satır veya sütun seçerek onu görünüme getirin.",
+    "bar": "Büyüklük",
+    "rank": "Sıra",
+    "item": "Öğe",
+    "value": "Değer"
+  },
+  "derivation": {
+    "title": "Bu nasıl hesaplandı?",
+    "open": "{cell} nasıl hesaplandı?",
+    "location": "{step} · {cell}",
+    "value": "Değer",
+    "formula": "Formül",
+    "withNumbers": "Bu hücrenin sayılarıyla",
+    "calculation": "Hesaplama",
+    "entered": "Girdi olarak girildi. Hiçbir şey hesaplanmadı.",
+    "carried": "Şu hücreden değişmeden aktarıldı:",
+    "node": {
+      "input": "Girilen değer",
+      "constant": "Formülün sabiti",
+      "parameter": "“{name}” parametresi",
+      "empty": "Tanım gereği değer yok",
+      "range": "{step} adımından {count, plural, one {# değer} other {# değer}}",
+      "more": "{count, plural, one {ve # değer daha} other {ve # değer daha}}"
+    },
+    "showCell": "{step} adımındaki {cell} hücresinin nasıl hesaplandığını göster",
+    "back": "Geri",
+    "close": "Kapat"
+  },
+  "operations": {
+    "unknown": "“{id}” işlemi",
+    "add": "Toplama",
+    "subtract": "Çıkarma",
+    "multiply": "Çarpma",
+    "divide": "Bölme",
+    "power": "Üs alma",
+    "negate": "İşaret değiştirme",
+    "abs": "Mutlak değer",
+    "sqrt": "Karekök",
+    "ln": "Doğal logaritma",
+    "exp": "Üstel fonksiyon",
+    "sum": "Toplam",
+    "product": "Çarpım",
+    "sum-of-squares": "Kareler toplamı",
+    "sum-of-reciprocals": "Terslerin toplamı",
+    "mean": "Ortalama",
+    "min": "En küçük değer",
+    "max": "En büyük değer",
+    "rank": "Tüm değerler arasındaki sıra",
+    "tfn": {
+      "add": "Bulanık toplama",
+      "subtract": "Bulanık çıkarma",
+      "multiply": "Bulanık çarpma",
+      "divide": "Bulanık bölme",
+      "add-scalar": "Bulanık sayı artı sayı",
+      "subtract-scalar": "Bulanık sayı eksi sayı",
+      "scalar-minus": "Sayı eksi bulanık sayı",
+      "multiply-by-scalar": "Bulanık sayı çarpı sayı",
+      "divide-by-scalar": "Bulanık sayının bir sayıya bölümü",
+      "scalar-divided-by": "Bir sayının bulanık sayıya bölümü",
+      "sum": "Bulanık toplam",
+      "min": "En küçük l, m ve u",
+      "max": "En büyük l, m ve u",
+      "arithmetic-mean": "Bulanık aritmetik ortalama",
+      "geometric-mean": "Bulanık geometrik ortalama",
+      "min-mean-max": "En küçük l, ortalama m, en büyük u",
+      "graded-mean": "Derecelendirilmiş ortalama (l + 4m + u) / 6",
+      "centroid": "Ağırlık merkezi (l + m + u) / 3",
+      "lower": "Alt değer l",
+      "modal": "En olası değer m",
+      "upper": "Üst değer u",
+      "from-crisp": "Bulanık sayı olarak sayı"
+    }
+  },
+  "story": {
+    "title": "Sonucun hikâyesi",
+    "intro": "Nihai sıralamanın kısa bir okuması. Her sayı, hesaplama adımlarındaki bir değerdir.",
+    "winner": {
+      "title": "Kazanan",
+      "text": "{name} birinci sırada.",
+      "tie": "{name}, birinciliği {others} ile paylaşıyor."
+    },
+    "score": "Nihai fayda",
+    "rank": "Sıra",
+    "drivers": {
+      "title": "{name} alternatifini öne taşıyanlar",
+      "text": "{name} için her kriterin ağırlıklı normalize değeri, en büyükten başlayarak. Üstteki kriterler nihai faydasına en çok katkıyı yaptı.",
+      "criterion": "Kriter",
+      "contribution": "{name} için ağırlıklı değer"
+    },
+    "runnerUp": {
+      "title": "İkinci ne kadar yakın?",
+      "text": "Ardından {runnerUp} geliyor. İki nihai faydayı karşılaştırın:",
+      "none": "Karşılaştırılacak başka alternatif yok.",
+      "ahead": "{winner} şu kriterlerde daha büyük ağırlıklı değere sahip:",
+      "behind": "{runnerUp} şu kriterlerde daha büyük ağırlıklı değere sahip:",
+      "nowhere": "Hiçbir kriterde.",
+      "equal": "İki alternatifin ağırlıklı değeri her kriterde aynı."
+    },
+    "fuzzyNote": "Bulanık değerler en olası değerleri m’ye göre sıralanır.",
+    "unavailable": "Bu analizde hikâyesi anlatılacak bir sıralama yok."
+  },
+  "sequences": {
+    "marcos": {
+      "normalized-weights": {
+        "normalized-weight": "Ağırlıkların toplamı 1 olsun diye her ağırlık tüm ağırlıkların toplamına bölünür."
+      },
+      "extended-matrix": {
+        "anti-ideal-benefit": "Fayda kriterinde en kötü değer, sütunundaki en küçük değerdir. Negatif ideal satıra (AAI) yazılır.",
+        "anti-ideal-cost": "Maliyet kriterinde en kötü değer, sütunundaki en büyük değerdir. Negatif ideal satıra (AAI) yazılır.",
+        "ideal-benefit": "Fayda kriterinde en iyi değer, sütunundaki en büyük değerdir. İdeal satıra (AI) yazılır.",
+        "ideal-cost": "Maliyet kriterinde en iyi değer, sütunundaki en küçük değerdir. İdeal satıra (AI) yazılır."
+      },
+      "normalized-matrix": {
+        "benefit": "Fayda kriterindeki bir değer, o kriterin ideal değerine bölünür. Sonuç 1’e ne kadar yakınsa alternatif ideale o kadar yakındır.",
+        "cost": "Maliyet kriterinde bölme tersine çevrilir: ideal değer, değere bölünür. Daha düşük maliyet 1’e daha yakın bir sonuç verir."
+      },
+      "weighted-matrix": {
+        "weighted": "Normalize değer kendi kriterinin ağırlığıyla çarpılır; böylece önemli kriterler daha çok sayılır."
+      },
+      "sums": {
+        "sum": "Bir satırın ağırlıklı değerleri toplanır. Bu, her alternatif için ve ayrıca negatif ideal ile ideal satırlar için yapılır."
+      },
+      "utility-degrees": {
+        "k-minus": "K⁻ bir alternatifi negatif ideal çözümle karşılaştırır: alternatifin toplamı, negatif ideal satırın toplamına bölünür. Büyük olan daha iyidir.",
+        "k-plus": "K⁺ bir alternatifi ideal çözümle karşılaştırır: alternatifin toplamı, ideal satırın toplamına bölünür. 1’e ne kadar yakınsa ideale o kadar yakındır."
+      },
+      "utility-functions": {
+        "f-k-minus": "Negatif ideal çözüme göre fayda fonksiyonu. Çaprazlamaya dikkat edin: payda K⁺ bulunur.",
+        "f-k-plus": "İdeal çözüme göre fayda fonksiyonu; payda K⁻ bulunur."
+      },
+      "final-utility": {
+        "final-utility": "Nihai fayda, iki fayda derecesini ve iki fayda fonksiyonunu tek bir sayıda birleştirir. En yüksek değer kazanır."
+      }
+    },
+    "fuzzyMarcos": {
+      "normalized-weights": {
+        "normalized-weight": "Ağırlıkların toplamı 1 olsun diye her ağırlık tüm ağırlıkların toplamına bölünür."
+      },
+      "extended-matrix": {
+        "anti-ideal-benefit": "Fayda kriterinde negatif ideal değer, sütunun en küçük l, en küçük m ve en küçük u değerlerini alır.",
+        "anti-ideal-cost": "Maliyet kriterinde negatif ideal değer, sütunun en büyük l, en büyük m ve en büyük u değerlerini alır.",
+        "ideal-benefit": "Fayda kriterinde ideal değer, sütunun en büyük l, en büyük m ve en büyük u değerlerini alır.",
+        "ideal-cost": "Maliyet kriterinde ideal değer, sütunun en küçük l, en küçük m ve en küçük u değerlerini alır."
+      },
+      "normalized-matrix": {
+        "benefit": "Fayda kriterindeki bir değerin her bileşeni tek bir sayıya bölünür: idealin üst değeri u.",
+        "cost": "Maliyet kriterinde idealin alt değeri l her bileşene bölünür. l ≤ m ≤ u korunsun diye bileşenler yer değiştirir."
+      },
+      "weighted-matrix": {
+        "weighted": "Normalize bulanık değer kendi kriterinin ağırlığıyla bileşen bileşen çarpılır."
+      },
+      "sums": {
+        "sum": "Bir satırın ağırlıklı bulanık değerleri bileşen bileşen toplanır; her alternatif için ve negatif ideal ile ideal satırlar için."
+      },
+      "utility-degrees": {
+        "k-minus": "K̃⁻, bir alternatifin bulanık toplamının negatif ideal satırın bulanık toplamına bölümüdür. Bulanık bölmede l u’ya, m m’ye, u l’ye bölünür.",
+        "k-plus": "K̃⁺, bir alternatifin bulanık toplamının ideal satırın bulanık toplamına bölümüdür; aynı bulanık bölme kullanılır."
+      },
+      "utility-degree-sums": {
+        "t": "Bir alternatifin iki bulanık fayda derecesi bileşen bileşen toplanır."
+      },
+      "max-utility-degree-sum": {
+        "d": "D̃, tüm T̃ değerleri arasından en büyük l, en büyük m ve en büyük u değerlerini alır."
+      },
+      "max-utility-degree-sum-crisp": {
+        "df": "D̃, derecelendirilmiş ortalama ile tek bir kesin sayıya çevrilir. Her bulanık fayda fonksiyonu bu sayıya bölünür."
+      },
+      "utility-functions": {
+        "f-k-minus": "Negatif ideal çözüme göre bulanık fayda fonksiyonu: K̃⁺’nın df_crisp’e bölümü. Çaprazlamaya dikkat edin.",
+        "f-k-plus": "İdeal çözüme göre bulanık fayda fonksiyonu: K̃⁻’nin df_crisp’e bölümü."
+      },
+      "defuzzification": {
+        "defuzzify": "Nihai fayda hesaplanabilsin diye her bulanık fayda derecesi ve fayda fonksiyonu tek bir kesin sayıya çevrilir."
+      },
+      "final-utility": {
+        "final-utility": "Nihai fayda, kesin fayda derecelerini ve fayda fonksiyonlarını tek bir sayıda birleştirir. En yüksek değer kazanır."
+      }
+    }
+  }
+}

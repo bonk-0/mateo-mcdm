@@ -1,0 +1,237 @@
+{
+  "view": {
+    "label": "Analysis view",
+    "results": "Results",
+    "explain": "Explain"
+  },
+  "panel": {
+    "label": "Explanation",
+    "timeline": "Step by step",
+    "story": "Story of the result"
+  },
+  "player": {
+    "label": "Step-by-step explanation",
+    "steps": "Steps",
+    "stepOf": "Step {current} of {total}",
+    "sceneOf": "Scene {current} of {total}",
+    "kind": {
+      "formula": "Formula on one example",
+      "fill": "All values"
+    },
+    "play": "Play",
+    "pause": "Pause",
+    "replay": "Play again from the start",
+    "previous": "Previous scene",
+    "next": "Next scene",
+    "first": "Go to the start",
+    "last": "Go to the end",
+    "position": "Position in the explanation",
+    "positionText": "Scene {current} of {total}: {name}",
+    "speed": "Speed",
+    "speedValue": "{speed}×",
+    "show": "Show",
+    "formula": "Formula",
+    "substitution": "Numbers",
+    "explanation": "Explanation",
+    "animations": "Animations",
+    "reducedMotion": "Reduced motion is on, so every step is shown complete and nothing moves.",
+    "shortcuts": "Keyboard: Space plays or pauses, the left and right arrow keys step, Home and End go to the start and the end.",
+    "announce": "{step}: {kind}"
+  },
+  "formula": {
+    "title": "Formula",
+    "exampleRow": "Example row",
+    "exampleColumn": "Example column",
+    "withNumbers": "With the numbers of {cell}",
+    "entered": "{cell} was entered as input. No formula produced it.",
+    "carried": "{cell} is carried over unchanged from {source}.",
+    "noFormula": "The engine recorded no formula for {cell}. Open the calculation to see its operands.",
+    "terms": "Terms of the formula",
+    "termValues": "{count, plural, one {# value} other {# values}}",
+    "highlight": "Highlight {term} in the tables",
+    "howCalculated": "How was this calculated?"
+  },
+  "stage": {
+    "sources": "Calculated from",
+    "output": "Result of this step",
+    "cellName": "{row}, {column}",
+    "focused": "Large table: {rows} of {totalRows} rows and {columns} of {totalColumns} columns are shown. Choose another example row or column to bring it into view.",
+    "bar": "Size",
+    "rank": "Rank",
+    "item": "Item",
+    "value": "Value"
+  },
+  "derivation": {
+    "title": "How was this calculated?",
+    "open": "How was {cell} calculated?",
+    "location": "{step} · {cell}",
+    "value": "Value",
+    "formula": "Formula",
+    "withNumbers": "With the numbers of this cell",
+    "calculation": "Calculation",
+    "entered": "Entered as input. Nothing was calculated.",
+    "carried": "Carried over unchanged from:",
+    "node": {
+      "input": "Entered value",
+      "constant": "Constant of the formula",
+      "parameter": "Parameter “{name}”",
+      "empty": "No value by definition",
+      "range": "{count, plural, one {# value} other {# values}} from {step}",
+      "more": "{count, plural, one {and # more value} other {and # more values}}"
+    },
+    "showCell": "Show how {cell} of {step} was calculated",
+    "back": "Back",
+    "close": "Close"
+  },
+  "operations": {
+    "unknown": "Operation “{id}”",
+    "add": "Addition",
+    "subtract": "Subtraction",
+    "multiply": "Multiplication",
+    "divide": "Division",
+    "power": "Power",
+    "negate": "Negation",
+    "abs": "Absolute value",
+    "sqrt": "Square root",
+    "ln": "Natural logarithm",
+    "exp": "Exponential",
+    "sum": "Sum",
+    "product": "Product",
+    "sum-of-squares": "Sum of squares",
+    "sum-of-reciprocals": "Sum of reciprocals",
+    "mean": "Mean",
+    "min": "Smallest value",
+    "max": "Largest value",
+    "rank": "Rank among all values",
+    "tfn": {
+      "add": "Fuzzy addition",
+      "subtract": "Fuzzy subtraction",
+      "multiply": "Fuzzy multiplication",
+      "divide": "Fuzzy division",
+      "add-scalar": "Fuzzy number plus a number",
+      "subtract-scalar": "Fuzzy number minus a number",
+      "scalar-minus": "Number minus a fuzzy number",
+      "multiply-by-scalar": "Fuzzy number times a number",
+      "divide-by-scalar": "Fuzzy number divided by a number",
+      "scalar-divided-by": "Number divided by a fuzzy number",
+      "sum": "Fuzzy sum",
+      "min": "Smallest l, m and u",
+      "max": "Largest l, m and u",
+      "arithmetic-mean": "Fuzzy arithmetic mean",
+      "geometric-mean": "Fuzzy geometric mean",
+      "min-mean-max": "Smallest l, mean m, largest u",
+      "graded-mean": "Graded mean (l + 4m + u) / 6",
+      "centroid": "Centroid (l + m + u) / 3",
+      "lower": "Lower value l",
+      "modal": "Most likely value m",
+      "upper": "Upper value u",
+      "from-crisp": "Number as a fuzzy number"
+    }
+  },
+  "story": {
+    "title": "Story of the result",
+    "intro": "A short reading of the final ranking. Every number is a value from the calculation steps.",
+    "winner": {
+      "title": "The winner",
+      "text": "{name} ranks first.",
+      "tie": "{name} shares first place with {others}."
+    },
+    "score": "Final utility",
+    "rank": "Rank",
+    "drivers": {
+      "title": "What carried {name}",
+      "text": "The weighted normalized value of each criterion for {name}, largest first. The top criteria contributed most to its final utility.",
+      "criterion": "Criterion",
+      "contribution": "Weighted value of {name}"
+    },
+    "runnerUp": {
+      "title": "How close is the runner-up?",
+      "text": "{runnerUp} comes next. Compare the two final utilities:",
+      "none": "There is no other alternative to compare with.",
+      "ahead": "{winner} has the larger weighted value on:",
+      "behind": "{runnerUp} has the larger weighted value on:",
+      "nowhere": "On no criterion.",
+      "equal": "The two alternatives have the same weighted value on every criterion."
+    },
+    "fuzzyNote": "Fuzzy values are ordered by their most likely value m.",
+    "unavailable": "This analysis has no ranking to tell a story about."
+  },
+  "sequences": {
+    "marcos": {
+      "normalized-weights": {
+        "normalized-weight": "Each weight is divided by the sum of all weights, so that the weights add up to 1."
+      },
+      "extended-matrix": {
+        "anti-ideal-benefit": "For a benefit criterion the worst value is the smallest one in its column. It goes into the anti-ideal row (AAI).",
+        "anti-ideal-cost": "For a cost criterion the worst value is the largest one in its column. It goes into the anti-ideal row (AAI).",
+        "ideal-benefit": "For a benefit criterion the best value is the largest one in its column. It goes into the ideal row (AI).",
+        "ideal-cost": "For a cost criterion the best value is the smallest one in its column. It goes into the ideal row (AI)."
+      },
+      "normalized-matrix": {
+        "benefit": "A value of a benefit criterion is divided by the ideal value of that criterion. The closer the result is to 1, the closer the alternative is to the ideal.",
+        "cost": "For a cost criterion the division is turned around: the ideal value is divided by the value. A lower cost gives a result closer to 1."
+      },
+      "weighted-matrix": {
+        "weighted": "The normalized value is multiplied by the weight of its criterion, so important criteria count for more."
+      },
+      "sums": {
+        "sum": "The weighted values of a row are added up. This is done for every alternative and also for the anti-ideal and ideal rows."
+      },
+      "utility-degrees": {
+        "k-minus": "K⁻ compares an alternative with the anti-ideal solution: its sum divided by the sum of the anti-ideal row. Larger is better.",
+        "k-plus": "K⁺ compares an alternative with the ideal solution: its sum divided by the sum of the ideal row. The closer to 1, the closer to the ideal."
+      },
+      "utility-functions": {
+        "f-k-minus": "The utility function in relation to the anti-ideal solution. Note the crossover: K⁺ is in the numerator.",
+        "f-k-plus": "The utility function in relation to the ideal solution, with K⁻ in the numerator."
+      },
+      "final-utility": {
+        "final-utility": "The final utility combines both utility degrees and both utility functions into one number. The highest value wins."
+      }
+    },
+    "fuzzyMarcos": {
+      "normalized-weights": {
+        "normalized-weight": "Each weight is divided by the sum of all weights, so that the weights add up to 1."
+      },
+      "extended-matrix": {
+        "anti-ideal-benefit": "For a benefit criterion the anti-ideal value takes the smallest l, the smallest m and the smallest u of the column.",
+        "anti-ideal-cost": "For a cost criterion the anti-ideal value takes the largest l, the largest m and the largest u of the column.",
+        "ideal-benefit": "For a benefit criterion the ideal value takes the largest l, the largest m and the largest u of the column.",
+        "ideal-cost": "For a cost criterion the ideal value takes the smallest l, the smallest m and the smallest u of the column."
+      },
+      "normalized-matrix": {
+        "benefit": "Each component of a benefit value is divided by one number: the upper value u of the ideal.",
+        "cost": "For a cost criterion the lower value l of the ideal is divided by each component. The components swap places, so that l ≤ m ≤ u still holds."
+      },
+      "weighted-matrix": {
+        "weighted": "The normalized fuzzy value is multiplied by the weight of its criterion, component by component."
+      },
+      "sums": {
+        "sum": "The weighted fuzzy values of a row are added up component by component, for every alternative and for the anti-ideal and ideal rows."
+      },
+      "utility-degrees": {
+        "k-minus": "K̃⁻ is the fuzzy sum of an alternative divided by the fuzzy sum of the anti-ideal row. In fuzzy division l is divided by u, m by m and u by l.",
+        "k-plus": "K̃⁺ is the fuzzy sum of an alternative divided by the fuzzy sum of the ideal row, with the same fuzzy division."
+      },
+      "utility-degree-sums": {
+        "t": "The two fuzzy utility degrees of an alternative are added component by component."
+      },
+      "max-utility-degree-sum": {
+        "d": "D̃ takes the largest l, the largest m and the largest u among all T̃."
+      },
+      "max-utility-degree-sum-crisp": {
+        "df": "D̃ is turned into one crisp number with the graded mean. Every fuzzy utility function is divided by this number."
+      },
+      "utility-functions": {
+        "f-k-minus": "The fuzzy utility function in relation to the anti-ideal solution: K̃⁺ divided by df_crisp. Note the crossover.",
+        "f-k-plus": "The fuzzy utility function in relation to the ideal solution: K̃⁻ divided by df_crisp."
+      },
+      "defuzzification": {
+        "defuzzify": "Each fuzzy utility degree and utility function is turned into one crisp number, so that the final utility can be calculated."
+      },
+      "final-utility": {
+        "final-utility": "The final utility combines the crisp utility degrees and utility functions into one number. The highest value wins."
+      }
+    }
+  }
+}
