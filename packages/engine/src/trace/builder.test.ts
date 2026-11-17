@@ -7,7 +7,6 @@ import { alternativeAxis, createTraceBuilder, criterionAxis } from './builder';
 import { crisp } from './crisp-ops';
 import { constant, empty, parameter, term } from './tracked';
 import type { TraceAxisItem, TraceValue } from './types';
-import { TRACE_FORMAT_VERSION } from './types';
 
 const meta = (id: string): StepMeta => ({
   id,
@@ -35,7 +34,6 @@ describe('TraceBuilder input steps', () => {
     const trace = tb.build();
 
     expect(trace).toMatchObject({
-      formatVersion: TRACE_FORMAT_VERSION,
       methodId: 'test',
       methodVersion: '1.0.0',
     });

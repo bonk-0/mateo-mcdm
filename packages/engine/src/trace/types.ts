@@ -1,13 +1,6 @@
 import type { TextParams, TextRef } from '../model/text';
 
 /**
- * Version of the trace data format. Traces are stored inside project files, so any change
- * to the shape of these types that old readers cannot ignore must bump this number and
- * come with a migration in `@mateo/project`.
- */
-export const TRACE_FORMAT_VERSION = 1;
-
-/**
  * A value that is not a single number, for example a triangular fuzzy number
  * `{ type: 'tfn', components: { l: 1, m: 2, u: 3 } }`. The engine does not interpret it;
  * the package that owns the number type encodes and renders it.
@@ -226,9 +219,13 @@ export interface TraceStep {
   readonly visualization: VisualizationHint;
 }
 
-/** The ordered record of one method run. */
+/**
+ * The ordered record of one method run. Derivation nodes may be shared between cells (a
+ * column maximum is one node used by every cell of its column), so treat them as
+ * immutable. A trace is stored with `encodeTrace`, which keeps that sharing, and read with
+ * `decodeTrace`; any change to these types must be reflected there (see `codec.ts`).
+ */
 export interface Trace {
-  readonly formatVersion: typeof TRACE_FORMAT_VERSION;
   readonly methodId: string;
   readonly methodVersion: string;
   readonly steps: readonly TraceStep[];

@@ -8,6 +8,8 @@ import {
   createTraceBuilder,
   crisp,
   crispWeights,
+  decodeTrace,
+  encodeTrace,
   runMethod,
   term,
   textLiteral,
@@ -215,14 +217,25 @@ describe('a trace that mixes every kind of operand', () => {
 });
 
 describe('analyses saved before the CRITIC and MEREC traces got smaller (1.0.0)', () => {
+  // Stored as Mateo 0.1 wrote them: trace format 1.
   it.each([
-    ['critic', criticTrace100 as unknown as Trace],
-    ['merec', merecTrace100 as unknown as Trace],
+    ['critic', decodeTrace(criticTrace100)],
+    ['merec', decodeTrace(merecTrace100)],
   ])('still have an explanation for %s', (methodId, trace) => {
     expect(trace.methodVersion).toBe('1.0.0');
     const timeline = buildTimeline(trace, sequenceFor(methodId)!);
     expect(timeline.steps.map((step) => step.stepId)).toEqual(trace.steps.map((step) => step.id));
     expect(timeline).toEqual(referenceTimeline(trace, sequenceFor(methodId)!));
+  });
+});
+
+describe('a trace read back from a project file', () => {
+  // Stored traces share their nodes again after reading; the timeline must not notice.
+  it.each(runs)('explains %s exactly like the trace of the run', (methodId, traceOf) => {
+    const trace = traceOf(12, 5);
+    const stored = decodeTrace(JSON.parse(JSON.stringify(encodeTrace(trace))) as unknown);
+    const sequence = sequenceFor(methodId)!;
+    expect(buildTimeline(stored, sequence)).toEqual(buildTimeline(trace, sequence));
   });
 });
 

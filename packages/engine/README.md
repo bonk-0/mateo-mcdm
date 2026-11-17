@@ -170,7 +170,11 @@ A package that adds a number type (`@mateo/fuzzy` for TFN) provides:
   operation with a known evaluator and compares it with the recorded value exactly.
 - `assertDeterministic(method, input, params)` runs a method several times on deeply frozen
   copies of the input and requires byte-identical records. It also catches input mutation.
-- `TRACE_FORMAT_VERSION` identifies the stored trace format for migrations.
+- `encodeTrace(trace)` writes the stored form of a trace, `decodeTrace(stored)` reads any
+  stored format back (`TRACE_FORMAT_VERSION` is the one written, see `src/trace/codec.ts`).
+  The stored form keeps the sharing of derivation nodes, so it grows with the number of
+  distinct nodes, not with how often they are used. The encoder refuses a node field it
+  does not know: a new field in the trace model needs a new stored format.
 - ESLint forbids `Math.random`, `Date` and similar sources in `engine`, `fuzzy` and `methods`.
 
 ## Commands

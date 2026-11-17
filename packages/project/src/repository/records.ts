@@ -1,6 +1,10 @@
 import {
   canonicalJson,
+  decodeTrace,
   deepFreeze,
+  encodeTrace,
+  EngineError,
+  READABLE_TRACE_FORMAT_VERSIONS,
   TRACE_FORMAT_VERSION,
   type MethodRunRecord,
   type Trace,
@@ -189,10 +193,16 @@ export function insertAnalysisStatement(
   createdAt: string,
 ): SqlStatement {
   const { record } = analysis;
-  if (record.trace.formatVersion !== TRACE_FORMAT_VERSION) {
+  let trace: string;
+  try {
+    trace = encodeJson(encodeTrace(record.trace));
+  } catch (cause) {
+    if (!(cause instanceof EngineError)) throw cause;
     throw new ProjectError(
       'INVALID_ARGUMENT',
-      `Cannot store a trace of format version ${String(record.trace.formatVersion)}.`,
+      `Cannot store the trace: ${cause.message}`,
+      {},
+      { cause },
     );
   }
   return statement(
@@ -215,8 +225,8 @@ export function insertAnalysisStatement(
       encodeJson(analysis.methodInput),
       encodeJson(record.result),
       encodeJson(record.warnings),
-      record.trace.formatVersion,
-      encodeJson(record.trace),
+      TRACE_FORMAT_VERSION,
+      trace,
       appVersion,
       createdAt,
     ],
@@ -266,11 +276,35 @@ export async function readAnalysis(connection: SqlConnection, id: string): Promi
   const row = rows[0];
   if (!row) throw new ProjectError('NOT_FOUND', `There is no analysis "${id}".`, { id });
   const summary = analysisSummary(row);
-  if (summary.traceFormatVersion !== TRACE_FORMAT_VERSION) {
+  if (!READABLE_TRACE_FORMAT_VERSIONS.includes(summary.traceFormatVersion)) {
     throw new ProjectError('CORRUPT_FILE', `Analysis "${id}" has an unknown trace format.`, { id });
   }
   const json = (column: string): unknown =>
     decodeJson(text(row, 'analyses', column), `${column} of analysis "${id}"`);
+  const storedTrace = json('trace');
+  // The document names its own format too; it must agree with the column.
+  if (
+    (storedTrace as { formatVersion?: unknown } | null)?.formatVersion !==
+    summary.traceFormatVersion
+  ) {
+    throw new ProjectError(
+      'CORRUPT_FILE',
+      `The trace of analysis "${id}" does not have the format its record names.`,
+      { id },
+    );
+  }
+  let trace: Trace;
+  try {
+    trace = decodeTrace(storedTrace);
+  } catch (cause) {
+    if (!(cause instanceof EngineError)) throw cause;
+    throw new ProjectError(
+      'CORRUPT_FILE',
+      `The trace of analysis "${id}" is damaged: ${cause.message}`,
+      { id },
+      { cause },
+    );
+  }
   return deepFreeze({
     ...summary,
     record: {
@@ -278,7 +312,7 @@ export async function readAnalysis(connection: SqlConnection, id: string): Promi
       methodVersion: summary.methodVersion,
       parameters: json('parameters') as MethodRunRecord<unknown>['parameters'],
       result: json('result'),
-      trace: json('trace') as Trace,
+      trace,
       warnings: json('warnings') as ValidationIssue[],
     },
     methodInput: json('method_input'),

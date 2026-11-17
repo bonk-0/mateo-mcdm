@@ -1,4 +1,4 @@
-import { deepFreeze } from '@mateo/engine';
+import { deepFreeze, TRACE_FORMAT_VERSION } from '@mateo/engine';
 import { ProjectError } from '../errors';
 import type { Command } from '../history/history';
 import { History } from '../history/history';
@@ -344,7 +344,7 @@ export class ProjectSession {
         methodVersion: analysis.record.methodVersion,
         numberType: analysis.numberType,
         variant: analysis.variant ?? null,
-        traceFormatVersion: analysis.record.trace.formatVersion,
+        traceFormatVersion: TRACE_FORMAT_VERSION,
         appVersion: this.environment.appVersion,
         createdAt,
       };

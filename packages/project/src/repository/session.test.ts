@@ -1,3 +1,4 @@
+import type { Trace } from '@mateo/engine';
 import { describe, expect, it, vi } from 'vitest';
 import { addDataset, removeDataset, setCells, updateCriterion } from '../history/commands';
 import { crispCell } from '../model/cells';
@@ -17,6 +18,17 @@ const edit = (value: number) =>
   setCells(DS, 'm-decision', [
     { alternativeId: 'a-1', criterionId: 'c-price', value: crispCell(value) },
   ]);
+
+/** The trace with a field on one derivation node that the stored format does not know. */
+function withUnknownNodeField(trace: Trace): Trace {
+  const [first, ...rest] = trace.steps;
+  const cells = first!.output.cells.map((row, r) =>
+    row.map((cell, c) =>
+      r === 0 && c === 0 ? { ...cell, derivation: { ...cell.derivation, note: 'new' } } : cell,
+    ),
+  );
+  return { ...trace, steps: [{ ...first!, output: { ...first!.output, cells } }, ...rest] };
+}
 
 function memoryStore() {
   const items = new Map<string, string>();
@@ -209,6 +221,59 @@ describe.each(STORAGE_KINDS)('project session (%s storage)', (kind) => {
     await reopened.close();
   });
 
+  it('stores traces in format 2, reads format 1 and refuses damaged traces', async () => {
+    const { test, session, repository } = await setup();
+    const run = runToyMethod();
+    const added = await session.addAnalysis({
+      datasetId: DS,
+      record: run.record,
+      methodInput: run.methodInput,
+      numberType: 'crisp',
+    });
+    // Read back exactly, with the trace's shared nodes shared again.
+    const stored = await session.getAnalysis(added.id);
+    expect(stored.traceFormatVersion).toBe(2);
+    expect(stored.record).toEqual(run.record);
+    expect(JSON.stringify(stored.record.trace)).toBe(JSON.stringify(run.record.trace));
+    await session.close();
+
+    const connection = await test.storage.open('s.mateo', { create: false });
+    expect(
+      await connection.select(
+        `SELECT trace_format_version AS v, json_extract(trace, '$.formatVersion') AS inner
+         FROM analyses`,
+      ),
+    ).toEqual([{ v: 2, inner: 2 }]);
+    // An analysis written by Mateo 0.1 (trace format 1: the plain trace).
+    const copy = (id: string, version: number, trace: string) =>
+      statement(
+        `INSERT INTO analyses (id, name, dataset_id, snapshot_id, method_id, method_version,
+           number_type, variant, parameters, configuration, method_input, result, warnings,
+           trace_format_version, trace, app_version, created_at)
+         SELECT ?, name, dataset_id, snapshot_id, method_id, method_version, number_type,
+           variant, parameters, configuration, method_input, result, warnings, ?, ?,
+           app_version, created_at
+         FROM analyses WHERE id = ?`,
+        [id, version, trace, added.id],
+      );
+    await connection.transaction([
+      copy('old', 1, JSON.stringify({ formatVersion: 1, ...run.record.trace })),
+      copy('mismatch', 1, JSON.stringify({ formatVersion: 2, methodId: 'x' })),
+      copy('damaged', 2, JSON.stringify({ formatVersion: 2, methodId: 'x' })),
+      copy('unknown', 3, '{}'),
+    ]);
+    await connection.close();
+
+    const reopened = await repository.open('s.mateo');
+    const old = await reopened.getAnalysis('old');
+    expect(old.traceFormatVersion).toBe(1);
+    expect(old.record.trace).toEqual(run.record.trace);
+    for (const id of ['mismatch', 'damaged', 'unknown']) {
+      await expect(reopened.getAnalysis(id), id).rejects.toMatchObject({ code: 'CORRUPT_FILE' });
+    }
+    await reopened.close();
+  });
+
   it('stores, lists, renames and deletes analyses', async () => {
     const { test, session } = await setup();
     const run = runToyMethod();
@@ -224,7 +289,7 @@ describe.each(STORAGE_KINDS)('project session (%s storage)', (kind) => {
     const third = await session.addAnalysis(base);
     expect(first.snapshotId).toBe(second.snapshotId);
     expect(third.snapshotId).not.toBe(first.snapshotId);
-    expect(second).toMatchObject({ name: '', variant: 'linear', traceFormatVersion: 1 });
+    expect(second).toMatchObject({ name: '', variant: 'linear', traceFormatVersion: 2 });
     expect((await session.listAnalyses()).map((a) => a.id)).toEqual([
       first.id,
       second.id,
@@ -252,7 +317,8 @@ describe.each(STORAGE_KINDS)('project session (%s storage)', (kind) => {
     await expect(
       session.addAnalysis({
         ...base,
-        record: { ...run.record, trace: { ...run.record.trace, formatVersion: 2 as 1 } },
+        // A field the stored trace format does not know is refused, not dropped.
+        record: { ...run.record, trace: withUnknownNodeField(run.record.trace) },
       }),
     ).rejects.toMatchObject({ code: 'INVALID_ARGUMENT' });
     await expect(
