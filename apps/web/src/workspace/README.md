@@ -14,3 +14,11 @@ How a run works:
 4. `AnalysisView.tsx` shows a stored analysis: ranking table, ECharts charts (`charts/`), and every trace step as a table (`TraceTables.tsx`); every cell opens "How was this calculated?". MARCOS and Fuzzy MARCOS also get the Explain tab (`../explain`). The results page only reads stored analyses and never runs anything.
 
 UI code does not calculate method results. `resultData.ts` only selects and joins values of the stored result and trace (for fuzzy cells in charts it picks the modal value `m`).
+
+## Sensitivity (P1.15)
+
+`SensitivityPanel.tsx` is step 8 of the MARCOS workspace and the whole `/analysis/sensitivity` screen (`SensitivityPage.tsx`, which picks a stored MARCOS analysis). It works on the input stored with the analysis and needs crisp weights.
+
+- Sliders move one weight with the engine's `setWeight` (`@mateo/engine`, proportional or equal redistribution), so the weights always sum to 1. After each move the method runs in the worker and the ranking list reorders with a transition (none under reduced motion).
+- The one-at-a-time chart (`sweepCriterion` in `sensitivity.ts`) runs the method at 11 weights of one criterion; every plotted rank is an engine run. It is drawn on request because it is 11 runs.
+- Named scenarios (weights and the ranking they gave) are saved in the project settings under `sensitivity.scenarios.<datasetId>`, so they travel with the project file. Runs made for sliders and the chart are not stored as analyses.

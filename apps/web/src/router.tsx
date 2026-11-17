@@ -36,6 +36,10 @@ const LAZY_SCREENS: Partial<Record<NavItemId, () => Promise<{ Component: Compone
     import('./workspace/MarcosPage').then((module) => ({ Component: module.MarcosPage })),
   marcos: () =>
     import('./workspace/MarcosPage').then((module) => ({ Component: module.MarcosPage })),
+  sensitivity: () =>
+    import('./workspace/SensitivityPage').then((module) => ({
+      Component: module.SensitivityPage,
+    })),
   results: () =>
     import('./workspace/ResultsPage').then((module) => ({ Component: module.ResultsPage })),
 };

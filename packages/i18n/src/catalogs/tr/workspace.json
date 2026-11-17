@@ -140,6 +140,9 @@
     "results": {
       "title": "Ara tablolar ve nihai sıralama",
       "open": "Sonuçlar'da aç"
+    },
+    "sensitivity": {
+      "title": "Duyarlılık analizi"
     }
   },
   "results": {
@@ -156,5 +159,50 @@
       "other": "Diğer"
     },
     "pick": "Sonucunu görmek için bir analiz seçin."
+  },
+  "sensitivity": {
+    "hint": "Bir ağırlığı değiştirdiğinizde diğerleri de onunla birlikte değişir ve toplam her zaman 1 kalır. Sıralama her harekette MARCOS motoru tarafından yeniden hesaplanır.",
+    "unsupported": {
+      "not-ranking": "Duyarlılık analizi MARCOS analizleri üzerinde çalışır.",
+      "unreadable": "Bu analizin girdisi okunamadı.",
+      "fuzzy-weights": "Bu analiz bulanık (TFN) ağırlık kullanıyor. Kaydırıcılar kesin ağırlık ister; analiz için Bulanık MARCOS'u kesin ağırlıklarla çalıştırın."
+    },
+    "redistribution": {
+      "label": "Bir ağırlık değişince kalan ağırlık",
+      "proportional": "oranlı paylaştırılır",
+      "equal": "eşit paylaştırılır"
+    },
+    "weights": {
+      "title": "Ağırlıklar",
+      "slider": "{name} ağırlığı",
+      "reset": "Analizin ağırlıklarına dön"
+    },
+    "ranking": {
+      "title": "Canlı sıralama",
+      "failed": "Yöntem bu ağırlıklarla çalıştırılamadı."
+    },
+    "sweep": {
+      "title": "Her seferinde bir kriter",
+      "hint": "Bir kriterin ağırlığı %0'dan %100'e gider, kalanı diğerleri paylaşır. Her nokta yöntemin tam bir çalıştırmasıdır.",
+      "criterion": "Kriter",
+      "axis": "{name} ağırlığı",
+      "rank": "Sıra",
+      "chart": "{name} ağırlığı değişirken alternatiflerin sıraları",
+      "run": "Grafiği çiz"
+    },
+    "scenarios": {
+      "title": "Kayıtlı senaryolar",
+      "name": "Senaryo adı",
+      "save": "Mevcut ağırlıkları kaydet",
+      "empty": "Henüz kayıtlı senaryo yok. Ağırlıkları ayarlayın, ad verin ve kaydedin.",
+      "load": "Ağırlıkları kullan",
+      "delete": "{name} senaryosunu sil",
+      "best": "En iyi: {name}"
+    }
+  },
+  "sensitivityPage": {
+    "choose": "Analiz",
+    "none": "Bu karar problemi için henüz MARCOS analizi yok.",
+    "toMarcos": "MARCOS'u çalıştır"
   }
 }

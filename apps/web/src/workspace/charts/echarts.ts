@@ -2,7 +2,7 @@
  * Apache ECharts with only the parts Mateo draws, so the bundle stays small. The SVG
  * renderer keeps text sharp at any zoom and works in the desktop webview.
  */
-import { BarChart, HeatmapChart } from 'echarts/charts';
+import { BarChart, HeatmapChart, LineChart } from 'echarts/charts';
 import {
   GridComponent,
   LegendComponent,
@@ -15,6 +15,7 @@ import { SVGRenderer } from 'echarts/renderers';
 core.use([
   BarChart,
   HeatmapChart,
+  LineChart,
   GridComponent,
   LegendComponent,
   TooltipComponent,

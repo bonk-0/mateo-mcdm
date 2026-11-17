@@ -22,6 +22,7 @@ import { ParameterFields } from './ParameterFields';
 import { DatasetProblems, ValidationProblems } from './Problems';
 import { workspaceRegistry } from './registry';
 import { runAndStore } from './runWorkflow';
+import { SensitivityPanel } from './SensitivityPanel';
 import type { ParameterValues, RunOutcome } from './runnerCore';
 import { parseNumber } from './WeightingPage';
 import { WorkspaceGate, type WorkspaceContext } from './WorkspaceGate';
@@ -436,6 +437,12 @@ function MarcosWorkspace({ session, document, dataset }: WorkspaceContext) {
               </Button>
             }
           />
+        </Step>
+      )}
+
+      {analysis && (
+        <Step id="m-sensitivity" index={8} title={t('marcos.sensitivity.title')}>
+          <SensitivityPanel analysis={analysis} session={session} document={document} />
         </Step>
       )}
     </div>
