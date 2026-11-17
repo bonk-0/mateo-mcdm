@@ -3,10 +3,11 @@ import type { Dataset, ProjectDocument, ProjectSession } from '@mateo/project';
 import { FilePlus2, FolderOpen, Table2 } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import { runCommand } from '../commands/commands';
 import { useDocument, useSession } from '../editor/session';
 import { fieldClass, labelClass } from '../editor/ui';
+import { DATASET_PARAM } from '../library/preset';
 import { PageHeader } from '../routes/PageHeader';
 
 export interface WorkspaceContext {
@@ -55,7 +56,9 @@ export function WorkspaceGate({
   const { t } = useTranslation('workspace');
   const session = useSession();
   const document = useDocument(session);
-  const [datasetId, setDatasetId] = useState<string | null>(null);
+  const [search] = useSearchParams();
+  // A link can name the decision problem to open, as the Method Library does for its samples.
+  const [datasetId, setDatasetId] = useState<string | null>(search.get(DATASET_PARAM));
 
   let body: ReactNode;
   if (!session || !document) {

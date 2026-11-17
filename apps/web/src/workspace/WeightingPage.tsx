@@ -5,15 +5,21 @@ import { Button } from '@mateo/ui';
 import { ArrowDown, ArrowUp, ArrowRight, Play } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate, useSearchParams } from 'react-router';
 import { useMessage, useTextRef } from '../editor/messages';
+import { presetFor } from '../library/preset';
 import { fieldClass, labelClass, toolbarButtonClass } from '../editor/ui';
 import { AnalysisView, methodKey } from './AnalysisView';
 import { isCurrent } from './analyses';
 import { buildCrispMatrix, type DatasetProblem } from './engineInput';
 import { ParameterFields } from './ParameterFields';
 import { DatasetProblems, ValidationProblems } from './Problems';
-import { WEIGHTING_METHOD_IDS, workspaceRegistry, type WeightingMethodId } from './registry';
+import {
+  WEIGHTING_METHOD_IDS,
+  isWeightingMethod,
+  workspaceRegistry,
+  type WeightingMethodId,
+} from './registry';
 import { runAndStore } from './runWorkflow';
 import type { ParameterValues, RunOutcome } from './runnerCore';
 import { WorkspaceGate, type WorkspaceContext } from './WorkspaceGate';
@@ -42,10 +48,27 @@ function WeightingWorkspace({ session, dataset }: WorkspaceContext) {
   const textOf = useTextRef();
   const navigate = useNavigate();
 
-  const [methodId, setMethodId] = useState<WeightingMethodId>('critic');
+  // Opened from a Method Library sample: its method and the assessments of the paper.
+  const [search] = useSearchParams();
+  const preset = presetFor(search, dataset);
+  const byCriterion = <T,>(values: readonly (T | null)[] | undefined, show: (value: T) => string) =>
+    Object.fromEntries(
+      dataset.criteria.flatMap((criterion, index) => {
+        const value = values?.[index];
+        return value === null || value === undefined ? [] : [[criterion.id, show(value)]];
+      }),
+    );
+
+  const [methodId, setMethodId] = useState<WeightingMethodId>(
+    preset && isWeightingMethod(preset.methodId) ? preset.methodId : 'critic',
+  );
   const [order, setOrder] = useState<string[]>(() => dataset.criteria.map((c) => c.id));
-  const [importance, setImportance] = useState<Record<string, string>>({});
-  const [terms, setTerms] = useState<Record<string, string>>({});
+  const [importance, setImportance] = useState<Record<string, string>>(() =>
+    byCriterion(preset?.importance, String),
+  );
+  const [terms, setTerms] = useState<Record<string, string>>(() =>
+    byCriterion(preset?.terms, (term) => term),
+  );
   const [parameters, setParameters] = useState<Record<string, ParameterValues>>({});
   const [busy, setBusy] = useState(false);
   const [datasetProblems, setDatasetProblems] = useState<readonly DatasetProblem[]>([]);

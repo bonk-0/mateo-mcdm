@@ -9,6 +9,7 @@ import enDataCenter from './en/dataCenter.json';
 import enExport from './en/export.json';
 import enExplain from './en/explain.json';
 import enHome from './en/home.json';
+import enLibrary from './en/library.json';
 import enMatrix from './en/matrix.json';
 import enNav from './en/nav.json';
 import enProject from './en/project.json';
@@ -19,6 +20,7 @@ import trDataCenter from './tr/dataCenter.json';
 import trExport from './tr/export.json';
 import trExplain from './tr/explain.json';
 import trHome from './tr/home.json';
+import trLibrary from './tr/library.json';
 import trMatrix from './tr/matrix.json';
 import trNav from './tr/nav.json';
 import trProject from './tr/project.json';
@@ -38,6 +40,7 @@ export const NAMESPACES = [
   'dataCenter',
   'export',
   'explain',
+  'library',
 ] as const;
 export type Namespace = (typeof NAMESPACES)[number];
 
@@ -55,6 +58,7 @@ export const resources = {
     dataCenter: enDataCenter,
     export: enExport,
     explain: enExplain,
+    library: enLibrary,
   },
   tr: {
     shell: trShell,
@@ -67,5 +71,6 @@ export const resources = {
     dataCenter: trDataCenter,
     export: trExport,
     explain: trExplain,
+    library: trLibrary,
   },
 } as const satisfies Record<Language, Record<Namespace, object>>;

@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react';
 import { createHashRouter, type RouteObject } from 'react-router';
 import { visibleNavigation, type NavItemId } from './navigation/navigation';
+import { libraryPath } from './library/methods';
 import { HomePage } from './routes/HomePage';
 import { NotFoundPage } from './routes/NotFoundPage';
 import { PlaceholderPage } from './routes/PlaceholderPage';
@@ -29,6 +30,10 @@ const LAZY_SCREENS: Partial<Record<NavItemId, () => Promise<{ Component: Compone
   matrix: () => import('./editor/EditorPage').then((module) => ({ Component: module.EditorPage })),
   scales: () =>
     import('./editor/ScaleManager').then((module) => ({ Component: module.ScaleManagerPage })),
+  library: () =>
+    import('./library/LibraryIndexPage').then((module) => ({
+      Component: module.LibraryIndexPage,
+    })),
   // The workspaces bring the charts with them.
   weighting: () =>
     import('./workspace/WeightingPage').then((module) => ({ Component: module.WeightingPage })),
@@ -62,7 +67,15 @@ export function buildRoutes(): RouteObject[] {
     {
       element: <AppShell />,
       HydrateFallback: () => null,
-      children: [...children, { path: '*', element: <NotFoundPage /> }],
+      children: [
+        ...children,
+        {
+          path: `${libraryPath()}/:pageId`,
+          lazy: () =>
+            import('./library/MethodPage').then((module) => ({ Component: module.MethodPage })),
+        },
+        { path: '*', element: <NotFoundPage /> },
+      ],
     },
   ];
 }

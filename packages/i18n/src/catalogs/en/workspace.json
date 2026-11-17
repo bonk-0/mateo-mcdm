@@ -111,7 +111,8 @@
       "title": "Weighting configuration",
       "source": {
         "manual": "Enter the weights",
-        "analysis": "Use a weighting analysis"
+        "analysis": "Use a weighting analysis",
+        "sample": "Weights of the method library sample"
       },
       "sum": "Sum of the weights: {sum}",
       "equal": "Fill with equal weights",

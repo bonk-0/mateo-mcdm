@@ -9,7 +9,9 @@ import { isRankingMethod, isWeightingMethod } from './registry';
  */
 export type WeightSource =
   | { readonly source: 'manual' }
-  | { readonly source: 'analysis'; readonly analysisId: string; readonly methodId: string };
+  | { readonly source: 'analysis'; readonly analysisId: string; readonly methodId: string }
+  /** The weights printed in the paper of a Method Library sample. */
+  | { readonly source: 'sample'; readonly sampleId: string };
 
 /** The workspace-owned part of a stored analysis (`NewAnalysis.configuration`). */
 export interface AnalysisConfiguration {

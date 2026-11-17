@@ -5,6 +5,7 @@
  * - `swara`: SWARA and fuzzy SWARA (IMF SWARA) (P1.5).
  * - `marcos`: MARCOS (P1.6).
  * - `fuzzy-marcos`: Fuzzy MARCOS with triangular fuzzy numbers (P1.6).
+ * - `REFERENCE_FIXTURES`: the P1.4 worked examples as data (P1.17).
  */
 export const PACKAGE_NAME = '@mateo/methods';
 
@@ -14,3 +15,4 @@ export * from '../marcos';
 export * from '../merec';
 export * from '../swara';
 export * from './messages';
+export * from './reference';

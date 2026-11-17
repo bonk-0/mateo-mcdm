@@ -135,7 +135,7 @@ export const NAVIGATION: readonly NavSection[] = [
   {
     id: 'learn',
     items: [
-      { id: 'library', path: '/learn/library', icon: BookOpen, phase: 1, plannedIn: 'P1.17' },
+      { id: 'library', path: '/learn/library', icon: BookOpen, phase: 1 },
       {
         id: 'playground',
         path: '/learn/playground',
@@ -169,10 +169,18 @@ export interface NavMatch {
   readonly item: NavItem;
 }
 
-/** Finds the visible item for a route path. */
+/**
+ * Finds the visible item for a route path. A page below an item's path belongs to the item,
+ * so `/learn/library/marcos` is the Method Library.
+ */
 export function findNavItem(path: string, phase: Phase = CURRENT_PHASE): NavMatch | undefined {
-  for (const section of visibleNavigation(phase)) {
+  const sections = visibleNavigation(phase);
+  for (const section of sections) {
     const item = section.items.find((i) => i.path === path);
+    if (item) return { section, item };
+  }
+  for (const section of sections) {
+    const item = section.items.find((i) => i.path !== '/' && path.startsWith(`${i.path}/`));
     if (item) return { section, item };
   }
   return undefined;

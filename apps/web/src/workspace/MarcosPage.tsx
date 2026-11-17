@@ -1,4 +1,5 @@
 import { crispWeights, type WeightVector } from '@mateo/engine';
+import type { TFN } from '@mateo/fuzzy';
 import type { AnalysisSummary, Dataset, StoredAnalysis } from '@mateo/project';
 import { Badge, Button } from '@mateo/ui';
 import { Play } from 'lucide-react';
@@ -10,6 +11,7 @@ import { useMessage } from '../editor/messages';
 import { syntaxForLocale } from '../editor/numbers';
 import { fieldClass, labelClass } from '../editor/ui';
 import { useFormatters } from '../hooks/preferences';
+import { presetFor } from '../library/preset';
 import { AnalysisView, methodKey } from './AnalysisView';
 import { isCurrent, kindOfMethod, type WeightSource } from './analyses';
 import {
@@ -111,10 +113,25 @@ function MarcosWorkspace({ session, document, dataset }: WorkspaceContext) {
   const formatters = useFormatters();
   const [search] = useSearchParams();
   const requested = search.get('weights');
+  // Opened from a Method Library sample: the paper's model and weights are filled in.
+  const preset = presetFor(search, dataset);
+  const sampleWeights = preset?.weights;
+  const fuzzySample = preset?.methodId === 'fuzzy-marcos';
 
-  const [fuzzyModel, setFuzzyModel] = useState<FuzzyModel>('classical');
-  const [source, setSource] = useState<'manual' | 'analysis'>(requested ? 'analysis' : 'manual');
-  const [manual, setManual] = useState<Record<string, string>>({});
+  const [fuzzyModel, setFuzzyModel] = useState<FuzzyModel>(fuzzySample ? 'tfn' : 'classical');
+  const [source, setSource] = useState<'manual' | 'analysis' | 'sample'>(
+    requested ? 'analysis' : fuzzySample ? 'sample' : 'manual',
+  );
+  const [manual, setManual] = useState<Record<string, string>>(() =>
+    sampleWeights && !fuzzySample
+      ? Object.fromEntries(
+          dataset.criteria.map((criterion, index) => [
+            criterion.id,
+            String(sampleWeights[index] as number),
+          ]),
+        )
+      : {},
+  );
   const [available, setAvailable] = useState<AnalysisSummary[]>([]);
   const [chosenId, setChosenId] = useState<string>(requested ?? '');
   const [chosen, setChosen] = useState<StoredAnalysis | null>(null);
@@ -173,9 +190,18 @@ function MarcosWorkspace({ session, document, dataset }: WorkspaceContext) {
     setInputProblem(null);
     setDatasetProblems([]);
 
-    let weights: WeightVector | null;
+    let weights: WeightVector | WeightVector<TFN> | null;
     let weightSource: WeightSource;
-    if (source === 'manual') {
+    if (source === 'sample' && preset && sampleWeights) {
+      weights = {
+        numberType: 'tfn',
+        entries: dataset.criteria.map((criterion, index) => ({
+          criterionId: criterion.id,
+          value: sampleWeights[index] as TFN,
+        })),
+      };
+      weightSource = { source: 'sample', sampleId: preset.sampleId };
+    } else if (source === 'manual') {
       const parsed = dataset.criteria.map((criterion) => parseNumber(manual[criterion.id] ?? ''));
       if (parsed.some((value) => value === null)) {
         setInputProblem(t('marcos.weights.incomplete'));
@@ -277,7 +303,10 @@ function MarcosWorkspace({ session, document, dataset }: WorkspaceContext) {
 
       <Step id="m-weights" index={4} title={t('marcos.weights.title')}>
         <div role="radiogroup" aria-labelledby="m-weights" className="flex flex-wrap gap-4 text-sm">
-          {(['manual', 'analysis'] as const).map((kind) => (
+          {(sampleWeights && fuzzySample
+            ? (['sample', 'manual', 'analysis'] as const)
+            : (['manual', 'analysis'] as const)
+          ).map((kind) => (
             <label key={kind} className="flex items-center gap-2">
               <input
                 type="radio"
@@ -289,7 +318,21 @@ function MarcosWorkspace({ session, document, dataset }: WorkspaceContext) {
             </label>
           ))}
         </div>
-        {source === 'manual' ? (
+        {source === 'sample' && sampleWeights ? (
+          <ul className="flex flex-wrap gap-2 text-sm" data-testid="sample-weights">
+            {dataset.criteria.map((criterion, index) => {
+              const weight = sampleWeights[index] as TFN;
+              return (
+                <li key={criterion.id}>
+                  <Badge variant="accent">
+                    {criterion.name || criterion.code}: ({formatters.value(weight.l)};{' '}
+                    {formatters.value(weight.m)}; {formatters.value(weight.u)})
+                  </Badge>
+                </li>
+              );
+            })}
+          </ul>
+        ) : source === 'manual' ? (
           <div className="space-y-2">
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {dataset.criteria.map((criterion) => (

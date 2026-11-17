@@ -1,0 +1,187 @@
+{
+  "index": {
+    "weightingTitle": "Weighting methods",
+    "weightingText": "Derive the importance of the criteria, from the data or from expert judgement.",
+    "rankingTitle": "Ranking methods",
+    "rankingText": "Rank the alternatives with the weights of the criteria.",
+    "open": "Read the reference page"
+  },
+  "page": {
+    "back": "Method Library",
+    "section": {
+      "introduction": "Introduction",
+      "purpose": "Purpose",
+      "inputs": "Inputs",
+      "numberTypes": "Supported number types",
+      "steps": "Steps and formulas",
+      "example": "Animated example",
+      "sample": "Sample data",
+      "notes": "Properties and edge cases",
+      "references": "References",
+      "related": "Related methods"
+    },
+    "variant": "Variant of the method",
+    "stepsText": "The formulas below are the ones the engine uses: this page reads them from the calculation trace of the reference example, so they cannot differ from the implementation. Every step is a table of the trace.",
+    "formulaWhen": "Applies: {condition}"
+  },
+  "family": {
+    "weighting": "Weighting method",
+    "ranking": "Ranking method"
+  },
+  "numberType": {
+    "crisp": "Crisp numbers",
+    "tfn": "Triangular fuzzy numbers"
+  },
+  "example": {
+    "text": "The reference example is run with the real method each time this page opens. Its source is {citation}",
+    "source": {
+      "original": "the original paper of the method.",
+      "substitute": "an open-access application by authors of the method, because the original paper could not be read in full (see docs/methods)."
+    },
+    "location": "Printed in: {location}.",
+    "noAnimation": "A step-by-step animation of this method is not available yet. The tables below show the same calculation: open any cell to see how it was calculated."
+  },
+  "sample": {
+    "text": "The sample is the reference example: the same numbers as the paper, so the workspace reproduces its printed result.",
+    "textOrdered": "The sample lists the criteria in order of importance with the assessments of the paper. The workspace fills them in for you.",
+    "download": "Download sample data (CSV)",
+    "open": "Open in workspace with sample data",
+    "openNew": "Create a project and open the sample",
+    "noProject": "The sample is added to the open project as a new decision problem. No project is open yet.",
+    "added": "Sample data added to the project.",
+    "failed": "The sample could not be added: {message}",
+    "datasetName": "{method}: reference example",
+    "datasetDescription": "Worked example from the method library. Source: {doi}",
+    "csv": {
+      "alternative": "Alternative",
+      "weight": "Weight",
+      "criterion": "Criterion",
+      "importance": "Comparative importance s_j",
+      "terms": "Assessment"
+    }
+  },
+  "role": {
+    "method": "The method",
+    "formulation": "Formulation",
+    "example": "Worked example",
+    "related": "Related reading"
+  },
+  "pages": {
+    "marcos": {
+      "title": "MARCOS",
+      "summary": "Ranks alternatives by their distance to an ideal and an anti-ideal solution, with crisp numbers.",
+      "introduction": "MARCOS (Measurement of Alternatives and Ranking according to COmpromise Solution) was introduced for supplier selection. It adds an ideal and an anti-ideal alternative to the decision matrix and measures every alternative against both. The final score is a compromise between being close to the ideal and far from the anti-ideal.",
+      "purpose": "Use it to rank alternatives when every criterion has a known weight and every value is a number. It needs no pairwise comparisons, and its score of an alternative does not change when other alternatives are added unless they become the new ideal or anti-ideal."
+    },
+    "fuzzy-marcos": {
+      "title": "Fuzzy MARCOS",
+      "summary": "MARCOS with triangular fuzzy numbers, for ratings given on a linguistic scale.",
+      "introduction": "Fuzzy MARCOS keeps the structure of MARCOS but calculates with triangular fuzzy numbers (l, m, u). The matrix and the weights may be fuzzy, for example linguistic ratings of experts converted with a scale, and the fuzzy utility degrees are turned into one crisp score at the end.",
+      "purpose": "Use it when values are judgements or imprecise estimates. Decision makers rate on a linguistic scale, the scale turns each term into a triangular fuzzy number, and the ranking follows from the crisp utility."
+    },
+    "critic": {
+      "title": "CRITIC",
+      "summary": "Objective weights from the contrast and the conflict between criteria.",
+      "introduction": "CRITIC (CRiteria Importance Through Intercriteria Correlation) derives weights from the decision matrix itself. A criterion gets more weight when its values differ strongly between alternatives (contrast intensity) and when it is little correlated with the other criteria (conflict).",
+      "purpose": "Use it when no expert judgement about the importance of the criteria is available, or as a cross-check of judged weights. It is sensitive to the set of alternatives: adding or removing an alternative changes the weights."
+    },
+    "merec": {
+      "title": "MEREC",
+      "summary": "Objective weights from the effect of removing each criterion on the alternatives' performance.",
+      "introduction": "MEREC (MEthod based on the Removal Effects of Criteria) measures how much the overall performance of the alternatives changes when one criterion is removed. The larger the change, the larger the weight of the criterion.",
+      "purpose": "Use it for objective weights when all values are positive. Like CRITIC it works from the data alone, but it does not look at correlations between criteria."
+    },
+    "swara": {
+      "title": "SWARA",
+      "summary": "Subjective weights from step-wise comparisons of neighbouring criteria, crisp or fuzzy.",
+      "introduction": "SWARA (Step-wise Weight Assessment Ratio Analysis) asks experts to put the criteria in order of importance and to state, for each criterion, how much less important it is than the one before. The weights follow from these steps. Mateo offers the classical method with numbers and a fuzzy variant, IMF SWARA, with linguistic terms.",
+      "purpose": "Use it when experts can rank the criteria and judge the gaps between neighbours. The result reflects their judgement, not the data, and the order of the criteria matters."
+    }
+  },
+  "variants": {
+    "marcos": {
+      "label": "MARCOS",
+      "numberTypes": "Crisp numbers: every value of the matrix and every weight is a real number. Zero is not allowed in a cost criterion, and a benefit criterion must not be zero everywhere. For triangular fuzzy numbers use Fuzzy MARCOS.",
+      "inputs": {
+        "matrix": "Decision matrix with m alternatives and n criteria. Each criterion is marked as benefit (higher is better) or cost (lower is better).",
+        "weights": "One weight per criterion. They do not have to sum to 1: scaling all weights changes S_i but not K, f(K) or the ranking. Optionally Mateo normalises them in a traced step."
+      },
+      "notes": {
+        "crossover": "In the utility functions, f(K⁻) has K⁺ in its numerator and f(K⁺) has K⁻, as the authors print them. This crossover is part of the method.",
+        "constants": "f(K⁻) and f(K⁺) are the same for every alternative, because K⁻ / K⁺ equals S_AI / S_AAI for all alternatives. The worked example shows 0.365 and 0.635 in every row; this is not a coincidence.",
+        "weightsScale": "Weights that do not sum to 1 only rescale the sums. The ranking does not change.",
+        "zeros": "A zero in a cost criterion, a benefit criterion that is zero everywhere and negative values stop the run with an error that names the cell or criterion.",
+        "ties": "Alternatives with identical rows get the same score and the same rank (standard competition ranking: 1, 2, 2, 4)."
+      }
+    },
+    "fuzzy-marcos": {
+      "label": "Fuzzy MARCOS",
+      "numberTypes": "Triangular fuzzy numbers (l, m, u) in the matrix. Weights are triangular fuzzy numbers or crisp numbers; a crisp weight w is the number (w, w, w). Linguistic ratings are converted to triangular fuzzy numbers with a scale before the method runs.",
+      "inputs": {
+        "matrix": "Fuzzy decision matrix with m alternatives and n criteria, each cell a triangular fuzzy number. Each criterion is marked as benefit or cost.",
+        "weights": "One weight per criterion, fuzzy or crisp.",
+        "scale": "A linguistic scale, when ratings are given as terms: it maps each term to a triangular fuzzy number. The paper's scale has nine terms from extremely poor to extremely good."
+      },
+      "notes": {
+        "componentwise": "The ideal and anti-ideal rows take the minimum or maximum of l, m and u separately, as the worked example does.",
+        "sharedDenominator": "Normalisation divides every component by one number of the ideal (the upper value for benefit criteria, the lower value for cost criteria). The final fuzzy utilities are divided by one crisp number for all alternatives, so their values differ from crisp MARCOS even for degenerate fuzzy numbers.",
+        "crispWeights": "With crisp inputs written as (x, x, x), Fuzzy MARCOS and MARCOS give different scores but the same ranking.",
+        "rankOrder": "The paper numbers ranks after a tie one by one; Mateo uses standard competition ranking. The order of the alternatives is the same.",
+        "zeros": "A cost criterion with a zero component, a benefit criterion whose ideal has upper value zero, and a zero component in the sum of the anti-ideal stop the run with an error."
+      }
+    },
+    "critic": {
+      "label": "CRITIC",
+      "numberTypes": "Crisp numbers only. Negative values are allowed, because the normalisation works for any real numbers.",
+      "inputs": {
+        "matrix": "Decision matrix with at least two alternatives and n criteria. Each criterion is marked as benefit or cost, which decides the ideal and anti-ideal value used for normalisation."
+      },
+      "notes": {
+        "population": "The standard deviation is the population standard deviation (divided by the number of alternatives), as in the paper. Sample standard deviations give the same weights, because the factor cancels.",
+        "constant": "A criterion with the same value for every alternative has no contrast and no defined correlation. It is rejected with an error that names the criterion.",
+        "negative": "Negative values are allowed.",
+        "conflict": "The correlation between criteria is the Pearson correlation. The paper mentions Spearman's rank correlation as an alternative; Mateo does not offer it."
+      }
+    },
+    "merec": {
+      "label": "MEREC",
+      "numberTypes": "Crisp numbers only. Every value must be greater than zero, because the method takes logarithms.",
+      "inputs": {
+        "matrix": "Decision matrix with n alternatives and m criteria, all values greater than zero. Each criterion is marked as beneficial or non-beneficial."
+      },
+      "notes": {
+        "reverse": "The normalisation is the reverse of the usual one: every criterion becomes a minimisation criterion (the smallest value divided by x for beneficial criteria, x divided by the largest value for non-beneficial ones).",
+        "divisor": "When a criterion is removed, the sum is still divided by the full number of criteria m, not by m − 1.",
+        "positive": "Zero or negative values are rejected. Shifting the data to positive numbers is your decision, made in the matrix editor.",
+        "rounding": "The weights are the unrounded removal effects divided by their sum. Dividing the rounded effects of the paper gives 0.5758 instead of 0.5752 for the first criterion."
+      }
+    },
+    "swara": {
+      "label": "SWARA",
+      "numberTypes": "Crisp numbers: the comparative importance of each criterion is a number greater than or equal to zero.",
+      "inputs": {
+        "criteria": "The criteria, ordered from the most to the least important. The order is part of the input.",
+        "importance": "For every criterion but the first, the comparative importance s_j: how much more important the criterion before it is. Zero means equally important. The paper uses the average of the experts."
+      },
+      "notes": {
+        "naming": "The paper calls the recalculated weight w_j and the final weight q_j. Many later papers swap the two letters. Mateo names the steps instead of relying on the letters.",
+        "order": "A negative s_j is rejected, because the criteria must be in descending order of importance.",
+        "first": "The first criterion has no comparative importance. Its coefficient is 1 and its recalculated weight is 1."
+      }
+    },
+    "fuzzy-swara": {
+      "label": "Fuzzy SWARA (IMF SWARA)",
+      "numberTypes": "Triangular fuzzy numbers: each assessment is a term of the improved fuzzy scale, which maps to a triangular fuzzy number. The final weights are given as fuzzy and as crisp numbers.",
+      "inputs": {
+        "criteria": "The criteria, ordered from the most to the least significant.",
+        "terms": "For every criterion but the first, a term of the scale that says how much less significant it is than the criterion before it: from equally significant to absolutely less significant. The scale is data, so another scale can be used."
+      },
+      "notes": {
+        "variant": "Mateo uses IMF SWARA, the improved scale, instead of the often cited scale of Chang. That scale gives inconsistent weights: equally important criteria cannot get equal weights.",
+        "erratum": "The paper's equation for the coefficient reads k = s without the + 1. With the term for equally significant (0, 0, 0) that would divide by zero, and every worked example uses k = s + 1, so Mateo does too.",
+        "defuzzification": "Neither paper states how the final weights are made crisp. Mateo uses the graded mean (l + 4m + u) / 6, which reproduces every printed value, and offers the centroid as a parameter.",
+        "sum": "The raw crisp weights do not sum to exactly 1, because defuzzification is not additive over normalised fuzzy weights. Mateo therefore adds an explicit, traced normalisation step, and the final weights sum to 1."
+      }
+    }
+  }
+}
