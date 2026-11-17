@@ -17,7 +17,7 @@ import {
 
 /**
  * Runs one job and returns its result. The page passes the worker runner, tests pass
- * `executeResultJob`. A scenario only needs the ranking, so the trace is not sent back.
+ * `executeResultJob`. A scenario only needs the ranking, so no trace is recorded.
  */
 export type JobRunner = (job: RunJob) => Promise<ResultOutcome> | ResultOutcome;
 

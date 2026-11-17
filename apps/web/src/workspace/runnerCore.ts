@@ -1,6 +1,7 @@
 import {
   MethodValidationError,
   runMethod,
+  type RunMethodOptions,
   type MethodRunRecord,
   type ValidationResult,
 } from '@mateo/engine';
@@ -24,8 +25,8 @@ export type RunOutcome =
 
 /**
  * The outcome of a run whose caller only reads the result (a sensitivity scenario). The
- * engine still runs the method in full; only the trace is not sent back, because copying
- * it out of the worker costs more than the run on a large matrix.
+ * engine runs the method without recording a trace, so there is nothing to copy out of
+ * the worker either; the result is identical to a traced run.
  */
 export type ResultOutcome = { readonly ok: true; readonly result: unknown } | RunFailure;
 
@@ -33,10 +34,10 @@ export type ResultOutcome = { readonly ok: true; readonly result: unknown } | Ru
  * Runs a job through the engine's `runMethod`. Used in the worker, and directly where
  * workers do not exist (tests).
  */
-export function executeJob(job: RunJob): RunOutcome {
+export function executeJob(job: RunJob, options: RunMethodOptions = {}): RunOutcome {
   try {
     const method = workspaceRegistry().get(job.methodId);
-    const record = runMethod(method, job.input, job.parameters as never);
+    const record = runMethod(method, job.input, job.parameters as never, options);
     return { ok: true, record };
   } catch (error) {
     if (error instanceof MethodValidationError) {
@@ -50,8 +51,8 @@ export function executeJob(job: RunJob): RunOutcome {
   }
 }
 
-/** {@link executeJob} for callers that only need the result. */
+/** {@link executeJob} for callers that only need the result: no trace is recorded. */
 export function executeResultJob(job: RunJob): ResultOutcome {
-  const outcome = executeJob(job);
+  const outcome = executeJob(job, { recordTrace: false });
   return outcome.ok ? { ok: true, result: outcome.record.result } : outcome;
 }

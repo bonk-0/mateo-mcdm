@@ -202,13 +202,20 @@ class Handle<T> implements StepHandle<T> {
   #allRange: TrackedRange<T> | undefined;
   readonly #cells: (Tracked<T> | undefined)[][] = [];
 
-  constructor(step: TraceStep, raw: readonly (readonly T[])[]) {
-    this.id = step.id;
-    this.shape = step.output.shape;
-    this.rows = step.output.rows;
-    this.columns = step.output.columns;
+  constructor(
+    id: string,
+    shape: TraceTableShape,
+    rows: readonly TraceAxisItem[],
+    columns: readonly TraceAxisItem[],
+    raw: readonly (readonly T[])[],
+    encoded: readonly (readonly TraceValue[])[],
+  ) {
+    this.id = id;
+    this.shape = shape;
+    this.rows = rows;
+    this.columns = columns;
     this.#raw = raw;
-    this.#encoded = step.output.cells.map((cells) => cells.map((cell) => cell.value));
+    this.#encoded = encoded;
     this.#rowIndex = new Map(this.rows.map((item, index) => [item.id, index]));
     this.#columnIndex = new Map(this.columns.map((item, index) => [item.id, index]));
   }
@@ -358,10 +365,34 @@ function assertUniqueIds(stepId: string, axis: string, items: readonly TraceAxis
   }
 }
 
+let recording = true;
+
+/**
+ * Runs `fn` with every trace builder created inside it in no-record mode. Steps still
+ * compute their values, so the result of a method is the same, but nothing is stored for
+ * the trace: no cells, derivations, sources or formula checks, and `build()` returns a
+ * trace without steps. This is how a caller that only reads the result (a sensitivity
+ * scenario) skips the cost of tracing without any change to the method.
+ *
+ * Checks that only audit the recorded trace (formula terms, unknown formula ids, terms a
+ * formula does not define) are skipped too; they are method bugs that any traced run, and
+ * the method's own tests, report.
+ */
+export function withoutTraceRecording<T>(fn: () => T): T {
+  const previous = recording;
+  recording = false;
+  try {
+    return fn();
+  } finally {
+    recording = previous;
+  }
+}
+
 export function createTraceBuilder(options: {
   readonly methodId: string;
   readonly methodVersion: string;
 }): TraceBuilder {
+  const recordsTrace = recording;
   const steps: TraceStep[] = [];
   const stepIds = new Set<string>();
 
@@ -384,6 +415,8 @@ export function createTraceBuilder(options: {
     }
     assertUniqueIds(meta.id, 'row', rows);
     assertUniqueIds(meta.id, 'column', columns);
+
+    if (!recordsTrace) return produceUntraced(meta.id, shape, rows, columns, produce);
 
     const formulas = meta.formulas ?? [];
     const formulaIds = new Set<string>();
@@ -510,7 +543,60 @@ export function createTraceBuilder(options: {
     };
     steps.push(step);
     stepIds.add(step.id);
-    return new Handle<T>(step, raw);
+    return new Handle<T>(
+      step.id,
+      shape,
+      rows,
+      columns,
+      raw,
+      cells.map((cellRow) => cellRow.map((cell) => cell.value)),
+    );
+  }
+
+  /** The no-record counterpart of the second half of `record`: values only. */
+  function produceUntraced<T>(
+    id: string,
+    shape: TraceTableShape,
+    rows: readonly TraceAxisItem[],
+    columns: readonly TraceAxisItem[],
+    produce: (row: AxisPosition, column: AxisPosition) => CellOutput<T>,
+  ): StepHandle<T> {
+    const raw: T[][] = [];
+    const encoded: TraceValue[][] = [];
+    rows.forEach((rowItem, rowIndex) => {
+      const rawRow: T[] = [];
+      const encodedRow: TraceValue[] = [];
+      const row: AxisPosition = { ...rowItem, index: rowIndex };
+      columns.forEach((columnItem, columnIndex) => {
+        let output: CellOutput<T>;
+        try {
+          output = produce(row, { ...columnItem, index: columnIndex });
+        } catch (error) {
+          if (error instanceof EngineError && error.code === 'NON_FINITE_VALUE') {
+            throw new EngineError(
+              error.code,
+              `Step "${id}", cell (${rowItem.id}, ${columnItem.id}): ${error.message}`,
+              { ...error.details, step: id, row: rowItem.id, column: columnItem.id },
+            );
+          }
+          throw error;
+        }
+        const candidate: unknown = output;
+        const tracked =
+          typeof candidate === 'object' && candidate !== null && 'tracked' in candidate
+            ? (output as { readonly tracked: Tracked<T> }).tracked
+            : (output as Tracked<T>);
+        if (!isTracked(tracked)) {
+          fail(id, `cell (${rowItem.id}, ${columnItem.id}) did not return a tracked value.`);
+        }
+        rawRow.push(tracked.value);
+        encodedRow.push(tracked.node.value);
+      });
+      raw.push(rawRow);
+      encoded.push(encodedRow);
+    });
+    stepIds.add(id);
+    return new Handle<T>(id, shape, rows, columns, raw, encoded);
   }
 
   function input<T>(spec: InputStepSpec<T>, forcedShape?: TraceTableShape): StepHandle<T> {
