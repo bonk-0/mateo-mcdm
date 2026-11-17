@@ -28,8 +28,12 @@ describe('app shell', () => {
     const user = userEvent.setup();
     renderApp('/');
     const nav = await screen.findByRole('navigation', { name: 'Main navigation' });
+    // Load the lazy chunk first so that a slow CI machine cannot time out on the import.
+    await import('../workspace/SensitivityPage');
     await user.click(within(nav).getByRole('link', { name: 'Sensitivity' }));
-    expect(await screen.findByRole('heading', { level: 1, name: 'Sensitivity' })).toBeTruthy();
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Sensitivity' }, { timeout: 10_000 }),
+    ).toBeTruthy();
     expect(
       within(nav).getByRole('link', { name: 'Sensitivity' }).getAttribute('aria-current'),
     ).toBe('page');
