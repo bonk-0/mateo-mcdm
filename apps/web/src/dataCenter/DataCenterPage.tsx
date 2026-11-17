@@ -25,6 +25,7 @@ import { runCommand } from '../commands/commands';
 import { EmptyState } from '../editor/EditorPage';
 import { useDocument, useSession } from '../editor/session';
 import { useFormatters } from '../hooks/preferences';
+import { MatrixExportButton } from '../export/buttons';
 import { PageHeader } from '../routes/PageHeader';
 import { ImportWizard } from './ImportWizard';
 import { IssueList } from './steps';
@@ -232,6 +233,11 @@ function DatasetsSection({
                   {t('page.datasets.open')}
                 </Link>
               </Button>
+              <MatrixExportButton
+                document={document}
+                dataset={dataset}
+                testId={`export-dataset-${dataset.id}`}
+              />
               <Button
                 variant="ghost"
                 size="icon"

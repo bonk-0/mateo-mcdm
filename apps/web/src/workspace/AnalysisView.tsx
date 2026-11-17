@@ -5,6 +5,8 @@ import { ChartColumn, Clapperboard, TriangleAlert } from 'lucide-react';
 import { useMemo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMessage, useTextRef } from '../editor/messages';
+import { useSession } from '../editor/session';
+import { AnalysisExportButton } from '../export/buttons';
 import { ExplainPanel, explanationOf } from '../explain/ExplainPanel';
 import { useFormatters } from '../hooks/preferences';
 import { kindOfMethod } from './analyses';
@@ -245,6 +247,7 @@ export function AnalysisView({
   const message = useMessage();
   const formatters = useFormatters();
   const kind = kindOfMethod(analysis.methodId);
+  const session = useSession();
   const { trace } = analysis.record;
   const explanation = useMemo(() => explanationOf(trace), [trace]);
   const results = (
@@ -271,7 +274,10 @@ export function AnalysisView({
             {stale && <Badge variant="accent">{t('result.stale')}</Badge>}
           </p>
         </div>
-        {actions}
+        <div className="flex flex-wrap items-center gap-2">
+          {session && <AnalysisExportButton session={session} analysis={analysis} stale={stale} />}
+          {actions}
+        </div>
       </header>
       <Warnings warnings={analysis.record.warnings} />
       {explanation ? (
