@@ -114,7 +114,6 @@ export const NAVIGATION: readonly NavSection[] = [
         path: '/analysis/sensitivity',
         icon: SlidersHorizontal,
         phase: 1,
-        plannedIn: 'P1.15',
       },
       {
         id: 'comparison',

@@ -9,7 +9,7 @@ import {
   type FileStore,
   type ProjectSession,
 } from '@mateo/project';
-import { act, screen, waitFor, within } from '@testing-library/react';
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { runCommand } from '../commands/commands';
@@ -238,6 +238,65 @@ describe('method workspaces', () => {
     expect((await session.getAnalysis(saved!.id)).configuration).toMatchObject({
       weights: { source: 'manual' },
     });
+  });
+
+  it('re-ranks live when a weight slider moves and saves the scenario in the project', async () => {
+    const user = userEvent.setup();
+    renderApp('/analysis/marcos');
+    const session = await openProjectWithData(user);
+    await user.click(await screen.findByRole('button', { name: 'Fill with equal weights' }));
+    await user.click(screen.getByTestId('run-marcos'));
+    await screen.findByTestId('ranking-table', {}, { timeout: 8000 });
+    await screen.findByTestId('sensitivity-panel');
+
+    fireEvent.change(screen.getByTestId('weight-slider-1'), { target: { value: '0.8' } });
+    // The other sliders follow, and the sum stays 1.
+    expect(Number(screen.getByTestId<HTMLInputElement>('weight-slider-0').value)).toBeCloseTo(
+      0.1,
+      6,
+    );
+    expect(Number(screen.getByTestId<HTMLInputElement>('weight-slider-2').value)).toBeCloseTo(
+      0.1,
+      6,
+    );
+    expect(screen.getByTestId('weights-sum').textContent).toContain('1');
+
+    // The live ranking is what the engine gives for these weights.
+    const weights = [0.1, 0.8, 0.1];
+    const expected = runMethod(marcosMethod, {
+      matrix: engineMatrix(),
+      weights: {
+        numberType: 'crisp',
+        entries: ['crit-1', 'crit-2', 'crit-3'].map((criterionId, i) => ({
+          criterionId,
+          value: weights[i]!,
+        })),
+      },
+    }).result;
+    const best = [...expected.ranking].sort((a, b) => a.rank - b.rank)[0]!;
+    await waitFor(() => {
+      const row = within(screen.getByTestId('live-ranking'))
+        .getAllByRole('listitem')
+        .find((item) => item.textContent?.startsWith('1'));
+      expect(row?.getAttribute('data-alternative')).toBe(best.alternativeId);
+    });
+
+    // The chart is drawn on request, from engine runs.
+    await user.click(screen.getByTestId('sweep-run'));
+    await screen.findByRole('img', { name: /Ranks of the alternatives/ });
+
+    await user.type(screen.getByTestId('scenario-name'), 'Memory first');
+    await user.click(screen.getByTestId('scenario-save'));
+    const list = await screen.findByTestId('scenario-list');
+    expect(within(list).getByText('Memory first')).toBeTruthy();
+    const dataset = session.document.model.datasets[0]!;
+    const stored = session.document.settings[`sensitivity.scenarios.${dataset.id}`] as {
+      name: string;
+      weights: Record<string, number>;
+    }[];
+    expect(stored).toHaveLength(1);
+    expect(stored[0]!.name).toBe('Memory first');
+    expect(stored[0]!.weights['crit-2']).toBeCloseTo(0.8, 12);
   });
 
   it('runs Fuzzy MARCOS with the TFN model on a plain-number matrix', async () => {

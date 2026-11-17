@@ -65,6 +65,9 @@ importers:
       '@mateo/engine':
         specifier: workspace:*
         version: link:../../packages/engine
+      '@mateo/explain':
+        specifier: workspace:*
+        version: link:../../packages/explain
       '@mateo/fuzzy':
         specifier: workspace:*
         version: link:../../packages/fuzzy
@@ -107,6 +110,9 @@ importers:
       i18next:
         specifier: ^27.1.2
         version: 27.1.2(typescript@6.0.3)
+      katex:
+        specifier: ^0.19.1
+        version: 0.19.1
       lucide-react:
         specifier: ^1.73.0
         version: 1.73.0(@types/react@19.3.0)(react@19.3.1)
@@ -166,9 +172,24 @@ importers:
         specifier: ^8.3.8
         version: 8.3.8(@types/node@22.20.5)(jiti@2.7.0)
 
-  packages/engine: {}
+  packages/engine:
+    devDependencies:
+      fast-check:
+        specifier: ^4.10.2
+        version: 4.10.2
 
-  packages/explain: {}
+  packages/explain:
+    dependencies:
+      '@mateo/engine':
+        specifier: workspace:*
+        version: link:../engine
+    devDependencies:
+      '@mateo/fuzzy':
+        specifier: workspace:*
+        version: link:../fuzzy
+      '@mateo/methods':
+        specifier: workspace:*
+        version: link:../methods
 
   packages/fuzzy:
     dependencies:
@@ -1765,6 +1786,10 @@ packages:
     resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
     engines: {node: '>=6'}
 
+  commander@15.1.0:
+    resolution: {integrity: sha512-cgnQ88TRrWcC7pVq46RzJVRMktu3W2RcbnoidnfBsl1bmDCBwJS/udcIZpKoCrbAYYaCqsz1yZCVIgbIaU3ddQ==}
+    engines: {node: '>=22.12.0'}
+
   compress-commons@4.1.2:
     resolution: {integrity: sha512-D3uMHtGc/fcO1Gt1/L7i1e33VOvD4A9hfQLP+6ewd+BvG/gQ84Yh4oftEhAdjSMgBgwGL+jsppT7JYNpo6MHHg==}
     engines: {node: '>= 10'}
@@ -2325,6 +2350,10 @@ packages:
 
   jszip@3.10.2:
     resolution: {integrity: sha512-3l+rb15IOWtUhU0H5MFqES/T6Kh7abYwjosBey/vD6hDt8zoEffkSC5Ws5SGtgVw3gBx2NEbhTeSW1+kWkpyTQ==}
+
+  katex@0.19.1:
+    resolution: {integrity: sha512-jG8uKntjSEcm2EpQOh0XturpPuuC9r3Sq5HLHdsFdWZT27E672SF19QEi+of0/YeOy15lDgRhKvr5614uRrEfA==}
+    hasBin: true
 
   keyv@5.6.0:
     resolution: {integrity: sha512-CYDD3SOtsHtyXeEORYRx2qBtpDJFjRTGXUtmNEMGyzYOKj1TE3tycdlho7kA1Ufx9OYWZzg52QFBGALTirzDSw==}
@@ -4726,6 +4755,8 @@ snapshots:
 
   clsx@2.1.1: {}
 
+  commander@15.1.0: {}
+
   compress-commons@4.1.2:
     dependencies:
       buffer-crc32: 0.2.13
@@ -5382,6 +5413,10 @@ snapshots:
       pako: 1.0.11
       readable-stream: 2.3.8
       setimmediate: 1.0.5
+
+  katex@0.19.1:
+    dependencies:
+      commander: 15.1.0
 
   keyv@5.6.0:
     dependencies:

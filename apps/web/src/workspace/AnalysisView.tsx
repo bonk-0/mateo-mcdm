@@ -1,12 +1,13 @@
 import type { ValidationIssue } from '@mateo/engine';
 import type { StoredAnalysis } from '@mateo/project';
-import { Badge } from '@mateo/ui';
-import { TriangleAlert } from 'lucide-react';
+import { Badge, Tabs, TabsContent, TabsList, TabsTrigger } from '@mateo/ui';
+import { ChartColumn, Clapperboard, TriangleAlert } from 'lucide-react';
 import { useMemo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMessage, useTextRef } from '../editor/messages';
 import { useSession } from '../editor/session';
 import { AnalysisExportButton } from '../export/buttons';
+import { ExplainPanel, explanationOf } from '../explain/ExplainPanel';
 import { useFormatters } from '../hooks/preferences';
 import { kindOfMethod } from './analyses';
 import { EChart } from './charts/EChart';
@@ -228,8 +229,8 @@ function RankingSection({ analysis }: { analysis: StoredAnalysis }) {
 
 /**
  * A stored analysis: the result first (weights, or ranking with its charts), then every
- * step of the calculation. Everything shown comes from the stored record; nothing is
- * calculated again.
+ * step of the calculation. Methods with an explain sequence also get Explain mode in a
+ * second tab. Everything shown comes from the stored record; nothing is calculated again.
  */
 export function AnalysisView({
   analysis,
@@ -242,10 +243,23 @@ export function AnalysisView({
   actions?: ReactNode;
 }) {
   const { t } = useTranslation('workspace');
+  const { t: tExplain } = useTranslation('explain');
   const message = useMessage();
   const formatters = useFormatters();
   const kind = kindOfMethod(analysis.methodId);
   const session = useSession();
+  const { trace } = analysis.record;
+  const explanation = useMemo(() => explanationOf(trace), [trace]);
+  const results = (
+    <div className="space-y-8">
+      {kind === 'weighting' && <WeightsSection analysis={analysis} />}
+      {kind === 'ranking' && <RankingSection analysis={analysis} />}
+      <Section title={t('result.steps')} testId="trace-section">
+        <p className="max-w-3xl text-sm text-muted-foreground">{t('result.stepsHint')}</p>
+        <TraceTables trace={trace} />
+      </Section>
+    </div>
+  );
   return (
     <div className="space-y-8" data-testid="analysis-view" data-method={analysis.methodId}>
       <header className="flex flex-wrap items-center justify-between gap-3">
@@ -266,12 +280,27 @@ export function AnalysisView({
         </div>
       </header>
       <Warnings warnings={analysis.record.warnings} />
-      {kind === 'weighting' && <WeightsSection analysis={analysis} />}
-      {kind === 'ranking' && <RankingSection analysis={analysis} />}
-      <Section title={t('result.steps')} testId="trace-section">
-        <p className="max-w-3xl text-sm text-muted-foreground">{t('result.stepsHint')}</p>
-        <TraceTables trace={analysis.record.trace} />
-      </Section>
+      {explanation ? (
+        // Explain mode sits next to the results and never replaces them.
+        <Tabs defaultValue="results" className="space-y-6">
+          <TabsList aria-label={tExplain('view.label')}>
+            <TabsTrigger value="results" data-testid="view-results">
+              <ChartColumn aria-hidden />
+              {tExplain('view.results')}
+            </TabsTrigger>
+            <TabsTrigger value="explain" data-testid="view-explain">
+              <Clapperboard aria-hidden />
+              {tExplain('view.explain')}
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="results">{results}</TabsContent>
+          <TabsContent value="explain">
+            <ExplainPanel trace={trace} explanation={explanation} />
+          </TabsContent>
+        </Tabs>
+      ) : (
+        results
+      )}
     </div>
   );
 }

@@ -26,8 +26,14 @@ function exempt(element: Element | null): boolean {
 export function findUntranslated(root: Element): string[] {
   const problems: string[] = [];
   const isTranslated = (text: string) => {
-    const stripped = text
-      .replace(/⟦[^⟦⟧]*⟧/gu, '')
+    // A translation can contain another one (a step name inside a sentence): peel the
+    // markers from the inside out.
+    let peeled = text;
+    for (let previous = ''; previous !== peeled;) {
+      previous = peeled;
+      peeled = peeled.replace(/⟦[^⟦⟧]*⟧/gu, '');
+    }
+    const stripped = peeled
       // Keyboard hints that libraries append to labels, for example "alt+T".
       .replace(/\b(alt|ctrl|shift|meta)\+\w\b/giu, '');
     return DATA_ONLY.test(stripped);
