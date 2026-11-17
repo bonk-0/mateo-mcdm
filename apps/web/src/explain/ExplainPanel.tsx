@@ -15,7 +15,7 @@ export interface Explanation {
 
 /**
  * The animated explanation of a stored trace, or `null` when its method has no explain
- * sequence (weighting methods get theirs in P1.14) or the trace was written by a version
+ * sequence or the trace was written by a version
  * of the method whose steps the sequence does not know.
  */
 export function explanationOf(trace: Trace): Explanation | null {

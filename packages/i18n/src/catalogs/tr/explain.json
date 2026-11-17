@@ -232,6 +232,142 @@
       "final-utility": {
         "final-utility": "Nihai fayda, kesin fayda derecelerini ve fayda fonksiyonlarını tek bir sayıda birleştirir. En yüksek değer kazanır."
       }
+    },
+    "critic": {
+      "normalized-matrix": {
+        "benefit": "Fayda kriterinin her değeri 0 ile 1 arasına ölçeklenir: sütunun en kötü değeri 0, en iyi değeri 1 olur.",
+        "cost": "Maliyet kriterinin her değeri 0 ile 1 arasına ölçeklenir: sütunun en düşük değeri 1, en yüksek değeri 0 olur."
+      },
+      "means": {
+        "mean": "Normalleştirilmiş her sütunun ortalaması, sonraki adımdaki sapmaların ölçüldüğü merkezdir."
+      },
+      "standard-deviations": {
+        "sigma": "Normalleştirilmiş bir sütunun standart sapması kontrast yoğunluğunu ölçer: alternatifler bir kriterde ne kadar farklıysa o kadar büyüktür."
+      },
+      "correlation-matrix": {
+        "pearson": "İki kriterin Pearson korelasyonu, ortalamadan sapmalarının çarpımlarının toplamının n ile iki standart sapmanın çarpımına bölünmesiyle bulunur."
+      },
+      "conflict": {
+        "conflict": "Bir kriterin çatışması, diğer tüm kriterlerle korelasyonunun 1'den farklarını toplar. Diğerleriyle az ilişkili bir kriter daha çok çatışma taşır."
+      },
+      "information-content": {
+        "information": "Bir kriterin bilgi içeriği, standart sapmasının çatışmasıyla çarpımıdır."
+      },
+      "weights": {
+        "weight": "Her bilgi içeriği hepsinin toplamına bölünür; böylece ağırlıkların toplamı 1 olur."
+      }
+    },
+    "merec": {
+      "normalized-matrix": {
+        "benefit": "Fayda kriterinde sütunun en küçük değeri değere bölünür; en iyi performans 1 alır, küçük değerler daha az alır.",
+        "cost": "Maliyet kriterinde değer sütunun en büyük değerine bölünür; en iyi performans en küçük oranı alır."
+      },
+      "absolute-logs": {
+        "abs-ln": "Normalleştirilmiş her değerin doğal logaritmasının mutlak değeri, değerin 1'den ne kadar uzak olduğunu ölçer."
+      },
+      "overall-performance": {
+        "overall": "Bir alternatifin genel performansı, mutlak logaritmalarının ortalamasına 1 eklenip logaritması alınarak bulunur."
+      },
+      "removal-performance": {
+        "removal": "Performans, bir kriter dışarıda bırakılarak yeniden hesaplanır. Bu işlem her alternatif ve her kriter için yapılır."
+      },
+      "removal-effects": {
+        "effect": "Bir kriterin çıkarma etkisi, o kriter dışarıda bırakıldığında her alternatifin performansının ne kadar değiştiğini toplar."
+      },
+      "weights": {
+        "weight": "Her çıkarma etkisi hepsinin toplamına bölünür; böylece ağırlıkların toplamı 1 olur."
+      }
+    },
+    "swara": {
+      "coefficients": {
+        "first": "En önemli kriterin katsayısı 1'dir.",
+        "coefficient": "Bir kriterin katsayısı, kendisinden önceki kriterle karşılaştırmalı önemine 1 eklenerek bulunur."
+      },
+      "recalculated-weights": {
+        "first": "En önemli kriter 1 değeriyle başlar.",
+        "recalculated": "Her değer, kendisinden önceki kriterin değerinin bu kriterin katsayısına bölünmesiyle bulunur."
+      },
+      "weights": {
+        "weight": "Yeniden hesaplanan her değer hepsinin toplamına bölünür; böylece ağırlıkların toplamı 1 olur."
+      }
+    },
+    "fuzzySwara": {
+      "coefficients": {
+        "first": "En önemli kriterin katsayısı (1, 1, 1)'dir.",
+        "coefficient": "Bir kriterin katsayısı, bulanık karşılaştırmalı önemine 1 eklenerek bulunur. 1 eklemek üçgenin tamamını sağa kaydırır."
+      },
+      "recalculated-weights": {
+        "first": "En önemli kriter (1, 1, 1) değeriyle başlar.",
+        "recalculated": "Her bulanık değer, kendisinden önceki kriterin değerinin bu kriterin katsayısına bölünmesiyle bulunur."
+      },
+      "recalculated-weights-sum": {
+        "sum": "Tüm kriterlerin bulanık değerleri bileşen bileşen toplanır."
+      },
+      "fuzzy-weights": {
+        "weight": "Her bulanık değer bulanık toplama bölünür; böylece ağırlıklar toplamı yaklaşık 1 olan bulanık sayılar olur."
+      },
+      "crisp-weights": {
+        "defuzzify": "Her bulanık ağırlık, seçilen durulaştırma yöntemiyle tek bir sayıya çevrilir."
+      },
+      "weights": {
+        "normalized": "Durulaştırılmış ağırlıklar toplamlarına bölünür; böylece kesin ağırlıkların toplamı 1 olur."
+      }
+    }
+  },
+  "playground": {
+    "title": "Bulanık Oyun Alanı",
+    "reset": "Sıfırla",
+    "hint": "A ve B'nin yuvarlak tutamaçlarını sürükleyin ya da odaktaki tutamaçta ok tuşlarını kullanın (büyük adımlar için Shift). Aşağıdaki her şeyi bulanık paket hesaplar.",
+    "result": "Sonuç",
+    "handle": "{name}, {point} noktası",
+    "terms": "{name} için terimler",
+    "scalar": "Kesin sayı k",
+    "point": {
+      "l": "l",
+      "m": "m",
+      "u": "u"
+    },
+    "chart": {
+      "operands": "A ve B üçgensel bulanık sayıları sayı doğrusunda",
+      "result": "İşlemin sonucu sayı doğrusunda",
+      "resultTitle": "Sonuç"
+    },
+    "operation": {
+      "label": "İşlem",
+      "add": "Toplama  A ⊕ B",
+      "subtract": "Çıkarma  A ⊖ B",
+      "multiply": "Çarpma  A ⊗ B",
+      "divide": "Bölme  A ⊘ B",
+      "scale": "Sayıyla çarpma  k · A",
+      "shift": "Sayı ekleme  A + k"
+    },
+    "rule": {
+      "add": "l, m ve u değerleri tek tek toplanır.",
+      "subtract": "A'nın alt değerinden B'nin üst değeri, orta değerlerin farkı ve A'nın üst değerinden B'nin alt değeri çıkarılır.",
+      "multiply": "Pozitif sayılar için l, m ve u değerleri tek tek çarpılır.",
+      "divide": "Pozitif sayılar için: A'nın l değeri B'nin u değerine, m değeri m değerine, A'nın u değeri B'nin l değerine bölünür. B sıfırı içermemelidir.",
+      "scale": "l, m ve u değerlerinin her biri k ile çarpılır.",
+      "shift": "k sayısı l, m ve u değerlerine eklenir."
+    },
+    "scale": {
+      "label": "Dilsel ölçek",
+      "none": "Ölçek yok"
+    },
+    "defuzzification": {
+      "graded-mean": "Dereceli ortalama",
+      "centroid": "Ağırlık merkezi"
+    },
+    "table": {
+      "caption": "Sayıların değerleri ve durulaştırılmış değerleri",
+      "number": "Sayı"
+    },
+    "error": {
+      "zero-divisor": "B sıfırı içeriyor, bu yüzden bölüm tanımsız. B'yi sıfırdan uzaklaştırın.",
+      "invalid": "Sonuç geçerli bir üçgensel bulanık sayı değil."
+    },
+    "name": {
+      "a": "A",
+      "b": "B"
     }
   }
 }
