@@ -3,12 +3,12 @@
  * (P1.17): every page shows a reference example, runs it through the real method and
  * offers it as sample data. The JSON files stay the single source; nothing is copied.
  */
-import critic from '../critic/fixtures/diakoulaki-1995.json';
-import fuzzyMarcos from '../fuzzy-marcos/fixtures/stankovic-2020.json';
-import marcos from '../marcos/fixtures/damjanovic-2022-s1.json';
-import merec from '../merec/fixtures/keshavarz-ghorabaee-2021.json';
-import imfSwara from '../swara/fixtures/imf-swara-damjanovic-2022-s1.json';
-import swara from '../swara/fixtures/kersuliene-2010.json';
+import critic from '../critic/fixtures/diakoulaki-1995.json' with { type: 'json' };
+import fuzzyMarcos from '../fuzzy-marcos/fixtures/stankovic-2020.json' with { type: 'json' };
+import marcos from '../marcos/fixtures/damjanovic-2022-s1.json' with { type: 'json' };
+import merec from '../merec/fixtures/keshavarz-ghorabaee-2021.json' with { type: 'json' };
+import imfSwara from '../swara/fixtures/imf-swara-damjanovic-2022-s1.json' with { type: 'json' };
+import swara from '../swara/fixtures/kersuliene-2010.json' with { type: 'json' };
 
 /** The parts of a fixture that the library reads. `input` is method-specific. */
 export interface ReferenceFixture {
