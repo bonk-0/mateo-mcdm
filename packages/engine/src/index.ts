@@ -8,6 +8,7 @@
  * - `math`: normalization, reductions and ranking.
  * - `method`: the `Method` contract, parameters, the registry and `runMethod`.
  * - `determinism`: the guard that proves a method gives identical output on every run.
+ * - `solver`: the `LinearSolver` interface that optimization-based methods call.
  *
  * See the package README for the guide to writing a method.
  */
@@ -19,5 +20,6 @@ export * from './math';
 export * from './messages';
 export * from './method';
 export * from './model';
+export * from './solver';
 export * from './trace';
 export * from './validation';

@@ -349,7 +349,7 @@ describe('runMethod', () => {
     ).not.toThrow();
     const lying = tinyMethod({
       run: () => {
-        const trace = tinyMethod().run({}, {}).trace;
+        const trace = tinyMethod().run({}, {}, {}).trace;
         const cell = trace.steps[0]?.output.cells[0]?.[0] as { value: number };
         cell.value = 2;
         return { result: 2, trace };

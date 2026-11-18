@@ -10,6 +10,7 @@ Data in, result plus step trace out: no UI, no I/O, no randomness, no clock.
 | `src/trace`        | Trace model, `TraceBuilder`, traced crisp arithmetic, formulas, trace auditor    |
 | `src/math`         | Normalization variants, reductions, ranking with tie rules                       |
 | `src/method`       | `Method` contract, parameter schemas, registry, `runMethod`                      |
+| `src/solver`       | `LinearProgram`, the `LinearSolver` interface, `solveToOptimality`               |
 | `src/determinism`  | `assertDeterministic`, `canonicalJson`                                           |
 | `src/messages`     | English and Turkish texts for the i18n keys the engine emits                     |
 | `src/__fixtures__` | A toy weighted-sum method used only by the tests; also a complete worked example |
@@ -151,6 +152,29 @@ Rules for method authors:
    variant only when it is exactly the one in the method's reference paper.
 7. Tests of every method call `assertDeterministic(method, input, params)` and
    `verifyTrace(trace, { requireKnownOperations: true })`.
+
+## Methods that solve optimization models
+
+Some methods solve linear programmes (BWM). The engine defines the model and the interface,
+not a solver: a `LinearProgram` is plain data (`sense`, variables with cost and bounds,
+constraints with sparse terms and bounds, `±Infinity` for no bound), and a `LinearSolver`
+has a `name`, a `version` and a synchronous `solve`. `@mateo/solver` implements it with
+HiGHS compiled to WebAssembly; the app loads it once in the Web Worker that runs methods.
+
+1. Declare `requires: ['linear-solver']`. `runMethod(method, input, params, { solver })`
+   passes the solver in the third argument of `run` (`context.solver`); without one it
+   throws a `MethodValidationError` with the issue `solver.unavailable` instead of running.
+2. Solve with `solveToOptimality(solver, program)`. It returns the optimum, throws
+   `EngineError('INVALID_ARGUMENT')` for a malformed programme (a bug in the method), and
+   throws a `SolverFailure` for every other outcome; `runMethod` reports that as the
+   translated validation error `solver.failed`. Only call it for programmes that are
+   feasible and bounded by construction.
+3. Record solver results with `derive` under an operation id of the method
+   (`bwm.nonlinear-xi`) whose options include `solverLabel(solver)`, and export
+   evaluators that recompute them with a solver, so `verifyTrace` can audit the trace.
+4. Never report a single optimum when the optimum is not unique: report what all optimal
+   solutions share (BWM reports each weight's interval over the optimal set).
+5. Pass the solver to `assertDeterministic(method, input, params, { solver })` in tests.
 
 ## Other number types
 

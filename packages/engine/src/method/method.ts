@@ -1,5 +1,6 @@
 import type { NumberTypeId } from '../model/number-type';
 import type { WeightVector } from '../model/weights';
+import type { LinearSolver } from '../solver/linear-program';
 import type { Trace } from '../trace/types';
 import type { ValidationResult } from '../validation/types';
 import type { ParameterSchema, ParameterValuesOf } from './parameters';
@@ -65,6 +66,23 @@ export interface Reference {
   readonly note?: string;
 }
 
+/**
+ * A service a method needs besides its input. `linear-solver`: the method solves linear
+ * programmes through {@link MethodContext.solver}.
+ */
+export type MethodRequirement = 'linear-solver';
+
+export const METHOD_REQUIREMENTS: readonly MethodRequirement[] = ['linear-solver'];
+
+/**
+ * What `run` receives besides input and parameters. Services are deterministic, so a
+ * method that uses them stays a pure function of input, parameters and service version.
+ */
+export interface MethodContext {
+  /** Present whenever the method declares the `linear-solver` requirement. */
+  readonly solver?: LinearSolver;
+}
+
 export interface MethodRun<TResult> {
   /** Plain JSON data: it is stored in the project file and compared between runs. */
   readonly result: TResult;
@@ -77,8 +95,9 @@ export interface MethodRun<TResult> {
  * `validate` and `run` must be pure: no I/O, no randomness, no clock, no mutation of
  * their arguments. The same input and parameters always give the same result and trace.
  *
- * `run` may assume that `validate` reported no errors for the same arguments. Callers go
- * through `runMethod`, which enforces that order.
+ * `run` may assume that `validate` reported no errors for the same arguments, and that the
+ * services in `requires` are in its context. Callers go through `runMethod`, which
+ * enforces both.
  */
 export interface Method<TInput, TSchema extends ParameterSchema, TResult> {
   /** Stable kebab-case id, for example `fuzzy-marcos`. */
@@ -98,12 +117,21 @@ export interface Method<TInput, TSchema extends ParameterSchema, TResult> {
   readonly parameters: TSchema;
   readonly references: readonly Reference[];
   /**
+   * Services the method needs (default none). `runMethod` refuses to run a method whose
+   * requirement it cannot meet, with a translated validation error.
+   */
+  readonly requires?: readonly MethodRequirement[];
+  /**
    * Reports every problem of the input. Input comes from files and stored projects, so
    * `validate` must not trust its static type: use the `check*` helpers, which accept
    * `unknown`.
    */
   validate(input: TInput, params: ParameterValuesOf<TSchema>): ValidationResult;
-  run(input: TInput, params: ParameterValuesOf<TSchema>): MethodRun<TResult>;
+  run(
+    input: TInput,
+    params: ParameterValuesOf<TSchema>,
+    context: MethodContext,
+  ): MethodRun<TResult>;
 }
 
 /** A method whose input, parameter and result types are not statically known. */

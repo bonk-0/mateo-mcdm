@@ -15,7 +15,8 @@ export type EngineErrorCode =
   | 'INVALID_METHOD'
   | 'UNKNOWN_METHOD'
   | 'NON_DETERMINISTIC'
-  | 'VALIDATION_FAILED';
+  | 'VALIDATION_FAILED'
+  | 'SOLVER_FAILED';
 
 export type EngineErrorDetails = Readonly<Record<string, unknown>>;
 

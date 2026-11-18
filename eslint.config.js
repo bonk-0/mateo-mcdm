@@ -9,7 +9,7 @@ import tseslint from 'typescript-eslint';
  * They may run in Web Workers, Node and tests, so they never import React, Tauri,
  * DOM-bound packages or the UI layer of the monorepo.
  */
-export const PURE_PACKAGES = ['engine', 'fuzzy', 'methods', 'io', 'project'];
+export const PURE_PACKAGES = ['engine', 'fuzzy', 'methods', 'solver', 'io', 'project'];
 
 /** Import specifiers that count as "UI" for the purity rule. */
 export const UI_IMPORT_PATTERNS = [
@@ -36,13 +36,13 @@ export const UI_RELATIVE_IMPORT_REGEX = String.raw`^(\.\./)+(packages/)?(ui|expl
  * input always gives the same result and trace, so they may not read a clock or a random
  * source. `io` and `project` are pure of UI code but legitimately record timestamps.
  */
-export const DETERMINISTIC_PACKAGES = ['engine', 'fuzzy', 'methods'];
+export const DETERMINISTIC_PACKAGES = ['engine', 'fuzzy', 'methods', 'solver'];
 
 const DETERMINISM_MESSAGE =
   'Calculation code must be deterministic: no randomness and no clock. See docs/plan.md §4.';
 
 const PURITY_MESSAGE =
-  'Pure packages (engine, fuzzy, methods, io, project) must not import UI or presentation code. See docs/plan.md §4.';
+  'Pure packages (engine, fuzzy, methods, solver, io, project) must not import UI or presentation code. See docs/plan.md §4.';
 
 export default tseslint.config(
   {

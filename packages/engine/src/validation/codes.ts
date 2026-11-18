@@ -36,6 +36,11 @@ export const ISSUE_CODES = {
   parameterOutOfRange: 'parameter.out-of-range',
   parameterNotInteger: 'parameter.not-integer',
   parameterInvalidOption: 'parameter.invalid-option',
+
+  /** The method needs an optimization solver and none could be loaded. */
+  solverUnavailable: 'solver.unavailable',
+  /** The solver did not return an optimum for a model that has one. */
+  solverFailed: 'solver.failed',
 } as const;
 
 export type EngineIssueCode = (typeof ISSUE_CODES)[keyof typeof ISSUE_CODES];

@@ -92,9 +92,9 @@ describe('determinism guard', () => {
     let calls = 0;
     const drifting = defineMethod({
       ...weightedSumMethod,
-      run(input: WeightedSumInput, params) {
+      run(input: WeightedSumInput, params, context) {
         calls += 1;
-        const run = weightedSumMethod.run(input, params);
+        const run = weightedSumMethod.run(input, params, context);
         return calls < 3 ? run : { ...run, result: { ...run.result, scores: [0, 0, 0] } };
       },
     });
@@ -112,9 +112,9 @@ describe('determinism guard', () => {
     let calls = 0;
     const drifting = defineMethod({
       ...weightedSumMethod,
-      run(input: WeightedSumInput, params) {
+      run(input: WeightedSumInput, params, context) {
         calls += 1;
-        const run = weightedSumMethod.run(input, params);
+        const run = weightedSumMethod.run(input, params, context);
         const steps = calls === 2 ? run.trace.steps.slice(0, -1) : run.trace.steps;
         return { ...run, trace: { ...run.trace, steps } };
       },
@@ -127,9 +127,9 @@ describe('determinism guard', () => {
   it('catches a method that mutates its input', () => {
     const mutating = defineMethod({
       ...weightedSumMethod,
-      run(input: WeightedSumInput, params) {
+      run(input: WeightedSumInput, params, context) {
         (input.matrix.values[0] as number[])[0] = 1;
-        return weightedSumMethod.run(input, params);
+        return weightedSumMethod.run(input, params, context);
       },
     });
     expect(() => assertDeterministic(mutating, sampleInput())).toThrow(TypeError);

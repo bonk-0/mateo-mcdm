@@ -276,6 +276,8 @@ describe('P1.2: validation distinguishes errors from warnings with stable codes'
         "parameter.not-integer",
         "parameter.out-of-range",
         "parameter.unknown",
+        "solver.failed",
+        "solver.unavailable",
         "weights.duplicate",
         "weights.empty",
         "weights.invalid-value",

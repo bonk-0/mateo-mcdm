@@ -1,4 +1,5 @@
 import { EngineError } from '../errors';
+import type { LinearSolver } from '../solver/linear-program';
 import type { Method } from '../method/method';
 import type { ParameterSchema, ParameterValuesOf } from '../method/parameters';
 import type { MethodRunRecord } from '../method/run';
@@ -8,6 +9,8 @@ import { canonicalJson, deepClone, deepFreeze } from './canonical';
 export interface DeterminismOptions {
   /** How many times to run. Default 3, minimum 2. */
   readonly runs?: number;
+  /** Passed to `runMethod` for methods that need a solver. */
+  readonly solver?: LinearSolver;
 }
 
 /**
@@ -31,7 +34,12 @@ export function assertDeterministic<TInput, TSchema extends ParameterSchema, TRe
 
   for (let run = 1; run <= runs; run += 1) {
     // A fresh copy per run: identical output must not depend on object identity.
-    const record = runMethod(method, deepFreeze(deepClone(input)), frozenParams);
+    const record = runMethod(
+      method,
+      deepFreeze(deepClone(input)),
+      frozenParams,
+      options.solver === undefined ? {} : { solver: options.solver },
+    );
     const actual = canonicalJson(record);
     if (first === undefined) {
       first = record;

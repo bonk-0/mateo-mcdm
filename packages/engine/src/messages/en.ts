@@ -52,6 +52,11 @@ export const en = {
   'validation.parameter.not-integer':
     'Parameter "{name}" must be a whole number; {value, number} is not.',
   'validation.parameter.invalid-option': '"{value}" is not a valid option for parameter "{name}".',
+
+  'validation.solver.unavailable':
+    'This method needs the optimization solver, which could not be loaded.',
+  'validation.solver.failed':
+    'The optimization solver ({solver}) could not solve this model (status: {status}). Check the input values and try again.',
 } as const;
 
 export type EngineMessageKey = keyof typeof en;

@@ -1,7 +1,7 @@
 import { EngineError } from '../errors';
 import type { NumberTypeId } from '../model/number-type';
 import type { AnyMethod, Method, MethodCategory } from './method';
-import { METHOD_CATEGORIES } from './method';
+import { METHOD_CATEGORIES, METHOD_REQUIREMENTS } from './method';
 import type { ParameterSchema } from './parameters';
 import { parameterSchemaProblems } from './parameters';
 
@@ -45,6 +45,17 @@ export function methodDescriptorProblems(method: AnyMethod): string[] {
     problems.push(...parameterSchemaProblems(method.parameters));
   }
   if (!Array.isArray(method.references)) problems.push('the references list is missing');
+  if (
+    method.requires !== undefined &&
+    !(
+      Array.isArray(method.requires) &&
+      (method.requires as readonly unknown[]).every((requirement) =>
+        (METHOD_REQUIREMENTS as readonly unknown[]).includes(requirement),
+      )
+    )
+  ) {
+    problems.push('requires lists an unknown requirement');
+  }
   if (typeof method.validate !== 'function' || typeof method.run !== 'function') {
     problems.push('validate and run must be functions');
   }
