@@ -6,7 +6,7 @@
  * Lists are reduced strictly left to right with the engine's own reductions, so results
  * are identical on every run and, for degenerate TFNs, identical to the crisp reduction.
  */
-import { EngineError, maximum, mean, minimum, product, sum } from '@mateo/engine';
+import { EngineError, maximum, mean, minimum, product, sum, sumOfSquares } from '@mateo/engine';
 import type { TFN } from './tfn';
 import { makeTfn } from './tfn';
 
@@ -26,6 +26,28 @@ const upper = (values: readonly TFN[]): number[] => values.map((value) => value.
 export function tfnSum(values: readonly TFN[]): TFN {
   assertNotEmpty(values, 'tfnSum');
   return makeTfn(sum(lower(values)), sum(modal(values)), sum(upper(values)));
+}
+
+/**
+ * Norm of a list of non-negative TFNs, `(√Σ lₖ², √Σ mₖ², √Σ uₖ²)`: the vector norm of each
+ * component. Dividing a TFN by it with `tfnDivide` is the fuzzy form of vector
+ * normalisation. Throws `EngineError('INVALID_ARGUMENT')` for a negative TFN (`l < 0`),
+ * where squaring would break `l ≤ m ≤ u`.
+ */
+export function tfnNorm(values: readonly TFN[]): TFN {
+  assertNotEmpty(values, 'tfnNorm');
+  const negative = values.findIndex((value) => value.l < 0);
+  if (negative !== -1) {
+    throw new EngineError('INVALID_ARGUMENT', '"tfnNorm" is defined for non-negative TFNs only.', {
+      operation: 'tfnNorm',
+      index: negative,
+    });
+  }
+  return makeTfn(
+    Math.sqrt(sumOfSquares(lower(values))),
+    Math.sqrt(sumOfSquares(modal(values))),
+    Math.sqrt(sumOfSquares(upper(values))),
+  );
 }
 
 /**

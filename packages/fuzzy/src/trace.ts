@@ -28,6 +28,7 @@ import {
   tfnMax,
   tfnMin,
   tfnMinMeanMax,
+  tfnNorm,
   tfnSum,
 } from './aggregation';
 import {
@@ -42,6 +43,7 @@ import {
   tfnSubtract,
   tfnSubtractScalar,
 } from './arithmetic';
+import { vertexDistance } from './distance';
 import type { DefuzzificationId } from './defuzzification';
 import { centroid, gradedMean, isDefuzzificationId } from './defuzzification';
 import type { TFN } from './tfn';
@@ -140,6 +142,12 @@ const tfnList = (fn: (values: readonly TFN[]) => TFN): TfnOperationSpec => ({
   evaluate: (args) => fn(args as readonly TFN[]),
 });
 
+const tfnTfnToCrisp = (fn: (a: TFN, b: TFN) => number): TfnOperationSpec => ({
+  operands: ['tfn', 'tfn'],
+  result: 'crisp',
+  evaluate: (args) => fn(args[0] as TFN, args[1] as TFN),
+});
+
 const tfnToCrisp = (fn: (a: TFN) => number): TfnOperationSpec => ({
   operands: ['tfn'],
   result: 'crisp',
@@ -159,11 +167,13 @@ export const TFN_OPERATIONS = {
   'tfn.divide-by-scalar': tfnScalar(tfnDivideByScalar),
   'tfn.scalar-divided-by': scalarTfn(tfnScalarDividedBy),
   'tfn.sum': tfnList(tfnSum),
+  'tfn.norm': tfnList(tfnNorm),
   'tfn.min': tfnList(tfnMin),
   'tfn.max': tfnList(tfnMax),
   'tfn.arithmetic-mean': tfnList(tfnArithmeticMean),
   'tfn.geometric-mean': tfnList(tfnGeometricMean),
   'tfn.min-mean-max': tfnList(tfnMinMeanMax),
+  'tfn.vertex-distance': tfnTfnToCrisp(vertexDistance),
   'tfn.graded-mean': tfnToCrisp(gradedMean),
   'tfn.centroid': tfnToCrisp(centroid),
   'tfn.lower': tfnToCrisp((a) => a.l),
@@ -292,6 +302,11 @@ const aggregate =
     return apply(operation, list);
   };
 
+const binaryToCrisp =
+  (operation: TfnOperationId) =>
+  (a: TfnOperand, b: TfnOperand): Tracked<number> =>
+    apply(operation, [liftTfn(a), liftTfn(b)]);
+
 const toCrisp =
   (operation: TfnOperationId) =>
   (a: TfnOperand): Tracked<number> =>
@@ -330,11 +345,15 @@ export const tfnOps = {
   divideByScalar: withScalar('tfn.divide-by-scalar'),
   scalarDividedBy: scalarFirst('tfn.scalar-divided-by'),
   sum: aggregate('tfn.sum'),
+  /** `(√Σ lₖ², √Σ mₖ², √Σ uₖ²)` of non-negative TFNs: the norm of each component. */
+  norm: aggregate('tfn.norm'),
   min: aggregate('tfn.min'),
   max: aggregate('tfn.max'),
   arithmeticMean: aggregate('tfn.arithmetic-mean'),
   geometricMean: aggregate('tfn.geometric-mean'),
   minMeanMax: aggregate('tfn.min-mean-max'),
+  /** Vertex distance of two TFNs, a crisp number. */
+  vertexDistance: binaryToCrisp('tfn.vertex-distance'),
   gradedMean: toCrisp('tfn.graded-mean'),
   centroid: toCrisp('tfn.centroid'),
   /** The formula chosen by a method parameter; recorded as that formula's own operation. */

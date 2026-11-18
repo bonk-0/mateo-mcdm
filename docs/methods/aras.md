@@ -28,3 +28,20 @@ Fixture: `packages/methods/aras/fixtures/zavadskas-2010.json`. Microclimate in f
 **Verified, but not reproduced.** The optimal-alternative row of the example is not legible in the available PDF, and every value depends on it.
 
 **Proposal.** Implement ARAS-F in P2.4 from the paper's formulas with property tests (crisp input gives crisp ARAS); add the golden test once the optimal row can be confirmed from a clean copy of the paper, or defer ARAS-F to P3.2 if Phase 2 should ship only verified variants.
+
+## Implementation (P2.5)
+
+`packages/methods/aras`: `aras` and `fuzzy-aras` (ARAS-F).
+
+- The optimal alternative is an optional input `optimal` (one value per criterion, keyed by criterion id, like weights). Entered, it is echoed as step `optimal-alternative`; omitted, the step computes the column best of Eq. 2. The row id of the optimal alternative in the trace is `A0`, which alternatives may not use.
+- An entered optimum that is worse than the best alternative on a criterion is a warning (`aras.optimal-worse-than-alternative`); the calculation continues and K_i can exceed 1.
+- Steps: optimal alternative → extended matrix → column sums (Σ x, or Σ 1/x for cost criteria) → normalized matrix → weighted matrix → S_i → K_i = S_i / S_0 (K_0 = 1 is in the trace) → ranking over the alternatives. Weights need not sum to 1 (K is unchanged).
+- Golden test for `aras`: Zavadskas and Turskis (2010), Tables 2–3, with the explicit optimal row and the 390 lx input correction of the fixture.
+
+### ARAS-F: formulas implemented, NOT yet verified
+
+Property tests only (crisp input gives crisp ARAS; every TFN valid; order invariance; hand-computed examples), because the optimal row of the paper's example is not legible (see above). The formulas are:
+
+- Optimal alternative: entered as TFNs, or the component-wise best TFN of each column.
+- Cost criteria inverted first (x̃' = 1 ⊘ x̃, so l must be > 0), then every column divided by the fuzzy sum of its TFNs over rows 0 to m: x̄ = x̃' ⊘ Σ x̃' = (l / Σu, m / Σm, u / Σl). A benefit criterion whose lower values are all 0 (optimum included) is rejected: Σl = 0.
+- S̃_i = Σ w̃_j ⊗ x̄_ij (TFN or crisp weights), defuzzified by the centroid (parameter `defuzzification`) before K_i = S_i / S_0.

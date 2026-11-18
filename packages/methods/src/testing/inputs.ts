@@ -70,3 +70,73 @@ export function crispMatrixInput(input: Omit<FixtureInput<number>, 'weights'>) {
 export function orderedCriteria(criteria: readonly { id: string; name: string }[]) {
   return criteria.map(({ id, name }) => ({ id, name: textLiteral(name) }));
 }
+
+/** A small crisp decision matrix with generated ids `a1…`, `c1…`, for property and validation tests. */
+export function smallMatrix(
+  values: readonly (readonly number[])[],
+  directions: readonly ('benefit' | 'cost')[],
+): DecisionMatrix<number> {
+  return {
+    alternatives: values.map((_, i) => ({ id: `a${i + 1}`, name: textLiteral(`A${i + 1}`) })),
+    criteria: directions.map((direction, j) => ({
+      id: `c${j + 1}`,
+      name: textLiteral(`C${j + 1}`),
+      direction,
+      numberType: 'crisp',
+    })),
+    values: values.map((row) => [...row]),
+  };
+}
+
+/** The crisp weight vector of {@link smallMatrix}: one value per criterion. */
+export function smallWeights(...values: number[]): WeightVector {
+  return {
+    numberType: 'crisp',
+    entries: values.map((value, j) => ({ criterionId: `c${j + 1}`, value })),
+  };
+}
+
+/** A small TFN decision matrix with generated ids, like {@link smallMatrix}. */
+export function smallTfnMatrix(
+  values: readonly (readonly TFN[])[],
+  directions: readonly ('benefit' | 'cost')[],
+): DecisionMatrix<TFN> {
+  return {
+    alternatives: values.map((_, i) => ({ id: `a${i + 1}`, name: textLiteral(`A${i + 1}`) })),
+    criteria: directions.map((direction, j) => ({
+      id: `c${j + 1}`,
+      name: textLiteral(`C${j + 1}`),
+      direction,
+      numberType: 'tfn',
+    })),
+    values: values.map((row) => [...row]),
+  };
+}
+
+/** The TFN weight vector of {@link smallTfnMatrix}. */
+export function smallTfnWeights(...values: TFN[]): WeightVector<TFN> {
+  return {
+    numberType: 'tfn',
+    entries: values.map((value, j) => ({ criterionId: `c${j + 1}`, value })),
+  };
+}
+
+/** The degenerate-TFN copy `(x, x, x)` of a crisp matrix, for crisp-equivalence tests. */
+export function asTfnMatrix(matrix: DecisionMatrix<number>): DecisionMatrix<TFN> {
+  return {
+    alternatives: matrix.alternatives,
+    criteria: matrix.criteria.map((criterion) => ({ ...criterion, numberType: 'tfn' })),
+    values: matrix.values.map((row) => row.map((x) => ({ l: x, m: x, u: x }))),
+  };
+}
+
+/** The degenerate-TFN copy of crisp weights. */
+export function asTfnWeights(weights: WeightVector): WeightVector<TFN> {
+  return {
+    numberType: 'tfn',
+    entries: weights.entries.map((entry) => ({
+      criterionId: entry.criterionId,
+      value: { l: entry.value, m: entry.value, u: entry.value },
+    })),
+  };
+}

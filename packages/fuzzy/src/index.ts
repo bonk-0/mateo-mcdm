@@ -2,7 +2,7 @@
  * @mateo/fuzzy — triangular fuzzy numbers (TFN) for every fuzzy method of Mateo.
  *
  * - `tfn`: the `TFN` type `(l, m, u)` and its validation.
- * - `arithmetic`, `aggregation`, `defuzzification`: pure, separately named operations.
+ * - `arithmetic`, `aggregation`, `defuzzification`, `distance`: pure, separately named operations.
  * - `trace`: TFN cells in step traces and the traced operations `tfnOps`.
  * - `validation`: checks for TFN matrices and weights.
  * - `scales`, `predefined-scales`: linguistic scales and term → TFN conversion.
@@ -14,6 +14,7 @@ export const PACKAGE_NAME = '@mateo/fuzzy';
 export * from './aggregation';
 export * from './arithmetic';
 export * from './defuzzification';
+export * from './distance';
 export * from './messages';
 export * from './predefined-scales';
 export * from './scales';

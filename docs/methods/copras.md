@@ -32,3 +32,13 @@ It **defuzzifies every TFN (ratings and weights) by its centroid (l + m + u)/3 f
 **Errata.** The crisp weight of VH (0.9167) is printed and used as 0.916 (deviation). Table 6 prints a C5 column that cannot come from Table 5 (values above the weight 0.5); Table 7 uses the correct values, and the fixture marks the column null.
 
 **Proposal.** Mateo implements fuzzy COPRAS as "centroid defuzzification, then COPRAS", shown as two explicit steps, rather than a separate fuzzy-arithmetic engine. Variants that keep TFNs until the end (for example fuzzy S+ and S−) have no reproducible open-access example and are not planned.
+
+## Implementation (P2.5)
+
+`packages/methods/copras`: `copras` and `fuzzy-copras` (two methods, because their inputs differ).
+
+- Steps: column sums → weighted normalized matrix d_ij → S⁺ and S⁻ → relative significance Q → utility degree N → ranking. N is the score; Q is also in the result.
+- Weights need not sum to 1: scaling them scales Q and leaves N and the ranking unchanged, so there is no normalisation warning.
+- Without cost criteria S⁻ is 0 everywhere and Q = S⁺ (the trace uses its own formula). A column that is 0 everywhere, and an alternative whose S⁻ is 0 while cost criteria exist, are validation errors.
+- `fuzzy-copras` shows the two stages the P2.1 decision asks for: the trace first holds the defuzzified matrix and weights (`defuzzified-matrix`, `defuzzified-weights`), then the steps above unchanged. Ratings and weights may be TFNs; crisp weights are used as they are. The `defuzzification` parameter defaults to the centroid of the paper; the graded mean is offered as an option and has no published reference.
+- Golden tests: Podvezko (2011) variant II for `copras`; Yazdani et al. (2011) for `fuzzy-copras` (crisp weights, Q, N, ranking, and Table 6 for C1–C4; the C5 column is marked unreproducible in the fixture).

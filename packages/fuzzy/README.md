@@ -4,17 +4,18 @@ Triangular fuzzy numbers (TFN) for every fuzzy method of Mateo, plus linguistic 
 (sub-phase P1.3, `docs/plan.md` §6.3). Pure TypeScript on top of `@mateo/engine`: no UI,
 no I/O, no randomness, no clock.
 
-| File                       | What it holds                                                             |
-| -------------------------- | ------------------------------------------------------------------------- |
-| `src/tfn.ts`               | The `TFN` type `(l, m, u)`, the checked constructor and `tfnProblem`      |
-| `src/arithmetic.ts`        | `tfnAdd`, `tfnSubtract`, `tfnMultiply`, `tfnDivide` and the scalar forms  |
-| `src/aggregation.ts`       | `tfnSum`, `tfnMin`, `tfnMax`, arithmetic and geometric mean, min/mean/max |
-| `src/defuzzification.ts`   | `gradedMean`, `centroid`, and both by id                                  |
-| `src/trace.ts`             | `encodeTfn`, the traced operations `tfnOps`, `TFN_EVALUATORS`             |
-| `src/validation.ts`        | `checkTfnMatrix`, `checkTfnWeights`, issue codes                          |
-| `src/scales.ts`            | `LinguisticScale`, `checkLinguisticScale`, term → TFN conversion          |
-| `src/predefined-scales.ts` | 5-level, 7-level, Fuzzy MARCOS and IMF SWARA scales                       |
-| `src/messages`             | English and Turkish texts for the i18n keys the package emits             |
+| File                       | What it holds                                                                        |
+| -------------------------- | ------------------------------------------------------------------------------------ |
+| `src/tfn.ts`               | The `TFN` type `(l, m, u)`, the checked constructor and `tfnProblem`                 |
+| `src/arithmetic.ts`        | `tfnAdd`, `tfnSubtract`, `tfnMultiply`, `tfnDivide` and the scalar forms             |
+| `src/aggregation.ts`       | `tfnSum`, `tfnNorm`, `tfnMin`, `tfnMax`, arithmetic and geometric mean, min/mean/max |
+| `src/distance.ts`          | `vertexDistance` of two TFNs                                                         |
+| `src/defuzzification.ts`   | `gradedMean`, `centroid`, and both by id                                             |
+| `src/trace.ts`             | `encodeTfn`, the traced operations `tfnOps`, `TFN_EVALUATORS`                        |
+| `src/validation.ts`        | `checkTfnMatrix`, `checkTfnWeights`, issue codes                                     |
+| `src/scales.ts`            | `LinguisticScale`, `checkLinguisticScale`, term → TFN conversion                     |
+| `src/predefined-scales.ts` | 5-level, 7-level, Fuzzy MARCOS and IMF SWARA scales                                  |
+| `src/messages`             | English and Turkish texts for the i18n keys the package emits                        |
 
 ## Core ideas
 
