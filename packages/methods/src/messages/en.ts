@@ -353,6 +353,229 @@ export const en = {
   'methods.bwm.steps.linear-xi.explanation':
     'The smallest ξ for which some weights keep every difference |w_B − a_Bj · w_j| and |w_j − a_jW · w_W| within ξ, found with a linear programme solved with {solver}. ξ^L* itself is the consistency indicator: the closer to 0, the more consistent the comparisons.',
 
+  // ------------------------------------------------------------ COPRAS, MOORA, ARAS and their fuzzy variants (P2.5)
+  'methods.copras.name': 'COPRAS',
+  'methods.copras.rows.columnSum': 'Column sum',
+  'methods.copras.columns.sPlus': 'Sum S⁺ (benefit)',
+  'methods.copras.columns.sMinus': 'Sum S⁻ (cost)',
+  'methods.copras.columns.Q': 'Relative significance Q',
+  'methods.copras.columns.N': 'Utility degree N (%)',
+  'methods.copras.columns.rank': 'Rank',
+  'methods.copras.steps.initial-matrix.name': 'Initial decision matrix',
+  'methods.copras.steps.initial-matrix.explanation':
+    'The performance of every alternative on every criterion, as entered.',
+  'methods.copras.steps.weights.name': 'Criterion weights',
+  'methods.copras.steps.weights.explanation':
+    'The importance of each criterion, as entered. Multiplying every weight by the same factor changes Q but not the utility degrees or the ranking.',
+  'methods.copras.steps.column-sums.name': 'Column sums',
+  'methods.copras.steps.column-sums.explanation':
+    'The sum of the values of each criterion over all alternatives. COPRAS shares each criterion’s weight among the alternatives in proportion to their values.',
+  'methods.copras.steps.weighted-normalized-matrix.name': 'Weighted normalized matrix',
+  'methods.copras.steps.weighted-normalized-matrix.explanation':
+    'Every value divided by the sum of its column and multiplied by the weight of its criterion. This is the same for benefit and cost criteria; the direction only matters in the next step.',
+  'methods.copras.steps.sums.name': 'Sums S⁺ and S⁻',
+  'methods.copras.steps.sums.explanation':
+    'S⁺ adds the weighted values of the benefit criteria (more is better) and S⁻ those of the cost criteria (less is better).',
+  'methods.copras.steps.relative-significance.name': 'Relative significance Q',
+  'methods.copras.steps.relative-significance.explanation':
+    'S⁺ plus a bonus for a small S⁻: the sum of all S⁻ divided by the alternative’s own S⁻ and the sum of all 1 / S⁻. Without cost criteria Q is just S⁺. A higher value is better.',
+  'methods.copras.steps.utility-degree.name': 'Utility degree N',
+  'methods.copras.steps.utility-degree.explanation':
+    'Q as a percentage of the best alternative’s Q, so the best alternative has N = 100.',
+  'methods.copras.steps.ranking.name': 'Ranking',
+  'methods.copras.steps.ranking.explanation':
+    'Alternatives ordered by utility degree, highest first. Equal values share a rank.',
+  'methods.fuzzyCopras.name': 'Fuzzy COPRAS',
+  'methods.fuzzyCopras.parameters.defuzzification.label': 'Defuzzification',
+  'methods.fuzzyCopras.parameters.defuzzification.description':
+    'How every fuzzy rating and weight is turned into a crisp number before crisp COPRAS runs. The reference paper uses the centroid.',
+  'methods.fuzzyCopras.parameters.defuzzification.centroid': 'Centroid (l + m + u) / 3',
+  'methods.fuzzyCopras.parameters.defuzzification.gradedMean': 'Graded mean (l + 4m + u) / 6',
+  'methods.fuzzyCopras.steps.initial-matrix.name': 'Initial fuzzy decision matrix',
+  'methods.fuzzyCopras.steps.initial-matrix.explanation':
+    'The rating of every alternative on every criterion as a triangular fuzzy number (l, m, u), as entered.',
+  'methods.fuzzyCopras.steps.weights.name': 'Criterion weights',
+  'methods.fuzzyCopras.steps.weights.explanation':
+    'The importance of each criterion, as entered: triangular fuzzy numbers or crisp numbers.',
+  'methods.fuzzyCopras.steps.defuzzified-matrix.name': 'Step 1: defuzzified matrix',
+  'methods.fuzzyCopras.steps.defuzzified-matrix.explanation':
+    'Fuzzy COPRAS first replaces every fuzzy rating by one crisp number. From here on the calculation is ordinary COPRAS.',
+  'methods.fuzzyCopras.steps.defuzzified-weights.name': 'Step 1: defuzzified weights',
+  'methods.fuzzyCopras.steps.defuzzified-weights.explanation':
+    'The fuzzy weights replaced by crisp numbers in the same way. Crisp weights are used as they are.',
+  'methods.moora.name': 'MOORA',
+  'methods.moora.rows.norm': 'Column norm',
+  'methods.moora.rows.referencePoint': 'Reference point (r)',
+  'methods.moora.columns.yPlus': 'Sum of maximised objectives y⁺',
+  'methods.moora.columns.yMinus': 'Sum of minimised objectives y⁻',
+  'methods.moora.columns.y': 'Ratio system y',
+  'methods.moora.columns.maxDeviation': 'Maximal deviation',
+  'methods.moora.columns.rank': 'Rank',
+  'methods.moora.parameters.rankBy.label': 'Ranking reported',
+  'methods.moora.parameters.rankBy.description':
+    'MOORA has two approaches. Both are calculated and shown in the steps; this selects the one that is the result. The ratio system ranks by the highest y, the reference point by the smallest maximal deviation.',
+  'methods.moora.parameters.rankBy.ratioSystem': 'Ratio system (highest y)',
+  'methods.moora.parameters.rankBy.referencePoint': 'Reference point (smallest maximal deviation)',
+  'methods.moora.steps.initial-matrix.name': 'Initial decision matrix',
+  'methods.moora.steps.initial-matrix.explanation':
+    'The performance of every alternative on every objective, as entered.',
+  'methods.moora.steps.weights.name': 'Objective weights',
+  'methods.moora.steps.weights.explanation':
+    'The importance of each objective, as entered. The original method has no weights; without them every objective counts equally.',
+  'methods.moora.steps.norms.name': 'Column norms',
+  'methods.moora.steps.norms.explanation':
+    'The square root of the sum of the squared values of each objective. It puts objectives with different units on a common scale.',
+  'methods.moora.steps.normalized-matrix.name': 'Normalized matrix',
+  'methods.moora.steps.normalized-matrix.explanation':
+    'Every value divided by the norm of its column (vector normalization).',
+  'methods.moora.steps.weighted-matrix.name': 'Weighted normalized matrix',
+  'methods.moora.steps.weighted-matrix.explanation':
+    'Every normalized value multiplied by the weight of its objective.',
+  'methods.moora.steps.ratio-sums.name': 'Sums of the maximised and minimised objectives',
+  'methods.moora.steps.ratio-sums.explanation':
+    'For each alternative, the sum of its (weighted) normalized values on the objectives to be maximised, and on those to be minimised.',
+  'methods.moora.steps.ratio-system.name': 'Ratio system y',
+  'methods.moora.steps.ratio-system.explanation':
+    'The sum over the maximised objectives minus the sum over the minimised objectives. A higher value is better.',
+  'methods.moora.steps.ratio-system-ranking.name': 'Ranking by the ratio system',
+  'methods.moora.steps.ratio-system-ranking.explanation':
+    'Alternatives ordered by y, highest first. Equal values share a rank.',
+  'methods.moora.steps.reference-point.name': 'Reference point',
+  'methods.moora.steps.reference-point.explanation':
+    'The best value of every objective, whichever alternative has it: the largest for maximised objectives, the smallest for minimised ones.',
+  'methods.moora.steps.deviations.name': 'Deviations from the reference point',
+  'methods.moora.steps.deviations.explanation':
+    'The distance of every value from the reference point of its objective. A deviation of 0 means the alternative is the best on that objective.',
+  'methods.moora.steps.max-deviation.name': 'Maximal deviation',
+  'methods.moora.steps.max-deviation.explanation':
+    'The largest deviation of each alternative over all objectives (the Tchebycheff metric). A smaller value is better.',
+  'methods.moora.steps.reference-point-ranking.name': 'Ranking by the reference point',
+  'methods.moora.steps.reference-point-ranking.explanation':
+    'Alternatives ordered by maximal deviation, smallest first. Equal values share a rank.',
+  'methods.fuzzyMoora.name': 'Fuzzy MOORA',
+  'methods.fuzzyMoora.columns.yPlus': 'Sum of maximised objectives ỹ⁺',
+  'methods.fuzzyMoora.columns.yMinus': 'Sum of minimised objectives ỹ⁻',
+  'methods.fuzzyMoora.columns.yFuzzy': 'Fuzzy ratio system ỹ',
+  'methods.fuzzyMoora.parameters.defuzzification.label': 'Defuzzification',
+  'methods.fuzzyMoora.parameters.defuzzification.description':
+    'How the fuzzy ratio system ỹ is turned into a crisp number for ranking. The reference paper uses the centroid (the best non-fuzzy performance, BNP).',
+  'methods.fuzzyMoora.parameters.defuzzification.centroid': 'Centroid (l + m + u) / 3',
+  'methods.fuzzyMoora.parameters.defuzzification.gradedMean': 'Graded mean (l + 4m + u) / 6',
+  'methods.fuzzyMoora.steps.initial-matrix.name': 'Initial fuzzy decision matrix',
+  'methods.fuzzyMoora.steps.initial-matrix.explanation':
+    'The performance of every alternative on every objective as a triangular fuzzy number (l, m, u), as entered.',
+  'methods.fuzzyMoora.steps.weights.name': 'Objective weights',
+  'methods.fuzzyMoora.steps.weights.explanation':
+    'The importance of each objective, as entered: triangular fuzzy numbers or crisp numbers. Without weights every objective counts equally.',
+  'methods.fuzzyMoora.steps.norms.name': 'Fuzzy column norms',
+  'methods.fuzzyMoora.steps.norms.explanation':
+    'The norm of each of the three components (l, m, u) of an objective: the square root of the sum of its squares, taken over all alternatives.',
+  'methods.fuzzyMoora.steps.normalized-matrix.name': 'Normalized fuzzy matrix',
+  'methods.fuzzyMoora.steps.normalized-matrix.explanation':
+    'Every fuzzy value divided by the fuzzy norm of its column. Dividing by a fuzzy number divides l by the norm’s upper bound and u by its lower bound, so the result is again a valid triangular number.',
+  'methods.fuzzyMoora.steps.weighted-matrix.name': 'Weighted normalized fuzzy matrix',
+  'methods.fuzzyMoora.steps.weighted-matrix.explanation':
+    'Every normalized fuzzy value multiplied by the weight of its objective.',
+  'methods.fuzzyMoora.steps.ratio-sums.name':
+    'Fuzzy sums of the maximised and minimised objectives',
+  'methods.fuzzyMoora.steps.ratio-sums.explanation':
+    'For each alternative, the fuzzy sum of its normalized values on the objectives to be maximised, and on those to be minimised.',
+  'methods.fuzzyMoora.steps.fuzzy-ratio-system.name': 'Fuzzy ratio system ỹ',
+  'methods.fuzzyMoora.steps.fuzzy-ratio-system.explanation':
+    'The fuzzy sum over the maximised objectives minus the fuzzy sum over the minimised objectives. Subtracting a fuzzy number subtracts its upper bound from l and its lower bound from u.',
+  'methods.fuzzyMoora.steps.ratio-system.name': 'Ratio system y (defuzzified)',
+  'methods.fuzzyMoora.steps.ratio-system.explanation':
+    'The fuzzy ratio system turned into a crisp number so that alternatives can be ranked. A higher value is better.',
+  'methods.fuzzyMoora.steps.reference-point.name': 'Fuzzy reference point',
+  'methods.fuzzyMoora.steps.reference-point.explanation':
+    'The best fuzzy value of every objective: the largest l, m and u for maximised objectives, the smallest for minimised ones, each taken separately.',
+  'methods.fuzzyMoora.steps.deviations.name': 'Distances from the reference point',
+  'methods.fuzzyMoora.steps.deviations.explanation':
+    'The vertex distance between every fuzzy value and the reference point of its objective: the root mean square of the differences of l, m and u. It is a crisp number.',
+  'methods.aras.name': 'ARAS',
+  'methods.aras.rows.optimal': 'Optimal alternative (A0)',
+  'methods.aras.rows.columnSum': 'Column sum',
+  'methods.aras.columns.S': 'Optimality function S_i',
+  'methods.aras.columns.K': 'Utility degree K_i',
+  'methods.aras.columns.rank': 'Rank',
+  'methods.aras.steps.initial-matrix.name': 'Initial decision matrix',
+  'methods.aras.steps.initial-matrix.explanation':
+    'The performance of every alternative on every criterion, as entered.',
+  'methods.aras.steps.weights.name': 'Criterion weights',
+  'methods.aras.steps.weights.explanation':
+    'The importance of each criterion, as entered. Multiplying every weight by the same factor changes S but not the utility degrees or the ranking.',
+  'methods.aras.steps.optimal-alternative.name': 'Optimal alternative',
+  'methods.aras.steps.optimal-alternative.explanation':
+    'The imaginary best alternative every real one is measured against. The decision maker can enter it; otherwise it takes the best value of each criterion: the largest for benefit criteria and the smallest for cost criteria.',
+  'methods.aras.steps.extended-matrix.name': 'Extended matrix',
+  'methods.aras.steps.extended-matrix.explanation':
+    'The optimal alternative added to the decision matrix as the first row (row 0).',
+  'methods.aras.steps.column-sums.name': 'Column sums',
+  'methods.aras.steps.column-sums.explanation':
+    'The sum of each column over the optimal alternative and all alternatives. For cost criteria it is the sum of the inverted values 1 / x, because a smaller cost is better.',
+  'methods.aras.steps.normalized-matrix.name': 'Normalized matrix',
+  'methods.aras.steps.normalized-matrix.explanation':
+    'Benefit values divided by their column sum. Cost values are first inverted (1 / x) and then divided by the column sum of the inverted values.',
+  'methods.aras.steps.weighted-matrix.name': 'Weighted normalized matrix',
+  'methods.aras.steps.weighted-matrix.explanation':
+    'Every normalized value multiplied by the weight of its criterion.',
+  'methods.aras.steps.sums.name': 'Optimality function S_i',
+  'methods.aras.steps.sums.explanation':
+    'The sum of each row of the weighted matrix, including the optimal alternative. A larger S means a better alternative.',
+  'methods.aras.steps.utility-degree.name': 'Utility degree K_i',
+  'methods.aras.steps.utility-degree.explanation':
+    'Each S divided by the S of the optimal alternative: how close the alternative is to the optimum. The optimal alternative itself has K = 1; an alternative above 1 beats an entered optimum.',
+  'methods.aras.steps.ranking.name': 'Ranking',
+  'methods.aras.steps.ranking.explanation':
+    'Alternatives ordered by utility degree, highest first. Equal values share a rank.',
+  'methods.fuzzyAras.name': 'ARAS-F (fuzzy ARAS)',
+  'methods.fuzzyAras.rows.optimal': 'Optimal alternative (A0)',
+  'methods.fuzzyAras.rows.columnSum': 'Column sum',
+  'methods.fuzzyAras.columns.SFuzzy': 'Fuzzy sum S̃_i',
+  'methods.fuzzyAras.columns.S': 'Optimality function S_i',
+  'methods.fuzzyAras.columns.K': 'Utility degree K_i',
+  'methods.fuzzyAras.columns.rank': 'Rank',
+  'methods.fuzzyAras.parameters.defuzzification.label': 'Defuzzification',
+  'methods.fuzzyAras.parameters.defuzzification.description':
+    'How the fuzzy sums S̃_i are turned into crisp numbers before the utility degrees are calculated.',
+  'methods.fuzzyAras.parameters.defuzzification.centroid': 'Centroid (l + m + u) / 3',
+  'methods.fuzzyAras.parameters.defuzzification.gradedMean': 'Graded mean (l + 4m + u) / 6',
+  'methods.fuzzyAras.steps.initial-matrix.name': 'Initial fuzzy decision matrix',
+  'methods.fuzzyAras.steps.initial-matrix.explanation':
+    'The performance of every alternative on every criterion as a triangular fuzzy number (l, m, u), as entered.',
+  'methods.fuzzyAras.steps.weights.name': 'Criterion weights',
+  'methods.fuzzyAras.steps.weights.explanation':
+    'The importance of each criterion, as entered: triangular fuzzy numbers or crisp numbers.',
+  'methods.fuzzyAras.steps.optimal-alternative.name': 'Optimal alternative',
+  'methods.fuzzyAras.steps.optimal-alternative.explanation':
+    'The imaginary best alternative every real one is measured against. The decision maker can enter it; otherwise it takes the best fuzzy value of each criterion: the largest l, m and u for benefit criteria and the smallest for cost criteria, each taken separately.',
+  'methods.fuzzyAras.steps.extended-matrix.name': 'Extended fuzzy matrix',
+  'methods.fuzzyAras.steps.extended-matrix.explanation':
+    'The optimal alternative added to the decision matrix as the first row (row 0).',
+  'methods.fuzzyAras.steps.inverted-matrix.name': 'Matrix with inverted cost criteria',
+  'methods.fuzzyAras.steps.inverted-matrix.explanation':
+    'Cost criteria are inverted, 1 divided by the fuzzy value, so that a smaller cost becomes a larger number. Benefit criteria stay as they are.',
+  'methods.fuzzyAras.steps.column-sums.name': 'Fuzzy column sums',
+  'methods.fuzzyAras.steps.column-sums.explanation':
+    'The fuzzy sum of each column over the optimal alternative and all alternatives.',
+  'methods.fuzzyAras.steps.normalized-matrix.name': 'Normalized fuzzy matrix',
+  'methods.fuzzyAras.steps.normalized-matrix.explanation':
+    'Every fuzzy value divided by the fuzzy sum of its column. Dividing by a fuzzy number divides l by the sum’s upper bound and u by its lower bound.',
+  'methods.fuzzyAras.steps.weighted-matrix.name': 'Weighted normalized fuzzy matrix',
+  'methods.fuzzyAras.steps.weighted-matrix.explanation':
+    'Every normalized fuzzy value multiplied by the weight of its criterion.',
+  'methods.fuzzyAras.steps.fuzzy-sums.name': 'Fuzzy optimality function S̃_i',
+  'methods.fuzzyAras.steps.fuzzy-sums.explanation':
+    'The fuzzy sum of each row of the weighted matrix, including the optimal alternative.',
+  'methods.fuzzyAras.steps.sums.name': 'Optimality function S_i (defuzzified)',
+  'methods.fuzzyAras.steps.sums.explanation':
+    'The fuzzy sums turned into crisp numbers so that the utility degrees can be calculated.',
+  'methods.fuzzyAras.steps.utility-degree.name': 'Utility degree K_i',
+  'methods.fuzzyAras.steps.utility-degree.explanation':
+    'Each S divided by the S of the optimal alternative: how close the alternative is to the optimum. The optimal alternative itself has K = 1; an alternative above 1 beats an entered optimum.',
+  'methods.fuzzyAras.steps.ranking.name': 'Ranking',
+  'methods.fuzzyAras.steps.ranking.explanation':
+    'Alternatives ordered by utility degree, highest first. Equal values share a rank.',
   // ------------------------------------------------------------ VIKOR
   'methods.vikor.name': 'VIKOR',
   'methods.vikor.rows.best': 'Best value f*',
@@ -812,6 +1035,40 @@ export const en = {
     'The vectors disagree on "{first}" and "{second}": the best-to-others vector ranks "{second}" higher, the others-to-worst vector ranks "{first}" higher. The weights can still be calculated, but the consistency will be poor.',
   'validation.bwm.threshold-unavailable':
     'The consistency threshold is only defined for up to {max, number} criteria, and there are {count, number}. The weights are calculated, but the comparisons cannot be judged acceptable or not.',
+  'validation.copras.zero-column-sum':
+    'Every value of criterion "{id}" is 0. COPRAS divides each value by the sum of its column, so a criterion cannot be 0 everywhere. Remove the criterion or enter its values.',
+  'validation.copras.zero-cost-sum':
+    'The weighted cost values of this alternative add up to 0 (every cost value is 0, or the cost criteria have weight 0). COPRAS divides by this sum, so the alternative cannot be assessed.',
+  'validation.fuzzy-copras.unsupported-weights':
+    'The weights use the number type "{numberType}". Fuzzy COPRAS accepts triangular fuzzy or crisp weights.',
+  'validation.moora.zero-column-norm':
+    'Every value of objective "{id}" is 0, so its norm is 0 and MOORA cannot normalize it. Remove the objective or enter its values.',
+  'validation.fuzzy-moora.unsupported-weights':
+    'The weights use the number type "{numberType}". Fuzzy MOORA accepts triangular fuzzy or crisp weights.',
+  'validation.fuzzy-moora.zero-column-norm':
+    'The lower value l of objective "{id}" is 0 for every alternative. Fuzzy normalization divides the upper values by the norm of the lower values, which is 0 here. Give at least one alternative a lower value above 0.',
+  'validation.aras.reserved-alternative-id':
+    'The alternative id "{id}" is reserved for the optimal alternative of ARAS.',
+  'validation.aras.optimal-mismatch':
+    'The optimal alternative must have exactly one value for every criterion. Check criterion "{id}": it is missing, repeated or unknown.',
+  'validation.aras.invalid-optimal-value':
+    'The optimal value of criterion "{id}" must be a finite number that is not negative.',
+  'validation.aras.zero-cost-value':
+    'A value of cost criterion "{id}" is 0. ARAS inverts the values of cost criteria (1 / x), so they must be greater than zero.',
+  'validation.aras.zero-benefit-sum':
+    'Every value of benefit criterion "{id}", the optimal one included, is 0. ARAS divides by the column sum, so the criterion cannot be 0 everywhere.',
+  'validation.aras.zero-optimal-sum':
+    'The optimality function S of the optimal alternative is 0, so the utility degrees K = S / S₀ cannot be calculated. Give the optimal alternative a value above 0 on a criterion that has weight.',
+  'validation.aras.optimal-worse-than-alternative':
+    'The optimal value of criterion "{id}" is worse than the best alternative. The calculation continues, and an alternative can get a utility degree above 1.',
+  'validation.fuzzy-aras.unsupported-weights':
+    'The weights use the number type "{numberType}". ARAS-F accepts triangular fuzzy or crisp weights.',
+  'validation.fuzzy-aras.zero-cost-value':
+    'A value of cost criterion "{id}" has lower value l = 0. ARAS-F inverts cost values (1 / x̃), so l must be greater than zero.',
+  'validation.fuzzy-aras.zero-benefit-lower-sum':
+    'The lower value l of benefit criterion "{id}", the optimal one included, is 0 for every alternative. Fuzzy normalization divides the upper values by the sum of the lower values, which is 0 here. Give at least one alternative a lower value above 0.',
+  'validation.fuzzy-aras.zero-optimal-sum':
+    'The fuzzy optimality function S̃ of the optimal alternative is 0, so the utility degrees K = S / S₀ cannot be calculated. Give the optimal alternative a value above 0 on a criterion that has weight.',
   'validation.vikor.no-discrimination':
     'Every alternative has the same group utility S and the same individual regret R, so the compromise index Q cannot be calculated: nothing separates the alternatives.',
   'validation.edas.zero-average':

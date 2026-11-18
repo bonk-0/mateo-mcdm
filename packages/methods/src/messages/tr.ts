@@ -354,6 +354,232 @@ export const tr: Readonly<Record<MethodsMessageKey, string>> = {
   'methods.bwm.steps.linear-xi.explanation':
     'Her |w_B − a_Bj · w_j| ve |w_j − a_jW · w_W| farkını en fazla ξ tutan bir ağırlık vektörünün bulunduğu en küçük ξ; {solver} ile çözülen bir doğrusal programla bulunur. ξ^L* değerinin kendisi tutarlılık göstergesidir: 0’a ne kadar yakınsa karşılaştırmalar o kadar tutarlıdır.',
 
+  // ------------------------------------------------------------ COPRAS, MOORA, ARAS and their fuzzy variants (P2.5)
+  'methods.copras.name': 'COPRAS',
+  'methods.copras.rows.columnSum': 'Sütun toplamı',
+  'methods.copras.columns.sPlus': 'Toplam S⁺ (fayda)',
+  'methods.copras.columns.sMinus': 'Toplam S⁻ (maliyet)',
+  'methods.copras.columns.Q': 'Göreli önem Q',
+  'methods.copras.columns.N': 'Fayda derecesi N (%)',
+  'methods.copras.columns.rank': 'Sıra',
+  'methods.copras.steps.initial-matrix.name': 'Başlangıç karar matrisi',
+  'methods.copras.steps.initial-matrix.explanation':
+    'Her alternatifin her kriterdeki performansı, girildiği gibi.',
+  'methods.copras.steps.weights.name': 'Kriter ağırlıkları',
+  'methods.copras.steps.weights.explanation':
+    'Her kriterin önemi, girildiği gibi. Tüm ağırlıkları aynı çarpanla çarpmak Q değerini değiştirir, ancak fayda derecelerini ve sıralamayı değiştirmez.',
+  'methods.copras.steps.column-sums.name': 'Sütun toplamları',
+  'methods.copras.steps.column-sums.explanation':
+    'Her kriterin değerlerinin tüm alternatifler üzerindeki toplamı. COPRAS, her kriterin ağırlığını alternatifler arasında değerleriyle orantılı olarak paylaştırır.',
+  'methods.copras.steps.weighted-normalized-matrix.name': 'Ağırlıklı normalize matris',
+  'methods.copras.steps.weighted-normalized-matrix.explanation':
+    'Her değer sütun toplamına bölünür ve kriterinin ağırlığıyla çarpılır. Bu işlem fayda ve maliyet kriterleri için aynıdır; kriter yönü bir sonraki adımda devreye girer.',
+  'methods.copras.steps.sums.name': 'Toplamlar S⁺ ve S⁻',
+  'methods.copras.steps.sums.explanation':
+    'S⁺ fayda kriterlerinin ağırlıklı değerlerini (fazlası iyi), S⁻ maliyet kriterlerinin ağırlıklı değerlerini (azı iyi) toplar.',
+  'methods.copras.steps.relative-significance.name': 'Göreli önem Q',
+  'methods.copras.steps.relative-significance.explanation':
+    'S⁺ artı küçük S⁻ için bir ödül: tüm S⁻ değerlerinin toplamı, alternatifin kendi S⁻ değerine ve tüm 1 / S⁻ değerlerinin toplamına bölünür. Maliyet kriteri yoksa Q doğrudan S⁺ olur. Yüksek değer daha iyidir.',
+  'methods.copras.steps.utility-degree.name': 'Fayda derecesi N',
+  'methods.copras.steps.utility-degree.explanation':
+    'Q değerinin en iyi alternatifin Q değerine yüzdesi; en iyi alternatifin N değeri 100’dür.',
+  'methods.copras.steps.ranking.name': 'Sıralama',
+  'methods.copras.steps.ranking.explanation':
+    'Alternatifler fayda derecesine göre, en yüksekten başlayarak sıralanır. Eşit değerler aynı sırayı paylaşır.',
+  'methods.fuzzyCopras.name': 'Bulanık COPRAS',
+  'methods.fuzzyCopras.parameters.defuzzification.label': 'Durulaştırma',
+  'methods.fuzzyCopras.parameters.defuzzification.description':
+    'Kesin COPRAS çalışmadan önce her bulanık değerlendirmenin ve ağırlığın kesin sayıya nasıl çevrileceği. Kaynak makale ağırlık merkezini kullanır.',
+  'methods.fuzzyCopras.parameters.defuzzification.centroid': 'Ağırlık merkezi (l + m + u) / 3',
+  'methods.fuzzyCopras.parameters.defuzzification.gradedMean':
+    'Derecelendirilmiş ortalama (l + 4m + u) / 6',
+  'methods.fuzzyCopras.steps.initial-matrix.name': 'Başlangıç bulanık karar matrisi',
+  'methods.fuzzyCopras.steps.initial-matrix.explanation':
+    'Her alternatifin her kriterdeki değerlendirmesi, girildiği gibi üçgen bulanık sayı (l, m, u) olarak.',
+  'methods.fuzzyCopras.steps.weights.name': 'Kriter ağırlıkları',
+  'methods.fuzzyCopras.steps.weights.explanation':
+    'Her kriterin önemi, girildiği gibi: üçgen bulanık sayılar ya da kesin sayılar.',
+  'methods.fuzzyCopras.steps.defuzzified-matrix.name': '1. adım: durulaştırılmış matris',
+  'methods.fuzzyCopras.steps.defuzzified-matrix.explanation':
+    'Bulanık COPRAS önce her bulanık değerlendirmeyi tek bir kesin sayıyla değiştirir. Bundan sonrası olağan COPRAS hesabıdır.',
+  'methods.fuzzyCopras.steps.defuzzified-weights.name': '1. adım: durulaştırılmış ağırlıklar',
+  'methods.fuzzyCopras.steps.defuzzified-weights.explanation':
+    'Bulanık ağırlıklar aynı yolla kesin sayılarla değiştirilir. Kesin ağırlıklar olduğu gibi kullanılır.',
+  'methods.moora.name': 'MOORA',
+  'methods.moora.rows.norm': 'Sütun normu',
+  'methods.moora.rows.referencePoint': 'Referans noktası (r)',
+  'methods.moora.columns.yPlus': 'Enbüyüklenen hedeflerin toplamı y⁺',
+  'methods.moora.columns.yMinus': 'Enküçüklenen hedeflerin toplamı y⁻',
+  'methods.moora.columns.y': 'Oran sistemi y',
+  'methods.moora.columns.maxDeviation': 'En büyük sapma',
+  'methods.moora.columns.rank': 'Sıra',
+  'methods.moora.parameters.rankBy.label': 'Raporlanan sıralama',
+  'methods.moora.parameters.rankBy.description':
+    'MOORA’nın iki yaklaşımı vardır. İkisi de hesaplanır ve adımlarda gösterilir; bu seçenek sonuç olarak hangisinin raporlanacağını belirler. Oran sistemi en yüksek y değerine, referans noktası en küçük en büyük sapmaya göre sıralar.',
+  'methods.moora.parameters.rankBy.ratioSystem': 'Oran sistemi (en yüksek y)',
+  'methods.moora.parameters.rankBy.referencePoint': 'Referans noktası (en küçük en büyük sapma)',
+  'methods.moora.steps.initial-matrix.name': 'Başlangıç karar matrisi',
+  'methods.moora.steps.initial-matrix.explanation':
+    'Her alternatifin her hedefteki performansı, girildiği gibi.',
+  'methods.moora.steps.weights.name': 'Hedef ağırlıkları',
+  'methods.moora.steps.weights.explanation':
+    'Her hedefin önemi, girildiği gibi. Özgün yöntemde ağırlık yoktur; ağırlık girilmezse her hedef eşit sayılır.',
+  'methods.moora.steps.norms.name': 'Sütun normları',
+  'methods.moora.steps.norms.explanation':
+    'Her hedefin değerlerinin karelerinin toplamının karekökü. Farklı birimli hedefleri ortak bir ölçeğe getirir.',
+  'methods.moora.steps.normalized-matrix.name': 'Normalize matris',
+  'methods.moora.steps.normalized-matrix.explanation':
+    'Her değer sütununun normuna bölünür (vektör normalizasyonu).',
+  'methods.moora.steps.weighted-matrix.name': 'Ağırlıklı normalize matris',
+  'methods.moora.steps.weighted-matrix.explanation':
+    'Her normalize değer hedefinin ağırlığıyla çarpılır.',
+  'methods.moora.steps.ratio-sums.name': 'Enbüyüklenen ve enküçüklenen hedeflerin toplamları',
+  'methods.moora.steps.ratio-sums.explanation':
+    'Her alternatif için, enbüyüklenecek hedeflerdeki ve enküçüklenecek hedeflerdeki (ağırlıklı) normalize değerlerinin toplamları.',
+  'methods.moora.steps.ratio-system.name': 'Oran sistemi y',
+  'methods.moora.steps.ratio-system.explanation':
+    'Enbüyüklenen hedeflerin toplamından enküçüklenen hedeflerin toplamı çıkarılır. Yüksek değer daha iyidir.',
+  'methods.moora.steps.ratio-system-ranking.name': 'Oran sistemine göre sıralama',
+  'methods.moora.steps.ratio-system-ranking.explanation':
+    'Alternatifler y değerine göre, en yüksekten başlayarak sıralanır. Eşit değerler aynı sırayı paylaşır.',
+  'methods.moora.steps.reference-point.name': 'Referans noktası',
+  'methods.moora.steps.reference-point.explanation':
+    'Her hedefin en iyi değeri, hangi alternatifte olursa olsun: enbüyüklenen hedefler için en büyük, enküçüklenenler için en küçük değer.',
+  'methods.moora.steps.deviations.name': 'Referans noktasından sapmalar',
+  'methods.moora.steps.deviations.explanation':
+    'Her değerin hedefinin referans noktasından uzaklığı. 0 sapma, alternatifin o hedefte en iyi olduğu anlamına gelir.',
+  'methods.moora.steps.max-deviation.name': 'En büyük sapma',
+  'methods.moora.steps.max-deviation.explanation':
+    'Her alternatifin tüm hedefler üzerindeki en büyük sapması (Chebyshev ölçütü). Küçük değer daha iyidir.',
+  'methods.moora.steps.reference-point-ranking.name': 'Referans noktasına göre sıralama',
+  'methods.moora.steps.reference-point-ranking.explanation':
+    'Alternatifler en büyük sapmaya göre, en küçüğünden başlayarak sıralanır. Eşit değerler aynı sırayı paylaşır.',
+  'methods.fuzzyMoora.name': 'Bulanık MOORA',
+  'methods.fuzzyMoora.columns.yPlus': 'Enbüyüklenen hedeflerin toplamı ỹ⁺',
+  'methods.fuzzyMoora.columns.yMinus': 'Enküçüklenen hedeflerin toplamı ỹ⁻',
+  'methods.fuzzyMoora.columns.yFuzzy': 'Bulanık oran sistemi ỹ',
+  'methods.fuzzyMoora.parameters.defuzzification.label': 'Durulaştırma',
+  'methods.fuzzyMoora.parameters.defuzzification.description':
+    'Sıralama için bulanık oran sistemi ỹ’nin kesin sayıya nasıl çevrileceği. Kaynak makale ağırlık merkezini (en iyi bulanık olmayan performans, BNP) kullanır.',
+  'methods.fuzzyMoora.parameters.defuzzification.centroid': 'Ağırlık merkezi (l + m + u) / 3',
+  'methods.fuzzyMoora.parameters.defuzzification.gradedMean':
+    'Derecelendirilmiş ortalama (l + 4m + u) / 6',
+  'methods.fuzzyMoora.steps.initial-matrix.name': 'Başlangıç bulanık karar matrisi',
+  'methods.fuzzyMoora.steps.initial-matrix.explanation':
+    'Her alternatifin her hedefteki performansı, girildiği gibi üçgen bulanık sayı (l, m, u) olarak.',
+  'methods.fuzzyMoora.steps.weights.name': 'Hedef ağırlıkları',
+  'methods.fuzzyMoora.steps.weights.explanation':
+    'Her hedefin önemi, girildiği gibi: üçgen bulanık sayılar ya da kesin sayılar. Ağırlık girilmezse her hedef eşit sayılır.',
+  'methods.fuzzyMoora.steps.norms.name': 'Bulanık sütun normları',
+  'methods.fuzzyMoora.steps.norms.explanation':
+    'Bir hedefin üç bileşeninin (l, m, u) her birinin normu: tüm alternatifler üzerinden karelerinin toplamının karekökü.',
+  'methods.fuzzyMoora.steps.normalized-matrix.name': 'Normalize bulanık matris',
+  'methods.fuzzyMoora.steps.normalized-matrix.explanation':
+    'Her bulanık değer sütununun bulanık normuna bölünür. Bulanık sayıya bölmek l değerini normun üst sınırına, u değerini alt sınırına böler; sonuç yine geçerli bir üçgen sayıdır.',
+  'methods.fuzzyMoora.steps.weighted-matrix.name': 'Ağırlıklı normalize bulanık matris',
+  'methods.fuzzyMoora.steps.weighted-matrix.explanation':
+    'Her normalize bulanık değer hedefinin ağırlığıyla çarpılır.',
+  'methods.fuzzyMoora.steps.ratio-sums.name':
+    'Enbüyüklenen ve enküçüklenen hedeflerin bulanık toplamları',
+  'methods.fuzzyMoora.steps.ratio-sums.explanation':
+    'Her alternatif için, enbüyüklenecek hedeflerdeki ve enküçüklenecek hedeflerdeki normalize değerlerinin bulanık toplamları.',
+  'methods.fuzzyMoora.steps.fuzzy-ratio-system.name': 'Bulanık oran sistemi ỹ',
+  'methods.fuzzyMoora.steps.fuzzy-ratio-system.explanation':
+    'Enbüyüklenen hedeflerin bulanık toplamından enküçüklenen hedeflerin bulanık toplamı çıkarılır. Bulanık sayıyı çıkarmak, l değerinden üst sınırını, u değerinden alt sınırını çıkarır.',
+  'methods.fuzzyMoora.steps.ratio-system.name': 'Oran sistemi y (durulaştırılmış)',
+  'methods.fuzzyMoora.steps.ratio-system.explanation':
+    'Alternatiflerin sıralanabilmesi için bulanık oran sistemi kesin sayıya çevrilir. Yüksek değer daha iyidir.',
+  'methods.fuzzyMoora.steps.reference-point.name': 'Bulanık referans noktası',
+  'methods.fuzzyMoora.steps.reference-point.explanation':
+    'Her hedefin en iyi bulanık değeri: enbüyüklenen hedefler için en büyük l, m ve u, enküçüklenenler için en küçük l, m ve u; her biri ayrı ayrı alınır.',
+  'methods.fuzzyMoora.steps.deviations.name': 'Referans noktasından uzaklıklar',
+  'methods.fuzzyMoora.steps.deviations.explanation':
+    'Her bulanık değer ile hedefinin referans noktası arasındaki köşe uzaklığı: l, m ve u farklarının karesel ortalamasının karekökü. Kesin bir sayıdır.',
+  'methods.aras.name': 'ARAS',
+  'methods.aras.rows.optimal': 'Optimal alternatif (A0)',
+  'methods.aras.rows.columnSum': 'Sütun toplamı',
+  'methods.aras.columns.S': 'Optimallik fonksiyonu S_i',
+  'methods.aras.columns.K': 'Fayda derecesi K_i',
+  'methods.aras.columns.rank': 'Sıra',
+  'methods.aras.steps.initial-matrix.name': 'Başlangıç karar matrisi',
+  'methods.aras.steps.initial-matrix.explanation':
+    'Her alternatifin her kriterdeki performansı, girildiği gibi.',
+  'methods.aras.steps.weights.name': 'Kriter ağırlıkları',
+  'methods.aras.steps.weights.explanation':
+    'Her kriterin önemi, girildiği gibi. Tüm ağırlıkları aynı çarpanla çarpmak S değerini değiştirir, ancak fayda derecelerini ve sıralamayı değiştirmez.',
+  'methods.aras.steps.optimal-alternative.name': 'Optimal alternatif',
+  'methods.aras.steps.optimal-alternative.explanation':
+    'Her gerçek alternatifin karşılaştırıldığı hayali en iyi alternatif. Karar verici bunu girebilir; girilmezse her kriterin en iyi değerini alır: fayda kriterlerinde en büyük, maliyet kriterlerinde en küçük değer.',
+  'methods.aras.steps.extended-matrix.name': 'Genişletilmiş matris',
+  'methods.aras.steps.extended-matrix.explanation':
+    'Optimal alternatif, karar matrisine ilk satır (0. satır) olarak eklenir.',
+  'methods.aras.steps.column-sums.name': 'Sütun toplamları',
+  'methods.aras.steps.column-sums.explanation':
+    'Her sütunun optimal alternatif ve tüm alternatifler üzerindeki toplamı. Maliyet kriterlerinde, küçük maliyet daha iyi olduğundan ters değerlerin (1 / x) toplamıdır.',
+  'methods.aras.steps.normalized-matrix.name': 'Normalize matris',
+  'methods.aras.steps.normalized-matrix.explanation':
+    'Fayda değerleri sütun toplamına bölünür. Maliyet değerleri önce ters çevrilir (1 / x), sonra ters değerlerin sütun toplamına bölünür.',
+  'methods.aras.steps.weighted-matrix.name': 'Ağırlıklı normalize matris',
+  'methods.aras.steps.weighted-matrix.explanation':
+    'Her normalize değer kriterinin ağırlığıyla çarpılır.',
+  'methods.aras.steps.sums.name': 'Optimallik fonksiyonu S_i',
+  'methods.aras.steps.sums.explanation':
+    'Optimal alternatif dahil, ağırlıklı matrisin her satırının toplamı. Büyük S, daha iyi alternatif demektir.',
+  'methods.aras.steps.utility-degree.name': 'Fayda derecesi K_i',
+  'methods.aras.steps.utility-degree.explanation':
+    'Her S değeri optimal alternatifin S değerine bölünür: alternatifin optimuma ne kadar yakın olduğunu gösterir. Optimal alternatifin kendisi için K = 1’dir; 1’in üzerindeki bir alternatif girilen optimumu geçmiştir.',
+  'methods.aras.steps.ranking.name': 'Sıralama',
+  'methods.aras.steps.ranking.explanation':
+    'Alternatifler fayda derecesine göre, en yüksekten başlayarak sıralanır. Eşit değerler aynı sırayı paylaşır.',
+  'methods.fuzzyAras.name': 'ARAS-F (bulanık ARAS)',
+  'methods.fuzzyAras.rows.optimal': 'Optimal alternatif (A0)',
+  'methods.fuzzyAras.rows.columnSum': 'Sütun toplamı',
+  'methods.fuzzyAras.columns.SFuzzy': 'Bulanık toplam S̃_i',
+  'methods.fuzzyAras.columns.S': 'Optimallik fonksiyonu S_i',
+  'methods.fuzzyAras.columns.K': 'Fayda derecesi K_i',
+  'methods.fuzzyAras.columns.rank': 'Sıra',
+  'methods.fuzzyAras.parameters.defuzzification.label': 'Durulaştırma',
+  'methods.fuzzyAras.parameters.defuzzification.description':
+    'Fayda dereceleri hesaplanmadan önce bulanık toplamlar S̃_i’nin kesin sayıya nasıl çevrileceği.',
+  'methods.fuzzyAras.parameters.defuzzification.centroid': 'Ağırlık merkezi (l + m + u) / 3',
+  'methods.fuzzyAras.parameters.defuzzification.gradedMean':
+    'Derecelendirilmiş ortalama (l + 4m + u) / 6',
+  'methods.fuzzyAras.steps.initial-matrix.name': 'Başlangıç bulanık karar matrisi',
+  'methods.fuzzyAras.steps.initial-matrix.explanation':
+    'Her alternatifin her kriterdeki performansı, girildiği gibi üçgen bulanık sayı (l, m, u) olarak.',
+  'methods.fuzzyAras.steps.weights.name': 'Kriter ağırlıkları',
+  'methods.fuzzyAras.steps.weights.explanation':
+    'Her kriterin önemi, girildiği gibi: üçgen bulanık sayılar ya da kesin sayılar.',
+  'methods.fuzzyAras.steps.optimal-alternative.name': 'Optimal alternatif',
+  'methods.fuzzyAras.steps.optimal-alternative.explanation':
+    'Her gerçek alternatifin karşılaştırıldığı hayali en iyi alternatif. Karar verici bunu girebilir; girilmezse her kriterin en iyi bulanık değerini alır: fayda kriterlerinde en büyük, maliyet kriterlerinde en küçük l, m ve u; her biri ayrı ayrı alınır.',
+  'methods.fuzzyAras.steps.extended-matrix.name': 'Genişletilmiş bulanık matris',
+  'methods.fuzzyAras.steps.extended-matrix.explanation':
+    'Optimal alternatif, karar matrisine ilk satır (0. satır) olarak eklenir.',
+  'methods.fuzzyAras.steps.inverted-matrix.name': 'Maliyet kriterleri ters çevrilmiş matris',
+  'methods.fuzzyAras.steps.inverted-matrix.explanation':
+    'Maliyet kriterleri ters çevrilir (1 bölü bulanık değer); böylece küçük maliyet büyük bir sayıya dönüşür. Fayda kriterleri olduğu gibi kalır.',
+  'methods.fuzzyAras.steps.column-sums.name': 'Bulanık sütun toplamları',
+  'methods.fuzzyAras.steps.column-sums.explanation':
+    'Her sütunun optimal alternatif ve tüm alternatifler üzerindeki bulanık toplamı.',
+  'methods.fuzzyAras.steps.normalized-matrix.name': 'Normalize bulanık matris',
+  'methods.fuzzyAras.steps.normalized-matrix.explanation':
+    'Her bulanık değer sütununun bulanık toplamına bölünür. Bulanık sayıya bölmek l değerini toplamın üst sınırına, u değerini alt sınırına böler.',
+  'methods.fuzzyAras.steps.weighted-matrix.name': 'Ağırlıklı normalize bulanık matris',
+  'methods.fuzzyAras.steps.weighted-matrix.explanation':
+    'Her normalize bulanık değer kriterinin ağırlığıyla çarpılır.',
+  'methods.fuzzyAras.steps.fuzzy-sums.name': 'Bulanık optimallik fonksiyonu S̃_i',
+  'methods.fuzzyAras.steps.fuzzy-sums.explanation':
+    'Optimal alternatif dahil, ağırlıklı matrisin her satırının bulanık toplamı.',
+  'methods.fuzzyAras.steps.sums.name': 'Optimallik fonksiyonu S_i (durulaştırılmış)',
+  'methods.fuzzyAras.steps.sums.explanation':
+    'Fayda derecelerinin hesaplanabilmesi için bulanık toplamlar kesin sayıya çevrilir.',
+  'methods.fuzzyAras.steps.utility-degree.name': 'Fayda derecesi K_i',
+  'methods.fuzzyAras.steps.utility-degree.explanation':
+    'Her S değeri optimal alternatifin S değerine bölünür: alternatifin optimuma ne kadar yakın olduğunu gösterir. Optimal alternatifin kendisi için K = 1’dir; 1’in üzerindeki bir alternatif girilen optimumu geçmiştir.',
+  'methods.fuzzyAras.steps.ranking.name': 'Sıralama',
+  'methods.fuzzyAras.steps.ranking.explanation':
+    'Alternatifler fayda derecesine göre, en yüksekten başlayarak sıralanır. Eşit değerler aynı sırayı paylaşır.',
   // ------------------------------------------------------------ VIKOR
   'methods.vikor.name': 'VIKOR',
   'methods.vikor.rows.best': 'En iyi değer f*',
@@ -814,6 +1040,40 @@ export const tr: Readonly<Record<MethodsMessageKey, string>> = {
     'Vektörler "{first}" ve "{second}" konusunda çelişiyor: en iyiden diğerlerine vektörü "{second}" kriterini, diğerlerinden en kötüye vektörü "{first}" kriterini daha önemli görüyor. Ağırlıklar yine hesaplanabilir, ancak tutarlılık düşük olacaktır.',
   'validation.bwm.threshold-unavailable':
     'Tutarlılık eşiği en çok {max, number} kriter için tanımlıdır, burada {count, number} kriter var. Ağırlıklar hesaplanır, ancak karşılaştırmaların kabul edilebilir olup olmadığı değerlendirilemez.',
+  'validation.copras.zero-column-sum':
+    '"{id}" kriterinin tüm değerleri 0. COPRAS her değeri sütun toplamına böler; bu yüzden bir kriter her yerde 0 olamaz. Kriteri kaldırın ya da değerlerini girin.',
+  'validation.copras.zero-cost-sum':
+    'Bu alternatifin ağırlıklı maliyet değerlerinin toplamı 0 (tüm maliyet değerleri 0 ya da maliyet kriterlerinin ağırlığı 0). COPRAS bu toplama böldüğü için alternatif değerlendirilemez.',
+  'validation.fuzzy-copras.unsupported-weights':
+    'Ağırlıklar "{numberType}" sayı türünü kullanıyor. Bulanık COPRAS üçgen bulanık ya da kesin ağırlıkları kabul eder.',
+  'validation.moora.zero-column-norm':
+    '"{id}" hedefinin tüm değerleri 0; normu 0 olduğundan MOORA onu normalize edemez. Hedefi kaldırın ya da değerlerini girin.',
+  'validation.fuzzy-moora.unsupported-weights':
+    'Ağırlıklar "{numberType}" sayı türünü kullanıyor. Bulanık MOORA üçgen bulanık ya da kesin ağırlıkları kabul eder.',
+  'validation.fuzzy-moora.zero-column-norm':
+    '"{id}" hedefinin alt değeri l, her alternatifte 0. Bulanık normalizasyon üst değerleri alt değerlerin normuna böler; bu norm burada 0. En az bir alternatife 0’dan büyük bir alt değer verin.',
+  'validation.aras.reserved-alternative-id':
+    '"{id}" alternatif kimliği ARAS’ın optimal alternatifi için ayrılmıştır.',
+  'validation.aras.optimal-mismatch':
+    'Optimal alternatifin her kriter için tam olarak bir değeri olmalıdır. "{id}" kriterini kontrol edin: eksik, tekrarlı ya da bilinmiyor.',
+  'validation.aras.invalid-optimal-value':
+    '"{id}" kriterinin optimal değeri negatif olmayan, sonlu bir sayı olmalıdır.',
+  'validation.aras.zero-cost-value':
+    '"{id}" maliyet kriterinin bir değeri 0. ARAS maliyet kriterlerinin değerlerini ters çevirir (1 / x); bu yüzden sıfırdan büyük olmalıdır.',
+  'validation.aras.zero-benefit-sum':
+    '"{id}" fayda kriterinin optimal değer dahil tüm değerleri 0. ARAS sütun toplamına böler; bu yüzden kriter her yerde 0 olamaz.',
+  'validation.aras.zero-optimal-sum':
+    'Optimal alternatifin optimallik fonksiyonu S 0 olduğundan fayda dereceleri K = S / S₀ hesaplanamaz. Optimal alternatife, ağırlığı olan bir kriterde 0’dan büyük bir değer verin.',
+  'validation.aras.optimal-worse-than-alternative':
+    '"{id}" kriterinin optimal değeri en iyi alternatiften daha kötü. Hesap sürer ve bir alternatifin fayda derecesi 1’in üzerinde çıkabilir.',
+  'validation.fuzzy-aras.unsupported-weights':
+    'Ağırlıklar "{numberType}" sayı türünü kullanıyor. ARAS-F üçgen bulanık ya da kesin ağırlıkları kabul eder.',
+  'validation.fuzzy-aras.zero-cost-value':
+    '"{id}" maliyet kriterinin bir değerinin alt değeri l = 0. ARAS-F maliyet değerlerini ters çevirir (1 / x̃); bu yüzden l sıfırdan büyük olmalıdır.',
+  'validation.fuzzy-aras.zero-benefit-lower-sum':
+    '"{id}" fayda kriterinin alt değeri l, optimal değer dahil her alternatifte 0. Bulanık normalizasyon üst değerleri alt değerlerin toplamına böler; bu toplam burada 0. En az bir alternatife 0’dan büyük bir alt değer verin.',
+  'validation.fuzzy-aras.zero-optimal-sum':
+    'Optimal alternatifin bulanık optimallik fonksiyonu S̃ 0 olduğundan fayda dereceleri K = S / S₀ hesaplanamaz. Optimal alternatife, ağırlığı olan bir kriterde 0’dan büyük bir değer verin.',
   'validation.vikor.no-discrimination':
     'Tüm alternatiflerin grup faydası S ve bireysel pişmanlığı R aynı, bu yüzden uzlaşı indeksi Q hesaplanamaz: alternatifleri ayıran bir şey yok.',
   'validation.edas.zero-average':

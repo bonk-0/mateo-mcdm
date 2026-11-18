@@ -19,8 +19,24 @@ import bwmFixture from '../bwm/fixtures/rezaei-car.json';
 import fucomFixture from '../fucom/fixtures/pamucar-2018-example-2.json';
 import dematelFixture from '../dematel/fixtures/chen-2018.json';
 import lopcowFixture from '../lopcow/fixtures/biswas-2024.json';
+import coprasFixture from '../copras/fixtures/podvezko-2011.json';
+import fuzzyCoprasFixture from '../copras/fixtures/yazdani-2011-fuzzy.json';
+import mooraFixture from '../moora/fixtures/brauers-2006.json';
+import arasFixture from '../aras/fixtures/zavadskas-2010.json';
 import {
+  ARAS_ISSUE_CODES,
   BWM_ISSUE_CODES,
+  COPRAS_ISSUE_CODES,
+  FUZZY_ARAS_ISSUE_CODES,
+  FUZZY_COPRAS_ISSUE_CODES,
+  FUZZY_MOORA_ISSUE_CODES,
+  MOORA_ISSUE_CODES,
+  arasMethod,
+  coprasMethod,
+  fuzzyArasMethod,
+  fuzzyCoprasMethod,
+  fuzzyMooraMethod,
+  mooraMethod,
   CODAS_ISSUE_CODES,
   CRITIC_ISSUE_CODES,
   EDAS_ISSUE_CODES,
@@ -57,9 +73,52 @@ import criticFixture from '../critic/fixtures/diakoulaki-1995.json';
 import merecFixture from '../merec/fixtures/keshavarz-ghorabaee-2021.json';
 import swaraFixture from '../swara/fixtures/kersuliene-2010.json';
 import imfFixture from '../swara/fixtures/imf-swara-damjanovic-2022-s1.json';
-import { crispInput, crispMatrixInput, orderedCriteria, tfnInput } from './testing/inputs';
+import {
+  crispInput,
+  crispMatrixInput,
+  orderedCriteria,
+  smallTfnMatrix,
+  smallTfnWeights,
+  smallWeights,
+  tfnInput,
+} from './testing/inputs';
 
 const known = new Set(Object.keys(METHODS_MESSAGES.en));
+
+const t = (l: number, m: number, u: number) => ({ l, m, u });
+
+/** Traces of the fuzzy MOORA and ARAS-F variants, with every optional input present. */
+function fuzzyFamilyTraces(): Trace[] {
+  const matrix = smallTfnMatrix(
+    [
+      [t(2, 3, 4), t(1, 2, 3)],
+      [t(4, 6, 8), t(2, 3, 5)],
+    ],
+    ['benefit', 'cost'],
+  );
+  const tfnWeights = smallTfnWeights(t(0.2, 0.4, 0.6), t(0.1, 0.2, 0.3));
+  const crispW = smallWeights(0.5, 0.5);
+  const optimal = {
+    numberType: 'tfn' as const,
+    entries: [
+      { criterionId: 'c1', value: t(5, 7, 9) },
+      { criterionId: 'c2', value: t(1, 1, 2) },
+    ],
+  };
+  return [
+    runMethod(fuzzyMooraMethod, { matrix }).trace,
+    ...(['ratio-system', 'reference-point'] as const).flatMap((rankBy) => [
+      runMethod(fuzzyMooraMethod, { matrix, weights: tfnWeights }, { rankBy }).trace,
+      runMethod(fuzzyMooraMethod, { matrix, weights: crispW }, { rankBy }).trace,
+    ]),
+    runMethod(fuzzyArasMethod, { matrix, weights: tfnWeights }).trace,
+    runMethod(
+      fuzzyArasMethod,
+      { matrix, weights: crispW, optimal },
+      { defuzzification: 'graded-mean' },
+    ).trace,
+  ];
+}
 
 function traceKeys(trace: Trace): string[] {
   const keys = new Set<string>();
@@ -111,6 +170,12 @@ describe('method messages', () => {
       ...Object.values(LOPCOW_ISSUE_CODES),
       ...Object.values(FUCOM_ISSUE_CODES),
       ...Object.values(BWM_ISSUE_CODES),
+      ...Object.values(COPRAS_ISSUE_CODES),
+      ...Object.values(FUZZY_COPRAS_ISSUE_CODES),
+      ...Object.values(MOORA_ISSUE_CODES),
+      ...Object.values(FUZZY_MOORA_ISSUE_CODES),
+      ...Object.values(ARAS_ISSUE_CODES),
+      ...Object.values(FUZZY_ARAS_ISSUE_CODES),
       ...Object.values(VIKOR_ISSUE_CODES),
       ...Object.values(EDAS_ISSUE_CODES),
       ...Object.values(CODAS_ISSUE_CODES),
@@ -209,6 +274,40 @@ describe('method messages', () => {
       ),
       runMethod(marcosMethod, crispInput(marcosFixture.input), { normalizeWeights: true }).trace,
       runMethod(fuzzyMarcosMethod, tfnInput(fuzzyFixture.input)).trace,
+      runMethod(coprasMethod, crispInput(coprasFixture.input)).trace,
+      ...(['centroid', 'graded-mean'] as const).map(
+        (defuzzification) =>
+          runMethod(
+            fuzzyCoprasMethod,
+            tfnInput(fuzzyCoprasFixture.input as Parameters<typeof tfnInput>[0]),
+            { defuzzification },
+          ).trace,
+      ),
+      runMethod(fuzzyCoprasMethod, {
+        ...tfnInput(fuzzyCoprasFixture.input as Parameters<typeof tfnInput>[0]),
+        weights: crispWeights(
+          fuzzyCoprasFixture.input.criteria.map((c) => c.id),
+          [1, 2, 3, 4, 5],
+        ),
+      }).trace,
+      // MOORA and ARAS: with and without weights / the optimal alternative, both rankings.
+      runMethod(mooraMethod, crispMatrixInput(mooraFixture.input)).trace,
+      runMethod(mooraMethod, {
+        ...crispMatrixInput(mooraFixture.input),
+        weights: crispWeights(
+          mooraFixture.input.criteria.map((c) => c.id),
+          [1, 2, 3, 1, 2, 3, 1],
+        ),
+      }).trace,
+      runMethod(arasMethod, crispInput(arasFixture.input)).trace,
+      runMethod(arasMethod, {
+        ...crispInput(arasFixture.input),
+        optimal: crispWeights(
+          arasFixture.input.criteria.map((c) => c.id),
+          arasFixture.input.optimal,
+        ),
+      }).trace,
+      ...fuzzyFamilyTraces(),
       runMethod(criticMethod, crispMatrixInput(criticFixture.input)).trace,
       runMethod(merecMethod, crispMatrixInput(merecFixture.input)).trace,
       runMethod(swaraMethod, {
@@ -239,6 +338,12 @@ describe('method messages', () => {
       ).trace,
     ];
     const methods: readonly { nameKey: string; parameters: ParameterSchema }[] = [
+      coprasMethod,
+      fuzzyCoprasMethod,
+      mooraMethod,
+      fuzzyMooraMethod,
+      arasMethod,
+      fuzzyArasMethod,
       marcosMethod,
       fuzzyMarcosMethod,
       criticMethod,

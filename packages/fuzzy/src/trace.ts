@@ -28,6 +28,7 @@ import {
   tfnMax,
   tfnMin,
   tfnMinMeanMax,
+  tfnNorm,
   tfnProduct,
   tfnSum,
 } from './aggregation';
@@ -44,6 +45,7 @@ import {
   tfnSubtract,
   tfnSubtractScalar,
 } from './arithmetic';
+import { vertexDistance } from './distance';
 import type { DefuzzificationId } from './defuzzification';
 import { centroid, gradedMean, isDefuzzificationId } from './defuzzification';
 import type { TFN } from './tfn';
@@ -118,6 +120,12 @@ export interface TfnOperationSpec {
   readonly evaluate: (args: readonly OperandValue[]) => OperandValue;
 }
 
+const tfnTfnToCrisp = (fn: (a: TFN, b: TFN) => number): TfnOperationSpec => ({
+  operands: ['tfn', 'tfn'],
+  result: 'crisp',
+  evaluate: (args) => fn(args[0] as TFN, args[1] as TFN),
+});
+
 const tfnTfn = (fn: (a: TFN, b: TFN) => TFN): TfnOperationSpec => ({
   operands: ['tfn', 'tfn'],
   result: 'tfn',
@@ -162,7 +170,9 @@ export const TFN_OPERATIONS = {
   'tfn.divide-by-scalar': tfnScalar(tfnDivideByScalar),
   'tfn.scalar-divided-by': scalarTfn(tfnScalarDividedBy),
   'tfn.sum': tfnList(tfnSum),
+  'tfn.norm': tfnList(tfnNorm),
   'tfn.product': tfnList(tfnProduct),
+  'tfn.vertex-distance': tfnTfnToCrisp(vertexDistance),
   'tfn.min': tfnList(tfnMin),
   'tfn.max': tfnList(tfnMax),
   'tfn.arithmetic-mean': tfnList(tfnArithmeticMean),
@@ -273,6 +283,11 @@ const binary =
   (a: TfnOperand, b: TfnOperand): Tracked<TFN> =>
     apply(operation, [liftTfn(a), liftTfn(b)]);
 
+const binaryToCrisp =
+  (operation: TfnOperationId) =>
+  (a: TfnOperand, b: TfnOperand): Tracked<number> =>
+    apply(operation, [liftTfn(a), liftTfn(b)]);
+
 const withScalar =
   (operation: TfnOperationId) =>
   (a: TfnOperand, k: ScalarOperand): Tracked<TFN> =>
@@ -336,7 +351,11 @@ export const tfnOps = {
   divideByScalar: withScalar('tfn.divide-by-scalar'),
   scalarDividedBy: scalarFirst('tfn.scalar-divided-by'),
   sum: aggregate('tfn.sum'),
+  /** `(√Σ lₖ², √Σ mₖ², √Σ uₖ²)` of non-negative TFNs: the norm of each component. */
+  norm: aggregate('tfn.norm'),
   product: aggregate('tfn.product'),
+  /** Vertex distance of two TFNs, a crisp number. */
+  vertexDistance: binaryToCrisp('tfn.vertex-distance'),
   min: aggregate('tfn.min'),
   max: aggregate('tfn.max'),
   arithmeticMean: aggregate('tfn.arithmetic-mean'),

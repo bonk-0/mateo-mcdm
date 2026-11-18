@@ -7,6 +7,7 @@ import {
   tfnMax,
   tfnMin,
   tfnMinMeanMax,
+  tfnNorm,
   tfnProduct,
   tfnSum,
 } from './index';
@@ -21,6 +22,24 @@ function errorCode(fn: () => unknown): string | undefined {
   }
   return undefined;
 }
+
+describe('TFN norm', () => {
+  it('is the vector norm of each component', () => {
+    // sqrt(1 + 9 + 4), sqrt(4 + 25 + 4), sqrt(16 + 36 + 64)
+    const norm = tfnNorm(judgements);
+    expect(norm.l).toBeCloseTo(Math.sqrt(14), 14);
+    expect(norm.m).toBeCloseTo(Math.sqrt(33), 14);
+    expect(norm.u).toBeCloseTo(Math.sqrt(116), 14);
+  });
+
+  it('is the crisp norm for degenerate TFNs', () => {
+    expect(tfnNorm([tfn(3, 3, 3), tfn(4, 4, 4)])).toEqual({ l: 5, m: 5, u: 5 });
+  });
+
+  it('refuses a TFN with a negative part', () => {
+    expect(errorCode(() => tfnNorm([tfn(-1, 0, 1)]))).toBe('INVALID_ARGUMENT');
+  });
+});
 
 describe('TFN aggregation', () => {
   it('multiplies component by component', () => {
@@ -101,6 +120,7 @@ describe('TFN aggregation', () => {
       tfnArithmeticMean,
       tfnGeometricMean,
       tfnMinMeanMax,
+      tfnNorm,
       tfnProduct,
     ]) {
       expect(errorCode(() => aggregate([]))).toBe('INVALID_ARGUMENT');

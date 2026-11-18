@@ -166,6 +166,8 @@ describe('traced TFN operations', () => {
     // (2 + 16 + 8) / 6 and (2 + 4 + 8) / 3
     expect(tfnOps.gradedMean(a).value).toBeCloseTo(26 / 6, 14);
     expect(tfnOps.centroid(a).value).toBeCloseTo(14 / 3, 14);
+    expect(tfnOps.norm([a, a]).value.m).toBeCloseTo(Math.sqrt(32), 14);
+    expect(tfnOps.vertexDistance(a, b).value).toBeCloseTo(Math.sqrt(7), 14); // (1² + 2² + 4²) / 3
     expect(tfnOps.lower(a).value).toBe(2);
     expect(tfnOps.modal(a).value).toBe(4);
     expect(tfnOps.upper(a).value).toBe(8);
