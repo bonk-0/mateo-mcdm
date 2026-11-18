@@ -13,6 +13,16 @@ A main phase is complete when all of its sub-phases are done and its **phase exi
 
 ---
 
+## Plan changes
+
+Decisions that changed after sub-phases were delivered. The phase files describe the current decision and note what was delivered differently.
+
+| Change | What it means |
+|---|---|
+| **Web app, not a desktop app** (after Phase 1) | Mateo is a static web app that works offline and can be installed from the browser (`docs/plan.md` §1, §4.1). The Tauri shell of P1.7, the Tauri SQL storage adapter of P1.8 and the installers of P1.18 were removed. Projects live in the browser's storage and go in and out as `.mateo` files (`docs/project-file.md`, Storage). Later phases assume the browser: no native menus, dialogs or file system paths. |
+
+---
+
 ## How a sub-phase is worked
 
 Every sub-phase has the same sections:
@@ -85,7 +95,7 @@ The table below and each sub-phase section list the exact dependencies.
 | P1.4 | Phase 1 references and test fixtures | P1.1 | **critical** |
 | P1.5 | CRITIC, MEREC and SWARA | P1.3, P1.4 | standard |
 | P1.6 | MARCOS and Fuzzy MARCOS | P1.3, P1.4 | **critical** |
-| P1.7 | App shell, desktop wrapper and i18n | P1.1 | standard |
+| P1.7 | App shell and i18n | P1.1 | standard |
 | P1.8 | Project file format and storage | P1.2 | **critical** |
 | P1.9 | Import engine (headless) | P1.3 | **critical** |
 | P1.10 | Data Center and import wizard UI | P1.7, P1.8, P1.9 | standard |

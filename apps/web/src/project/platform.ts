@@ -1,9 +1,16 @@
 import type { KeyValueStore, StorageAdapter } from '@mateo/project';
 
+/** A `.mateo` file from the user's computer, read into memory. */
+export interface ProjectFileInput {
+  /** The file name, for example `Suppliers.mateo`. */
+  readonly name: string;
+  readonly bytes: Uint8Array;
+}
+
 /**
  * What the project controller needs from the platform it runs on: where project files are
- * stored, and how the user picks one. The desktop build implements it with the Tauri SQL
- * plugin and the native file dialogs (`desktop.ts`).
+ * stored, how the user picks one, and how a project comes in from and goes out to the
+ * user's computer. The app implements it in `browser.ts`; tests pass their own.
  */
 export interface ProjectPlatform {
   readonly storage: StorageAdapter;
@@ -24,6 +31,24 @@ export interface ProjectPlatform {
    * that a file the user never saw cannot be lost.
    */
   removeReplacedFile(location: string): Promise<void>;
+  /**
+   * Checks that `bytes` are a project this version can open, throwing the `ProjectError`
+   * that opening would throw (`NOT_A_PROJECT_FILE`, `NEWER_SCHEMA`, `CORRUPT_FILE`...).
+   * Nothing is stored.
+   */
+  checkProjectFile(bytes: Uint8Array): Promise<void>;
+  /**
+   * Asks under which name to keep a project brought in from the computer, asking before
+   * an existing one is replaced. `suggestedName` is a file name without extension.
+   */
+  chooseImportLocation(suggestedName: string): Promise<string | null>;
+  /** Stores `bytes` at `location`, replacing what is there (`IN_USE` if it is open elsewhere). */
+  writeProjectFile(location: string, bytes: Uint8Array): Promise<void>;
+  /**
+   * Gives the user the stored file at `location` as a `.mateo` file on their computer.
+   * Resolves `false` when the user cancelled.
+   */
+  exportProjectFile(location: string): Promise<boolean>;
 }
 
 export const PROJECT_EXTENSION = 'mateo';

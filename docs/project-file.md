@@ -118,9 +118,17 @@ The JSON document names its format too (`formatVersion`); a reader refuses a doc
 
 ## Storage
 
-| Build | Adapter | How |
-|---|---|---|
-| Desktop | Tauri SQL plugin | The file on disk is the database. Each transaction is sent as one call. |
-| Browser | SQLite WebAssembly | The file is loaded into memory and written back whole, to the origin private file system or IndexedDB, after each transaction. |
+Mateo is a web app, so project files live in the browser (`packages/project/src/storage`, set up by `apps/web/src/project/browser.ts`):
 
-Both produce the same bytes-level format, so a project made in one opens in the other.
+| What | How |
+|---|---|
+| Where files are kept | One file per project, named after it (`Suppliers.mateo`), in the origin private file system (OPFS). Where the browser cannot write there (older Safari, some private windows), in IndexedDB. |
+| Reading and writing | The file is loaded into an in-memory SQLite database (SQLite compiled to WebAssembly). After every transaction the whole database is written back as one atomic replacement (an OPFS writable stream replaces the file only when it is closed; an IndexedDB `put` is atomic). Opening never writes. |
+| Crash safety | The stored file is always a complete, consistent `.mateo` file. A crash or a closed tab loses at most the edits not yet saved: autosave runs a second or two after an edit and at once when the page is hidden, and the browser asks before a page with unsaved changes is closed. If storing fails (for example the quota is full), memory goes back to what is stored and the change stays unsaved. |
+| One tab per project | Opening a project takes a Web Lock named after it and holds it until the project is closed (the browser drops it if the tab closes or crashes). Opening it in a second tab, saving a copy over it or replacing it fails with `IN_USE` instead of two tabs overwriting each other. |
+| In and out | "Download .mateo file" saves the stored bytes as a file on the computer; "Open from computer" (or dropping a `.mateo` file) checks the file with a full open on a throwaway in-memory copy, then stores it under a name the user confirms and opens it. Both are byte-for-byte this format, so a project moves freely between browsers and computers. |
+| Keeping data | The app asks for persistent storage (`navigator.storage.persist()`) when the first project is stored. Without it the browser may clear the storage under pressure, so users are advised to download projects worth keeping (Settings → About shows the state). |
+
+**Why this design.** The OPFS virtual file systems of SQLite would write only changed pages, but they run in a worker, one needs cross-origin isolation (special headers from the host) and the other lets only one tab use any project at a time, and neither works where OPFS cannot be written. Writing the whole file keeps the stored file trivially consistent, works in every current browser and on any static host, and makes download and upload a copy of bytes. Its cost grows with the file: a project must fit in memory and each save rewrites it. A project holding many large analyses (traces of 5–12 MB each for 500 × 50, see [Traces](#traces)) takes noticeably longer to save than a small one. If such projects become common, the adapter can move to a worker with incremental writes behind the same `StorageAdapter` interface without any change to the format.
+
+Projects made by the earlier desktop build of Mateo (Phase 1) are the same format and open after "Open from computer".

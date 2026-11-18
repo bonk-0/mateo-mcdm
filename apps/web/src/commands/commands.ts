@@ -1,17 +1,26 @@
+import type { ProjectFileInput } from '../project/platform';
+
 /**
- * App-level commands that can be triggered from several places: the native desktop menu,
- * buttons on screens and, later, keyboard shortcuts and a command palette.
+ * App-level commands that can be triggered from several places: the project menu, buttons
+ * on screens, keyboard shortcuts and, later, a command palette.
  *
- * The File commands are handled by `project/ProjectFiles.tsx`, `app.quit` by the desktop
- * bridge (it closes the window, so the unsaved-changes question is asked first). A command without a
- * handler goes to the fallback handler, which does nothing unless one is set.
+ * The File commands are handled by `project/ProjectFiles.tsx`. A command without a handler
+ * goes to the fallback handler, which does nothing unless one is set.
  */
 export type AppCommand =
-  'file.new' | 'file.open' | 'file.save' | 'file.saveAs' | 'file.clearRecent' | 'app.quit';
+  | 'file.new'
+  | 'file.open'
+  | 'file.save'
+  | 'file.saveAs'
+  | 'file.import'
+  | 'file.export'
+  | 'file.clearRecent';
 
 export interface CommandPayload {
-  /** File paths, for example from opening `.mateo` files through the OS. */
-  readonly paths?: readonly string[];
+  /** `file.open`: the stored project to open, for example from the recent list. */
+  readonly location?: string;
+  /** `file.import`: a `.mateo` file already read, for example one dropped on the page. */
+  readonly file?: ProjectFileInput;
 }
 
 export type CommandHandler = (payload: CommandPayload) => void;

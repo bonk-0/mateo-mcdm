@@ -155,6 +155,32 @@ describe('project files in the app (browser build)', () => {
     expect(projects.getState().project?.isDirty).toBe(false);
   });
 
+  it('saves with Ctrl+S and asks before a page with unsaved changes is closed', async () => {
+    const user = userEvent.setup();
+    renderApp('/');
+    const projects = await controller();
+    act(() => runCommand('file.new'));
+    await user.click(
+      within(await screen.findByRole('dialog', { name: 'New project' })).getByRole('button', {
+        name: 'Create',
+      }),
+    );
+    await waitFor(() => expect(projects.getState().project).not.toBeNull());
+
+    const closing = () => {
+      const event = new Event('beforeunload', { cancelable: true });
+      window.dispatchEvent(event);
+      return event.defaultPrevented;
+    };
+    expect(closing()).toBe(false);
+    makeDirty();
+    expect(closing()).toBe(true);
+
+    await user.keyboard('{Control>}s{/Control}');
+    await waitFor(() => expect(projects.getState().project?.isDirty).toBe(false));
+    expect(closing()).toBe(false);
+  });
+
   it('shows translated messages for project errors', async () => {
     useSettings.getState().update({ language: 'tr' });
     renderApp('/', { language: 'tr' });

@@ -1,6 +1,6 @@
 # Mateo
 
-Mateo is a local-first desktop application for classical and fuzzy multi-criteria decision making (MCDM), with MARCOS and Fuzzy MARCOS as its flagship methods and animated, step-by-step explanations of every calculation.
+Mateo is a local-first web app for classical and fuzzy multi-criteria decision making (MCDM), with MARCOS and Fuzzy MARCOS as its flagship methods and animated, step-by-step explanations of every calculation.
 
 - [`docs/plan.md`](docs/plan.md): product and technical plan (current).
 - [`docs/phases/`](docs/phases/README.md): main phases and sub-phases.
@@ -13,6 +13,6 @@ Mateo is a local-first desktop application for classical and fuzzy multi-criteri
 corepack enable
 pnpm install
 pnpm verify       # typecheck, lint, format check, i18n check, tests
-pnpm dev          # web app in the browser at http://localhost:5173
-pnpm dev:desktop  # desktop app (needs Rust and the Tauri system libraries)
+pnpm dev          # the app in the browser at http://localhost:5173
+pnpm build        # static production build in apps/web/dist, served by any HTTPS host
 ```

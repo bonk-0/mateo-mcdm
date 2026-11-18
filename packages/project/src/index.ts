@@ -5,7 +5,7 @@
  *   with crisp, TFN and linguistic cells, scales).
  * - `repository`: `createProjectRepository` to create and open files, and the
  *   `ProjectSession` of an open project (save, snapshots, analyses, source files...).
- * - `storage`: the two storage adapters, Tauri SQL plugin and SQLite WebAssembly.
+ * - `storage`: SQLite WebAssembly storage, browser file stores and project locks.
  * - `schema`: schema version and migrations.
  * - `history`: undo/redo and the model edit commands.
  * - `autosave`, `recent`: the autosave hook and the recent projects list.

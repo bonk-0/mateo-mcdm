@@ -1,6 +1,7 @@
 import sqlite3InitModule from '@sqlite.org/sqlite-wasm';
 import {
   addDataset,
+  createProjectRepository,
   createWasmStorage,
   memoryFileStore,
   type FileStore,
@@ -35,6 +36,8 @@ interface Harness {
   readonly unsavedAnswers: UnsavedChoice[];
   readonly unsavedAsked: string[];
   readonly removed: string[];
+  /** Locations given to the user as files. */
+  readonly exported: string[];
 }
 
 function setup(autosaveDelayMs: number | false = false): Harness {
@@ -44,6 +47,7 @@ function setup(autosaveDelayMs: number | false = false): Harness {
   const unsavedAsked: string[] = [];
   const notices: ProjectNotice[] = [];
   const removed: string[] = [];
+  const exported: string[] = [];
   const next = () => Promise.resolve(locations.length > 0 ? locations.shift()! : null);
   const platform: ProjectPlatform = {
     storage: createWasmStorage({ sqlite3: () => sqlite3, files }),
@@ -54,6 +58,22 @@ function setup(autosaveDelayMs: number | false = false): Harness {
     async removeReplacedFile(location) {
       removed.push(location);
       await files.remove(location);
+    },
+    async checkProjectFile(bytes) {
+      const probe = createProjectRepository({
+        storage: createWasmStorage({
+          sqlite3: () => sqlite3,
+          files: memoryFileStore({ 'probe.mateo': bytes }),
+        }),
+        appVersion: '0.1.0-test',
+      });
+      await (await probe.open('probe.mateo')).close();
+    },
+    chooseImportLocation: next,
+    writeProjectFile: (location, bytes) => files.write(location, bytes),
+    exportProjectFile(location) {
+      exported.push(location);
+      return Promise.resolve(true);
     },
   };
   const controller = createProjectController({
@@ -67,7 +87,7 @@ function setup(autosaveDelayMs: number | false = false): Harness {
     untitledName: () => 'Untitled project',
     autosaveDelayMs,
   });
-  return { controller, files, notices, locations, unsavedAnswers, unsavedAsked, removed };
+  return { controller, files, notices, locations, unsavedAnswers, unsavedAsked, removed, exported };
 }
 
 /** Makes the open project dirty with a model edit. */
@@ -204,7 +224,7 @@ describe('project controller', () => {
     expect(controller.session?.document.model.datasets.map((d) => d.id)).toEqual(['ds-1']);
   });
 
-  it('keeps the window open when closing is cancelled', async () => {
+  it('keeps the project open when closing is cancelled', async () => {
     const { controller, locations, unsavedAnswers } = setup();
     expect(await controller.closeProject()).toBe(true);
 
@@ -247,6 +267,78 @@ describe('project controller', () => {
     locations.push('copy.mateo');
     await controller.saveAs();
     expect(controller.getState().project?.isDirty).toBe(false);
+  });
+
+  it('opens a project file from the computer under the chosen name', async () => {
+    const { controller, files, locations, notices } = setup();
+    locations.push('a.mateo');
+    await controller.newProject();
+    edit(controller);
+    await controller.save();
+    const bytes = (await files.read('a.mateo'))!;
+
+    locations.push('From disk.mateo');
+    await controller.importProject({ name: 'a.mateo', bytes });
+    expect(controller.getState().project).toEqual({
+      name: 'a',
+      location: 'From disk.mateo',
+      isDirty: false,
+    });
+    expect(controller.session?.document.model.datasets.map((d) => d.id)).toEqual(['ds-1']);
+    expect(notices.at(-1)).toEqual({ kind: 'imported', name: 'a', location: 'From disk.mateo' });
+    expect(await files.list()).toEqual(['From disk.mateo', 'a.mateo']);
+  });
+
+  it('checks a file before anything is stored', async () => {
+    const { controller, files, locations, notices } = setup();
+    locations.push('never.mateo');
+    await controller.importProject({
+      name: 'notes.mateo',
+      bytes: new TextEncoder().encode('just some text, not SQLite'.repeat(10)),
+    });
+    expect(notices).toEqual([
+      expect.objectContaining({ kind: 'failed', action: 'import', location: 'notes.mateo' }),
+    ]);
+    expect(await files.list()).toEqual([]);
+    // Not even asked for a name.
+    expect(locations).toEqual(['never.mateo']);
+  });
+
+  it('replaces the open project with a file from the computer only after closing it', async () => {
+    const { controller, files, locations, unsavedAnswers } = setup();
+    locations.push('a.mateo', 'b.mateo');
+    await controller.newProject();
+    edit(controller);
+    await controller.save();
+    const withDataset = (await files.read('a.mateo'))!;
+    await controller.newProject();
+    edit(controller, 'ds-2');
+
+    // Cancelling the unsaved changes question keeps everything as it was.
+    locations.push('b.mateo');
+    unsavedAnswers.push('cancel');
+    await controller.importProject({ name: 'a.mateo', bytes: withDataset });
+    expect(controller.getState().project).toMatchObject({ location: 'b.mateo', isDirty: true });
+
+    locations.push('b.mateo');
+    unsavedAnswers.push('discard');
+    await controller.importProject({ name: 'a.mateo', bytes: withDataset });
+    expect(controller.getState().project).toMatchObject({ location: 'b.mateo', isDirty: false });
+    expect(controller.session?.document.model.datasets.map((d) => d.id)).toEqual(['ds-1']);
+  });
+
+  it('saves before giving the project to the user as a file', async () => {
+    const { controller, locations, notices, exported } = setup();
+    await controller.exportProject();
+    expect(kinds(notices)).toEqual(['noProject']);
+
+    locations.push('a.mateo');
+    await controller.newProject();
+    edit(controller);
+    await controller.exportProject();
+    expect(controller.getState().project?.isDirty).toBe(false);
+    expect(exported).toEqual(['a.mateo']);
+    expect(notices.at(-1)).toEqual({ kind: 'exported', name: 'a', location: 'a.mateo' });
   });
 
   it('runs one file operation at a time', async () => {
@@ -301,13 +393,26 @@ describe('project controller', () => {
       expect(controller.getState().project).toBeNull();
     });
 
-    it('is off when asked to be', async () => {
+    it('is off when asked to be, and then the page going away saves nothing', async () => {
       const { controller, locations } = setup(false);
       locations.push('manual.mateo');
       await controller.newProject();
       edit(controller);
       await new Promise((resolve) => setTimeout(resolve, 60));
       expect(controller.getState().project?.isDirty).toBe(true);
+      await controller.flush();
+      expect(controller.hasUnsavedChanges()).toBe(true);
+    });
+
+    it('saves pending edits at once when the page is hidden', async () => {
+      const { controller, locations } = setup(60_000);
+      locations.push('auto.mateo');
+      await controller.newProject();
+      expect(controller.hasUnsavedChanges()).toBe(false);
+      edit(controller);
+      expect(controller.hasUnsavedChanges()).toBe(true);
+      await controller.flush();
+      expect(controller.hasUnsavedChanges()).toBe(false);
     });
   });
 });

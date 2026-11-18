@@ -13,6 +13,8 @@ export const en = {
     'This project could not be upgraded to the current file format. The file was not changed.',
   'project.error.LOCATION_NOT_EMPTY': 'A file already exists at this location.',
   'project.error.NOT_FOUND': 'The file or item could not be found.',
+  'project.error.IN_USE':
+    'This project is open in another tab or window. Close it there, or continue in that tab.',
   'project.error.PROJECT_CLOSED': 'The project is closed.',
   'project.error.INVALID_ARGUMENT': 'This change cannot be stored in the project.',
   'project.error.STORAGE_FAILED':

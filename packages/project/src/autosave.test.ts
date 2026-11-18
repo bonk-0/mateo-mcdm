@@ -176,7 +176,7 @@ describe('autosave', () => {
   });
 
   it('works with a real session and the platform timers', async () => {
-    const test = await createTestStorage('wasm');
+    const test = await createTestStorage();
     const repository = createTestRepository(test.storage);
     const session = await repository.create('auto.mateo', { name: 'Auto' });
     const saved = new Promise<void>((resolve) => {

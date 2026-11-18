@@ -10,6 +10,8 @@ export const tr: Record<ProjectMessageKey, string> = {
     'Bu proje güncel dosya biçimine yükseltilemedi. Dosya değiştirilmedi.',
   'project.error.LOCATION_NOT_EMPTY': 'Bu konumda zaten bir dosya var.',
   'project.error.NOT_FOUND': 'Dosya veya öğe bulunamadı.',
+  'project.error.IN_USE':
+    'Bu proje başka bir sekmede veya pencerede açık. Orada kapatın ya da o sekmede devam edin.',
   'project.error.PROJECT_CLOSED': 'Proje kapalı.',
   'project.error.INVALID_ARGUMENT': 'Bu değişiklik projeye kaydedilemiyor.',
   'project.error.STORAGE_FAILED':

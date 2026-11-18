@@ -80,13 +80,15 @@
   },
   "about": {
     "title": "Hakkında",
-    "tagline": "Klasik ve bulanık çok kriterli karar verme için yerel öncelikli bir masaüstü uygulaması.",
+    "tagline": "Klasik ve bulanık çok kriterli karar verme için yerel öncelikli bir web uygulaması. Bir kez yüklendikten sonra çevrimdışı da çalışır.",
     "version": "Sürüm",
-    "runtime": "Çalışma biçimi",
-    "runtimeDesktop": "Masaüstü uygulaması",
-    "runtimeBrowser": "Tarayıcı sürümü",
     "storage": "Veriler",
-    "storageValue": "Yalnızca bu bilgisayarda saklanır",
+    "storageValue": "Yalnızca bu bilgisayardaki bu tarayıcıda saklanır",
+    "persistence": "Depolama",
+    "persistent": "Siz silene kadar saklanır",
+    "bestEffort": "Yer azalınca tarayıcı silebilir. Saklamak istediğiniz projeleri indirin.",
+    "unknown": "Bu tarayıcıda bilinmiyor",
+    "keep": "Tarayıcıdan saklamasını iste",
     "languages": "Diller",
     "languagesValue": "İngilizce, Türkçe"
   }

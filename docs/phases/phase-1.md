@@ -2,6 +2,8 @@
 
 **Goal:** a first usable release of Mateo. A user can import an Excel/CSV decision matrix, compute weights with CRITIC, MEREC or SWARA, rank alternatives with MARCOS or Fuzzy MARCOS (TFN), watch every step animated, test weight sensitivity, and export all tables to Excel, in Turkish or English, fully offline.
 
+> **Changed after delivery: Mateo is a web app.** Phase 1 was built with a Tauri desktop shell around the web UI (P1.7), a Tauri SQL storage adapter (P1.8) and desktop installers (P1.18). These were removed when the product was settled as a web app (`docs/plan.md` §1 and §4.1, `docs/phases/README.md`, Plan changes). The sections below describe the web form; the Tauri parts are noted where they were delivered.
+
 See [README.md](README.md) for the working rules that apply to every sub-phase.
 
 ---
@@ -11,7 +13,7 @@ See [README.md](README.md) for the working rules that apply to every sub-phase.
 **Goal:** an empty but complete workspace that every later sub-phase builds on.
 
 **Scope**
-- pnpm workspace with the layout from `docs/plan.md` §4: `apps/web`, `apps/desktop`, `packages/{engine,fuzzy,methods,io,project,explain,i18n,ui}`. Packages contain only an `index.ts` placeholder and a smoke test.
+- pnpm workspace with the layout from `docs/plan.md` §4: `apps/web`, `packages/{engine,fuzzy,methods,io,project,explain,i18n,ui}` (and `apps/desktop` until the web app change). Packages contain only an `index.ts` placeholder and a smoke test.
 - TypeScript strict config shared across packages, path aliases.
 - ESLint + Prettier with a shared config; rule forbidding imports from UI packages inside `engine`, `fuzzy`, `methods`, `io`, `project`.
 - Vitest configured for all packages.
@@ -19,7 +21,7 @@ See [README.md](README.md) for the working rules that apply to every sub-phase.
 - `CONTRIBUTING.md` with branch, commit and PR conventions.
 - Node and pnpm versions pinned (`.nvmrc`, `packageManager` field).
 
-**Out of scope:** React app content, Tauri setup (P1.7), any engine logic.
+**Out of scope:** React app content, the app shell (P1.7), any engine logic.
 
 **Depends on:** —
 
@@ -157,9 +159,9 @@ See [README.md](README.md) for the working rules that apply to every sub-phase.
 
 ---
 
-## P1.7 — App shell, desktop wrapper and i18n
+## P1.7 — App shell and i18n
 
-**Goal:** the running application frame in TR and EN, on desktop and in the browser.
+**Goal:** the running application frame in TR and EN, in the browser.
 
 **Scope**
 - `apps/web`: React + Vite, Tailwind, shadcn/ui base components, routing, sidebar navigation per `docs/plan.md` §12 (only Phase 1 items visible), Home screen placeholder, Settings screen.
@@ -167,17 +169,17 @@ See [README.md](README.md) for the working rules that apply to every sub-phase.
 - `packages/i18n`: i18next with ICU, `en` and `tr` catalogs, namespaced keys, language switcher, persisted preference, default from OS.
 - Number/date formatting helpers using `Intl`; separate settings for UI language, display number format and import number format (§11).
 - CI script that fails on missing or unused keys between `en` and `tr`.
-- `apps/desktop`: Tauri 2 wrapper loading the web app, native menu (File: New, Open, Save, Save As, Recent), file associations for `.mateo`. Desktop build in CI for at least one OS.
+- File commands (New, Open, Save, Save As, Recent) in the app's own project menu. *(Delivered with a Tauri 2 desktop wrapper, native menu and `.mateo` file associations; removed with the web app change.)*
 - Accessibility baseline: keyboard focus styles, landmark roles, reduced-motion detection hook.
 
 **Out of scope:** feature screens.
 
 **Depends on:** P1.1
 
-**Deliverables:** runnable web app (`pnpm dev`), runnable desktop app, i18n package and CI check.
+**Deliverables:** runnable web app (`pnpm dev`), i18n package and CI check.
 
 **Done when**
-- The app starts in both browser and desktop, switches TR/EN at runtime with no untranslated strings.
+- The app starts in the browser and switches TR/EN at runtime with no untranslated strings.
 - Missing-key check fails CI when a key is removed from `tr`.
 - Lighthouse accessibility score ≥ 90 on the shell in the browser build.
 
@@ -189,7 +191,7 @@ See [README.md](README.md) for the working rules that apply to every sub-phase.
 
 **Scope**
 - SQLite schema: project info, criteria, alternatives, matrices (crisp and TFN cells), linguistic scales, imported source files (blobs) and import profiles, analyses (method id, version, parameters, inputs snapshot id, trace, results, warnings, timestamps), settings.
-- Storage adapter interface with two implementations: Tauri SQL plugin (desktop) and SQLite WASM with OPFS/IndexedDB persistence (browser).
+- Storage adapter interface, implemented with SQLite WASM and OPFS/IndexedDB persistence in the browser. *(Delivered with a second, Tauri SQL plugin adapter; removed with the web app change.)*
 - Schema versioning and migrations from day one.
 - Immutable snapshots of model state referenced by analyses (basis for reproducibility and later versioning).
 - Repository API used by the UI: create/open/save/close, autosave hook, recent projects list.
@@ -426,13 +428,13 @@ See [README.md](README.md) for the working rules that apply to every sub-phase.
 
 ## P1.18 — Phase 1 release hardening
 
-**Goal:** a release candidate users can install.
+**Goal:** a release candidate users can open in their browser and use offline.
 
 **Scope**
 - End-to-end test suite for the main flows (import → weight → MARCOS → explain → sensitivity → export) in TR and EN.
 - Accessibility pass to WCAG 2.1 AA on all Phase 1 screens.
 - Performance check with large matrices (500 alternatives × 50 criteria).
-- Signed or at least reproducible installers for Windows, macOS, Linux via CI.
+- A reproducible production web build via CI. *(Delivered as desktop installers for Windows, macOS and Linux; replaced by the web build with the web app change.)*
 - Crash-safe autosave and recovery after an unexpected exit.
 - User-facing release notes (TR and EN).
 
@@ -440,7 +442,7 @@ See [README.md](README.md) for the working rules that apply to every sub-phase.
 
 **Depends on:** P1.1–P1.17
 
-**Deliverables:** installers as CI artifacts, test reports, release notes.
+**Deliverables:** the web build as a CI artifact, test reports, release notes.
 
 **Done when**
 - Phase 1 exit criteria below all pass.
@@ -453,4 +455,4 @@ See [README.md](README.md) for the working rules that apply to every sub-phase.
 - A new user can go from an Excel file to an exported MARCOS result in under five minutes without documentation (checked with at least one person outside the project).
 - The full flow works offline in TR and EN.
 - No untranslated strings, no failing accessibility checks at AA level.
-- Installers build in CI for all three desktop platforms.
+- The production web build passes the end-to-end suite in CI, offline use included.

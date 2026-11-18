@@ -8,6 +8,7 @@ import type {
   StorageAdapter,
 } from '../sql/types';
 import type { FileStore } from './file-store';
+import type { ProjectLocks } from './locks';
 
 /**
  * The part of the `@sqlite.org/sqlite-wasm` module object this adapter uses (the value
@@ -49,21 +50,31 @@ export interface WasmStorageOptions {
   readonly sqlite3: Sqlite3Like | (() => Promise<Sqlite3Like>);
   /** Where the files are kept, see `opfsFileStore` and `indexedDbFileStore`. */
   readonly files: FileStore;
+  /**
+   * Keeps each project open in one tab at a time (`webProjectLocks(navigator.locks)`).
+   * Without it nothing stops two tabs from overwriting each other's changes.
+   */
+  readonly locks?: ProjectLocks;
 }
 
 /**
- * Project files in the browser: SQLite compiled to WebAssembly.
+ * Project files: SQLite compiled to WebAssembly, over files kept in the browser.
  *
  * A project is loaded into an in-memory database; after every transaction the whole
- * database is written back to the file store as one atomic replacement. The stored bytes
- * are an ordinary SQLite file, identical in format to the desktop one, so a project can
- * be downloaded from the browser build and opened on the desktop and the other way round
- * (read and write the bytes through the file store).
+ * database is written back to the file store as one atomic replacement. So the stored
+ * file is always a complete, consistent `.mateo` file: a crash or a closed tab loses at
+ * most the changes not yet saved, never the file. The stored bytes are an ordinary SQLite
+ * file, which is also what the user downloads and opens again (`FileStore.read`/`write`).
  *
- * This keeps the adapter independent of workers and cross-origin isolation, which the
- * OPFS virtual file systems of SQLite need, and works with IndexedDB as well. The price is
- * that a project must fit in memory and each save rewrites the file; fine for the browser
- * build, which exists for development and demos (docs/plan.md §1).
+ * Why not one of the OPFS virtual file systems of SQLite, which write only changed pages:
+ * they run in a worker, the plain one needs cross-origin isolation and the pool one lets
+ * only one tab use any project at a time, and neither has an IndexedDB fallback for
+ * browsers without a writable OPFS. The price of this design is that a project must fit
+ * in memory and each save rewrites the file, which stays fast at the project sizes Mateo
+ * targets (docs/project-file.md, Storage).
+ *
+ * With `locks`, an open project holds its lock until the connection closes; opening it
+ * elsewhere fails with `IN_USE`, and so does copying onto it.
  */
 export function createWasmStorage(options: WasmStorageOptions): StorageAdapter {
   let module: Promise<Sqlite3Like> | undefined;
@@ -74,14 +85,31 @@ export function createWasmStorage(options: WasmStorageOptions): StorageAdapter {
   return {
     kind: 'wasm',
     async open(location: string, open: OpenConnectionOptions): Promise<SqlConnection> {
-      const bytes = await options.files.read(location);
-      if (bytes === null && !open.create) {
-        throw new ProjectError('NOT_FOUND', `No project file named ${location}.`, { location });
+      const release = await lock(options.locks, location);
+      try {
+        const bytes = await options.files.read(location);
+        if (bytes === null && !open.create) {
+          throw new ProjectError('NOT_FOUND', `No project file named ${location}.`, { location });
+        }
+        const api = await sqlite3();
+        return new WasmConnection(api, options, location, load(api, bytes), release);
+      } catch (error) {
+        release();
+        throw error;
       }
-      const api = await sqlite3();
-      return new WasmConnection(api, options.files, location, load(api, bytes));
     },
   };
+}
+
+async function lock(locks: ProjectLocks | undefined, location: string): Promise<() => void> {
+  if (!locks) return () => {};
+  const release = await locks.acquire(location);
+  if (release === null) throw inUse(location);
+  return release;
+}
+
+function inUse(location: string): ProjectError {
+  return new ProjectError('IN_USE', `${location} is open in another tab or window.`, { location });
 }
 
 /**
@@ -128,12 +156,19 @@ function load(api: Sqlite3Like, bytes: Uint8Array | null): Sqlite3DbLike {
 }
 
 class WasmConnection implements SqlConnection {
+  private readonly files: FileStore;
+  private readonly locks: ProjectLocks | undefined;
+
   constructor(
     private readonly api: Sqlite3Like,
-    private readonly files: FileStore,
+    options: WasmStorageOptions,
     private readonly location: string,
     private db: Sqlite3DbLike,
-  ) {}
+    private readonly release: () => void,
+  ) {
+    this.files = options.files;
+    this.locks = options.locks;
+  }
 
   select(sql: string, params: readonly SqlValue[] = []): Promise<SqlRow[]> {
     try {
@@ -182,11 +217,11 @@ class WasmConnection implements SqlConnection {
     }
   }
 
-  prepareForWriting(): Promise<void> {
-    return Promise.resolve();
-  }
-
   async copyTo(location: string): Promise<void> {
+    // A project open elsewhere would overwrite the copy with its next save.
+    if (location !== this.location && (await this.locks?.isHeld(location))) {
+      throw inUse(location);
+    }
     try {
       await this.files.write(location, this.exportBytes());
     } catch (cause) {
@@ -200,7 +235,11 @@ class WasmConnection implements SqlConnection {
   }
 
   close(): Promise<void> {
-    this.db.close();
+    try {
+      this.db.close();
+    } finally {
+      this.release();
+    }
     return Promise.resolve();
   }
 
