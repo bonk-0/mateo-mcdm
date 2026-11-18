@@ -10,7 +10,6 @@ import {
   fillSample,
   runToyMethod,
   SAMPLE_DATASET,
-  STORAGE_KINDS,
 } from '../testing/harness';
 
 const DS = SAMPLE_DATASET.id;
@@ -38,9 +37,9 @@ function memoryStore() {
   };
 }
 
-describe.each(STORAGE_KINDS)('project session (%s storage)', (kind) => {
+describe('project session', () => {
   const setup = async () => {
-    const test = await createTestStorage(kind);
+    const test = await createTestStorage();
     const recent = createRecentProjects(memoryStore());
     const repository = createTestRepository(test.storage, { recent });
     const session = await repository.create('s.mateo', { name: 'Session' });
@@ -88,7 +87,7 @@ describe.each(STORAGE_KINDS)('project session (%s storage)', (kind) => {
   });
 
   it('keeps edits made during a save dirty and writes them with the next save', async () => {
-    const test = await createTestStorage(kind);
+    const test = await createTestStorage();
     // A storage whose writes can be held back, to edit while a save is in flight.
     let hold: Promise<void> | undefined;
     const slow: typeof test.storage = {
@@ -97,7 +96,6 @@ describe.each(STORAGE_KINDS)('project session (%s storage)', (kind) => {
         const connection = await test.storage.open(location, options);
         return {
           select: (sql, params) => connection.select(sql, params),
-          prepareForWriting: () => connection.prepareForWriting(),
           copyTo: (target) => connection.copyTo(target),
           close: () => connection.close(),
           async transaction(statements) {
@@ -433,7 +431,7 @@ describe.each(STORAGE_KINDS)('project session (%s storage)', (kind) => {
     expect(await test.readFile('s.mateo')).toEqual(originalBytes);
     expect(recent.list().map((item) => item.location)).toEqual(['copy.mateo', 's.mateo']);
 
-    // Copying onto an existing file replaces it on the desktop only if the app can delete.
+    // Copying onto an existing file replaces it.
     await session.saveAs('s.mateo');
     expect(session.location).toBe('s.mateo');
     await session.close();
@@ -445,7 +443,6 @@ describe.each(STORAGE_KINDS)('project session (%s storage)', (kind) => {
     );
     expect((await copy.getAnalysis(analysis.id)).record).toEqual(run.record);
     await copy.close();
-    expect(test.fake?.openPools() ?? 0).toBe(0);
   });
 
   it('keeps the list of recent projects up to date', async () => {

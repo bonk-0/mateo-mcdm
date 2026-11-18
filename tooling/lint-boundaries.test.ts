@@ -23,7 +23,6 @@ const uiImports = [
   "import { PACKAGE_NAME } from '../../ui/src/index';",
   "import { PACKAGE_NAME } from '../../../apps/web/src/index';",
   "import * as React from 'react';",
-  "import { invoke } from '@tauri-apps/api/core';",
 ];
 
 describe('UI import boundary', () => {

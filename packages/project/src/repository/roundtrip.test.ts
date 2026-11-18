@@ -10,12 +10,11 @@ import {
   SAMPLE_CELLS,
   SAMPLE_DATASET,
   SAMPLE_SCALE,
-  STORAGE_KINDS,
 } from '../testing/harness';
 
-describe.each(STORAGE_KINDS)('project round trip (%s storage)', (kind) => {
+describe('project round trip', () => {
   it('saves and reopens crisp and TFN data and an analysis unchanged', async () => {
-    const test = await createTestStorage(kind);
+    const test = await createTestStorage();
     const repository = createTestRepository(test.storage);
 
     const created = await repository.create('suppliers.mateo', {
@@ -98,7 +97,7 @@ describe.each(STORAGE_KINDS)('project round trip (%s storage)', (kind) => {
   });
 
   it('reports a missing file and refuses to create over an existing one', async () => {
-    const test = await createTestStorage(kind);
+    const test = await createTestStorage();
     const repository = createTestRepository(test.storage);
     await expect(repository.open('missing.mateo')).rejects.toMatchObject({ code: 'NOT_FOUND' });
     expect(await test.readFile('missing.mateo')).toBeNull();
@@ -112,7 +111,7 @@ describe.each(STORAGE_KINDS)('project round trip (%s storage)', (kind) => {
   });
 
   it('rejects files that are not Mateo projects without touching them', async () => {
-    const test = await createTestStorage(kind);
+    const test = await createTestStorage();
     const repository = createTestRepository(test.storage);
     const junk = Uint8Array.from(
       'This is definitely not an SQLite database file. '.repeat(40),
@@ -127,11 +126,10 @@ describe.each(STORAGE_KINDS)('project round trip (%s storage)', (kind) => {
       code: 'LOCATION_NOT_EMPTY',
     });
     expect(await test.readFile('junk.mateo')).toEqual(junk);
-    expect(test.fake?.openPools() ?? 0).toBe(0);
   });
 
-  it('writes one portable file that the other storage can open', async () => {
-    const test = await createTestStorage(kind);
+  it('writes one portable SQLite file that opens anywhere', async () => {
+    const test = await createTestStorage();
     const session = await createTestRepository(test.storage).create('p.mateo', {
       name: 'Portable',
     });
@@ -143,9 +141,9 @@ describe.each(STORAGE_KINDS)('project round trip (%s storage)', (kind) => {
     // An SQLite file using the rollback journal: no -wal side file is needed to read it.
     expect(String.fromCharCode(...bytes.subarray(0, 15))).toBe('SQLite format 3');
     expect([bytes[18], bytes[19]]).toEqual([1, 1]);
-    expect(test.fake?.journalModes.get('p.mateo') ?? 'delete').toBe('delete');
 
-    const other = await createTestStorage(kind === 'wasm' ? 'tauri' : 'wasm');
+    // A separate storage, as in another browser or on another computer.
+    const other = await createTestStorage();
     await other.writeFile('copy.mateo', bytes);
     const opened = await createTestRepository(other.storage).open('copy.mateo');
     expect(opened.document).toEqual(document);
@@ -153,7 +151,7 @@ describe.each(STORAGE_KINDS)('project round trip (%s storage)', (kind) => {
   });
 
   it('fails with PROJECT_CLOSED after close', async () => {
-    const test = await createTestStorage(kind);
+    const test = await createTestStorage();
     const session = await createTestRepository(test.storage).create('c.mateo', { name: 'C' });
     await session.close();
     await session.close();
@@ -161,6 +159,5 @@ describe.each(STORAGE_KINDS)('project round trip (%s storage)', (kind) => {
     await expect(session.save()).rejects.toBeInstanceOf(ProjectError);
     await expect(session.listAnalyses()).rejects.toMatchObject({ code: 'PROJECT_CLOSED' });
     expect(() => session.setInfo({ name: 'D' })).toThrow(ProjectError);
-    expect(test.fake?.openPools() ?? 0).toBe(0);
   });
 });

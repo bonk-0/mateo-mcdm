@@ -107,8 +107,8 @@ export function buildRoutes(): RouteObject[] {
 }
 
 /**
- * Hash routing works the same in the browser build and in the desktop webview, where
- * deep links to `/settings/...` would not map to files.
+ * Hash routing: the app is one static page, so it works from any folder of any static
+ * host (and offline from the service worker) without rewriting deep links to `/settings/...`.
  */
 export function createAppRouter() {
   return createHashRouter(buildRoutes());

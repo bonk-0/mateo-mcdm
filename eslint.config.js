@@ -6,8 +6,8 @@ import tseslint from 'typescript-eslint';
 
 /**
  * Packages that must stay free of UI code (docs/plan.md §4, docs/phases/README.md rule 6).
- * They may run in Web Workers, Node and tests, so they never import React, Tauri,
- * DOM-bound packages or the UI layer of the monorepo.
+ * They may run in Web Workers, Node and tests, so they never import React, DOM-bound
+ * packages or the UI layer of the monorepo.
  */
 export const PURE_PACKAGES = ['engine', 'fuzzy', 'methods', 'solver', 'io', 'project'];
 
@@ -17,19 +17,16 @@ export const UI_IMPORT_PATTERNS = [
   '@mateo/ui/*',
   '@mateo/web',
   '@mateo/web/*',
-  '@mateo/desktop',
-  '@mateo/desktop/*',
   '@mateo/explain',
   '@mateo/explain/*',
   'react',
   'react/*',
   'react-dom',
   'react-dom/*',
-  '@tauri-apps/*',
 ];
 
 /** Relative paths that climb out of a package into a UI workspace (e.g. `../../ui/src`). */
-export const UI_RELATIVE_IMPORT_REGEX = String.raw`^(\.\./)+(packages/)?(ui|explain|apps|web|desktop)(/|$)`;
+export const UI_RELATIVE_IMPORT_REGEX = String.raw`^(\.\./)+(packages/)?(ui|explain|apps|web)(/|$)`;
 
 /**
  * Packages whose calculations must be reproducible (docs/plan.md §4 and §13): the same
@@ -46,7 +43,7 @@ const PURITY_MESSAGE =
 
 export default tseslint.config(
   {
-    ignores: ['**/node_modules/**', '**/dist/**', '**/coverage/**', '**/src-tauri/target/**'],
+    ignores: ['**/node_modules/**', '**/dist/**', '**/coverage/**'],
   },
   js.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
@@ -71,7 +68,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['*.js', '*.ts', 'tooling/**', 'apps/desktop/src/**'],
+    files: ['*.js', '*.ts', 'tooling/**', 'apps/web/icons/**'],
     languageOptions: { globals: globals.node },
   },
   {

@@ -16,19 +16,18 @@ pnpm install
 
 ## Everyday commands
 
-| Command              | What it does                                                      |
-| -------------------- | ----------------------------------------------------------------- |
-| `pnpm typecheck`     | Strict TypeScript check of the root config and every workspace.   |
-| `pnpm lint`          | ESLint (type-aware) with zero warnings allowed.                   |
-| `pnpm format`        | Formats the repo with Prettier (`format:check` only checks).      |
-| `pnpm test`          | Runs Vitest for every package, app and the repo tooling.          |
-| `pnpm test:watch`    | Vitest in watch mode.                                             |
-| `pnpm test:coverage` | Runs the tests of packages that enforce a coverage threshold.     |
-| `pnpm i18n:check`    | Fails on missing or unused keys between `en` and `tr`.            |
-| `pnpm dev`           | Web app with hot reload at http://localhost:5173.                 |
-| `pnpm dev:desktop`   | Desktop app (Tauri) around the same dev server.                   |
-| `pnpm build`         | Production build of the web app into `apps/web/dist`.             |
-| `pnpm verify`        | Everything CI runs, in the same order (except the desktop build). |
+| Command              | What it does                                                    |
+| -------------------- | --------------------------------------------------------------- |
+| `pnpm typecheck`     | Strict TypeScript check of the root config and every workspace. |
+| `pnpm lint`          | ESLint (type-aware) with zero warnings allowed.                 |
+| `pnpm format`        | Formats the repo with Prettier (`format:check` only checks).    |
+| `pnpm test`          | Runs Vitest for every package, app and the repo tooling.        |
+| `pnpm test:watch`    | Vitest in watch mode.                                           |
+| `pnpm test:coverage` | Runs the tests of packages that enforce a coverage threshold.   |
+| `pnpm i18n:check`    | Fails on missing or unused keys between `en` and `tr`.          |
+| `pnpm dev`           | Web app with hot reload at http://localhost:5173.               |
+| `pnpm build`         | Production build of the web app into `apps/web/dist`.           |
+| `pnpm verify`        | Everything CI runs except the E2E and accessibility jobs.       |
 
 Run a single package with a filter, for example `pnpm --filter @mateo/engine test`.
 
@@ -36,8 +35,7 @@ Run a single package with a filter, for example `pnpm --filter @mateo/engine tes
 
 ```
 apps/
-  web/          React UI (P1.7)
-  desktop/      Tauri shell (P1.7)
+  web/          The app: React UI, browser storage, service worker
 packages/
   engine/       Pure calculation engine
   fuzzy/        Fuzzy number types and arithmetic
@@ -56,24 +54,23 @@ Each workspace is an internal, source-first package: its `package.json` `exports
 ### Shared configuration
 
 - [`tsconfig.base.json`](tsconfig.base.json): strict settings for every package, no DOM and no Node types. Pure packages extend it directly, so browser or Node globals in engine code fail the type check.
-- [`tsconfig.dom.json`](tsconfig.dom.json): adds DOM libraries and JSX for `ui`, `web` and `desktop`.
+- [`tsconfig.dom.json`](tsconfig.dom.json): adds DOM libraries and JSX for `ui` and `web`.
 - [`eslint.config.js`](eslint.config.js): one flat config for the whole repo.
 - [`.prettierrc.json`](.prettierrc.json): formatting. ESLint does not check formatting; Prettier does.
 - [`vitest.config.ts`](vitest.config.ts): one Vitest project per workspace plus `tooling`.
 
 ### Engine purity
 
-`engine`, `fuzzy`, `methods`, `io` and `project` must stay free of UI code (plan §4). ESLint rejects imports of `@mateo/ui`, `@mateo/explain`, the apps, React and Tauri from these packages, including relative paths that climb into them. [`tooling/lint-boundaries.test.ts`](tooling/lint-boundaries.test.ts) proves the rule keeps working. The calculation packages (`engine`, `fuzzy`, `methods`) are also deterministic: no I/O, no randomness, no clock. ESLint rejects `Math.random`, `Date` and similar sources there, and every method test calls `assertDeterministic` from `@mateo/engine`. See [`packages/engine/README.md`](packages/engine/README.md) for the guide to writing a method. Fuzzy methods build on [`packages/fuzzy`](packages/fuzzy/README.md) for TFN arithmetic, defuzzification and linguistic scales.
+`engine`, `fuzzy`, `methods`, `io` and `project` must stay free of UI code (plan §4). ESLint rejects imports of `@mateo/ui`, `@mateo/explain`, the apps and React from these packages, including relative paths that climb into them. [`tooling/lint-boundaries.test.ts`](tooling/lint-boundaries.test.ts) proves the rule keeps working. The calculation packages (`engine`, `fuzzy`, `methods`) are also deterministic: no I/O, no randomness, no clock. ESLint rejects `Math.random`, `Date` and similar sources there, and every method test calls `assertDeterministic` from `@mateo/engine`. See [`packages/engine/README.md`](packages/engine/README.md) for the guide to writing a method. Fuzzy methods build on [`packages/fuzzy`](packages/fuzzy/README.md) for TFN arithmetic, defuzzification and linguistic scales.
 
-## Desktop app
+## The web app
 
-The desktop app is a Tauri 2 wrapper around the web build (`apps/desktop/src-tauri`). It needs a Rust toolchain and the [Tauri system prerequisites](https://v2.tauri.app/start/prerequisites/) for your OS. `pnpm dev:desktop` starts the web dev server and opens it in a native window; `pnpm --filter @mateo/desktop build` builds installers. CI builds a Linux `.deb` on every pull request.
+Mateo is a static web app (`apps/web`, `docs/plan.md` §4.1). `pnpm build` writes it to `apps/web/dist`: plain files with relative URLs that any HTTPS host can serve from any folder, with no server code and no special headers. The `Release web build` workflow (`.github/workflows/release.yml`) builds the same files as one archive.
 
-The native menu (File: New, Open, Open Recent, Save, Save As) is built by the UI through the Tauri menu API, so its labels follow the UI language. Menu items and buttons trigger app commands (`apps/web/src/commands`), which `apps/web/src/project` handles with `@mateo/project`: on the desktop each project is a `.mateo` file read and written through the Tauri SQL plugin and chosen with the native dialogs; in the browser build projects live in browser storage (SQLite WebAssembly). Files opened through the `.mateo` association reach the UI as a `file.open` command.
-
-`apps/desktop/src/sqlPlugin.test.ts` runs project files through the real SQL plugin: build its bridge first with `cargo build --example sql_bridge` in `apps/desktop/src-tauri`, otherwise the suite is skipped (CI requires it).
-
-The app icon comes from `apps/desktop/icons/source.svg`. After changing it, export a 1024×1024 `source.png` next to it and run `pnpm --filter @mateo/desktop icons`.
+- **Offline.** `vite-plugin-pwa` generates the service worker and the web app manifest at build time (`apps/web/vite.config.ts`). The dev server has no service worker; test offline behaviour with `pnpm build && pnpm --filter @mateo/web preview`, or with the E2E suite (`e2e/webApp.e2e.ts`). A new version waits until the user reloads (`src/shell/AppUpdate.tsx`).
+- **Content Security Policy.** Set in the built `index.html` from `CONTENT_SECURITY_POLICY` in `vite.config.ts`. Anything that loads from another origin, or needs `eval`, is refused; the E2E suite fails on any violation.
+- **Project files.** Menu items, buttons and shortcuts trigger app commands (`apps/web/src/commands`), which `apps/web/src/project` handles with `@mateo/project`: projects live in browser storage (SQLite WebAssembly over OPFS or IndexedDB), one tab per project, and go in and out as `.mateo` files. See [`docs/project-file.md`](docs/project-file.md#storage).
+- **Icons.** The app icons in `apps/web/public` come from `apps/web/icons/source.svg`; after changing it run `pnpm --filter @mateo/web icons`.
 
 ## Translations
 

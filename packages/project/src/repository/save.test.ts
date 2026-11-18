@@ -26,7 +26,6 @@ import {
   fillSample,
   SAMPLE_DATASET,
   SAMPLE_SCALE,
-  STORAGE_KINDS,
 } from '../testing/harness';
 import { planModelSave, planSettingsSave } from './save';
 
@@ -158,9 +157,9 @@ function randomCommand(
   }
 }
 
-describe.each(STORAGE_KINDS)('incremental save (%s storage)', (kind) => {
+describe('incremental save', () => {
   it('stores exactly the model after any sequence of edits, saves, undos and redos', async () => {
-    const test = await createTestStorage(kind);
+    const test = await createTestStorage();
     const repository = createTestRepository(test.storage);
     for (const seed of [1, 2, 3]) {
       const next = random(seed);
@@ -209,7 +208,7 @@ describe.each(STORAGE_KINDS)('incremental save (%s storage)', (kind) => {
 
 describe('save plans', () => {
   const sample = async () => {
-    const test = await createTestStorage('wasm');
+    const test = await createTestStorage();
     const session = await createTestRepository(test.storage).create('p.mateo', { name: 'P' });
     fillSample(session);
     return session;

@@ -3,12 +3,12 @@ import { ProjectError } from '../errors';
 /**
  * Values that may be bound to a statement or come back from a query.
  *
- * Deliberately narrow, because the two drivers agree on nothing else:
+ * Deliberately narrow, so that any SQLite driver (in this thread, in a worker, or behind a
+ * message channel) can carry them without loss:
  *
- * - Numbers must be integers. The Tauri SQL plugin binds every number as a double and its
- *   JSON bridge does not guarantee exact doubles, so real numbers travel as JSON text.
- * - Binary data travels as hex text (`unhex(?)` when writing, `hex(column)` when reading):
- *   the plugin cannot bind blobs.
+ * - Numbers must be integers. Real numbers of the model travel as JSON text, which
+ *   round-trips every double exactly (docs/project-file.md, Conventions).
+ * - Binary data travels as hex text (`unhex(?)` when writing, `hex(column)` when reading).
  */
 export type SqlValue = string | number | null;
 
@@ -46,10 +46,9 @@ export function statement(sql: string, params: readonly SqlValue[] = []): SqlSta
 /**
  * An open connection to one project file.
  *
- * The interface is the smallest one both drivers can implement safely. In particular
- * there is no `begin`/`commit`: the Tauri SQL plugin runs each call on any connection of
- * a pool, so a transaction that spans several calls is not possible there. Atomic writes
- * are a list of statements handed over in one call.
+ * The interface is deliberately small. There is no `begin`/`commit`: atomic writes are a
+ * list of statements handed over in one call, so a transaction can never be left open
+ * between calls, and a driver that runs in a worker needs one message per write.
  *
  * Calls must not overlap; the repository runs them one at a time.
  */
@@ -61,11 +60,6 @@ export interface SqlConnection {
    * durable when the promise resolves, or none is.
    */
   transaction(statements: readonly SqlStatement[]): Promise<void>;
-  /**
-   * Called once before the first write, after the file was accepted as a project this
-   * version may modify. Until then the connection must not change the file in any way.
-   */
-  prepareForWriting(): Promise<void>;
   /** Writes a consistent copy of the database to another location of the same storage. */
   copyTo(location: string): Promise<void>;
   close(): Promise<void>;
@@ -77,12 +71,15 @@ export interface OpenConnectionOptions {
 }
 
 /**
- * Where project files live and how they are reached: the Tauri SQL plugin on the desktop
- * (`createTauriStorage`) and SQLite compiled to WebAssembly in the browser
- * (`createWasmStorage`). A location is a file path on the desktop and a file name in the
- * browser's private storage.
+ * Where project files live and how they are reached: SQLite compiled to WebAssembly over
+ * the browser's own storage (`createWasmStorage`). A location is a file name in that
+ * storage, for example `Suppliers.mateo`.
  */
 export interface StorageAdapter {
   readonly kind: string;
+  /**
+   * Opens the file at `location`. Opening never changes the file: the repository checks
+   * that it is a project this version may modify before its first `transaction`.
+   */
   open(location: string, options: OpenConnectionOptions): Promise<SqlConnection>;
 }

@@ -80,13 +80,15 @@
   },
   "about": {
     "title": "About",
-    "tagline": "A local-first desktop application for classical and fuzzy multi-criteria decision making.",
+    "tagline": "A local-first web app for classical and fuzzy multi-criteria decision making. It works offline once loaded.",
     "version": "Version",
-    "runtime": "Running as",
-    "runtimeDesktop": "Desktop app",
-    "runtimeBrowser": "Browser build",
     "storage": "Data",
-    "storageValue": "Stored only on this computer",
+    "storageValue": "Kept only in this browser, on this computer",
+    "persistence": "Storage",
+    "persistent": "Kept until you delete it",
+    "bestEffort": "The browser may clear it when space runs low. Download projects you want to keep.",
+    "unknown": "Not known in this browser",
+    "keep": "Ask the browser to keep it",
     "languages": "Languages",
     "languagesValue": "English, Turkish"
   }

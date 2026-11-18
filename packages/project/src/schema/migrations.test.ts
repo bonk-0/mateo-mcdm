@@ -12,7 +12,6 @@ import {
   SAMPLE_CELLS,
   SAMPLE_DATASET,
   SAMPLE_SCALE,
-  STORAGE_KINDS,
 } from '../testing/harness';
 import {
   assertMigrationList,
@@ -74,9 +73,9 @@ describe('schema history', () => {
   });
 });
 
-describe.each(STORAGE_KINDS)('migrations (%s storage)', (kind) => {
+describe('migrations', () => {
   it('opens the version 1 fixture file with the current schema', async () => {
-    const test = await createTestStorage(kind);
+    const test = await createTestStorage();
     await test.writeFile('old.mateo', fixtureV1());
     const repository = createTestRepository(test.storage);
     const session = await repository.open('old.mateo');
@@ -112,7 +111,7 @@ describe.each(STORAGE_KINDS)('migrations (%s storage)', (kind) => {
   });
 
   it('upgrades the version 1 fixture file step by step and keeps its data', async () => {
-    const test = await createTestStorage(kind);
+    const test = await createTestStorage();
     await test.writeFile('old.mateo', fixtureV1());
     const seen: unknown[] = [];
     const repository = createTestRepository(test.storage, { migrations: FUTURE });
@@ -159,7 +158,7 @@ describe.each(STORAGE_KINDS)('migrations (%s storage)', (kind) => {
   });
 
   it('gives a migrated file the same schema as a newly created one', async () => {
-    const test = await createTestStorage(kind);
+    const test = await createTestStorage();
     const repository = createTestRepository(test.storage, { migrations: FUTURE });
     await test.writeFile('old.mateo', fixtureV1());
     await (await repository.open('old.mateo')).close();
@@ -177,7 +176,7 @@ describe.each(STORAGE_KINDS)('migrations (%s storage)', (kind) => {
   });
 
   it('refuses a file from a newer version and leaves it byte for byte as it was', async () => {
-    const test = await createTestStorage(kind);
+    const test = await createTestStorage();
     // A file written by a "future" Mateo with a later schema version.
     const future = createTestRepository(test.storage, { migrations: FUTURE });
     const written = await future.create('future.mateo', { name: 'From the future' });
@@ -185,7 +184,6 @@ describe.each(STORAGE_KINDS)('migrations (%s storage)', (kind) => {
     await written.save();
     await written.close();
     const bytes = (await test.readFile('future.mateo'))!;
-    const callsBefore = test.fake?.calls.length ?? 0;
 
     const current = createTestRepository(test.storage);
     const error = await current.open('future.mateo').then(
@@ -204,11 +202,6 @@ describe.each(STORAGE_KINDS)('migrations (%s storage)', (kind) => {
     });
     expect((error as Error).message).toMatch(/newer version of Mateo/);
     expect(await test.readFile('future.mateo')).toEqual(bytes);
-    // On the desktop not a single write was attempted, and the pool was closed again.
-    expect(
-      test.fake?.calls.slice(callsBefore).filter((call) => call.kind === 'execute') ?? [],
-    ).toEqual([]);
-    expect(test.fake?.openPools() ?? 0).toBe(0);
 
     // The newer Mateo still opens it.
     const reopened = await future.open('future.mateo');
@@ -217,7 +210,7 @@ describe.each(STORAGE_KINDS)('migrations (%s storage)', (kind) => {
   });
 
   it('leaves the file untouched when a migration fails or is cancelled', async () => {
-    const test = await createTestStorage(kind);
+    const test = await createTestStorage();
     await test.writeFile('old.mateo', fixtureV1());
     const broken: readonly Migration[] = [
       ...FUTURE.slice(0, NOTES_VERSION),
@@ -245,7 +238,6 @@ describe.each(STORAGE_KINDS)('migrations (%s storage)', (kind) => {
       code: 'MIGRATION_FAILED',
       details: { fromVersion: NOTES_VERSION, toVersion: FUTURE_VERSION },
     });
-    expect(test.fake?.openPools() ?? 0).toBe(0);
     // The steps before were applied completely, the broken one not at all: the file is a
     // valid file of the version before it.
     const check = await test.storage.open('old.mateo', { create: false });
@@ -263,7 +255,7 @@ describe.each(STORAGE_KINDS)('migrations (%s storage)', (kind) => {
   });
 
   it('marks new files with the application id and the current version', async () => {
-    const test = await createTestStorage(kind);
+    const test = await createTestStorage();
     await (await createTestRepository(test.storage).create('n.mateo', { name: 'N' })).close();
     const connection = await test.storage.open('n.mateo', { create: false });
     expect(await connection.select('PRAGMA application_id')).toEqual([
@@ -278,7 +270,7 @@ describe.each(STORAGE_KINDS)('migrations (%s storage)', (kind) => {
   });
 
   it('reports a project file without a version or without its project row as corrupt', async () => {
-    const test = await createTestStorage(kind);
+    const test = await createTestStorage();
     await (await createTestRepository(test.storage).create('x.mateo', { name: 'X' })).close();
     const connection = await test.storage.open('x.mateo', { create: false });
     await connection.transaction([statement('DELETE FROM project')]);

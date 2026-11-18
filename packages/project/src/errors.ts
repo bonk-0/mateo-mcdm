@@ -17,6 +17,8 @@ export type ProjectErrorCode =
   | 'LOCATION_NOT_EMPTY'
   /** The file or the requested record does not exist. */
   | 'NOT_FOUND'
+  /** The project is open in another tab or window of the browser. */
+  | 'IN_USE'
   /** The project was used after it was closed. */
   | 'PROJECT_CLOSED'
   /** A caller passed data that cannot be stored (programming error or invalid model). */

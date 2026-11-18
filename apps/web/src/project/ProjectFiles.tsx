@@ -18,47 +18,62 @@ import {
   DialogTitle,
 } from '@mateo/ui';
 import type { TFunction } from 'i18next';
-import { FileText } from 'lucide-react';
+import { FileText, Upload } from 'lucide-react';
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { registerCommand, type AppCommand, type CommandPayload } from '../commands/commands';
-import { isDesktop } from '../platform/runtime';
-import type { BrowserFileDialogs } from './browser';
+import {
+  registerCommand,
+  runCommand,
+  type AppCommand,
+  type CommandPayload,
+} from '../commands/commands';
+import type { BrowserFileDialogs, NamePurpose } from './browser';
 import {
   createProjectController,
   type ProjectController,
   type ProjectNotice,
   type UnsavedChoice,
 } from './controller';
-import type { DialogLabels } from './desktop';
 import { autosaveSettings } from './autosaveSettings';
-import { fileNameOf, type ProjectPlatform } from './platform';
+import { fileNameOf, PROJECT_EXTENSION, type ProjectPlatform } from './platform';
 import { getProjectController, setProjectController } from './store';
 
-/** What a platform needs from the UI: texts for native dialogs, in-app dialogs for the browser. */
+/** What the platform needs from the UI: the in-app dialogs and translated texts. */
 export interface PlatformContext {
-  readonly dialogLabels: () => DialogLabels;
-  readonly browserDialogs: BrowserFileDialogs;
+  readonly dialogs: BrowserFileDialogs;
+  /** Name of the `.mateo` file type, for example "Mateo project". */
+  readonly fileTypeLabel: () => string;
 }
 
 export type PlatformLoader = (context: PlatformContext) => Promise<ProjectPlatform>;
 
-/** Desktop: files on disk through Tauri. Browser: SQLite WebAssembly and browser storage. */
-export const loadPlatform: PlatformLoader = async ({ dialogLabels, browserDialogs }) => {
-  if (isDesktop()) {
-    const { createDesktopPlatform } = await import('./desktop');
-    return createDesktopPlatform(dialogLabels);
-  }
+/** SQLite WebAssembly over the browser's project storage. */
+export const loadPlatform: PlatformLoader = async ({ dialogs, fileTypeLabel }) => {
   const { browserFileStore, createBrowserPlatform } = await import('./browser');
-  return createBrowserPlatform({ files: await browserFileStore(), dialogs: browserDialogs });
+  return createBrowserPlatform({
+    files: await browserFileStore(),
+    dialogs,
+    fileTypeLabel,
+    appVersion: __APP_VERSION__,
+  });
 };
+
+/** Reads a file the user picked or dropped. */
+export async function readProjectFile(file: File) {
+  return { name: file.name, bytes: new Uint8Array(await file.arrayBuffer()) };
+}
+
+/** Whether a file the user dropped or picked is a Mateo project, judged by its name. */
+export function isProjectFileName(name: string): boolean {
+  return name.toLowerCase().endsWith(`.${PROJECT_EXTENSION}`);
+}
 
 type Prompt =
   | { readonly kind: 'unsaved'; readonly name: string; answer(choice: UnsavedChoice): void }
   | {
       readonly kind: 'name';
-      readonly purpose: 'new' | 'saveAs';
+      readonly purpose: NamePurpose;
       readonly suggested: string;
       answer(name: string | null): void;
     }
@@ -80,6 +95,8 @@ function showNotice(t: TFunction<'project'>, notice: ProjectNotice): void {
     case 'created':
     case 'opened':
     case 'saved':
+    case 'imported':
+    case 'exported':
       toast.success(t(`notices.${notice.kind}`, { name: notice.name }), {
         description: fileNameOf(notice.location),
       });
@@ -101,15 +118,18 @@ function showNotice(t: TFunction<'project'>, notice: ProjectNotice): void {
 }
 
 /**
- * Connects the File commands (menu, buttons, files opened through the OS) to project
- * storage, and shows the questions and dialogs that go with them. Rendered once, in the
- * app shell.
+ * Connects the File commands (menu, buttons, shortcuts, dropped files) to project storage,
+ * and shows the questions and dialogs that go with them. Also keeps work from being lost
+ * when the page goes away: a pending autosave runs when the page is hidden, and the
+ * browser asks before a page with unsaved changes is closed. Rendered once, in the app
+ * shell.
  */
 export function ProjectFiles({ load = loadPlatform }: { load?: PlatformLoader }) {
   const { t } = useTranslation('project');
   const translate = useRef(t);
   translate.current = t;
   const [prompt, setPrompt] = useState<Prompt | null>(null);
+  const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     let disposed = false;
@@ -130,13 +150,8 @@ export function ProjectFiles({ load = loadPlatform }: { load?: PlatformLoader })
     }
 
     const context: PlatformContext = {
-      dialogLabels: () => ({
-        newTitle: translate.current('dialogs.newTitle'),
-        openTitle: translate.current('dialogs.openTitle'),
-        saveAsTitle: translate.current('dialogs.saveAsTitle'),
-        filterName: translate.current('dialogs.filterName'),
-      }),
-      browserDialogs: {
+      fileTypeLabel: () => translate.current('fileType'),
+      dialogs: {
         askName: (purpose, suggested) =>
           ask<string | null>((answer) => ({ kind: 'name', purpose, suggested, answer })),
         pickProject: (locations) =>
@@ -170,29 +185,60 @@ export function ProjectFiles({ load = loadPlatform }: { load?: PlatformLoader })
       },
     );
 
-    // Registered right away, so commands that arrive while storage loads (such as files
-    // opened at launch) wait for it instead of getting lost.
+    // Registered right away, so commands that arrive while storage loads wait for it
+    // instead of getting lost.
     const handle =
       (run: (controller: ProjectController, payload: CommandPayload) => Promise<unknown> | void) =>
       (payload: CommandPayload) => {
         void ready.then((controller) => (controller ? run(controller, payload) : undefined));
       };
-    const handlers: Record<Exclude<AppCommand, 'app.quit'>, (payload: CommandPayload) => void> = {
+    const handlers: Record<AppCommand, (payload: CommandPayload) => void> = {
       'file.new': handle((c) => c.newProject()),
-      'file.open': handle(async (c, { paths }) => {
-        // One project at a time: the OS may pass several files, the first one is opened.
-        await c.openProject(paths?.[0]);
-      }),
+      'file.open': handle((c, { location }) => c.openProject(location)),
       'file.save': handle((c) => c.save()),
       'file.saveAs': handle((c) => c.saveAs()),
+      'file.import': ({ file }) => {
+        // Without a file, the file chooser of the browser picks one (see the input below).
+        // It opens right away: browsers allow that only while the click is being handled.
+        if (!file) fileInput.current?.click();
+        else void ready.then((controller) => controller?.importProject(file));
+      },
+      'file.export': handle((c) => c.exportProject()),
       'file.clearRecent': handle((c) => c.clearRecent()),
     };
     const unregister = Object.entries(handlers).map(([command, handler]) =>
       registerCommand(command as AppCommand, handler),
     );
 
+    // Ctrl+S (Cmd+S) saves the project instead of the web page.
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key.toLowerCase() !== 's' || !(event.ctrlKey || event.metaKey) || event.altKey) {
+        return;
+      }
+      event.preventDefault();
+      runCommand(event.shiftKey ? 'file.saveAs' : 'file.save');
+    };
+    // A pending autosave runs while the page can still finish it: hiding comes before
+    // closing, and also covers a phone switching apps.
+    const onHidden = () => {
+      if (document.visibilityState === 'hidden') void getProjectController()?.flush();
+    };
+    // The browser asks before closing a page whose changes are not stored yet.
+    const onBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!getProjectController()?.hasUnsavedChanges()) return;
+      event.preventDefault();
+      // Older browsers still need a return value to ask.
+      event.returnValue = '';
+    };
+    window.addEventListener('keydown', onKeyDown);
+    document.addEventListener('visibilitychange', onHidden);
+    window.addEventListener('beforeunload', onBeforeUnload);
+
     return () => {
       disposed = true;
+      window.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('visibilitychange', onHidden);
+      window.removeEventListener('beforeunload', onBeforeUnload);
       for (const stop of unregister) stop();
       void ready.then((controller) => {
         if (controller && getProjectController() === controller) setProjectController(null);
@@ -200,7 +246,29 @@ export function ProjectFiles({ load = loadPlatform }: { load?: PlatformLoader })
     };
   }, [load]);
 
-  return <ProjectPrompt prompt={prompt} />;
+  return (
+    <>
+      <input
+        ref={fileInput}
+        type="file"
+        accept={`.${PROJECT_EXTENSION}`}
+        className="hidden"
+        tabIndex={-1}
+        aria-hidden
+        data-testid="project-file-input"
+        onChange={(event) => {
+          const input = event.currentTarget;
+          const file = input.files?.[0];
+          // Cleared, so that choosing the same file again fires a change.
+          input.value = '';
+          if (file) {
+            void readProjectFile(file).then((read) => runCommand('file.import', { file: read }));
+          }
+        }}
+      />
+      <ProjectPrompt prompt={prompt} />
+    </>
+  );
 }
 
 function ProjectPrompt({ prompt }: { prompt: Prompt | null }) {
@@ -294,9 +362,7 @@ function NameDialog({ prompt }: { prompt: Extract<Prompt, { kind: 'name' }> }) {
     <DialogContent>
       <form onSubmit={submit} className="flex flex-col gap-4">
         <DialogHeader>
-          <DialogTitle>
-            {t(prompt.purpose === 'new' ? 'browser.newTitle' : 'browser.saveAsTitle')}
-          </DialogTitle>
+          <DialogTitle>{t(`browser.${prompt.purpose}Title`)}</DialogTitle>
           <DialogDescription>{t('browser.nameDescription')}</DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-1.5">
@@ -320,7 +386,7 @@ function NameDialog({ prompt }: { prompt: Extract<Prompt, { kind: 'name' }> }) {
             </Button>
           </DialogClose>
           <Button type="submit" disabled={name.trim().length === 0}>
-            {t(prompt.purpose === 'new' ? 'browser.create' : 'browser.save')}
+            {t(prompt.purpose === 'saveAs' ? 'browser.save' : 'browser.create')}
           </Button>
         </DialogFooter>
       </form>
@@ -354,7 +420,19 @@ function PickDialog({ prompt }: { prompt: Extract<Prompt, { kind: 'pick' }> }) {
           ))}
         </ul>
       )}
-      <DialogFooter>
+      <DialogFooter className="sm:justify-between">
+        <Button
+          variant="ghost"
+          onClick={() => {
+            prompt.answer(null);
+            // Still inside the click, which the browser's file chooser requires.
+            runCommand('file.import');
+          }}
+          data-testid="open-from-computer"
+        >
+          <Upload aria-hidden />
+          {t('browser.fromComputer')}
+        </Button>
         <DialogClose asChild>
           <Button variant="outline">{t('browser.cancel')}</Button>
         </DialogClose>
