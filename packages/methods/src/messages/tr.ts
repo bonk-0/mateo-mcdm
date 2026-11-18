@@ -354,6 +354,123 @@ export const tr: Readonly<Record<MethodsMessageKey, string>> = {
   'methods.bwm.steps.linear-xi.explanation':
     'Her |w_B − a_Bj · w_j| ve |w_j − a_jW · w_W| farkını en fazla ξ tutan bir ağırlık vektörünün bulunduğu en küçük ξ; {solver} ile çözülen bir doğrusal programla bulunur. ξ^L* değerinin kendisi tutarlılık göstergesidir: 0’a ne kadar yakınsa karşılaştırmalar o kadar tutarlıdır.',
 
+  // ------------------------------------------------------------ DEMATEL
+  'methods.dematel.name': 'DEMATEL',
+  'methods.dematel.columns.rowSum': 'Satır toplamı',
+  'methods.dematel.columns.dispatch': 'Gönderilen etki D',
+  'methods.dematel.columns.receive': 'Alınan etki R',
+  'methods.dematel.columns.prominence': 'Öne çıkma D + R',
+  'methods.dematel.columns.relation': 'İlişki D − R',
+  'methods.dematel.rows.columnSum': 'Sütun toplamı',
+  'methods.dematel.rows.weightBasis': 'Ağırlık tabanı a_i',
+  'methods.dematel.rows.weight': 'Ağırlık w_i',
+  'methods.dematel.parameters.normalization.label': 'Normalleştirme sabiti',
+  'methods.dematel.parameters.normalization.description':
+    'Doğrudan ilişki matrisini bölen s sabiti. En büyük satır toplamı ile en büyük sütun toplamının büyüğü klasik biçimdir ve dolaylı etkiler serisinin yakınsamasını garanti eder.',
+  'methods.dematel.parameters.normalization.maxRowOrColumnSum': 'En büyük satır veya sütun toplamı',
+  'methods.dematel.parameters.normalization.maxRowSum': 'Yalnızca en büyük satır toplamı',
+  'methods.dematel.parameters.threshold.label': 'Neden-sonuç haritasının eşiği',
+  'methods.dematel.parameters.threshold.description':
+    'Toplam ilişki matrisinin hangi ilişkilerinin haritada gösterileceği. Yalnızca haritayı etkiler; T, D + R, D − R ve ağırlıklar değişmez.',
+  'methods.dematel.parameters.threshold.mean': 'Toplam ilişki matrisinin ortalaması',
+  'methods.dematel.parameters.threshold.custom': 'Kendim gireceğim değer',
+  'methods.dematel.parameters.customThreshold.label': 'Eşik değeri',
+  'methods.dematel.parameters.customThreshold.description':
+    'Eşik elle girildiğinde kullanılır. Bu değere eşit veya daha büyük ilişkiler gösterilir. 0 her ilişkiyi gösterir.',
+  'methods.dematel.parameters.weightBasis.label': 'Ağırlıkların kaynağı',
+  'methods.dematel.parameters.weightBasis.description':
+    'Öne çıkma D + R, her faktöre sistemdeki katılımı oranında pay verir. Uzaklık √((D + R)² + (D − R)²) güçlü neden ve güçlü sonuçları da ödüllendirir.',
+  'methods.dematel.parameters.weightBasis.prominence': 'Öne çıkma D + R',
+  'methods.dematel.parameters.weightBasis.distance': 'Uzaklık √((D + R)² + (D − R)²)',
+  'methods.dematel.steps.expert-matrices.name': 'Uzman matrisleri',
+  'methods.dematel.steps.expert-matrices.explanation':
+    'Her uzmanın doğrudan ilişki matrisi, alt alta: her faktörün diğer faktörler üzerindeki etkisi.',
+  'methods.dematel.steps.direct-relation.name': 'Doğrudan ilişki matrisi Z',
+  'methods.dematel.steps.direct-relation.explanation':
+    '{experts, plural, one {Her faktörün diğer faktörler üzerindeki doğrudan etkisi, girildiği gibi.} other {{experts, number} uzman matrisinin hücre hücre ortalaması.}}',
+  'methods.dematel.steps.row-sums.name': 'Satır toplamları',
+  'methods.dematel.steps.row-sums.explanation':
+    'Her faktörün gönderdiği toplam doğrudan etki: Z matrisindeki satırının toplamı.',
+  'methods.dematel.steps.column-sums.name': 'Sütun toplamları',
+  'methods.dematel.steps.column-sums.explanation':
+    'Her faktörün aldığı toplam doğrudan etki: Z matrisindeki sütununun toplamı.',
+  'methods.dematel.steps.normalization-constant.name': 'Normalleştirme sabiti s',
+  'methods.dematel.steps.normalization-constant.explanation':
+    '{normalization, select, max-row-sum {En büyük satır toplamı.} other {En büyük satır toplamı ile en büyük sütun toplamının büyüğü.}} Buna bölmek, her dolaylı etkiyi bir öncekinden küçük yapar.',
+  'methods.dematel.steps.normalized-matrix.name': 'Normalleştirilmiş matris X',
+  'methods.dematel.steps.normalized-matrix.explanation': 'Z’nin her hücresinin s’ye bölünmüşü.',
+  'methods.dematel.steps.inverse.name': 'Ters matris (I − X)⁻¹',
+  'methods.dematel.steps.inverse.explanation':
+    'Birim matrisden X çıkarılarak elde edilen matrisin tersi. I + X + X² + … toplamına eşittir: doğrudan etki ile her uzunluktaki zincirlerden gelen tüm dolaylı etkilerin toplamı.',
+  'methods.dematel.steps.total-relation.name': 'Toplam ilişki matrisi T',
+  'methods.dematel.steps.total-relation.explanation':
+    'T = X (I − X)⁻¹ = X + X² + X³ + …: her faktörün diğerleri üzerindeki doğrudan etkisi artı tüm dolaylı etkileri.',
+  'methods.dematel.steps.influence.name': 'Gönderilen ve alınan etki',
+  'methods.dematel.steps.influence.explanation':
+    'D, T matrisinin satır toplamıdır (faktörün tüm faktörlere gönderdiği etki), R sütun toplamıdır (faktörün tüm faktörlerden aldığı etki).',
+  'methods.dematel.steps.prominence-relation.name': 'Öne çıkma ve ilişki',
+  'methods.dematel.steps.prominence-relation.explanation':
+    'D + R, faktörün sisteme ne kadar katıldığını gösterir. D − R neden için pozitif (etkilediği, etkilendiğinden fazla), sonuç için negatiftir.',
+  'methods.dematel.steps.weight-basis.name': 'Ağırlık tabanı a_i',
+  'methods.dematel.steps.weight-basis.explanation':
+    'Her faktörün öne çıkma-ilişki düzleminde orijine uzaklığı: √((D + R)² + (D − R)²).',
+  'methods.dematel.steps.weight-basis-sum.name': 'Ağırlık tabanının toplamı',
+  'methods.dematel.steps.weight-basis-sum.explanation':
+    'Ağırlıkların türetildiği değerin tüm faktörler üzerinden toplamı.',
+  'methods.dematel.steps.weights.name': 'Faktör ağırlıkları',
+  'methods.dematel.steps.weights.explanation':
+    'Her faktörün değeri toplama bölünür; böylece ağırlıkların toplamı 1 olur ve bir sıralama yöntemine girdi olabilir.',
+  'methods.dematel.steps.threshold.name': 'Neden-sonuç haritasının eşiği',
+  'methods.dematel.steps.threshold.explanation':
+    '{threshold, select, mean {Toplam ilişki matrisinin tüm girdilerinin ortalaması.} other {Parametre olarak girilen değer.}} Harita, farklı faktörler arasındaki bu değere eşit veya daha büyük ilişkileri gösterir.',
+
+  // ------------------------------------------------------------ Bulanık DEMATEL
+  'methods.fuzzyDematel.name': 'Bulanık DEMATEL (TFN)',
+  'methods.fuzzyDematel.parameters.defuzzification.label': 'Durulaştırma',
+  'methods.fuzzyDematel.parameters.defuzzification.description':
+    'D̃ + R̃, D̃ − R̃ ve toplam ilişki matrisinin kesin sayıya çevrilme biçimi. Ağırlık merkezi ve dereceli ortalama her sayıyı tek başına işler; CFCS bir tablonun tüm sayılarıyla normalleştirir.',
+  'methods.fuzzyDematel.parameters.defuzzification.centroid': 'Ağırlık merkezi (l + m + u) / 3',
+  'methods.fuzzyDematel.parameters.defuzzification.gradedMean':
+    'Dereceli ortalama (l + 4m + u) / 6',
+  'methods.fuzzyDematel.parameters.defuzzification.cfcs':
+    'CFCS (bulanık veriyi kesin puana çevirme)',
+  'methods.fuzzyDematel.steps.expert-matrices.name': 'Uzman matrisleri (TFN)',
+  'methods.fuzzyDematel.steps.expert-matrices.explanation':
+    'Her uzmanın doğrudan ilişki matrisi üçgensel bulanık sayılarla, alt alta.',
+  'methods.fuzzyDematel.steps.direct-relation.name': 'Bulanık doğrudan ilişki matrisi Z̃',
+  'methods.fuzzyDematel.steps.direct-relation.explanation':
+    '{experts, plural, one {Her faktörün diğer faktörler üzerindeki bulanık doğrudan etkisi, girildiği gibi.} other {{experts, number} uzman matrisinin bileşen bileşen ortalaması.}}',
+  'methods.fuzzyDematel.steps.row-sums.name': 'Bulanık satır toplamları',
+  'methods.fuzzyDematel.steps.row-sums.explanation':
+    'Z̃ matrisinin her satırının bileşen bileşen toplamı.',
+  'methods.fuzzyDematel.steps.column-sums.name': 'Bulanık sütun toplamları',
+  'methods.fuzzyDematel.steps.column-sums.explanation':
+    'Z̃ matrisinin her sütununun bileşen bileşen toplamı.',
+  'methods.fuzzyDematel.steps.normalization-constant.name': 'Normalleştirme sabiti s',
+  'methods.fuzzyDematel.steps.normalization-constant.explanation':
+    '{normalization, select, max-row-sum {Satır toplamlarının en büyük üst bileşeni.} other {Satır ve sütun toplamlarının en büyük üst bileşenlerinin büyüğü.}} Üst bileşenler en büyük olanlardır; bu yüzden s’ye bölmek üç matrisi de yakınsak tutar.',
+  'methods.fuzzyDematel.steps.normalized-matrix.name': 'Bulanık normalleştirilmiş matris X̃',
+  'methods.fuzzyDematel.steps.normalized-matrix.explanation':
+    'Z̃’nin her bileşeninin s’ye bölünmüşü. Bundan sonra l, m ve u matrisleri ayrı ayrı işlenir.',
+  'methods.fuzzyDematel.steps.inverse.name': 'Bileşen başına ters matris (I − X)⁻¹',
+  'methods.fuzzyDematel.steps.inverse.explanation':
+    'Birim matrisden X çıkarılarak elde edilen matrisin tersi; l matrisi, m matrisi ve u matrisi için ayrı ayrı hesaplanır ve bulanık sayı olarak birleştirilir.',
+  'methods.fuzzyDematel.steps.total-relation.name': 'Bulanık toplam ilişki matrisi T̃',
+  'methods.fuzzyDematel.steps.total-relation.explanation':
+    'T = X (I − X)⁻¹ işlemi l, m ve u matrisleri için ayrı ayrı yapılır: T_l = X_l (I − X_l)⁻¹, m ve u için de aynı.',
+  'methods.fuzzyDematel.steps.influence.name': 'Bulanık gönderilen ve alınan etki',
+  'methods.fuzzyDematel.steps.influence.explanation':
+    'D̃, T̃ matrisinin her satırının; R̃ her sütununun bileşen bileşen toplamıdır.',
+  'methods.fuzzyDematel.steps.fuzzy-prominence-relation.name': 'Bulanık öne çıkma ve ilişki',
+  'methods.fuzzyDematel.steps.fuzzy-prominence-relation.explanation':
+    'D̃ + R̃ ve D̃ − R̃, bulanık toplama ve çıkarma ile.',
+  'methods.fuzzyDematel.steps.defuzzified-total-relation.name': 'Kesin toplam ilişki matrisi',
+  'methods.fuzzyDematel.steps.defuzzified-total-relation.explanation':
+    'T̃ matrisinin her bulanık girdisi {defuzzification, select, centroid {ağırlık merkezi (l + m + u) / 3} graded-mean {dereceli ortalama (l + 4m + u) / 6} cfcs {CFCS yöntemi} other {seçilen formül}} ile durulaştırılır. Neden-sonuç haritasının eşiğini belirler.',
+  'methods.fuzzyDematel.steps.prominence-relation.name': 'Kesin öne çıkma ve ilişki',
+  'methods.fuzzyDematel.steps.prominence-relation.explanation':
+    'D̃ + R̃ ve D̃ − R̃, {defuzzification, select, centroid {ağırlık merkezi (l + m + u) / 3} graded-mean {dereceli ortalama (l + 4m + u) / 6} cfcs {CFCS yöntemi, her sütun kendi başına} other {seçilen formül}} ile durulaştırılır. Ağırlıklar ve neden ile sonuç grupları bu değerlerden gelir.',
+
   // ------------------------------------------------------------ validation
   'validation.marcos.reserved-alternative-id':
     '"{id}" alternatif kimliği MARCOS’un negatif ideal ya da ideal çözümüne ayrılmıştır.',
@@ -414,4 +531,12 @@ export const tr: Readonly<Record<MethodsMessageKey, string>> = {
     'Vektörler "{first}" ve "{second}" konusunda çelişiyor: en iyiden diğerlerine vektörü "{second}" kriterini, diğerlerinden en kötüye vektörü "{first}" kriterini daha önemli görüyor. Ağırlıklar yine hesaplanabilir, ancak tutarlılık düşük olacaktır.',
   'validation.bwm.threshold-unavailable':
     'Tutarlılık eşiği en çok {max, number} kriter için tanımlıdır, burada {count, number} kriter var. Ağırlıklar hesaplanır, ancak karşılaştırmaların kabul edilebilir olup olmadığı değerlendirilemez.',
+  'validation.dematel.relation-shape':
+    '{expert, number}. uzmanın matrisinde her faktör için bir satır ve bir sütun olmak üzere {order, number} satır ve {order, number} sütun bulunmalıdır.',
+  'validation.dematel.non-zero-diagonal':
+    '"{id}" faktörü kendi üzerinde etkili olarak değerlendirilmiş ({expert, number}. uzman). Formül izin verdiği için değer korunur. Kendi üzerine etki kastedilmiyorsa 0 yapın.',
+  'validation.dematel.zero-matrix':
+    'Tüm etkiler 0 olduğu için matris normalleştirilemez. En az bir ilişkiyi 0’dan büyük değerlendirin.',
+  'validation.dematel.near-singular':
+    'Toplam etki hesaplanamıyor: dolaylı etkiler sönmüyor (örneğin her faktör en büyük faktör kadar etki gönderiyor), bu yüzden I − X matrisi tersine çevrilemiyor (koşul sayısı {condition, number}). Bazı değerlendirmeleri düşürün veya normalleştirme sabiti olarak satır ve sütun toplamlarının büyüğünü kullanın.',
 };

@@ -4,7 +4,7 @@
  * placeholders.
  */
 import type { ParameterSchema, Trace } from '@mateo/engine';
-import { crispWeights, isTextKey, messageKeyForCode, runMethod } from '@mateo/engine';
+import { crispWeights, isTextKey, messageKeyForCode, runMethod, textLiteral } from '@mateo/engine';
 import { describe, expect, it } from 'vitest';
 import marcosFixture from '../marcos/fixtures/damjanovic-2022-s1.json';
 import fuzzyFixture from '../fuzzy-marcos/fixtures/stankovic-2020.json';
@@ -12,10 +12,12 @@ import type { MethodsMessageKey } from './index';
 import { loadHighsSolver } from '@mateo/solver';
 import bwmFixture from '../bwm/fixtures/rezaei-car.json';
 import fucomFixture from '../fucom/fixtures/pamucar-2018-example-2.json';
+import dematelFixture from '../dematel/fixtures/chen-2018.json';
 import lopcowFixture from '../lopcow/fixtures/biswas-2024.json';
 import {
   BWM_ISSUE_CODES,
   CRITIC_ISSUE_CODES,
+  DEMATEL_ISSUE_CODES,
   FUCOM_ISSUE_CODES,
   LOPCOW_ISSUE_CODES,
   FUZZY_MARCOS_ISSUE_CODES,
@@ -26,7 +28,9 @@ import {
   METHODS_MESSAGES,
   bwmMethod,
   criticMethod,
+  dematelMethod,
   fucomMethod,
+  fuzzyDematelMethod,
   lopcowMethod,
   fuzzyMarcosMethod,
   fuzzySwaraMethod,
@@ -92,6 +96,7 @@ describe('method messages', () => {
       ...Object.values(LOPCOW_ISSUE_CODES),
       ...Object.values(FUCOM_ISSUE_CODES),
       ...Object.values(BWM_ISSUE_CODES),
+      ...Object.values(DEMATEL_ISSUE_CODES),
     ]) {
       expect(known.has(messageKeyForCode(code)), code).toBe(true);
     }
@@ -107,8 +112,40 @@ describe('method messages', () => {
       othersToWorst: bwmFixture.input.othersToWorst,
     };
     const ranked = orderedCriteria(fucomFixture.input.ranking.map((id) => ({ id, name: id })));
+    const dematelInput = {
+      factors: dematelFixture.input.factors.map((id) => ({ id, name: textLiteral(id) })),
+      relations: [dematelFixture.input.directRelation, dematelFixture.input.directRelation],
+    };
+    const fuzzyDematelInput = {
+      ...dematelInput,
+      relations: dematelInput.relations.map((m) =>
+        m.map((row) => row.map((x) => ({ l: Math.max(x - 1, 0), m: x, u: x + 1 }))),
+      ),
+    };
     const traces = [
       runMethod(lopcowMethod, crispMatrixInput(lopcowFixture.input)).trace,
+      runMethod(dematelMethod, { ...dematelInput, relations: [dematelInput.relations[0]!] }).trace,
+      runMethod(dematelMethod, dematelInput, {
+        normalization: 'max-row-sum',
+        threshold: 'custom',
+        weightBasis: 'distance',
+      }).trace,
+      ...(['centroid', 'graded-mean', 'cfcs'] as const).flatMap((defuzzification) => [
+        runMethod(fuzzyDematelMethod, fuzzyDematelInput, { defuzzification }).trace,
+        runMethod(
+          fuzzyDematelMethod,
+          {
+            ...fuzzyDematelInput,
+            relations: [fuzzyDematelInput.relations[0]!],
+          },
+          {
+            defuzzification,
+            normalization: 'max-row-sum',
+            threshold: 'custom',
+            weightBasis: 'distance',
+          },
+        ).trace,
+      ]),
       runMethod(fucomMethod, {
         criteria: ranked,
         priorities: { kind: 'significance', values: fucomFixture.input.significance },
@@ -161,6 +198,8 @@ describe('method messages', () => {
       lopcowMethod,
       fucomMethod,
       bwmMethod,
+      dematelMethod,
+      fuzzyDematelMethod,
     ];
     const definitionKeys = methods.flatMap((method) => [
       method.nameKey,
