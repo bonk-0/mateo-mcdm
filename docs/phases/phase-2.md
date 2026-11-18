@@ -26,6 +26,17 @@
 - Every Phase 2 method and its fuzzy variant has a verified reference and at least one fixture with input and final result.
 - Methods without an accessible fuzzy worked example are listed with a proposal (defer, or alternative source).
 
+**Fuzzy-variant decisions (agreed after P2.1).** Only WASPAS and COPRAS have a TFN worked example that reproduces from an open-access source. The later sub-phases below follow this table; the reasons are on each method's page in `docs/methods/`.
+
+| Method | Fuzzy variant in Phase 2 |
+|---|---|
+| WASPAS | WASPAS-F (Turskis et al. 2015), golden test from its fixture |
+| COPRAS | Yazdani et al. 2011: centroid defuzzification, then crisp COPRAS, shown as two explicit steps; golden test from its fixture |
+| DEMATEL, MOORA, ARAS | Implemented from the formulas of the chosen paper and tested with property tests (crisp input gives the crisp result, l ≤ m ≤ u is preserved). Marked "not yet verified against a published example" in the Method Library until a golden test is added |
+| EDAS, CODAS | Deferred to P3.2: the authors' fuzzy versions use trapezoidal numbers |
+| VIKOR, BWM | Deferred: the fuzzy originals are paywalled; revisit when a reproducible source is available |
+| LOPCOW, FUCOM | Deferred: fuzzy data reaches them through the Hybrid Builder's explicit defuzzification step (P2.9) |
+
 ---
 
 ## P2.2 — Optimization solver and LOPCOW, FUCOM, BWM
@@ -34,9 +45,9 @@
 
 **Scope**
 - Integrate HiGHS (WebAssembly) behind a small `Solver` interface in `packages/engine`, running in a worker.
-- LOPCOW (classical and chosen fuzzy variant).
+- LOPCOW (classical; no fuzzy variant, see the P2.1 decisions).
 - FUCOM: comparative priorities, consistency (DFC), optimization model as in the reference.
-- BWM: nonlinear model where solvable exactly, and the linear model (Rezaei 2016); consistency ratio / indicator per reference.
+- BWM: nonlinear model where solvable exactly, and the linear model (Rezaei 2016); consistency ratio / indicator per reference. The nonlinear optimum is not unique in general: report ξ*, each weight's interval over the optimal set and the interval centres, never a single solver-dependent vertex.
 - Traces include the optimization model, solver status and the reported objective value (ξ or χ).
 
 **Out of scope:** UI (P2.7).
@@ -58,7 +69,8 @@
 
 **Scope**
 - Direct relation matrix (single or averaged experts), normalization, total relation matrix, prominence (D + R), relation (D − R), threshold options for the cause–effect map.
-- Fuzzy DEMATEL per P2.1 choice, with its defuzzification method.
+- Fuzzy DEMATEL per P2.1 choice (Lin & Wu 2008 structure, centroid defuzzification by default, CFCS as an option), with property tests until a reproducible published example is found.
+- Non-zero diagonal entries in the direct relation matrix produce a warning, not a silent change.
 - Weight derivation from prominence (documented formula), exposed as a weighting output so it can feed ranking methods.
 
 **Out of scope:** UI (P2.8).
@@ -78,11 +90,11 @@
 **Goal:** four ranking methods, classical and TFN.
 
 **Scope**
-- VIKOR (S, R, Q, parameter v, acceptable advantage and stability conditions, compromise set).
+- VIKOR (S, R, Q, parameter v with 0.5 as default and the Opricovic–Tzeng 2008 rule (n + 1)/(2n) as an option, acceptable advantage and stability conditions, compromise set).
 - EDAS (PDA, NDA, appraisal score).
-- CODAS (Euclidean and taxicab distances, threshold parameter τ).
-- WASPAS (WSM, WPM, λ parameter).
-- TFN variants per P2.1.
+- CODAS (Euclidean and taxicab distances, threshold parameter τ). Check Table 4 of the reference against the typeset PDF before adding it to the fixture.
+- WASPAS (WSM, WPM, λ parameter: fixed, optimal per alternative (Zavadskas et al. 2012) or pooled (WASPAS-F)).
+- TFN variant of WASPAS (WASPAS-F) per P2.1. Fuzzy VIKOR, EDAS and CODAS are not in Phase 2 (see the P2.1 decisions).
 - Traces with every intermediate table.
 
 **Out of scope:** UI (P2.6).
@@ -104,8 +116,8 @@
 **Scope**
 - COPRAS (S⁺, S⁻, relative significance, utility degree).
 - MOORA (ratio system and reference point; optionally full multiplicative form as a separate variant if the reference covers it).
-- ARAS (optimal alternative row, normalization, utility degree).
-- TFN variants per P2.1.
+- ARAS (optimal alternative row, entered by the user or defaulting to the column best, normalization, utility degree).
+- Fuzzy variants per the P2.1 decisions: fuzzy COPRAS as defuzzification followed by COPRAS; fuzzy MOORA (Brauers, Baležentis, Baležentis 2011) and ARAS-F (Turskis, Zavadskas 2010) with property tests.
 
 **Out of scope:** UI.
 
@@ -114,7 +126,7 @@
 **Deliverables:** three method packages with tests.
 
 **Done when**
-- Same criteria as P2.4.
+- Same criteria as P2.4; fuzzy MOORA and ARAS-F pass their property tests instead of a golden test.
 
 ---
 
@@ -125,7 +137,7 @@
 **Scope**
 - A generic ranking workspace driven by method metadata (inputs, parameters, trace steps), reusing the MARCOS workspace components where possible.
 - Parameter editors (v, τ, λ...) with translated help text.
-- Explain sequences for VIKOR, EDAS, CODAS, WASPAS, COPRAS, MOORA, ARAS (classical and fuzzy).
+- Explain sequences for VIKOR, EDAS, CODAS, WASPAS, COPRAS, MOORA, ARAS, and for the fuzzy variants that Phase 2 ships.
 - Results view support for method-specific outputs (for example VIKOR compromise set).
 
 **Out of scope:** comparison across methods (P2.10).
@@ -283,7 +295,7 @@
 
 ## Phase 2 exit criteria
 
-- All Phase 2 methods pass golden tests against verified references.
+- All Phase 2 methods pass golden tests against verified references (fuzzy DEMATEL, fuzzy MOORA and ARAS-F: property tests, per the P2.1 decisions).
 - Every method has a workspace, an Explain sequence and a Method Library page in TR and EN.
 - Every example combination in `base-plan.md` §13.1 runs in the Hybrid Builder.
 - Installers build in CI; no accessibility regressions.
