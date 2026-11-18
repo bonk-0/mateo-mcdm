@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "method": "aras",
+  "variant": "classical",
+  "numberType": "crisp",
+  "title": "Microclimate in office rooms: fourteen rooms, six criteria",
+  "source": {
+    "role": "original",
+    "citation": "Zavadskas, E. K., Turskis, Z. (2010). A new additive ratio assessment (ARAS) method in multicriteria decision-making. Technological and Economic Development of Economy, 16(2), 159-172.",
+    "doi": "10.3846/tede.2010.10",
+    "location": "Section 3 (Eqs. 1-10), Section 4, Tables 1-3",
+    "accessedVia": "https://jeelm.vgtu.lt/index.php/TEDE/article/download/5850/5093",
+    "note": "Read from the publisher's open-access PDF."
+  },
+  "precision": {
+    "decimals": 4,
+    "rule": "round-half-away-from-zero"
+  },
+  "input": {
+    "alternatives": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"],
+    "criteria": [
+      {
+        "id": "x1",
+        "direction": "benefit"
+      },
+      {
+        "id": "x2",
+        "direction": "benefit"
+      },
+      {
+        "id": "x3",
+        "direction": "benefit"
+      },
+      {
+        "id": "x4",
+        "direction": "benefit"
+      },
+      {
+        "id": "x5",
+        "direction": "cost"
+      },
+      {
+        "id": "x6",
+        "direction": "cost"
+      }
+    ],
+    "optimal": [15, 50, 24.5, 400, 0.05, 5],
+    "matrix": [
+      [7.6, 46, 18, 390, 0.1, 11],
+      [5.5, 32, 21, 360, 0.05, 11],
+      [5.3, 32, 21, 290, 0.05, 11],
+      [5.7, 37, 19, 270, 0.05, 9],
+      [4.2, 38, 19, 240, 0.1, 8],
+      [4.4, 38, 19, 260, 0.1, 8],
+      [3.9, 42, 16, 270, 0.1, 5],
+      [7.9, 44, 20, 390, 0.05, 6],
+      [8.1, 44, 20, 380, 0.05, 6],
+      [4.5, 46, 18, 320, 0.1, 7],
+      [5.7, 48, 20, 320, 0.05, 11],
+      [5.2, 48, 20, 310, 0.05, 11],
+      [7.1, 49, 19, 280, 0.1, 12],
+      [6.9, 50, 16, 250, 0.05, 10]
+    ],
+    "weights": [0.21, 0.16, 0.26, 0.17, 0.12, 0.08]
+  },
+  "parameters": {},
+  "steps": {
+    "normalizedMatrix": {
+      "printedIn": "Table 2 (row 0 is the optimal alternative)",
+      "values": [
+        [0.1546, 0.0776, 0.0843, 0.0846, 0.0833, 0.1067],
+        [0.0784, 0.0714, 0.062, 0.0825, 0.0417, 0.0485],
+        [0.0567, 0.0497, 0.0723, 0.0761, 0.0833, 0.0485],
+        [0.0546, 0.0497, 0.0723, 0.0613, 0.0833, 0.0485],
+        [0.0588, 0.0575, 0.0654, 0.0571, 0.0833, 0.0593],
+        [0.0433, 0.059, 0.0654, 0.0507, 0.0417, 0.0667],
+        [0.0454, 0.059, 0.0654, 0.055, 0.0417, 0.0667],
+        [0.0402, 0.0652, 0.0551, 0.0571, 0.0417, 0.1067],
+        [0.0814, 0.0683, 0.0688, 0.0825, 0.0833, 0.0889],
+        [0.0835, 0.0683, 0.0688, 0.0803, 0.0833, 0.0889],
+        [0.0464, 0.0714, 0.062, 0.0677, 0.0417, 0.0762],
+        [0.0588, 0.0745, 0.0688, 0.0677, 0.0833, 0.0485],
+        [0.0536, 0.0745, 0.0688, 0.0655, 0.0833, 0.0485],
+        [0.0732, 0.0761, 0.0654, 0.0592, 0.0417, 0.0444],
+        [0.0711, 0.0776, 0.0551, 0.0529, 0.0833, 0.0533]
+      ]
+    },
+    "weightedMatrix": {
+      "printedIn": "Table 3",
+      "values": [
+        [0.0325, 0.0124, 0.0219, 0.0144, 0.01, 0.0085],
+        [0.0165, 0.0114, 0.0161, 0.014, 0.005, 0.0039],
+        [0.0119, 0.008, 0.0188, 0.0129, 0.01, 0.0039],
+        [0.0115, 0.008, 0.0188, 0.0104, 0.01, 0.0039],
+        [0.0123, 0.0092, 0.017, 0.0097, 0.01, 0.0047],
+        [0.0091, 0.0094, 0.017, 0.0086, 0.005, 0.0053],
+        [0.0095, 0.0094, 0.017, 0.0093, 0.005, 0.0053],
+        [0.0084, 0.0104, 0.0143, 0.0097, 0.005, 0.0085],
+        [0.0171, 0.0109, 0.0179, 0.014, 0.01, 0.0071],
+        [0.0175, 0.0109, 0.0179, 0.0137, 0.01, 0.0071],
+        [0.0097, 0.0114, 0.0161, 0.0115, 0.005, 0.0061],
+        [0.0123, 0.0119, 0.0179, 0.0115, 0.01, 0.0039],
+        [0.0113, 0.0119, 0.0179, 0.0111, 0.01, 0.0039],
+        [0.0154, 0.0122, 0.017, 0.0101, 0.005, 0.0036],
+        [0.0149, 0.0124, 0.0143, 0.009, 0.01, 0.0043]
+      ]
+    },
+    "optimality": {
+      "printedIn": "Table 3, column S_i",
+      "values": [
+        0.0997, 0.0669, 0.0655, 0.0625, 0.063, 0.0545, 0.0556, 0.0564, 0.0771, 0.0771, 0.0599,
+        0.0675, 0.0661, 0.0632, 0.0649
+      ]
+    }
+  },
+  "result": {
+    "utility": {
+      "printedIn": "Table 3, column K_i",
+      "values": [
+        1.0, 0.6707, 0.6564, 0.6269, 0.6315, 0.5464, 0.558, 0.5659, 0.7727, 0.7734, 0.6004, 0.6773,
+        0.6628, 0.6334, 0.6511
+      ]
+    },
+    "ranking": {
+      "printedIn": "Table 3, column Rank",
+      "decimals": 0,
+      "values": [4, 6, 10, 9, 14, 13, 12, 2, 1, 11, 3, 5, 8, 7]
+    }
+  },
+  "deviations": [],
+  "notes": [
+    "Criteria: x1 amount of air per head (m3/h), x2 relative air humidity (%), x3 air temperature (C), x4 illumination during work hours (lx) are maximised; x5 rate of air flow (m/s) and x6 dew point (C) are minimised.",
+    "The optimal alternative (row 0) is set by the decision maker, not taken from the data: x1 = 15 and x2 = 50 exceed every room. Eq. 2 (max or min of the column) is only the default when no optimum is given, so the method must accept an explicit optimal row.",
+    "Cost criteria are normalised in two stages: x* = 1/x, then x* / sum x* over all rows including row 0 (Eq. 5). Utility K_i = S_i / S_0 (Eq. 10).",
+    "Input correction: Table 1 prints room 8's illumination x4 as 400 lx, but Tables 2 and 3 were computed with 390 lx (normalised 0.0825, the same as room 1, and a column sum of 4730 that makes the optimal 400 lx 0.0846). The fixture uses 390 so that it reproduces the paper; with 400 room 8 (K = 0.7762) would rank first instead of room 9.",
+    "Rooms 8 and 9 both print S = 0.0771; the ranking follows the unrounded K (0.7727 and 0.7734)."
+  ]
+}

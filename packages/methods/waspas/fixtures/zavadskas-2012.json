@@ -1,0 +1,190 @@
+{
+  "schemaVersion": 1,
+  "method": "waspas",
+  "variant": "classical",
+  "numberType": "crisp",
+  "title": "Building facade alternatives: four alternatives, twelve criteria",
+  "source": {
+    "role": "original",
+    "citation": "Zavadskas, E. K., Turskis, Z., Antucheviciene, J., Zakarevicius, A. (2012). Optimization of weighted aggregated sum product assessment. Elektronika ir Elektrotechnika, 122(6), 3-6.",
+    "doi": "10.5755/j01.eee.122.6.1810",
+    "location": "Eqs. 1-19, Tables 1-4",
+    "accessedVia": "https://eejournal.ktu.lt/index.php/elt/article/view/1810/1468",
+    "note": "Read from the publisher's open-access PDF. The 2012 paper prints only the normalised matrix; the raw decision matrix, criterion types and weights come from the same example in Zavadskas, Antucheviciene, Saparauskas, Turskis (2013), Economic Computation and Economic Cybernetics Studies and Research 47(2), 5-20, Table 2 (https://ecocyb.ase.ro/20132/Zavadskas%20(T).pdf)."
+  },
+  "precision": {
+    "decimals": 4,
+    "rule": "round-half-away-from-zero"
+  },
+  "input": {
+    "alternatives": ["a1", "a2", "a3", "a4"],
+    "criteria": [
+      {
+        "id": "x1",
+        "direction": "cost"
+      },
+      {
+        "id": "x2",
+        "direction": "cost"
+      },
+      {
+        "id": "x3",
+        "direction": "benefit"
+      },
+      {
+        "id": "x4",
+        "direction": "benefit"
+      },
+      {
+        "id": "x5",
+        "direction": "benefit"
+      },
+      {
+        "id": "x6",
+        "direction": "benefit"
+      },
+      {
+        "id": "x7",
+        "direction": "benefit"
+      },
+      {
+        "id": "x8",
+        "direction": "benefit"
+      },
+      {
+        "id": "x9",
+        "direction": "cost"
+      },
+      {
+        "id": "x10",
+        "direction": "cost"
+      },
+      {
+        "id": "x11",
+        "direction": "benefit"
+      },
+      {
+        "id": "x12",
+        "direction": "benefit"
+      }
+    ],
+    "matrix": [
+      [370, 11, 2.69, 2.75, 5, 1.63, 1.47, 7.11, 88, 410, 2.93, 1.98],
+      [314, 7, 3.37, 3.27, 35, 1.72, 2.07, 5.6, 12.6, 100, 2.13, 3.21],
+      [480, 10, 3.09, 3.67, 30, 1.87, 1.38, 7.82, 94, 410, 2.87, 2.94],
+      [850, 16, 3.17, 4.1, 50, 1.91, 2.22, 8.25, 23, 65, 1.1, 4.37]
+    ],
+    "weights": [
+      0.0627, 0.0508, 0.1114, 0.0874, 0.0625, 0.1183, 0.0784, 0.0984, 0.053, 0.1417, 0.0798, 0.0557
+    ]
+  },
+  "parameters": {
+    "lambda": "optimal",
+    "relativeError": 0.05
+  },
+  "steps": {
+    "normalizedMatrix": {
+      "printedIn": "Table 1",
+      "values": [
+        [0.8486, 0.6364, 0.7982, 0.6707, 1.0, 0.8534, 0.6622, 0.8618, 0.1432, 0.1585, 1.0, 0.4531],
+        [1.0, 1.0, 1.0, 0.7976, 0.7, 0.9005, 0.9324, 0.6788, 1.0, 0.65, 0.727, 0.7346],
+        [0.6542, 0.7, 0.9169, 0.8951, 0.6, 0.9791, 0.6216, 0.9479, 0.134, 0.1585, 0.9795, 0.6728],
+        [0.3694, 0.4375, 0.9407, 1.0, 1.0, 1.0, 1.0, 1.0, 0.5478, 1.0, 0.3754, 1.0]
+      ]
+    },
+    "wsm": {
+      "printedIn": "Table 2, column lambda = 1 (printed under 0 in the 2012 paper, see notes)",
+      "values": [0.612, 0.8292, 0.6972, 0.852]
+    },
+    "wpm": {
+      "printedIn": "Table 2, column lambda = 0 (printed under 1.0 in the 2012 paper, see notes)",
+      "values": [0.4912, 0.8173, 0.5873, 0.8015]
+    },
+    "optimalLambda": {
+      "printedIn": "Table 4",
+      "decimals": 2,
+      "values": [0.32, 0.49, 0.37, 0.43]
+    }
+  },
+  "result": {
+    "jointCriterion": {
+      "printedIn": "Table 4",
+      "values": [0.5303, 0.8232, 0.6284, 0.8233]
+    },
+    "ranking": {
+      "printedIn": "Table 4",
+      "decimals": 0,
+      "values": [4, 2, 3, 1]
+    }
+  },
+  "deviations": [
+    {
+      "path": "steps.normalizedMatrix.values[0][4]",
+      "printed": 1.0,
+      "recomputed": 0.1,
+      "note": "Table 1 prints 1.0000 for warranty 5 of a1; 5/50 = 0.1000. Typo in the table; Q1 and Q2 use 0.1000."
+    },
+    {
+      "path": "steps.wsm.values[0]",
+      "printed": 0.612,
+      "recomputed": 0.6121,
+      "note": "Recomputed 0.61210 rounds to 0.6121; printed 0.6120. Rounding."
+    },
+    {
+      "path": "steps.wsm.values[1]",
+      "printed": 0.8292,
+      "recomputed": 0.8288,
+      "note": "Printed WSM of a2-a4 is 3-4 units off in the fourth decimal while the WPM matches exactly; cause not identified (see notes)."
+    },
+    {
+      "path": "steps.wsm.values[2]",
+      "printed": 0.6972,
+      "recomputed": 0.6975,
+      "note": "Printed WSM of a2-a4 is 3-4 units off in the fourth decimal while the WPM matches exactly; cause not identified (see notes)."
+    },
+    {
+      "path": "steps.wsm.values[3]",
+      "printed": 0.852,
+      "recomputed": 0.8516,
+      "note": "Printed WSM of a2-a4 is 3-4 units off in the fourth decimal while the WPM matches exactly; cause not identified (see notes)."
+    },
+    {
+      "path": "steps.optimalLambda.values[0]",
+      "printed": 0.32,
+      "recomputed": 0.3425,
+      "note": "The paper computed the variance of a1 with the mistyped normalised value 1.0000 (Table 1), which gives lambda = 0.323; the correct value 0.1000 gives 0.343."
+    },
+    {
+      "path": "result.jointCriterion.values[0]",
+      "printed": 0.5303,
+      "recomputed": 0.5326,
+      "note": "Follows from the a1 variance computed with the mistyped 1.0000: lambda 0.323 gives 0.5303 exactly."
+    },
+    {
+      "path": "result.jointCriterion.values[1]",
+      "printed": 0.8232,
+      "recomputed": 0.823,
+      "note": "Follows from the printed WSM offset of this alternative; the ranking is unchanged."
+    },
+    {
+      "path": "result.jointCriterion.values[2]",
+      "printed": 0.6284,
+      "recomputed": 0.6285,
+      "note": "Follows from the printed WSM offset of this alternative; the ranking is unchanged."
+    },
+    {
+      "path": "result.jointCriterion.values[3]",
+      "printed": 0.8233,
+      "recomputed": 0.8231,
+      "note": "Follows from the printed WSM offset of this alternative; the ranking is unchanged."
+    }
+  ],
+  "notes": [
+    "Criterion types and weights from the 2013 paper, Table 2: x1 installation cost, x2 labour intensity, x9 weight of structure and x10 thickness are minimised; the rest are maximised. The 2012 paper lists the weights of Table 1 in the reverse column order; the normalised values identify the columns unambiguously.",
+    "Input correction: the 2013 paper prints x3 of a2 as 2.37, but the 2012 normalised value 1.0000 and every Q value require 3.37 (the column maximum). The fixture uses 3.37.",
+    "Table 2 prints Q(lambda) for lambda = 0, 0.1, ..., 1 and Table 3 the standard deviation of each. Q(lambda) is linear in lambda, so the fixture keeps only its two ends, the WPM (lambda = 0) and the WSM (lambda = 1). The 2012 paper labels the columns from 1.0 down to 0 although the first column is the WPM (a weighted geometric mean can never exceed the weighted arithmetic mean); the 2013 paper prints the same numbers against lambda = 0 ... 1.",
+    "The printed WPM values are reproduced exactly; the printed WSM values of a2, a3 and a4 differ from the recomputed ones by 3-4 units in the fourth decimal (0.8292 vs 0.8288, 0.6972 vs 0.6975, 0.8520 vs 0.8516) while a1 matches. No single input or weight change explains this pattern; it is recorded as a deviation and does not affect the ranking.",
+    "Optimal lambda per alternative (Eqs. 11-19): lambda = var(Q2) / (var(Q1) + var(Q2)) with var(Q1) = sum_j w_j^2 var(x_ij), var(Q2) = sum_j (Q2 w_j / x_ij)^2 var(x_ij) and var(x_ij) = (0.05 x_ij)^2.",
+    "The paper's Table 1 prints x5 of a1 (warranty 5 of 50) as 1.0000 instead of 0.1000. Q1 and Q2 use the correct value, but the variance of a1 was evidently computed with 1.0000: it gives sigma(WSM) = 0.0108, lambda = 0.32 and Q = 0.5303 exactly as printed, while the correct normalised value gives 0.0104, 0.343 and 0.5326. These are listed as deviations; the ranking is unchanged."
+  ]
+}

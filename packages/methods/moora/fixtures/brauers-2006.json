@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "method": "moora",
+  "variant": "classical",
+  "numberType": "crisp",
+  "title": "Privatisation projects: three projects, seven objectives",
+  "source": {
+    "role": "original",
+    "citation": "Brauers, W. K. M., Zavadskas, E. K. (2006). The MOORA method and its application to privatization in a transition economy. Control and Cybernetics, 35(2), 445-469.",
+    "url": "https://eudml.org/doc/209425",
+    "location": "Section 2 (Eqs. 1-4) and Table 1",
+    "accessedVia": "https://bibliotekanauki.pl/articles/969961.pdf",
+    "note": "The journal issued no DOI; the European Digital Mathematics Library record is the stable identifier. Read from the open-access copy in the Polish Library of Science."
+  },
+  "precision": {
+    "decimals": 5,
+    "rule": "round-half-away-from-zero"
+  },
+  "input": {
+    "alternatives": ["A", "B", "C"],
+    "criteria": [
+      {
+        "id": "IRR",
+        "direction": "benefit"
+      },
+      {
+        "id": "payback",
+        "direction": "cost"
+      },
+      {
+        "id": "productivity",
+        "direction": "benefit"
+      },
+      {
+        "id": "investment",
+        "direction": "benefit"
+      },
+      {
+        "id": "employment",
+        "direction": "benefit"
+      },
+      {
+        "id": "valueAdded",
+        "direction": "benefit"
+      },
+      {
+        "id": "balanceOfPayments",
+        "direction": "benefit"
+      }
+    ],
+    "matrix": [
+      [12, 5, 4, 4.5, 750, 700, 150],
+      [10, 7, 4, 3, 800, 600, 200],
+      [10, 8, 1, 2.5, 1000, 900, 225]
+    ]
+  },
+  "parameters": {},
+  "steps": {
+    "squareRoots": {
+      "printedIn": "Table 1, row \"square root\"",
+      "decimals": 4,
+      "values": [18.54723699, 11.7473401, 5.74456265, 5.9581876, 1484.08221, 1288.4099, 336.3406012]
+    },
+    "normalizedMatrix": {
+      "printedIn": "Table 1, ratios",
+      "decimals": 5,
+      "values": [
+        [0.646996639, 0.425628, 0.69631062, 0.7552632, 0.50536284, 0.54331, 0.445976488],
+        [0.539163866, 0.59588, 0.69631062, 0.5035088, 0.539054, 0.4656903, 0.594635317],
+        [0.539163866, 0.681005, 0.17407766, 0.4195907, 0.67381712, 0.6985355, 0.668964732]
+      ]
+    },
+    "deviations": {
+      "printedIn": "Table 1, reference point deviations",
+      "decimals": 5,
+      "values": [
+        [0, 0, 0, 0, 0.16845428, 0.15523, 0.222988244],
+        [0.107832773, 0.170251, 0, 0.2517544, 0.134763, 0.23285, 0.074329415],
+        [0.107832773, 0.255377, 0.52223297, 0.3356725, 0, 0, 0]
+      ]
+    }
+  },
+  "result": {
+    "ratioSystem": {
+      "printedIn": "Table 1, ratio system total",
+      "values": [3.16759, 2.74248, 2.49314]
+    },
+    "ratioSystemRanking": {
+      "printedIn": "Table 1, ratio system rank",
+      "decimals": 0,
+      "values": [1, 2, 3]
+    },
+    "maxDeviation": {
+      "printedIn": "Table 1, reference point, maximal deviation",
+      "values": [0.22299, 0.25174, 0.52223]
+    },
+    "referencePointRanking": {
+      "printedIn": "Table 1, reference point rank",
+      "decimals": 0,
+      "values": [1, 2, 3]
+    }
+  },
+  "deviations": [
+    {
+      "path": "result.maxDeviation.values[1]",
+      "printed": 0.25174,
+      "recomputed": 0.2518,
+      "note": "The printed maximal deviation of B is its investment deviation 0.2517544 truncated to five decimals (0.25174); rounded it is 0.25175."
+    }
+  ],
+  "notes": [
+    "Objectives: internal rate of return (%), payback period (years, minimised), productivity increase (%), new investment, new employment (jobs), discounted value added, balance of payments. All but payback are maximised.",
+    "No weights: the original MOORA treats all objectives as equally important (Section 4 discusses importance coefficients and sub-objectives as options). The ratio system adds the normalised maximised objectives and subtracts the minimised ones; a weighted variant multiplies each ratio by w_j before summing.",
+    "Vector normalisation x_ij / sqrt(sum_i x_ij^2) (Eq. 2). The reference point is the best normalised value per objective, and alternatives are ranked by the smallest maximal (Tchebycheff) deviation from it (Eq. 4).",
+    "The paper prints values to between three and nine decimals; each table uses the smallest number of decimals it prints in that block."
+  ]
+}

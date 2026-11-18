@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "method": "copras",
+  "variant": "classical",
+  "numberType": "crisp",
+  "title": "Three alternatives, four criteria (variant II of the SAW/COPRAS comparison)",
+  "source": {
+    "role": "substitute",
+    "citation": "Podvezko, V. (2011). The comparative analysis of MCDA methods SAW and COPRAS. Inzinerine Ekonomika - Engineering Economics, 22(2), 134-146.",
+    "doi": "10.5755/j01.ee.22.2.310",
+    "location": "Eqs. 6-11, Tables 7-8 (variant II)",
+    "accessedVia": "https://inzeko.ktu.lt/index.php/EE/article/view/310/829",
+    "note": "Open-access paper from the method's school (Vilnius Gediminas Technical University). The original COPRAS paper (Zavadskas, Kaklauskas, Sarka 1994, Technological and Economic Development of Economy 1(3), 131-139) is not available online; see docs/methods/copras.md."
+  },
+  "precision": {
+    "decimals": 3,
+    "rule": "round-half-away-from-zero"
+  },
+  "input": {
+    "alternatives": ["A1", "A2", "A3"],
+    "criteria": [
+      {
+        "id": "R1",
+        "direction": "benefit"
+      },
+      {
+        "id": "R2",
+        "direction": "benefit"
+      },
+      {
+        "id": "R3",
+        "direction": "cost"
+      },
+      {
+        "id": "R4",
+        "direction": "cost"
+      }
+    ],
+    "matrix": [
+      [42, 19, 13, 110],
+      [71, 18, 11, 200],
+      [53, 20, 12, 149]
+    ],
+    "weights": [0.26, 0.23, 0.24, 0.27]
+  },
+  "parameters": {},
+  "steps": {
+    "sPlus": {
+      "printedIn": "Table 8, COPRAS row S+j, variant II",
+      "values": [0.142, 0.184, 0.164]
+    },
+    "sMinus": {
+      "printedIn": "Table 8, COPRAS row S-j, variant II",
+      "values": [0.151, 0.191, 0.168]
+    }
+  },
+  "result": {
+    "relativeSignificance": {
+      "printedIn": "Table 8, COPRAS row Zj, variant II",
+      "values": [0.332, 0.334, 0.335]
+    },
+    "ranking": {
+      "printedIn": "Table 8, COPRAS row Rank, variant II",
+      "decimals": 0,
+      "values": [3, 2, 1]
+    }
+  },
+  "deviations": [],
+  "notes": [
+    "Normalisation is by the column sum, d_ij = w_j x_ij / sum_i x_ij, for both benefit and cost criteria (Eq. 6). S+ and S- sum the weighted values of the benefit and cost criteria.",
+    "Relative significance Q_j = S+_j + sum S- / (S-_j * sum (1 / S-)) (Eq. 11), the form with S-_min cancelled; Zavadskas et al. write it with S-_min (Eq. 8), which is algebraically identical. Utility degree N_j = 100 Q_j / max Q (not printed in this paper).",
+    "Variant I (x_41 = 105, x_42 = 215) is not used: the Z row printed for it repeats the variant II values, while its own S- and ranks (1, 3, 2) correspond to Z = 0.336, 0.328, 0.336. That is a printing error in Table 8.",
+    "The example shows COPRAS rank reversal under a small data change: variant I ranks A1 first, variant II ranks A3 first."
+  ]
+}

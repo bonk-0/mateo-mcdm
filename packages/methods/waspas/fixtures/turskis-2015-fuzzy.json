@@ -1,0 +1,279 @@
+{
+  "schemaVersion": 1,
+  "method": "waspas",
+  "variant": "tfn",
+  "numberType": "tfn",
+  "title": "Construction site selection: four sites, eight criteria (WASPAS-F)",
+  "source": {
+    "role": "original",
+    "citation": "Turskis, Z., Zavadskas, E. K., Antucheviciene, J., Kosareva, N. (2015). A hybrid model based on fuzzy AHP and fuzzy WASPAS for construction site selection. International Journal of Computers Communications & Control, 10(6), 873-888.",
+    "doi": "10.15837/ijccc.2015.6.2078",
+    "location": "Section 3 (Eqs. 13-24), Section 4, Tables 3-8",
+    "accessedVia": "https://core.ac.uk/download/236053616.pdf",
+    "note": "Read from the open-access PDF (CC BY-NC)."
+  },
+  "precision": {
+    "decimals": 2,
+    "rule": "round-half-away-from-zero"
+  },
+  "input": {
+    "alternatives": ["A1", "A2", "A3", "A4"],
+    "criteria": [
+      {
+        "id": "x1",
+        "direction": "benefit"
+      },
+      {
+        "id": "x2",
+        "direction": "benefit"
+      },
+      {
+        "id": "x3",
+        "direction": "benefit"
+      },
+      {
+        "id": "x4",
+        "direction": "benefit"
+      },
+      {
+        "id": "x5",
+        "direction": "benefit"
+      },
+      {
+        "id": "x6",
+        "direction": "benefit"
+      },
+      {
+        "id": "x7",
+        "direction": "benefit"
+      },
+      {
+        "id": "x8",
+        "direction": "benefit"
+      }
+    ],
+    "matrix": [
+      [
+        [0.5, 0.6, 0.7],
+        [0.6, 0.7, 0.8],
+        [0.8, 0.9, 1.0],
+        [0.5, 0.6, 0.7],
+        [0.8, 0.9, 1.0],
+        [0.5, 0.6, 0.7],
+        [0.4, 0.5, 0.6],
+        [0.5, 0.6, 0.7]
+      ],
+      [
+        [0.6, 0.7, 0.8],
+        [0.6, 0.7, 0.8],
+        [0.5, 0.6, 0.7],
+        [0.6, 0.7, 0.8],
+        [0.7, 0.8, 0.9],
+        [0.8, 0.9, 1.0],
+        [0.5, 0.6, 0.7],
+        [0.4, 0.5, 0.6]
+      ],
+      [
+        [0.6, 0.7, 0.8],
+        [0.8, 0.9, 1.0],
+        [0.6, 0.7, 0.8],
+        [0.5, 0.6, 0.7],
+        [0.6, 0.7, 0.8],
+        [0.6, 0.7, 0.8],
+        [0.8, 0.9, 1.0],
+        [0.4, 0.5, 0.6]
+      ],
+      [
+        [0.6, 0.7, 0.8],
+        [0.5, 0.6, 0.7],
+        [0.6, 0.7, 0.8],
+        [0.4, 0.5, 0.6],
+        [0.5, 0.6, 0.7],
+        [0.8, 0.9, 1.0],
+        [0.7, 0.8, 0.9],
+        [0.5, 0.6, 0.7]
+      ]
+    ],
+    "weights": [
+      [0.21, 0.28, 0.35],
+      [0.16, 0.2, 0.23],
+      [0.14, 0.16, 0.17],
+      [0.09, 0.12, 0.17],
+      [0.07, 0.08, 0.12],
+      [0.05, 0.06, 0.09],
+      [0.03, 0.05, 0.07],
+      [0.01, 0.03, 0.06]
+    ]
+  },
+  "parameters": {
+    "defuzzification": "centroid",
+    "lambda": "pooled"
+  },
+  "steps": {
+    "normalizedMatrix": {
+      "printedIn": "Table 5",
+      "values": [
+        [
+          [0.63, 0.75, 0.88],
+          [0.6, 0.7, 0.8],
+          [0.8, 0.9, 1.0],
+          [0.63, 0.75, 0.88],
+          [0.8, 0.9, 1.0],
+          [0.5, 0.6, 0.7],
+          [0.4, 0.5, 0.6],
+          [0.71, 0.86, 1.0]
+        ],
+        [
+          [0.75, 0.88, 1.0],
+          [0.6, 0.7, 0.8],
+          [0.5, 0.6, 0.7],
+          [0.75, 0.88, 1.0],
+          [0.7, 0.8, 0.9],
+          [0.8, 0.9, 1.0],
+          [0.5, 0.6, 0.7],
+          [0.57, 0.71, 0.86]
+        ],
+        [
+          [0.75, 0.88, 1.0],
+          [0.8, 0.9, 1.0],
+          [0.6, 0.7, 0.8],
+          [0.63, 0.75, 0.88],
+          [0.6, 0.7, 0.8],
+          [0.6, 0.7, 0.8],
+          [0.8, 0.9, 1.0],
+          [0.57, 0.71, 0.86]
+        ],
+        [
+          [0.75, 0.88, 1.0],
+          [0.5, 0.6, 0.7],
+          [0.6, 0.7, 0.8],
+          [0.5, 0.63, 0.75],
+          [0.5, 0.6, 0.7],
+          [0.8, 0.9, 1.0],
+          [0.7, 0.8, 0.9],
+          [0.71, 0.86, 1.0]
+        ]
+      ]
+    },
+    "wsmMatrix": {
+      "printedIn": "Table 6",
+      "values": [
+        [
+          [0.13, 0.21, 0.31],
+          [0.1, 0.14, 0.18],
+          [0.11, 0.14, 0.17],
+          [0.06, 0.09, 0.15],
+          [0.06, 0.07, 0.12],
+          [0.03, 0.04, 0.06],
+          [0.01, 0.03, 0.04],
+          [0.01, 0.03, 0.06]
+        ],
+        [
+          [0.16, 0.25, 0.35],
+          [0.1, 0.14, 0.18],
+          [0.07, 0.1, 0.12],
+          [0.07, 0.11, 0.17],
+          [0.05, 0.06, 0.11],
+          [0.04, 0.05, 0.09],
+          [0.02, 0.03, 0.05],
+          [0.01, 0.02, 0.05]
+        ],
+        [
+          [0.16, 0.25, 0.35],
+          [0.13, 0.18, 0.23],
+          [0.08, 0.11, 0.14],
+          [0.06, 0.09, 0.15],
+          [0.04, 0.06, 0.1],
+          [0.03, 0.04, 0.07],
+          [0.02, 0.05, 0.07],
+          [0.01, 0.02, 0.05]
+        ],
+        [
+          [0.16, 0.25, 0.35],
+          [0.08, 0.12, 0.16],
+          [0.08, 0.11, 0.14],
+          [0.05, 0.08, 0.13],
+          [0.04, 0.05, 0.08],
+          [0.04, 0.05, 0.09],
+          [0.02, 0.04, 0.06],
+          [0.01, 0.03, 0.06]
+        ]
+      ]
+    },
+    "wpmMatrix": {
+      "printedIn": "Table 7",
+      "values": [
+        [
+          [0.85, 0.92, 0.97],
+          [0.89, 0.93, 0.96],
+          [0.96, 0.98, 1.0],
+          [0.92, 0.97, 0.99],
+          [0.97, 0.99, 1.0],
+          [0.94, 0.97, 0.98],
+          [0.94, 0.97, 0.98],
+          [0.98, 1.0, 1.0]
+        ],
+        [
+          [0.9, 0.96, 1.0],
+          [0.89, 0.93, 0.96],
+          [0.89, 0.92, 0.95],
+          [0.95, 0.98, 1.0],
+          [0.96, 0.98, 0.99],
+          [0.98, 0.99, 1.0],
+          [0.95, 0.97, 0.99],
+          [0.97, 0.99, 1.0]
+        ],
+        [
+          [0.9, 0.96, 1.0],
+          [0.95, 0.98, 1.0],
+          [0.92, 0.94, 0.97],
+          [0.92, 0.97, 0.99],
+          [0.94, 0.97, 0.98],
+          [0.96, 0.98, 0.99],
+          [0.98, 0.99, 1.0],
+          [0.97, 0.99, 1.0]
+        ],
+        [
+          [0.9, 0.96, 1.0],
+          [0.85, 0.9, 0.94],
+          [0.92, 0.94, 0.97],
+          [0.89, 0.95, 0.97],
+          [0.92, 0.96, 0.98],
+          [0.98, 0.99, 1.0],
+          [0.98, 0.99, 1.0],
+          [0.98, 1.0, 1.0]
+        ]
+      ]
+    },
+    "crispWsm": {
+      "printedIn": "Table 8, row Q",
+      "values": [0.78, 0.79, 0.82, 0.75]
+    },
+    "crispWpm": {
+      "printedIn": "Table 8, row P",
+      "values": [0.74, 0.75, 0.79, 0.71]
+    },
+    "lambda": {
+      "printedIn": "Table 8, row lambda",
+      "values": 0.49
+    }
+  },
+  "result": {
+    "jointCriterion": {
+      "printedIn": "Table 8, row K",
+      "values": [0.76, 0.77, 0.8, 0.73]
+    },
+    "ranking": {
+      "printedIn": "Table 8, row Rank",
+      "decimals": 0,
+      "values": [3, 2, 1, 4]
+    }
+  },
+  "deviations": [],
+  "notes": [
+    "All eight criteria are maximised (Table 4, column \"max\"). The fuzzy weights come from the paper's fuzzy AHP step (Table 3); their modal values sum to 0.98 as printed.",
+    "Normalisation (Eq. 16) divides each benefit TFN by the largest upper value of its criterion; for a cost criterion it is min_i l_ij divided by the TFN, i.e. (min l / u, min l / m, min l / l). No cost criterion occurs in the example.",
+    "WSM cells are TFN products x_ij * w_j (Eq. 17). WPM cells use the power rule of Eq. 13: x^w = (x_l^w_u, x_m^w_m, x_u^w_l).",
+    "Q and P are the centroids (l + m + u)/3 of the summed WSM and multiplied WPM rows (Eqs. 19-22). lambda = sum P / (sum Q + sum P) is one value for all alternatives (Eq. 24), unlike the per-alternative optimum of Zavadskas et al. (2012); the method should expose both rules."
+  ]
+}

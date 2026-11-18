@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "method": "lopcow",
+  "variant": "classical",
+  "numberType": "crisp",
+  "title": "Energy-sector firms: eight alternatives, six criteria",
+  "source": {
+    "role": "substitute",
+    "citation": "Biswas, S., Pamucar, D., Dawn, S., Simic, V. (2024). Evaluation based on Relative Utility and Nonlinear Standardization (ERUNS) method for comparing firm performance in energy sector. Decision Making Advances, 2(1), 1-21.",
+    "doi": "10.31181/dma21202419",
+    "location": "Section 3 (Eqs. 10-13) and Section 5, Tables 4-6",
+    "accessedVia": "http://www.dma-journal.org/index.php/dema/article/download/19/10",
+    "note": "Open-access application co-authored by the method's second author. The original paper (Ecer and Pamucar 2022, Omega 112, 102690, doi:10.1016/j.omega.2022.102690) is paywalled; see docs/methods/lopcow.md."
+  },
+  "precision": {
+    "decimals": 3,
+    "rule": "round-half-away-from-zero"
+  },
+  "input": {
+    "alternatives": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"],
+    "criteria": [
+      {
+        "id": "C1",
+        "direction": "benefit"
+      },
+      {
+        "id": "C2",
+        "direction": "benefit"
+      },
+      {
+        "id": "C3",
+        "direction": "benefit"
+      },
+      {
+        "id": "C4",
+        "direction": "cost"
+      },
+      {
+        "id": "C5",
+        "direction": "benefit"
+      },
+      {
+        "id": "C6",
+        "direction": "benefit"
+      }
+    ],
+    "matrix": [
+      [74, 57, 64, 2.4, 1395.77, 1526.54],
+      [46, 59, 68, 0.86, 746.87, 1013.54],
+      [43, 70, 68, 1.2, 1100.04, 2138.67],
+      [45, 63, 66, 1.34, 1697.89, 3518.15],
+      [35, 55, 61, 0.1, 1900.25, 1622.89],
+      [56, 58, 62, 1.57, 1574.36, 2805.05],
+      [44, 67, 73, 0.46, 15772.1, 17040.29],
+      [51, 46, 58, 2.1, 607.91, 864.37]
+    ]
+  },
+  "parameters": {
+    "standardDeviation": "sample"
+  },
+  "steps": {
+    "normalizedMatrix": {
+      "printedIn": "Table 5",
+      "decimals": 4,
+      "values": [
+        [1.0, 0.4583, 0.4, 0.0, 0.052, 0.0409],
+        [0.2821, 0.5417, 0.6667, 0.6696, 0.0092, 0.0092],
+        [0.2051, 1.0, 0.6667, 0.5217, 0.0325, 0.0788],
+        [0.2564, 0.7083, 0.5333, 0.4609, 0.0719, 0.1641],
+        [0.0, 0.375, 0.2, 1.0, 0.0852, 0.0469],
+        [0.5385, 0.5, 0.2667, 0.3609, 0.0637, 0.12],
+        [0.2308, 0.875, 1.0, 0.8435, 1.0, 1.0],
+        [0.4103, 0.0, 0.0, 0.1304, 0.0, 0.0]
+      ]
+    },
+    "meanSquares": {
+      "printedIn": "Table 6, row \"Mean Square\"",
+      "values": [0.212, 0.395, 0.306, 0.349, 0.128, 0.131]
+    },
+    "standardDeviations": {
+      "printedIn": "Table 6, row sigma",
+      "values": [0.3, 0.311, 0.317, 0.339, 0.339, 0.335]
+    },
+    "percentageValues": {
+      "printedIn": "Table 6, row P_j",
+      "values": [42.858, 70.389, 55.69, 55.522, 5.214, 7.932]
+    },
+    "percentageValuesSum": {
+      "printedIn": "Table 6, row P_j, column Sum",
+      "values": 237.605
+    }
+  },
+  "result": {
+    "weights": {
+      "printedIn": "Table 6, row w_j",
+      "decimals": 4,
+      "values": [0.1804, 0.2962, 0.2344, 0.2337, 0.0219, 0.0334]
+    }
+  },
+  "deviations": [],
+  "notes": [
+    "Criteria: C1 environmental score, C2 social score, C3 governance score, C4 debt-to-equity ratio (cost), C5 market capitalisation, C6 enterprise value (Tables 3-4).",
+    "Normalisation is min-max: (x - min)/(max - min) for benefit and (max - x)/(max - min) for cost criteria (Eqs. 10-11).",
+    "The \"Mean Square\" row is (1/m) sum_i r_ij^2; the percentage value is PV_j = |ln(sqrt(mean square) / sigma_j) * 100| (Eq. 12).",
+    "sigma_j is the sample standard deviation (divisor m - 1) of the normalised column. The population standard deviation gives P_j = 49.534, 77.066, ... and does not match; the paper only says \"standard deviation\", so this fixture is what fixes the convention."
+  ]
+}

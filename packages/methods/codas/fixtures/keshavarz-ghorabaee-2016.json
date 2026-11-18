@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "method": "codas",
+  "variant": "classical",
+  "numberType": "crisp",
+  "title": "Industrial robot selection: seven robots, five criteria",
+  "source": {
+    "role": "original",
+    "citation": "Keshavarz Ghorabaee, M., Zavadskas, E. K., Turskis, Z., Antucheviciene, J. (2016). A new combinative distance-based assessment (CODAS) method for multi-criteria decision-making. Economic Computation and Economic Cybernetics Studies and Research, 50(3), 25-44.",
+    "url": "https://econpapers.repec.org/RePEc:cys:ecocyb:v:50:y:2016:i:3:p:25-44",
+    "location": "Section 2 (Eqs. 1-11) and Section 3.1, Tables 1-4",
+    "accessedVia": "https://etalpykla.vilniustech.lt/bitstream/handle/123456789/116529/ece_Vol50_No3_Keshavarz_25-44.pdf",
+    "note": "The journal issued no DOI for this volume; the RePEc handle RePEc:cys:ecocyb:v:50:y:2016:i:3:p:25-44 is the stable identifier. Read from the institutional repository copy of the published paper."
+  },
+  "precision": {
+    "decimals": 4,
+    "rule": "round-half-away-from-zero"
+  },
+  "input": {
+    "alternatives": ["A1", "A2", "A3", "A4", "A5", "A6", "A7"],
+    "criteria": [
+      {
+        "id": "LC",
+        "direction": "benefit"
+      },
+      {
+        "id": "RE",
+        "direction": "cost"
+      },
+      {
+        "id": "MTS",
+        "direction": "benefit"
+      },
+      {
+        "id": "MC",
+        "direction": "benefit"
+      },
+      {
+        "id": "MR",
+        "direction": "benefit"
+      }
+    ],
+    "matrix": [
+      [60, 0.4, 2540, 500, 990],
+      [6.35, 0.15, 1016, 3000, 1041],
+      [6.8, 0.1, 1727.2, 1500, 1676],
+      [10, 0.2, 1000, 2000, 965],
+      [2.5, 0.1, 560, 500, 915],
+      [4.5, 0.08, 1016, 350, 508],
+      [3, 0.1, 1778, 1000, 920]
+    ],
+    "weights": [0.036, 0.192, 0.326, 0.326, 0.12]
+  },
+  "parameters": {
+    "tau": 0.02
+  },
+  "steps": {
+    "normalizedMatrix": {
+      "printedIn": "Table 2",
+      "decimals": 3,
+      "values": [
+        [1.0, 0.2, 1.0, 0.167, 0.591],
+        [0.106, 0.533, 0.4, 1.0, 0.621],
+        [0.113, 0.8, 0.68, 0.5, 1.0],
+        [0.167, 0.4, 0.394, 0.667, 0.576],
+        [0.042, 0.8, 0.22, 0.167, 0.546],
+        [0.075, 1.0, 0.4, 0.117, 0.303],
+        [0.05, 0.8, 0.7, 0.333, 0.549]
+      ]
+    },
+    "weightedMatrix": {
+      "printedIn": "Table 3",
+      "values": [
+        [0.036, 0.0384, 0.326, 0.0543, 0.0709],
+        [0.0038, 0.1024, 0.1304, 0.326, 0.0745],
+        [0.0041, 0.1536, 0.2217, 0.163, 0.12],
+        [0.006, 0.0768, 0.1283, 0.2173, 0.0691],
+        [0.0015, 0.1536, 0.0719, 0.0543, 0.0655],
+        [0.0027, 0.192, 0.1304, 0.038, 0.0364],
+        [0.0018, 0.1536, 0.2282, 0.1087, 0.0659]
+      ]
+    },
+    "negativeIdeal": {
+      "printedIn": "Table 3, row ns",
+      "values": [0.0015, 0.0384, 0.0719, 0.038, 0.0364]
+    },
+    "euclideanDistances": {
+      "printedIn": "Table 3, column E_i",
+      "values": [0.2593, 0.3032, 0.2415, 0.1947, 0.1199, 0.1644, 0.2087]
+    },
+    "taxicabDistances": {
+      "printedIn": "Table 3, column T_i",
+      "values": [0.3394, 0.451, 0.4762, 0.3114, 0.1606, 0.2133, 0.372]
+    }
+  },
+  "result": {
+    "ranking": {
+      "printedIn": "Section 3.1, final ranking A2 > A3 > A1 > A7 > A4 > A6 > A5",
+      "decimals": 0,
+      "values": [3, 1, 2, 5, 7, 6, 4]
+    }
+  },
+  "deviations": [],
+  "notes": [
+    "Criteria: LC load capacity (kg), RE repeatability (mm, cost), MTS maximum tip speed (mm/s), MC memory capacity (points), MR manipulator reach (mm). The example is the robot-selection data set used throughout the MCDM literature.",
+    "Every printed value of Tables 2 and 3 is reproduced, including E_i and T_i.",
+    "Table 4 (relative assessment matrix and H_i) is deliberately not part of this fixture. The copy that could be read is not antisymmetric (h_47 = h_74 = -0.0746) and several entries match neither E_i - E_k nor Eq. (9); whether this is a printing error or an extraction error could not be settled without the typeset page. Recomputed with Eq. (9) and tau = 0.02, H = 0.5122, 1.4633, 1.0715, -0.2125, -1.8515, -1.1717, 0.1887, which gives exactly the printed ranking. P2.4 should confirm Table 4 against the PDF before adding it."
+  ]
+}
