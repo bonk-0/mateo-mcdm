@@ -104,6 +104,7 @@ mateo/
 │   ├── engine/         Pure TypeScript calculation engine, no UI dependencies
 │   ├── fuzzy/          Fuzzy number types and arithmetic (TFN, later trapezoidal etc.)
 │   ├── methods/        One folder per method, each with formulation, trace, tests
+│   ├── solver/         LP solver for the engine's `LinearSolver` interface (HiGHS, WebAssembly)
 │   ├── io/             Excel/CSV import and export, structure detection, locale parsing
 │   ├── project/        .mateo file format, schema, migrations, history
 │   ├── explain/        Turns engine traces into animation timelines
@@ -137,7 +138,7 @@ mateo/
 | Excel/CSV reading | SheetJS (reading XLSX/XLS/XLSM) + Papa Parse (CSV/TSV) | Broad format coverage, no macro execution. |
 | Excel writing | ExcelJS | Styled, multi-sheet workbooks. |
 | DOCX / PDF reports | `docx` library; PDF from a print-ready HTML report | Same report template feeds both outputs. |
-| Optimization (BWM, FUCOM) | HiGHS compiled to WebAssembly | Reliable LP/QP solver that runs locally. |
+| Optimization (BWM) | HiGHS compiled to WebAssembly | Reliable LP/QP solver that runs locally. FUCOM's model has a closed-form optimum and needs no solver (docs/methods/fucom.md). |
 | Storage | SQLite (`.mateo` file) via Tauri SQL plugin; SQLite WASM in the browser build | Single portable file, transactional, supports history. |
 | i18n | i18next with ICU message format; `Intl` for numbers and dates | Plurals, interpolation, locale-aware formatting. |
 | Testing | Vitest (unit, golden tests), Playwright (end-to-end) | Fast, TypeScript-native. |
@@ -158,7 +159,7 @@ Every method implements the same contract:
 - `inputSchema`: what it needs (decision matrix, directions, weights, expert judgements, pairwise comparisons...).
 - `parameters`: method options with defaults (for example WASPAS λ, VIKOR v).
 - `validate(input)`: returns errors and warnings.
-- `run(input, params)`: returns `{ result, trace }`.
+- `run(input, params, context)`: returns `{ result, trace }`. The context holds the services the method declares in `requires`, such as the linear solver of BWM; they are deterministic, so a run stays a pure function of input, parameters and service version.
 - `references`: verified citations for the formulation used.
 
 ### 6.2 Step trace

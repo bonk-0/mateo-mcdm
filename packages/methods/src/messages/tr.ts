@@ -231,6 +231,116 @@ export const tr: Readonly<Record<MethodsMessageKey, string>> = {
   'methods.fuzzySwara.steps.weights.explanation':
     'Her kesin ağırlık toplamlarına bölünür; böylece ağırlıkların toplamı 1 olur ve başka bir yönteme girdi olabilir.',
 
+  // ------------------------------------------------------------ LOPCOW
+  'methods.lopcow.name': 'LOPCOW',
+  'methods.lopcow.rows.meanSquare': 'Kareler ortalaması',
+  'methods.lopcow.rows.sigma': 'Standart sapma σ_j',
+  'methods.lopcow.rows.percentageValue': 'Yüzde değeri PV_j',
+  'methods.lopcow.rows.weight': 'Ağırlık w_j',
+  'methods.lopcow.steps.initial-matrix.name': 'Başlangıç karar matrisi',
+  'methods.lopcow.steps.initial-matrix.explanation':
+    'Her alternatifin her kriterdeki performansı, girildiği gibi.',
+  'methods.lopcow.steps.normalized-matrix.name': 'Normalize matris r_ij',
+  'methods.lopcow.steps.normalized-matrix.explanation':
+    'Her kriter [0, 1] aralığına ölçeklenir: en kötü değer 0, en iyi değer 1 olur. Fayda kriterinde en iyi değer en büyük, maliyet kriterinde en küçük değerdir.',
+  'methods.lopcow.steps.mean-squares.name': 'Kareler ortalaması',
+  'methods.lopcow.steps.mean-squares.explanation':
+    'Her kriterin normalize değerlerinin karelerinin ortalaması. Karekökü sütunun karesel ortalamasıdır.',
+  'methods.lopcow.steps.means.name': 'Sütun ortalamaları',
+  'methods.lopcow.steps.means.explanation':
+    'Sapmalar için gereken, her normalize sütunun ortalaması.',
+  'methods.lopcow.steps.deviations.name': 'Ortalamadan sapmalar d_ij',
+  'methods.lopcow.steps.deviations.explanation':
+    'Her normalize değerden sütununun ortalaması çıkarılır.',
+  'methods.lopcow.steps.standard-deviations.name': 'Standart sapmalar σ_j',
+  'methods.lopcow.steps.standard-deviations.explanation':
+    'Her normalize sütunun örneklem standart sapması (m − 1’e, yani alternatif sayısının bir eksiğine bölünür). Kaynak örneği bu tanım yeniden üretir.',
+  'methods.lopcow.steps.percentage-values.name': 'Yüzde değerleri PV_j',
+  'methods.lopcow.steps.percentage-values.explanation':
+    'Her kriterin karesel ortalaması ile standart sapması arasındaki logaritmik yüzde değişim: |ln(√(kareler ortalaması) / σ_j) · 100|. Kriterin yayılımının ortalama düzeyinden ne kadar farklı olduğunu ölçer.',
+  'methods.lopcow.steps.percentage-value-sum.name': 'Yüzde değerlerinin toplamı',
+  'methods.lopcow.steps.percentage-value-sum.explanation':
+    'Tüm kriterlerin yüzde değerlerinin toplamı.',
+  'methods.lopcow.steps.weights.name': 'Kriter ağırlıkları',
+  'methods.lopcow.steps.weights.explanation':
+    'Her yüzde değeri toplamlarına bölünür; böylece ağırlıkların toplamı 1 olur.',
+
+  // ------------------------------------------------------------ FUCOM
+  'methods.fucom.name': 'FUCOM',
+  'methods.fucom.rows.significance': 'Önem değeri ϖ',
+  'methods.fucom.rows.comparativePriority': 'Karşılaştırmalı öncelik φ_k/(k+1)',
+  'methods.fucom.rows.transitivePriority': 'Geçişli öncelik φ_k/(k+2)',
+  'methods.fucom.rows.relativeWeight': 'Göreli ağırlık v_j',
+  'methods.fucom.rows.weight': 'Ağırlık w_j',
+  'methods.fucom.rows.adjacentDeviation': '|w_k / w_(k+1) − φ_k/(k+1)|',
+  'methods.fucom.rows.transitiveDeviation': '|w_k / w_(k+2) − φ_k/(k+2)|',
+  'methods.fucom.reasons.firstPair':
+    'Geçişli koşul yok: bu kriter en önemli kriterin yalnızca bir sıra altında.',
+  'methods.fucom.steps.significance.name': 'Kriterlerin önem değerleri ϖ',
+  'methods.fucom.steps.significance.explanation':
+    'Uzmanın her kritere verdiği önem değeri, sıralama düzeninde. En önemli kriterin değeri en küçüktür; eşit değerler eşit önem demektir.',
+  'methods.fucom.steps.comparative-priorities.name': 'Karşılaştırmalı öncelikler φ',
+  'methods.fucom.steps.comparative-priorities.explanation':
+    'Her kriterin hemen altındaki kriterden kaç kat önemli olduğu; alttaki kriterin sütununda gösterilir. Önem değerlerinden, sonraki değerin bu değere bölümüdür.',
+  'methods.fucom.steps.transitive-priorities.name': 'Geçişli öncelikler',
+  'methods.fucom.steps.transitive-priorities.explanation':
+    'Bir kriterin iki sıra altındaki kritere göre önceliği: aradaki iki karşılaştırmalı önceliğin çarpımı. Tam tutarlılık, ağırlıkların bunlara da uymasını gerektirir.',
+  'methods.fucom.steps.relative-weights.name': 'Göreli ağırlıklar v_j',
+  'methods.fucom.steps.relative-weights.explanation':
+    'En önemli kriter 1 alır; sonraki her kriter, bir öncekinin değerinin aralarındaki karşılaştırmalı önceliğe bölümünü alır. Bu oranlar FUCOM modelinin tüm koşullarını tam olarak sağlar.',
+  'methods.fucom.steps.weights.name': 'Kriter ağırlıkları',
+  'methods.fucom.steps.weights.explanation':
+    'Her göreli ağırlık toplamlarına bölünür; böylece ağırlıkların toplamı 1 olur.',
+  'methods.fucom.steps.consistency-deviations.name': 'Tam tutarlılıktan sapmalar',
+  'methods.fucom.steps.consistency-deviations.explanation':
+    'FUCOM modelinin her koşulu son ağırlıklarla kontrol edilir: her ağırlık oranının karşılaştırmalı ya da geçişli öncelikten ne kadar uzak olduğu.',
+  'methods.fucom.steps.dfc.name': 'Tam tutarlılıktan sapma χ (DFC)',
+  'methods.fucom.steps.dfc.explanation':
+    'FUCOM modeli, tüm sapmaları sınırlayan χ değerini en küçük yapan ağırlıkları arar. Yukarıdaki ağırlıklar tüm koşulları sağladığı için χ 0’dır (son basamaklardaki yuvarlama dışında) ve başka bir ağırlık vektörü en iyi değildir.',
+
+  // ------------------------------------------------------------ BWM
+  'methods.bwm.name': 'BWM',
+  'methods.bwm.parameters.model.label': 'Model',
+  'methods.bwm.parameters.model.description':
+    'Doğrusal olmayan model yöntemin özgün hâlidir; en iyi ağırlıkları bir aralık oluşturabilir, bu yüzden her ağırlık bir aralık ve onun merkezi olarak verilir. Doğrusal modelin her zaman tek bir çözümü vardır.',
+  'methods.bwm.parameters.model.nonlinear': 'Doğrusal olmayan (Rezaei 2015)',
+  'methods.bwm.parameters.model.linear': 'Doğrusal (Rezaei 2016)',
+  'methods.bwm.rows.bestToOthers': 'En iyiden diğerlerine a_Bj',
+  'methods.bwm.rows.othersToWorst': 'Diğerlerinden en kötüye a_jW',
+  'methods.bwm.rows.lowerBound': 'En küçük optimal ağırlık',
+  'methods.bwm.rows.upperBound': 'En büyük optimal ağırlık',
+  'methods.bwm.rows.centre': 'Aralık merkezi c_j',
+  'methods.bwm.rows.weight': 'Ağırlık w_j',
+  'methods.bwm.steps.best-to-others.name': 'En iyiden diğerlerine vektörü',
+  'methods.bwm.steps.best-to-others.explanation':
+    'En iyi kriterin her kritere 1–9 ölçeğinde ne kadar tercih edildiği. En iyi kriterin kendisiyle karşılaştırması 1’dir.',
+  'methods.bwm.steps.others-to-worst.name': 'Diğerlerinden en kötüye vektörü',
+  'methods.bwm.steps.others-to-worst.explanation':
+    'Her kriterin en kötü kritere 1–9 ölçeğinde ne kadar tercih edildiği. En kötü kriterin kendisiyle karşılaştırması 1’dir.',
+  'methods.bwm.steps.optimal-xi.name': 'Optimal ξ*',
+  'methods.bwm.steps.optimal-xi.explanation':
+    'Her w_B / w_j ve w_j / w_W oranını belirtilen tercihten en fazla ξ uzakta tutan bir ağırlık vektörünün bulunduğu en küçük ξ. ξ sabitken koşullar doğrusaldır; bu yüzden ξ*, her adımda {solver} ile çözülen bir doğrusal programla ikiye bölme yöntemiyle bulunur. ξ* = 0, karşılaştırmaların tam tutarlı olduğu anlamına gelir.',
+  'methods.bwm.steps.weight-intervals.name': 'Optimal ağırlık aralıkları',
+  'methods.bwm.steps.weight-intervals.explanation':
+    'ξ* değerine birden fazla ağırlık vektörü ulaşabilir. Her kriter için bunların arasındaki en küçük ve en büyük ağırlık; her biri {solver} ile çözülen bir doğrusal programla bulunur.',
+  'methods.bwm.steps.interval-centres.name': 'Aralık merkezleri c_j',
+  'methods.bwm.steps.interval-centres.explanation':
+    'Her aralığın orta noktası; doğrusal olmayan model için önerilen temsilî ağırlık. Merkezlerin toplamı tam olarak 1 olmayabilir.',
+  'methods.bwm.steps.consistency-index.name': 'Tutarlılık indeksi CI',
+  'methods.bwm.steps.consistency-index.explanation':
+    'En iyi kriterin en kötü kritere tercihine (a_BW) göre ξ* değerinin alabileceği en büyük değer.',
+  'methods.bwm.steps.consistency-ratio.name': 'Tutarlılık oranı CR',
+  'methods.bwm.steps.consistency-ratio.explanation':
+    'ξ* değerinin tutarlılık indeksine bölümü: tam tutarlı karşılaştırmalarda 0, tutarlılık azaldıkça 1’e daha yakın.',
+  'methods.bwm.steps.weights.name': 'Kriter ağırlıkları',
+  'methods.bwm.steps.weights.explanation':
+    'Her aralık merkezi toplamlarına bölünür; böylece ağırlıkların toplamı 1 olur ve başka bir yöntemde kullanılabilir.',
+  'methods.bwm.steps.weights.linearExplanation':
+    'Doğrusal modelin {solver} ile çözülen optimal çözümünün ağırlıkları. Doğrusal modelin tek bir optimal çözümü vardır.',
+  'methods.bwm.steps.linear-xi.name': 'Optimal ξ^L*',
+  'methods.bwm.steps.linear-xi.explanation':
+    'Her |w_B − a_Bj · w_j| ve |w_j − a_jW · w_W| farkını en fazla ξ tutan bir ağırlık vektörünün bulunduğu en küçük ξ; {solver} ile çözülen bir doğrusal programla bulunur. ξ^L* değerinin kendisi tutarlılık göstergesidir: 0’a ne kadar yakınsa karşılaştırmalar o kadar tutarlıdır.',
+
   // ------------------------------------------------------------ validation
   'validation.marcos.reserved-alternative-id':
     '"{id}" alternatif kimliği MARCOS’un negatif ideal ya da ideal çözümüne ayrılmıştır.',
@@ -271,4 +381,22 @@ export const tr: Readonly<Record<MethodsMessageKey, string>> = {
     '"{term}" ölçek teriminin negatif bir bileşeni var, bu yüzden katsayısı 1’in altına düşebilir.',
   'validation.fuzzy-swara.first-assessment-ignored':
     'İlk kriterin değerlendirmesi yoktur. Değer yok sayılır.',
+  'validation.lopcow.zero-percentage-values':
+    'Bütün yüzde değerleri PV_j 0, bu yüzden ağırlıklar hesaplanamaz.',
+  'validation.fucom.ranking-violated':
+    '{value, number} önceliği sıralamayla çelişiyor. Kriterleri en önemliden en az önemliye sıralayın: karşılaştırmalı öncelikler en az 1 olmalı, önem değerleri azalmamalıdır.',
+  'validation.fucom.unknown-priority-kind':
+    'Öncelikler önem değerleri ya da karşılaştırmalı öncelikler olarak verilmelidir, "{kind}" olarak değil.',
+  'validation.bwm.unknown-criterion': '"{id}" kriterlerden biri değil.',
+  'validation.bwm.best-is-worst': '"{id}" kriteri hem en iyi hem en kötü olamaz.',
+  'validation.bwm.out-of-scale':
+    '{value, number} karşılaştırması {min, number} ile {max, number} arasındaki ölçeğin dışında.',
+  'validation.bwm.self-comparison':
+    '"{id}" kriterinin kendisiyle karşılaştırması {value, number} değil, 1 olmalıdır.',
+  'validation.bwm.best-worst-mismatch':
+    'En iyi kriterin en kötüye tercihi, en iyiden diğerlerine vektöründe {bestToWorst, number}, diğerlerinden en kötüye vektöründe {worstFromBest, number}. İkisi aynı değer olmalıdır.',
+  'validation.bwm.best-not-preferred':
+    'En iyi kriter en kötüye tercih edilmelidir (1’den büyük bir değer). İkisi eşit önemdeyse tüm kriterler eşit önemdedir.',
+  'validation.bwm.ordinal-inconsistency':
+    'Vektörler "{first}" ve "{second}" konusunda çelişiyor: en iyiden diğerlerine vektörü "{second}" kriterini, diğerlerinden en kötüye vektörü "{first}" kriterini daha önemli görüyor. Ağırlıklar yine hesaplanabilir, ancak tutarlılık düşük olacaktır.',
 };

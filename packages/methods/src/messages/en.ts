@@ -230,6 +230,116 @@ export const en = {
   'methods.fuzzySwara.steps.weights.explanation':
     'Each crisp weight divided by their sum, so the weights sum to 1 and can feed another method.',
 
+  // ------------------------------------------------------------ LOPCOW
+  'methods.lopcow.name': 'LOPCOW',
+  'methods.lopcow.rows.meanSquare': 'Mean square',
+  'methods.lopcow.rows.sigma': 'Standard deviation σ_j',
+  'methods.lopcow.rows.percentageValue': 'Percentage value PV_j',
+  'methods.lopcow.rows.weight': 'Weight w_j',
+  'methods.lopcow.steps.initial-matrix.name': 'Initial decision matrix',
+  'methods.lopcow.steps.initial-matrix.explanation':
+    'The performance of every alternative on every criterion, as entered.',
+  'methods.lopcow.steps.normalized-matrix.name': 'Normalized matrix r_ij',
+  'methods.lopcow.steps.normalized-matrix.explanation':
+    'Each criterion is rescaled to [0, 1]: the worst value becomes 0 and the best value 1. For a benefit criterion the best value is the largest; for a cost criterion it is the smallest.',
+  'methods.lopcow.steps.mean-squares.name': 'Mean squares',
+  'methods.lopcow.steps.mean-squares.explanation':
+    'The mean of the squared normalized values of each criterion. Its square root is the root mean square of the column.',
+  'methods.lopcow.steps.means.name': 'Column means',
+  'methods.lopcow.steps.means.explanation':
+    'The mean of each normalized column, needed for the deviations.',
+  'methods.lopcow.steps.deviations.name': 'Deviations from the mean d_ij',
+  'methods.lopcow.steps.deviations.explanation':
+    'Each normalized value minus the mean of its column.',
+  'methods.lopcow.steps.standard-deviations.name': 'Standard deviations σ_j',
+  'methods.lopcow.steps.standard-deviations.explanation':
+    'The sample standard deviation of each normalized column (divided by m − 1, the number of alternatives minus one). This is the convention that reproduces the reference example.',
+  'methods.lopcow.steps.percentage-values.name': 'Percentage values PV_j',
+  'methods.lopcow.steps.percentage-values.explanation':
+    'The logarithmic percentage change between the root mean square and the standard deviation of each criterion: |ln(√(mean square) / σ_j) · 100|. It measures how far the spread of a criterion differs from its average level.',
+  'methods.lopcow.steps.percentage-value-sum.name': 'Sum of the percentage values',
+  'methods.lopcow.steps.percentage-value-sum.explanation':
+    'The sum of the percentage values of all criteria.',
+  'methods.lopcow.steps.weights.name': 'Criterion weights',
+  'methods.lopcow.steps.weights.explanation':
+    'Each percentage value divided by their sum, so the weights sum to 1.',
+
+  // ------------------------------------------------------------ FUCOM
+  'methods.fucom.name': 'FUCOM',
+  'methods.fucom.rows.significance': 'Significance ϖ',
+  'methods.fucom.rows.comparativePriority': 'Comparative priority φ_k/(k+1)',
+  'methods.fucom.rows.transitivePriority': 'Transitive priority φ_k/(k+2)',
+  'methods.fucom.rows.relativeWeight': 'Relative weight v_j',
+  'methods.fucom.rows.weight': 'Weight w_j',
+  'methods.fucom.rows.adjacentDeviation': '|w_k / w_(k+1) − φ_k/(k+1)|',
+  'methods.fucom.rows.transitiveDeviation': '|w_k / w_(k+2) − φ_k/(k+2)|',
+  'methods.fucom.reasons.firstPair':
+    'No transitive condition: this criterion is only one place below the most important one.',
+  'methods.fucom.steps.significance.name': 'Significance of the criteria ϖ',
+  'methods.fucom.steps.significance.explanation':
+    'The significance the expert gave each criterion, in ranking order. The most important criterion has the smallest value; equal values mean equal importance.',
+  'methods.fucom.steps.comparative-priorities.name': 'Comparative priorities φ',
+  'methods.fucom.steps.comparative-priorities.explanation':
+    'How many times more important each criterion is than the one ranked just below it, shown under the lower-ranked criterion. From significance values it is the next value divided by this one.',
+  'methods.fucom.steps.transitive-priorities.name': 'Transitive priorities',
+  'methods.fucom.steps.transitive-priorities.explanation':
+    'The priority of a criterion over the one two places below it: the product of the two comparative priorities in between. Full consistency requires the weights to respect these too.',
+  'methods.fucom.steps.relative-weights.name': 'Relative weights v_j',
+  'methods.fucom.steps.relative-weights.explanation':
+    'The most important criterion gets 1; every following criterion gets the previous value divided by their comparative priority. These ratios meet every condition of the FUCOM model exactly.',
+  'methods.fucom.steps.weights.name': 'Criterion weights',
+  'methods.fucom.steps.weights.explanation':
+    'Each relative weight divided by their sum, so the weights sum to 1.',
+  'methods.fucom.steps.consistency-deviations.name': 'Deviations from full consistency',
+  'methods.fucom.steps.consistency-deviations.explanation':
+    'Every condition of the FUCOM model checked against the final weights: how far each weight ratio is from its comparative or transitive priority.',
+  'methods.fucom.steps.dfc.name': 'Deviation from full consistency χ (DFC)',
+  'methods.fucom.steps.dfc.explanation':
+    'The FUCOM model looks for the weights with the smallest χ that bounds every deviation. The weights above meet every condition, so χ is 0 (up to rounding in the last digits) and no other weights are optimal.',
+
+  // ------------------------------------------------------------ BWM
+  'methods.bwm.name': 'BWM',
+  'methods.bwm.parameters.model.label': 'Model',
+  'methods.bwm.parameters.model.description':
+    'The nonlinear model is the original method; its optimal weights may form a range, so each weight is reported as an interval and its centre. The linear model always has a single solution.',
+  'methods.bwm.parameters.model.nonlinear': 'Nonlinear (Rezaei 2015)',
+  'methods.bwm.parameters.model.linear': 'Linear (Rezaei 2016)',
+  'methods.bwm.rows.bestToOthers': 'Best to others a_Bj',
+  'methods.bwm.rows.othersToWorst': 'Others to worst a_jW',
+  'methods.bwm.rows.lowerBound': 'Smallest optimal weight',
+  'methods.bwm.rows.upperBound': 'Largest optimal weight',
+  'methods.bwm.rows.centre': 'Interval centre c_j',
+  'methods.bwm.rows.weight': 'Weight w_j',
+  'methods.bwm.steps.best-to-others.name': 'Best-to-others vector',
+  'methods.bwm.steps.best-to-others.explanation':
+    'How strongly the best criterion is preferred to each criterion, on 1–9. The best criterion compared with itself is 1.',
+  'methods.bwm.steps.others-to-worst.name': 'Others-to-worst vector',
+  'methods.bwm.steps.others-to-worst.explanation':
+    'How strongly each criterion is preferred to the worst criterion, on 1–9. The worst criterion compared with itself is 1.',
+  'methods.bwm.steps.optimal-xi.name': 'Optimal ξ*',
+  'methods.bwm.steps.optimal-xi.explanation':
+    'The smallest ξ for which some weights keep every ratio w_B / w_j and w_j / w_W within ξ of the stated preference. For a fixed ξ the conditions are linear, so ξ* is found by bisection with a linear programme at each step, solved with {solver}. ξ* = 0 means the comparisons are fully consistent.',
+  'methods.bwm.steps.weight-intervals.name': 'Optimal weight intervals',
+  'methods.bwm.steps.weight-intervals.explanation':
+    'Several weight vectors can reach ξ*. For each criterion, the smallest and the largest weight among all of them, each found with a linear programme solved with {solver}.',
+  'methods.bwm.steps.interval-centres.name': 'Interval centres c_j',
+  'methods.bwm.steps.interval-centres.explanation':
+    'The midpoint of each interval, the representative weight recommended for the nonlinear model. The centres need not sum to exactly 1.',
+  'methods.bwm.steps.consistency-index.name': 'Consistency index CI',
+  'methods.bwm.steps.consistency-index.explanation':
+    'The largest ξ* possible for the preference of the best over the worst criterion a_BW.',
+  'methods.bwm.steps.consistency-ratio.name': 'Consistency ratio CR',
+  'methods.bwm.steps.consistency-ratio.explanation':
+    'ξ* divided by the consistency index: 0 for fully consistent comparisons, closer to 1 for less consistent ones.',
+  'methods.bwm.steps.weights.name': 'Criterion weights',
+  'methods.bwm.steps.weights.explanation':
+    'Each interval centre divided by their sum, so the weights sum to 1 and can feed another method.',
+  'methods.bwm.steps.weights.linearExplanation':
+    'The weights of the optimal solution of the linear model, solved with {solver}. The linear model has a single optimal solution.',
+  'methods.bwm.steps.linear-xi.name': 'Optimal ξ^L*',
+  'methods.bwm.steps.linear-xi.explanation':
+    'The smallest ξ for which some weights keep every difference |w_B − a_Bj · w_j| and |w_j − a_jW · w_W| within ξ, found with a linear programme solved with {solver}. ξ^L* itself is the consistency indicator: the closer to 0, the more consistent the comparisons.',
+
   // ------------------------------------------------------------ validation
   'validation.marcos.reserved-alternative-id':
     'The alternative id "{id}" is reserved for the anti-ideal or ideal solution of MARCOS.',
@@ -270,6 +380,24 @@ export const en = {
     'The scale term "{term}" has a negative component, so its coefficient could fall below 1.',
   'validation.fuzzy-swara.first-assessment-ignored':
     'The first criterion has no assessment. The value is ignored.',
+  'validation.lopcow.zero-percentage-values':
+    'Every percentage value PV_j is 0, so the weights cannot be calculated.',
+  'validation.fucom.ranking-violated':
+    'The priority {value, number} contradicts the ranking. List the criteria from most to least important: comparative priorities must be at least 1 and significance values must not decrease.',
+  'validation.fucom.unknown-priority-kind':
+    'The priorities must be given as significance values or as comparative priorities, not "{kind}".',
+  'validation.bwm.unknown-criterion': '"{id}" is not one of the criteria.',
+  'validation.bwm.best-is-worst': 'Criterion "{id}" cannot be both the best and the worst.',
+  'validation.bwm.out-of-scale':
+    'The comparison {value, number} is outside the scale from {min, number} to {max, number}.',
+  'validation.bwm.self-comparison':
+    'Criterion "{id}" compared with itself must be 1, not {value, number}.',
+  'validation.bwm.best-worst-mismatch':
+    'The preference of the best over the worst criterion is {bestToWorst, number} in the best-to-others vector but {worstFromBest, number} in the others-to-worst vector. It must be the same value.',
+  'validation.bwm.best-not-preferred':
+    'The best criterion must be preferred to the worst (a value above 1). If they are equally important, all criteria are.',
+  'validation.bwm.ordinal-inconsistency':
+    'The vectors disagree on "{first}" and "{second}": the best-to-others vector ranks "{second}" higher, the others-to-worst vector ranks "{first}" higher. The weights can still be calculated, but the consistency will be poor.',
 } as const;
 
 export type MethodsMessageKey = keyof typeof en;
