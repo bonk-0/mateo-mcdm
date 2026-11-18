@@ -11,7 +11,7 @@
 **Goal:** verified sources and fixtures for Phase 3 methods.
 
 **Scope**
-- Verify references for FMEA (classical RPN, AIAG–VDA action priority, chosen fuzzy FMEA), Fine-Kinney (classical and chosen fuzzy variant), group aggregation operators, and trapezoidal variants of MARCOS and other methods that will support them.
+- Verify references for FMEA (classical RPN, AIAG–VDA action priority, chosen fuzzy FMEA), Fine-Kinney (classical and chosen fuzzy variant), group aggregation operators, and trapezoidal variants of MARCOS and other methods that will support them, including fuzzy EDAS (Keshavarz Ghorabaee et al. 2016) and fuzzy CODAS (Keshavarz Ghorabaee et al. 2017), deferred from Phase 2 because both are trapezoidal.
 - Fixtures and `docs/methods/*.md` as in P1.4.
 
 **Depends on:** Phase 2
