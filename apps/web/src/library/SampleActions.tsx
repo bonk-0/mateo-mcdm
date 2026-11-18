@@ -1,4 +1,4 @@
-import { addDataset } from '@mateo/project';
+import { addDataset, type ProjectSession } from '@mateo/project';
 import { Button } from '@mateo/ui';
 import { Download, FilePlus2, FlaskConical } from 'lucide-react';
 import { useState } from 'react';
@@ -19,6 +19,25 @@ import {
   sampleRoute,
   type SampleId,
 } from './samples';
+
+/**
+ * Adds a sample's decision problem to the project (once: opening it again reuses it) and
+ * returns the address that opens it in its step.
+ */
+export function addSample(
+  session: ProjectSession,
+  sampleId: SampleId,
+  names: { name: string; description: string },
+): string {
+  const id = sampleDatasetId(sampleId);
+  if (!session.document.model.datasets.some((dataset) => dataset.id === id)) {
+    session.execute(
+      addDataset(sampleDataset(sampleId, { ...names, now: new Date().toISOString() })),
+    );
+    session.history.sealMerge();
+  }
+  return sampleAddress(sampleRoute(sampleId), sampleId, id);
+}
 
 /** The sample of one variant: a CSV download and "Open in workspace with sample data". */
 export function SampleActions({ sampleId }: { sampleId: SampleId }) {
@@ -47,24 +66,16 @@ export function SampleActions({ sampleId }: { sampleId: SampleId }) {
       return;
     }
     try {
-      const id = sampleDatasetId(sampleId);
-      // Opening a sample twice reuses its decision problem instead of adding a copy.
-      if (!session.document.model.datasets.some((dataset) => dataset.id === id)) {
-        const fixture = sampleFixture(sampleId);
-        session.execute(
-          addDataset(
-            sampleDataset(sampleId, {
-              name: t('sample.datasetName', {
-                method: message(`methods.${methodKey(sampleId)}.name`),
-              }),
-              description: t('sample.datasetDescription', { doi: fixture.source.doi }),
-              now: new Date().toISOString(),
-            }),
-          ),
-        );
-        session.history.sealMerge();
-      }
-      void navigate(sampleAddress(sampleRoute(sampleId), sampleId, id));
+      void navigate(
+        addSample(session, sampleId, {
+          name: t('sample.datasetName', {
+            method: message(`methods.${methodKey(sampleId)}.name`),
+          }),
+          description: t('sample.datasetDescription', {
+            doi: sampleFixture(sampleId).source.doi,
+          }),
+        }),
+      );
     } catch (error) {
       setFailure(error instanceof Error ? error.message : String(error));
     }

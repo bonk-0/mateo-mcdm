@@ -29,10 +29,16 @@ async function rowTexts(page: Page, row: number): Promise<string[]> {
 }
 
 async function newDecisionProblem(page: Page): Promise<void> {
-  await page.goto('/#/matrix');
-  await page.getByRole('button', { name: 'New project' }).first().click();
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Blank table' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Create' }).click();
-  await page.getByRole('button', { name: 'Create decision problem' }).click();
+  await page.getByTestId('create-dataset').click();
+}
+
+/** Less frequent tools are in the "More" menu of the toolbar. */
+async function more(page: Page, testId: string): Promise<void> {
+  await page.getByTestId('more-actions').click();
+  await page.getByTestId(testId).click();
 }
 
 const saved = (page: Page) => page.getByTestId('save-status');
@@ -69,11 +75,13 @@ test('paste 10×6, edit, undo, redo, autosave and reopen without losing data', a
 
   // Reload: the app starts from nothing, then opens the saved project.
   await page.reload();
-  await page.getByRole('button', { name: 'Open project' }).first().click();
+  await page.goto('/#/');
+  await page.getByRole('button', { name: 'Open another project…' }).click();
   await page
     .getByRole('dialog')
     .getByRole('button', { name: /Untitled project/ })
     .click();
+  await page.getByTestId('continue').click();
   await expect(page.locator('.ag-row')).toHaveCount(10);
   const after = await Promise.all(Array.from({ length: 10 }, (_, r) => rowTexts(page, r)));
   expect(after).toEqual(before);
@@ -92,6 +100,7 @@ test('a triangular number with l > m is rejected with a translated message', asy
   await expect(page.locator('.ag-row')).toHaveCount(3);
 
   await cellAt(page, 0, 0).click();
+  await more(page, 'toggle-panel');
   await page.getByLabel('Number type').selectOption('tfn');
   await expect(cellAt(page, 0, 0)).toHaveText('(1, 1, 1)');
 
@@ -124,7 +133,7 @@ test('selection, bulk edit, insert and delete rows and columns', async ({ page }
   await expect(cellAt(page, 1, 0)).toHaveClass(/mt-selected/);
   await page.keyboard.press('Shift+ArrowRight');
   await expect(cellAt(page, 1, 1)).toHaveClass(/mt-selected/);
-  await page.getByTestId('bulk-edit').click();
+  await more(page, 'bulk-edit');
   await page.getByLabel('Operation').selectOption('multiply');
   await page.getByLabel('Number', { exact: true }).fill('10');
   await page.getByRole('button', { name: 'Apply' }).click();
@@ -135,7 +144,7 @@ test('selection, bulk edit, insert and delete rows and columns', async ({ page }
   // Insert a row below the selection and delete it again.
   await page.getByTestId('insert-row-below').click();
   await expect(page.locator('.ag-row')).toHaveCount(5);
-  await page.getByTestId('delete-rows').click();
+  await more(page, 'delete-rows');
   await expect(page.locator('.ag-row')).toHaveCount(3);
   await page.getByTestId('undo').click();
   await expect(page.locator('.ag-row')).toHaveCount(5);
@@ -151,6 +160,7 @@ test('selection, bulk edit, insert and delete rows and columns', async ({ page }
   expect(copied.split('\n')[0]).toBe('10\t20');
 
   // Search filters the rows.
+  await more(page, 'toggle-find');
   await page.getByRole('searchbox', { name: 'Search the matrix' }).fill('A1');
   await expect(page.locator('.ag-row')).toHaveCount(1);
 });

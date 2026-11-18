@@ -1,73 +1,80 @@
-import { Badge } from '@mateo/ui';
-import { ChevronRight, FileQuestion, FileText, Monitor } from 'lucide-react';
+import { cn } from '@mateo/ui';
+import { BookOpen, Settings } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import type { NavMatch } from '../navigation/navigation';
-import { isDesktop } from '../platform/runtime';
-import { useProjectState } from '../project/store';
-import { LanguageMenu, ThemeMenu } from './QuickSettings';
+import { Link, NavLink, useLocation } from 'react-router';
+import { findPage, pathOf } from '../navigation/navigation';
+import { useSession } from '../editor/session';
+import { LogoMark } from './Logo';
+import { ProjectMenu } from './ProjectMenu';
+import { Stepper } from './Stepper';
 
-export function TopBar({ match }: { match: NavMatch | undefined }) {
-  const { t } = useTranslation(['nav', 'shell', 'project']);
-  const { project } = useProjectState();
+function AreaLink({
+  to,
+  active,
+  label,
+  icon,
+}: {
+  to: string;
+  active: boolean;
+  label: string;
+  icon: React.ReactNode;
+}) {
   return (
-    <header className="flex h-14 shrink-0 items-center gap-3 border-b border-border bg-surface/80 px-5 backdrop-blur">
-      <nav aria-label={t('shell:breadcrumb')} className="min-w-0 flex-1">
-        <ol className="flex items-center gap-1.5 text-sm">
-          {match ? (
-            <>
-              {/* Skip the section when it repeats the page name (Home › Home). */}
-              {t(`nav:sections.${match.section.id}`) !== t(`nav:items.${match.item.id}.title`) && (
-                <>
-                  <li className="text-muted-foreground">{t(`nav:sections.${match.section.id}`)}</li>
-                  <li aria-hidden>
-                    <ChevronRight className="size-3.5 text-muted-foreground" />
-                  </li>
-                </>
-              )}
-              <li className="truncate font-medium text-foreground" aria-current="page">
-                {t(`nav:items.${match.item.id}.title`)}
-              </li>
-            </>
-          ) : (
-            <li className="font-medium text-foreground">{t('shell:notFound.title')}</li>
-          )}
-        </ol>
-      </nav>
+    <NavLink
+      to={to}
+      aria-current={active ? 'page' : undefined}
+      className={cn(
+        'inline-flex h-8 items-center gap-1.5 rounded-md px-2.5 text-sm transition-colors',
+        active
+          ? 'bg-accent text-accent-foreground'
+          : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+      )}
+    >
+      {icon}
+      <span className="hidden sm:inline">{label}</span>
+    </NavLink>
+  );
+}
 
-      {project ? (
-        <Badge
-          variant="outline"
-          className="hidden max-w-64 sm:inline-flex"
-          title={project.location}
-          data-testid="open-project"
+/**
+ * The only bar of the app: the project on the left, the steps of the decision in the
+ * middle, Learn and Settings on the right.
+ */
+export function TopBar() {
+  const { t } = useTranslation(['nav', 'shell']);
+  const { pathname } = useLocation();
+  const area = findPage(pathname)?.area;
+  const session = useSession();
+  return (
+    <header className="flex h-14 shrink-0 items-center gap-3 border-b border-border bg-surface px-4">
+      <div className="flex min-w-0 flex-1 items-center gap-2">
+        <Link
+          to="/"
+          className="flex shrink-0 items-center gap-2 rounded-md"
+          aria-label={t('shell:home')}
         >
-          <FileText className="size-3.5 shrink-0" aria-hidden />
-          <span className="truncate">{project.name}</span>
-          {project.isDirty && (
-            <span
-              className="size-1.5 shrink-0 rounded-full bg-primary"
-              role="img"
-              aria-label={t('project:unsavedChanges')}
-              title={t('project:unsavedChanges')}
-            />
-          )}
-        </Badge>
-      ) : (
-        <Badge variant="outline" className="hidden sm:inline-flex">
-          <FileQuestion className="size-3.5" aria-hidden />
-          {t('shell:noProject')}
-        </Badge>
-      )}
-      {!isDesktop() && (
-        <Badge variant="neutral" className="hidden md:inline-flex">
-          <Monitor className="size-3.5" aria-hidden />
-          {t('shell:browserBuild')}
-        </Badge>
-      )}
-      <div className="flex items-center gap-1">
-        <LanguageMenu />
-        <ThemeMenu />
+          <LogoMark className="size-7" />
+        </Link>
+        <ProjectMenu />
       </div>
+      <nav aria-label={t('shell:mainNavigation')} className="flex items-center gap-1">
+        {session && <Stepper />}
+        <span className="mx-2 hidden h-5 w-px bg-border md:block" aria-hidden />
+        <AreaLink
+          to={pathOf('library')}
+          active={area === 'learn'}
+          label={t('nav:areas.learn')}
+          icon={<BookOpen className="size-4" aria-hidden />}
+        />
+        <AreaLink
+          to={pathOf('languageFormats')}
+          active={area === 'settings'}
+          label={t('nav:areas.settings')}
+          icon={<Settings className="size-4" aria-hidden />}
+        />
+      </nav>
+      {/* Keeps the steps centred between the project name and the side links. */}
+      <div className="hidden flex-1 lg:block" aria-hidden />
     </header>
   );
 }

@@ -40,6 +40,11 @@ function makeDirty(): void {
   );
 }
 
+async function newProjectFromMenu(user: ReturnType<typeof userEvent.setup>): Promise<void> {
+  await user.click(screen.getByTestId('open-project'));
+  await user.click(await screen.findByRole('menuitem', { name: 'New project' }));
+}
+
 describe('project files in the app (browser build)', () => {
   afterEach(() => {
     autosaveSettings.delayMs = 1500;
@@ -55,10 +60,10 @@ describe('project files in the app (browser build)', () => {
 
   it('creates a project from the home screen and shows it in the top bar', async () => {
     const user = userEvent.setup();
-    renderApp('/');
+    const { router } = renderApp('/');
     await controller();
 
-    await user.click(await screen.findByRole('button', { name: 'New project' }));
+    await user.click(await screen.findByRole('button', { name: 'Blank table' }));
     const dialog = await screen.findByRole('dialog', { name: 'New project' });
     const name = within(dialog).getByLabelText('Project name');
     expect((name as HTMLInputElement).value).toBe('Untitled project');
@@ -69,8 +74,8 @@ describe('project files in the app (browser build)', () => {
     expect(await screen.findByText('Created “Suppliers”')).toBeTruthy();
     expect(within(screen.getByRole('banner')).getByText('Suppliers')).toBeTruthy();
     expect(await store.files!.list()).toEqual(['Suppliers.mateo']);
-    // The home screen lists it as a recent project.
-    expect(screen.getByRole('button', { name: 'Open Suppliers' })).toBeTruthy();
+    // A blank table is entered on the data step.
+    await waitFor(() => expect(router.state.location.pathname).toBe('/data'));
   });
 
   it('opens a stored project from the list', async () => {
@@ -83,7 +88,7 @@ describe('project files in the app (browser build)', () => {
     await screen.findByText('Created “Untitled project”');
     await act(() => projects.closeProject());
 
-    await user.click(screen.getByRole('button', { name: 'Open project' }));
+    await user.click(screen.getByRole('button', { name: 'Open another project…' }));
     const picker = await screen.findByRole('dialog', { name: 'Open a project' });
     await user.click(within(picker).getByRole('button', { name: 'Untitled project' }));
     expect(await screen.findByText('Opened “Untitled project”')).toBeTruthy();
@@ -132,7 +137,7 @@ describe('project files in the app (browser build)', () => {
       within(screen.getByRole('banner')).getByRole('img', { name: 'Unsaved changes' }),
     ).toBeTruthy();
 
-    await user.click(screen.getByRole('button', { name: 'New project' }));
+    await newProjectFromMenu(user);
     const question = await screen.findByRole('alertdialog', {
       name: 'Save the changes to “Untitled project”?',
     });
@@ -141,7 +146,7 @@ describe('project files in the app (browser build)', () => {
     expect(projects.getState().project).toMatchObject({ isDirty: true });
     expect(screen.queryByRole('dialog')).toBeNull();
 
-    await user.click(screen.getByRole('button', { name: 'New project' }));
+    await newProjectFromMenu(user);
     await user.click(
       within(await screen.findByRole('alertdialog')).getByRole('button', { name: 'Save' }),
     );

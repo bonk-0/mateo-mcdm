@@ -1,71 +1,39 @@
 {
-  "sections": {
-    "home": "Ana Sayfa",
-    "methods": "Yöntemler",
-    "analysis": "Analiz",
+  "areas": {
     "learn": "Öğren",
     "settings": "Ayarlar"
   },
+  "steps": {
+    "label": "Karar adımları",
+    "data": "Veriler",
+    "weights": "Ağırlıklar",
+    "result": "Sonuç",
+    "step": "Adım {number}/{total}"
+  },
   "items": {
-    "home": {
-      "title": "Ana Sayfa",
-      "description": "Bir proje başlatın, son çalışmalarınıza dönün ve Mateo’nun neler yapabildiğini görün."
+    "start": {
+      "title": "Başlangıç",
+      "description": "Tablonuzu getirin ve kararınızı verin."
     },
-    "projects": {
-      "title": "Projeler",
-      "description": ".mateo proje dosyaları oluşturun, açın, kaydedin ve son projelerinizi bulun."
+    "data": {
+      "title": "Veriler",
+      "description": "Alternatifleriniz ve kriterleriniz. Yazın ya da Excel’den yapıştırın."
     },
-    "dataCenter": {
-      "title": "Veri Merkezi",
-      "description": "Excel ve CSV dosyalarını içe aktarın, yapılarını denetleyin ve içe aktarma profillerini yeniden kullanın."
+    "dataSources": {
+      "title": "İçe aktarılan dosyalar",
+      "description": "İçe aktarılan her dosya projede aynen saklanır; içe aktarma geçmişi ve kaydedilen ayarlar da burada."
     },
-    "matrix": {
-      "title": "Karar Matrisi",
-      "description": "Alternatifleri, kriterleri ve değerleri tablo benzeri bir ızgarada yazın, yapıştırın ve düzenleyin."
+    "weights": {
+      "title": "Ağırlıklar",
+      "description": "Kriterler ne kadar önemli?"
     },
-    "weighting": {
-      "title": "Ağırlıklandırma",
-      "description": "Kriter ağırlıklarını CRITIC, MEREC ve SWARA ile belirleyin."
+    "result": {
+      "title": "Sonuç",
+      "description": "Alternatiflerinizin sıralaması."
     },
-    "ranking": {
-      "title": "Sıralama",
-      "description": "Alternatifleri MARCOS ve bulanık MARCOS ile sıralayın."
-    },
-    "dematel": {
-      "title": "DEMATEL",
-      "description": "Kriterler arasındaki neden-sonuç ilişkilerini haritalayın ve bunlardan ağırlık türetin."
-    },
-    "riskAssessment": {
-      "title": "Risk Değerlendirme",
-      "description": "Riskleri FMEA ve Fine-Kinney ile değerlendirin."
-    },
-    "hybridBuilder": {
-      "title": "Hibrit Oluşturucu",
-      "description": "Ağırlıklandırma ve sıralama yöntemlerini tek bir görsel akışta birleştirin."
-    },
-    "marcos": {
-      "title": "MARCOS Çalışma Alanı",
-      "description": "Klasik ve bulanık MARCOS’u çalıştırın, hesaplamanın her adımını izleyin."
-    },
-    "results": {
-      "title": "Sonuçlar",
-      "description": "Analizlerinizin sıralamaları, fayda fonksiyonları, ağırlıkları ve grafikleri."
-    },
-    "sensitivity": {
-      "title": "Duyarlılık",
-      "description": "Ağırlıkları değiştirin, sıralamanın anında nasıl tepki verdiğini izleyin."
-    },
-    "comparison": {
-      "title": "Yöntem Karşılaştırma",
-      "description": "Yöntemlerin sıralamalarını sıra korelasyonu ölçüleriyle karşılaştırın."
-    },
-    "groupDecisions": {
-      "title": "Grup Kararları",
-      "description": "Birden çok uzmanın değerlendirmesini tek bir kararda birleştirin."
-    },
-    "batch": {
-      "title": "Toplu Analiz",
-      "description": "Birçok analizi tek seferde çalıştırın."
+    "history": {
+      "title": "Önceki hesaplamalar",
+      "description": "Bu projede saklanan tüm hesaplamalar, tabloları ve grafikleriyle."
     },
     "library": {
       "title": "Yöntem Kütüphanesi",
@@ -74,10 +42,6 @@
     "playground": {
       "title": "Bulanık Deneme Alanı",
       "description": "Üçgen bulanık sayıları sürükleyin, aritmetik ve durulaştırma sonuçlarının anında güncellendiğini görün."
-    },
-    "practice": {
-      "title": "Alıştırma Merkezi",
-      "description": "Her yöntemi adım adım çalışmanız için rehberli alıştırmalar."
     },
     "languageFormats": {
       "title": "Dil ve Biçimler",
@@ -88,7 +52,7 @@
       "description": "Tema ve hareket."
     },
     "scales": {
-      "title": "Ölçekler ve Şablonlar",
+      "title": "Dilsel Ölçekler",
       "description": "Dilsel ölçekleri yönetin ve üyelik fonksiyonlarını önizleyin."
     },
     "about": {

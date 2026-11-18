@@ -1,83 +1,47 @@
 {
-  "sections": {
-    "home": "Home",
-    "methods": "Methods",
-    "analysis": "Analysis",
+  "areas": {
     "learn": "Learn",
     "settings": "Settings"
   },
+  "steps": {
+    "label": "Steps of the decision",
+    "data": "Data",
+    "weights": "Weights",
+    "result": "Result",
+    "step": "Step {number} of {total}"
+  },
   "items": {
-    "home": {
-      "title": "Home",
-      "description": "Start a project, pick up recent work and see what Mateo can do."
+    "start": {
+      "title": "Start",
+      "description": "Bring your table and make a decision."
     },
-    "projects": {
-      "title": "Projects",
-      "description": "Create, open and save .mateo project files, and find your recent projects."
+    "data": {
+      "title": "Data",
+      "description": "Your alternatives and criteria. Type, or paste from Excel."
     },
-    "dataCenter": {
-      "title": "Data Center",
-      "description": "Import Excel and CSV files, check their structure and reuse import profiles."
+    "dataSources": {
+      "title": "Imported files",
+      "description": "Every imported file is kept in the project exactly as it was, with the import history and saved import settings."
     },
-    "matrix": {
-      "title": "Decision Matrix",
-      "description": "Type, paste and edit alternatives, criteria and values in a spreadsheet-like grid."
+    "weights": {
+      "title": "Weights",
+      "description": "How important is each criterion?"
     },
-    "weighting": {
-      "title": "Weighting",
-      "description": "Derive criteria weights with CRITIC, MEREC and SWARA."
+    "result": {
+      "title": "Result",
+      "description": "The ranking of your alternatives."
     },
-    "ranking": {
-      "title": "Ranking",
-      "description": "Rank alternatives with MARCOS and Fuzzy MARCOS."
-    },
-    "dematel": {
-      "title": "DEMATEL",
-      "description": "Map cause and effect between criteria and derive weights from it."
-    },
-    "riskAssessment": {
-      "title": "Risk Assessment",
-      "description": "Assess risks with FMEA and Fine-Kinney."
-    },
-    "hybridBuilder": {
-      "title": "Hybrid Builder",
-      "description": "Chain weighting and ranking methods into one visual pipeline."
-    },
-    "marcos": {
-      "title": "MARCOS Workspace",
-      "description": "Run classical and fuzzy MARCOS and follow every step of the calculation."
-    },
-    "results": {
-      "title": "Results",
-      "description": "Rankings, utility functions, weights and charts for your analyses."
-    },
-    "sensitivity": {
-      "title": "Sensitivity",
-      "description": "Move weights and watch the ranking respond in real time."
-    },
-    "comparison": {
-      "title": "Method Comparison",
-      "description": "Compare rankings across methods with rank correlation measures."
-    },
-    "groupDecisions": {
-      "title": "Group Decisions",
-      "description": "Combine the judgements of several experts into one decision."
-    },
-    "batch": {
-      "title": "Batch Analysis",
-      "description": "Run many analyses in one go."
+    "history": {
+      "title": "Earlier calculations",
+      "description": "Every calculation stored in this project, with its tables and charts."
     },
     "library": {
       "title": "Method Library",
-      "description": "How each method works, its formulas and the paper it comes from."
+      "description": "How each method works, its formulas and the paper it is based on."
     },
     "playground": {
       "title": "Fuzzy Playground",
-      "description": "Drag triangular fuzzy numbers and see arithmetic and defuzzification update live."
-    },
-    "practice": {
-      "title": "Practice Center",
-      "description": "Guided exercises to practise each method step by step."
+      "description": "Drag triangular fuzzy numbers and watch arithmetic and defuzzification update instantly."
     },
     "languageFormats": {
       "title": "Language and Formats",
@@ -88,7 +52,7 @@
       "description": "Theme and motion."
     },
     "scales": {
-      "title": "Scales and Templates",
+      "title": "Linguistic Scales",
       "description": "Manage linguistic scales and preview their membership functions."
     },
     "about": {

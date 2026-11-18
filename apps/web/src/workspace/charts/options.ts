@@ -10,11 +10,11 @@ export interface ChartTheme {
 }
 
 export const FALLBACK_THEME: ChartTheme = {
-  text: '#0f1c36',
-  muted: '#4f5b70',
-  border: '#dde3ec',
+  text: '#1c1a2b',
+  muted: '#5f5d73',
+  border: '#dcd9e6',
   surface: '#ffffff',
-  series: ['#1f4fd1', '#0e9384', '#c2610c', '#8a3ffc', '#d12771'],
+  series: ['#2463d6', '#a85a12', '#127a6e', '#7a49c9', '#a03f78'],
 };
 
 /** Reads the theme tokens from the document. Falls back to the light theme where there are none (tests). */

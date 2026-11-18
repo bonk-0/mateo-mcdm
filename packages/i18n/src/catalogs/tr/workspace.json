@@ -1,21 +1,5 @@
 {
-  "run": "Çalıştır",
   "running": "Çalışıyor…",
-  "runFailed": "Hesaplama başarısız oldu: {message}",
-  "gate": {
-    "noProject": {
-      "title": "Açık bir proje yok",
-      "description": "Yöntemleri karar problemi üzerinde çalıştırmak için bir proje oluşturun veya açın."
-    },
-    "newProject": "Yeni proje",
-    "openProject": "Proje aç",
-    "noDataset": {
-      "title": "Bu projede henüz karar problemi yok",
-      "description": "Önce Karar Matrisi'nde alternatifleri, kriterleri ve değerleri ekleyin."
-    },
-    "toMatrix": "Karar Matrisi'ni aç",
-    "dataset": "Karar problemi"
-  },
   "problems": {
     "title": "Veriler henüz kullanılamıyor",
     "no-matrix": "Karar probleminin karar matrisi yok.",
@@ -59,99 +43,16 @@
     "steps": "Hesaplama adımları",
     "stepsHint": "Hesaplamanın her ara tablosu, motorun kaydettiği haliyle."
   },
-  "weighting": {
-    "method": "Ağırlıklandırma yöntemi",
-    "methodHint": {
-      "critic": "Kriterler arasındaki kontrast ve çatışmadan nesnel ağırlıklar.",
-      "merec": "Her kriterin çıkarılmasının etkisinden nesnel ağırlıklar.",
-      "swara": "Sıralı kriterlerin karşılaştırmalı önemlerinden öznel ağırlıklar.",
-      "fuzzySwara": "Dilsel karşılaştırmaları üçgensel bulanık sayılara çeviren SWARA."
-    },
-    "input": "Girdi",
-    "matrixInput": "{alternatives} alternatif ve {criteria} kriterli karar matrisini kullanır.",
-    "openMatrix": "Karar Matrisi'ni aç",
-    "moveUp": "{name} kriterini yukarı taşı",
-    "moveDown": "{name} kriterini aşağı taşı",
-    "swara": {
-      "hint": "Kriterleri en önemliden en az önemliye doğru sıralayın, sonra her kriterin bir üstündekine göre karşılaştırmalı önemini s_j olarak girin.",
-      "importance": "s_j",
-      "importanceOf": "{name} için karşılaştırmalı önem",
-      "incomplete": "İlk kriter dışındaki her kriter için karşılaştırmalı önemi girin."
-    },
-    "fuzzySwara": {
-      "hint": "Kriterleri en önemliden en az önemliye doğru sıralayın, sonra her birinin bir üstündekinden ne kadar daha az önemli olduğunu seçin.",
-      "term": "Karşılaştırma",
-      "termOf": "{name} için karşılaştırma",
-      "choose": "Seçin…",
-      "incomplete": "İlk kriter dışındaki her kriter için bir karşılaştırma seçin."
-    },
-    "useInMarcos": "Bu ağırlıkları MARCOS'ta kullan"
-  },
   "marcos": {
-    "overview": {
-      "title": "Genel bakış",
-      "text": "“{name}” karar problemi: {alternatives} alternatif, {criteria} kriter."
-    },
-    "input": {
-      "title": "Girdi verisi",
-      "empty": "Henüz veri yok.",
-      "caption": "Karar matrisi"
-    },
-    "criteria": {
-      "title": "Kriter yapılandırması",
-      "hint": "Fayda kriterlerinde büyük değer, maliyet kriterlerinde küçük değer daha iyidir. Karar Matrisi'nde değiştirebilirsiniz.",
-      "code": "Kod",
-      "name": "Ad",
-      "direction": "Yön",
-      "unit": "Birim",
-      "benefit": "Fayda",
-      "cost": "Maliyet"
-    },
     "weights": {
-      "title": "Ağırlık yapılandırması",
-      "source": {
-        "manual": "Ağırlıkları gireceğim",
-        "analysis": "Bir ağırlıklandırma analizini kullan",
-        "sample": "Yöntem kütüphanesi örneğinin ağırlıkları"
-      },
-      "sum": "Ağırlıkların toplamı: {sum}",
-      "equal": "Eşit ağırlıklarla doldur",
-      "incomplete": "Her kriter için bir ağırlık girin.",
-      "noAnalysis": "Önce bir ağırlıklandırma analizi seçin.",
-      "noneAvailable": "Bu karar problemi için henüz ağırlıklandırma analizi yok.",
-      "toWeighting": "Bir ağırlıklandırma yöntemi çalıştır",
-      "analysis": "Ağırlıklandırma analizi",
-      "choose": "Seçin…",
-      "stale": "Bu ağırlıklandırma analizi çalıştırıldıktan sonra veri değişti."
-    },
-    "model": {
-      "title": "Bulanık model",
-      "classical": {
-        "title": "Klasik MARCOS",
-        "hint": "Yalnızca düz sayılar."
-      },
-      "tfn": {
-        "title": "Bulanık MARCOS (TFN)",
-        "hint": "Üçgensel bulanık sayılar; düz sayılar ve dilsel terimler dönüştürülür."
-      }
-    },
-    "calculation": {
-      "title": "Hesaplama"
-    },
-    "results": {
-      "title": "Ara tablolar ve nihai sıralama",
-      "open": "Sonuçlar'da aç"
-    },
-    "sensitivity": {
-      "title": "Duyarlılık analizi"
+      "sum": "Ağırlıkların toplamı: {sum}"
     }
   },
   "results": {
     "empty": {
       "title": "Henüz analiz yok",
-      "description": "Bir ağırlıklandırma yöntemi veya MARCOS çalıştırın. Her çalıştırma projeye kaydedilir ve burada görünür.",
-      "weighting": "Ağırlıklandırma",
-      "marcos": "MARCOS"
+      "description": "Sonuç adımındaki her hesaplama projede saklanır ve burada görünür.",
+      "result": "Sonuca git"
     },
     "list": "Kayıtlı analizler",
     "kind": {
@@ -200,10 +101,5 @@
       "delete": "{name} senaryosunu sil",
       "best": "En iyi: {name}"
     }
-  },
-  "sensitivityPage": {
-    "choose": "Analiz",
-    "none": "Bu karar problemi için henüz MARCOS analizi yok.",
-    "toMarcos": "MARCOS'u çalıştır"
   }
 }

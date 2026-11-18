@@ -4,9 +4,10 @@ import { resolve } from 'node:path';
 const FIXTURES = resolve(import.meta.dirname, '../../../packages/io/fixtures/files');
 
 async function newProject(page: Page): Promise<void> {
-  await page.goto('/#/data-center');
-  await page.getByRole('button', { name: 'New project' }).first().click();
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Blank table' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Create' }).click();
+  // The data step of a new project starts with the import.
   await expect(page.getByTestId('import-file')).toBeVisible();
 }
 
@@ -47,7 +48,7 @@ test('imports a Turkish XLSX and an English CSV with fuzzy columns into editable
   await expect(page.locator('.ag-row[row-index="3"]').getByText('Çerkezköy')).toBeVisible();
 
   // --- EN-locale CSV with a fuzzy (l, m, u) layout.
-  await page.goto('/#/data-center');
+  await page.goto('/#/data/sources');
   await page.getByTestId('import-file').click();
   await page.getByTestId('import-file-input').setInputFiles({
     name: 'fuzzy-suppliers.csv',
@@ -74,7 +75,7 @@ test('imports a Turkish XLSX and an English CSV with fuzzy columns into editable
   await expect(page.locator('.ag-row[row-index="0"]').getByText(/5\.5/).first()).toBeVisible();
 
   // --- The Data Center lists both datasets, both original files and the history.
-  await page.getByRole('link', { name: 'Data Center' }).first().click();
+  await page.goto('/#/data/sources');
   await expect(page.getByTestId('dataset-list').getByRole('listitem')).toHaveCount(2);
   const files = page.getByTestId('file-list');
   await expect(files.getByText('08-tr-tez-tablosu.xlsx')).toBeVisible();
@@ -82,17 +83,18 @@ test('imports a Turkish XLSX and an English CSV with fuzzy columns into editable
   await expect(page.getByTestId('history-list').getByRole('listitem')).toHaveCount(2);
 
   // The project reopens with everything in place (the editor shows when autosave is done).
-  await page.goto('/#/matrix');
+  await page.goto('/#/data');
   await expect(page.getByTestId('save-status')).toHaveText('All changes saved', {
     timeout: 10_000,
   });
   await page.reload();
-  await page.getByRole('button', { name: 'Open project' }).first().click();
+  await page.goto('/#/');
+  await page.getByRole('button', { name: 'Open another project…' }).click();
   await page
     .getByRole('dialog')
     .getByRole('button', { name: /Untitled project/ })
     .click();
-  await page.getByRole('link', { name: 'Data Center' }).first().click();
+  await page.goto('/#/data/sources');
   await expect(page.getByTestId('dataset-list').getByRole('listitem')).toHaveCount(2);
   await expect(page.getByTestId('file-list').getByText('fuzzy-suppliers.csv')).toBeVisible();
 });

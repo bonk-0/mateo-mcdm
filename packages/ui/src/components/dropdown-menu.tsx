@@ -60,3 +60,53 @@ export function DropdownMenuRadioItem({
     </DropdownPrimitive.RadioItem>
   );
 }
+
+export function DropdownMenuItem({
+  className,
+  ...props
+}: ComponentProps<typeof DropdownPrimitive.Item>) {
+  return (
+    <DropdownPrimitive.Item
+      className={cn(
+        'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-muted [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-muted-foreground',
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+export function DropdownMenuCheckboxItem({
+  className,
+  children,
+  ...props
+}: ComponentProps<typeof DropdownPrimitive.CheckboxItem>) {
+  return (
+    <DropdownPrimitive.CheckboxItem
+      className={cn(
+        'relative flex cursor-default select-none items-center gap-2 rounded-sm py-1.5 pr-2 pl-8 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-muted',
+        className,
+      )}
+      {...props}
+    >
+      <span className="absolute left-2 flex size-4 items-center justify-center">
+        <DropdownPrimitive.ItemIndicator>
+          <Check className="size-4 text-primary" aria-hidden />
+        </DropdownPrimitive.ItemIndicator>
+      </span>
+      {children}
+    </DropdownPrimitive.CheckboxItem>
+  );
+}
+
+export function DropdownMenuSeparator({
+  className,
+  ...props
+}: ComponentProps<typeof DropdownPrimitive.Separator>) {
+  return (
+    <DropdownPrimitive.Separator
+      className={cn('-mx-1 my-1 h-px bg-border', className)}
+      {...props}
+    />
+  );
+}

@@ -1,7 +1,7 @@
 import type { Dataset, ProjectDocument, ProjectSession, StoredAnalysis } from '@mateo/project';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ExportButton } from './ExportDialog';
+import { ExportButton, ExportDialog } from './ExportDialog';
 import { analysisSource, matrixSource } from './sources';
 
 /** Exports a decision problem: its matrix (readable by the import again), criteria, alternatives and scales. */
@@ -29,6 +29,24 @@ export function MatrixExportButton({
       {...(testId ? { testId } : {})}
     />
   );
+}
+
+/** {@link MatrixExportButton} opened from a menu. */
+export function MatrixExportDialog({
+  document,
+  dataset,
+  onClose,
+}: {
+  document: ProjectDocument;
+  dataset: Dataset;
+  onClose: () => void;
+}) {
+  const { t, i18n } = useTranslation('export');
+  const source = useMemo(
+    () => matrixSource(i18n, document, dataset, (name) => t('fileName.matrix', { name })),
+    [i18n, document, dataset, t],
+  );
+  return <ExportDialog source={source} hint={t('matrixHint')} onClose={onClose} />;
 }
 
 /** Exports a stored analysis: its data, parameters, every step of the calculation and the results. */

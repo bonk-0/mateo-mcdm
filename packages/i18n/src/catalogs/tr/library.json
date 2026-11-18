@@ -42,10 +42,10 @@
     "noAnimation": "Bu yöntem için adım adım animasyon henüz yok. Aşağıdaki tablolar aynı hesabı gösterir: bir hücreyi açarak nasıl hesaplandığını görebilirsiniz."
   },
   "sample": {
-    "text": "Örnek, başvuru örneğinin kendisidir: makaledeki sayıların aynısı, böylece çalışma alanı basılı sonucu yeniden üretir.",
-    "textOrdered": "Örnek, kriterleri önem sırasıyla ve makaledeki değerlendirmelerle listeler. Çalışma alanı bunları sizin için doldurur.",
+    "text": "Örnek, başvuru örneğinin kendisidir: makaledeki sayıların aynısı, böylece Mateo basılı sonucu yeniden üretir.",
+    "textOrdered": "Örnek, kriterleri önem sırasıyla ve makaledeki değerlendirmelerle listeler. Mateo bunları sizin için doldurur.",
     "download": "Örnek veriyi indir (CSV)",
-    "open": "Örnek veriyle çalışma alanında aç",
+    "open": "Örnek veriyle dene",
     "openNew": "Proje oluştur ve örneği aç",
     "noProject": "Örnek, açık projeye yeni bir karar problemi olarak eklenir. Henüz açık bir proje yok.",
     "added": "Örnek veri projeye eklendi.",

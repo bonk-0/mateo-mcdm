@@ -1,11 +1,8 @@
 {
+  "appName": "Mateo",
+  "home": "Mateo, start page",
   "skipToContent": "Skip to content",
   "mainNavigation": "Main navigation",
-  "breadcrumb": "Breadcrumb",
-  "collapseSidebar": "Collapse sidebar",
-  "expandSidebar": "Expand sidebar",
-  "noProject": "No project open",
-  "browserBuild": "Browser build",
   "notifications": "Notifications",
   "closeNotification": "Close notification",
   "notFound": {
@@ -13,20 +10,7 @@
     "description": "This page does not exist. It may have moved, or the link may be incomplete."
   },
   "placeholder": {
-    "comingSoon": "Coming soon",
     "backHome": "Back to Home"
-  },
-  "language": {
-    "change": "Change language",
-    "label": "Language",
-    "system": "System ({language})"
-  },
-  "theme": {
-    "change": "Change theme",
-    "label": "Theme",
-    "system": "System",
-    "light": "Light",
-    "dark": "Dark"
   },
   "menu": {
     "file": "File",
@@ -53,6 +37,8 @@
     "services": "Services",
     "hide": "Hide Mateo",
     "hideOthers": "Hide Others",
-    "showAll": "Show All"
-  }
+    "showAll": "Show All",
+    "newProject": "New project"
+  },
+  "projectMenu": "Project menu"
 }

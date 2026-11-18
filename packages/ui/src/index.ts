@@ -22,10 +22,13 @@ export { Button, buttonVariants, type ButtonProps } from './components/button';
 export { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/card';
 export {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './components/dropdown-menu';
 export {

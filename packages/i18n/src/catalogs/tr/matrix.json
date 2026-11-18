@@ -28,19 +28,6 @@
     "unknownTerm": "“{term}”, bu kriterin ölçeğinde bir terim değil.",
     "label": "Sorun"
   },
-  "page": {
-    "noProject": {
-      "title": "Açık bir proje yok",
-      "description": "Karar matrisini düzenlemek için bir proje oluşturun veya açın."
-    },
-    "new": "Yeni proje",
-    "open": "Proje aç",
-    "noDataset": {
-      "title": "Bu projede henüz bir karar problemi yok",
-      "description": "Bir tane oluşturun, ardından alternatifleri, kriterleri ve değerleri yazın ya da yapıştırın."
-    },
-    "createDataset": "Karar problemi oluştur"
-  },
   "dataset": {
     "defaultName": "Karar problemi",
     "label": "Karar problemi",
@@ -60,23 +47,26 @@
     "redo": "Yinele",
     "redoWith": "Yinele: {label}",
     "insertRowAbove": "Üste satır ekle",
-    "insertRowBelow": "Alta satır ekle",
     "deleteRows": "Seçili satırları sil",
     "insertColumnLeft": "Sola sütun ekle",
-    "insertColumnRight": "Sağa sütun ekle",
     "deleteColumns": "Seçili sütunları sil",
     "bulkEdit": "Toplu düzenle",
-    "hint": "Bir hücre seçip Excel’den Ctrl+V ile yapıştırın. Shift+oklar seçimi genişletir.",
+    "hint": "Bir hücre seçip Excel’den Ctrl+V ile yapıştırın.",
     "search": "Matriste ara",
     "searchPlaceholder": "Ara…",
     "filters": "Sütun filtreleri",
     "onlyIssues": "Yalnızca sorunlu satırlar",
-    "clearView": "Sıralama ve filtreleri temizle",
     "viewActive": "Görünüm sıralı veya filtreli olduğundan satırlar sürüklenerek yeniden konumlandırılamaz.",
     "panel": {
-      "show": "Kriterleri ve alternatifleri göster",
-      "hide": "Kriterleri ve alternatifleri gizle"
-    }
+      "details": "Kriter ve alternatif ayrıntıları"
+    },
+    "addAlternative": "Alternatif",
+    "addCriterion": "Kriter",
+    "more": "Daha fazla",
+    "find": "Ara ve filtrele",
+    "import": "Dosya içe aktar…",
+    "export": "Dışa aktar…",
+    "sources": "İçe aktarılan dosyalar"
   },
   "summary": {
     "invalid": "{count, plural, other {# geçersiz hücre}}",
@@ -244,5 +234,13 @@
     "select": "Ölçek",
     "noScales": "Ölçek yok",
     "sourceEdited": "“{name}” temel alınmıştır"
+  },
+  "directions": {
+    "label": "Hangisi iyi:",
+    "benefit": "yüksek",
+    "cost": "düşük",
+    "toggle": "Yüksek iyi ile düşük iyi arasında geçmek için tıklayın",
+    "ariaBenefit": "{name}: yüksek değer iyi. Düşük iyiye çevir.",
+    "ariaCost": "{name}: düşük değer iyi. Yüksek iyiye çevir."
   }
 }

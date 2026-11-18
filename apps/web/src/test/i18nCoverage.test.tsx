@@ -2,12 +2,12 @@ import { screen, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { createAppI18n } from '../i18n/setup';
 import { sampleFixture, SAMPLE_IDS } from '../library/samples';
-import { visibleNavigation } from '../navigation/navigation';
+import { PAGES } from '../navigation/navigation';
 import { findUntranslated, pseudoProcessor } from './pseudo';
 import { renderApp } from './renderApp';
 
 const paths = [
-  ...visibleNavigation().flatMap((section) => section.items.map((item) => item.path)),
+  ...PAGES.map((page) => page.path),
   // Pages of the Method Library: a ranking method, a weighting method and the two-variant page.
   '/learn/library/marcos',
   '/learn/library/critic',

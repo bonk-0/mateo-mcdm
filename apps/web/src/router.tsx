@@ -1,79 +1,105 @@
-import type { ComponentType } from 'react';
-import { createHashRouter, type RouteObject } from 'react-router';
-import { visibleNavigation, type NavItemId } from './navigation/navigation';
-import { libraryPath } from './library/methods';
-import { HomePage } from './routes/HomePage';
+import { createHashRouter, Navigate, useLocation, type RouteObject } from 'react-router';
+import { REDIRECTS } from './navigation/navigation';
 import { NotFoundPage } from './routes/NotFoundPage';
-import { PlaceholderPage } from './routes/PlaceholderPage';
+import { StartPage } from './routes/StartPage';
 import { AboutPage } from './routes/settings/AboutPage';
 import { AppearancePage } from './routes/settings/AppearancePage';
 import { LanguageFormatsPage } from './routes/settings/LanguageFormatsPage';
 import { AppShell } from './shell/AppShell';
+import { AreaLayout } from './shell/AreaLayout';
 
-/** Screens that exist in P1.7. Every other visible item renders a placeholder. */
-const SCREENS: Partial<Record<NavItemId, () => React.JSX.Element>> = {
-  home: HomePage,
-  languageFormats: LanguageFormatsPage,
-  appearance: AppearancePage,
-  about: AboutPage,
-};
+/** Sends an old address to its new page and keeps the query, so sample links still apply. */
+function Redirect({ to }: { to: string }) {
+  const { search } = useLocation();
+  return <Navigate to={`${to}${search}`} replace />;
+}
 
-/**
- * Screens loaded on first visit. The matrix editor brings the spreadsheet grid with it,
- * which would otherwise make every start of the app slower.
+/*
+ * Screens below are loaded on first visit. The data step brings the spreadsheet grid with
+ * it and the weights and result steps bring the charts, which would otherwise make every
+ * start of the app slower.
  */
-const LAZY_SCREENS: Partial<Record<NavItemId, () => Promise<{ Component: ComponentType }>>> = {
-  dataCenter: () =>
-    import('./dataCenter/DataCenterPage').then((module) => ({
-      Component: module.DataCenterPage,
-    })),
-  matrix: () => import('./editor/EditorPage').then((module) => ({ Component: module.EditorPage })),
-  scales: () =>
-    import('./editor/ScaleManager').then((module) => ({ Component: module.ScaleManagerPage })),
-  library: () =>
-    import('./library/LibraryIndexPage').then((module) => ({
-      Component: module.LibraryIndexPage,
-    })),
-  // The workspaces bring the charts with them.
-  weighting: () =>
-    import('./workspace/WeightingPage').then((module) => ({ Component: module.WeightingPage })),
-  ranking: () =>
-    import('./workspace/MarcosPage').then((module) => ({ Component: module.MarcosPage })),
-  marcos: () =>
-    import('./workspace/MarcosPage').then((module) => ({ Component: module.MarcosPage })),
-  sensitivity: () =>
-    import('./workspace/SensitivityPage').then((module) => ({
-      Component: module.SensitivityPage,
-    })),
-  playground: () =>
-    import('./tfn/FuzzyPlayground').then((module) => ({ Component: module.FuzzyPlayground })),
-  results: () =>
-    import('./workspace/ResultsPage').then((module) => ({ Component: module.ResultsPage })),
-};
 
 export function buildRoutes(): RouteObject[] {
-  const children: RouteObject[] = visibleNavigation().flatMap((section) =>
-    section.items.map((item) => {
-      const Screen = SCREENS[item.id];
-      const lazy = LAZY_SCREENS[item.id];
-      if (lazy) return { path: item.path, lazy };
-      return {
-        path: item.path,
-        element: Screen ? <Screen /> : <PlaceholderPage item={item} />,
-      };
-    }),
-  );
   return [
     {
       element: <AppShell />,
       HydrateFallback: () => null,
       children: [
-        ...children,
+        { index: true, element: <StartPage /> },
         {
-          path: `${libraryPath()}/:pageId`,
+          path: 'data',
           lazy: () =>
-            import('./library/MethodPage').then((module) => ({ Component: module.MethodPage })),
+            import('./editor/EditorPage').then((module) => ({ Component: module.EditorPage })),
         },
+        {
+          path: 'data/sources',
+          lazy: () =>
+            import('./dataCenter/DataCenterPage').then((module) => ({
+              Component: module.DataCenterPage,
+            })),
+        },
+        {
+          path: 'weights',
+          lazy: () =>
+            import('./flow/WeightsStep').then((module) => ({ Component: module.WeightsStep })),
+        },
+        {
+          path: 'result',
+          lazy: () =>
+            import('./flow/ResultStep').then((module) => ({ Component: module.ResultStep })),
+        },
+        {
+          path: 'result/history',
+          lazy: () =>
+            import('./workspace/ResultsPage').then((module) => ({ Component: module.ResultsPage })),
+        },
+        {
+          path: 'learn',
+          element: <AreaLayout area="learn" />,
+          children: [
+            { index: true, element: <Redirect to="/learn/library" /> },
+            {
+              path: 'library',
+              lazy: () =>
+                import('./library/LibraryIndexPage').then((module) => ({
+                  Component: module.LibraryIndexPage,
+                })),
+            },
+            {
+              path: 'library/:pageId',
+              lazy: () =>
+                import('./library/MethodPage').then((module) => ({
+                  Component: module.MethodPage,
+                })),
+            },
+            {
+              path: 'playground',
+              lazy: () =>
+                import('./tfn/FuzzyPlayground').then((module) => ({
+                  Component: module.FuzzyPlayground,
+                })),
+            },
+          ],
+        },
+        {
+          path: 'settings',
+          element: <AreaLayout area="settings" />,
+          children: [
+            { index: true, element: <Redirect to="/settings/language" /> },
+            { path: 'language', element: <LanguageFormatsPage /> },
+            { path: 'appearance', element: <AppearancePage /> },
+            {
+              path: 'scales',
+              lazy: () =>
+                import('./editor/ScaleManager').then((module) => ({
+                  Component: module.ScaleManagerPage,
+                })),
+            },
+            { path: 'about', element: <AboutPage /> },
+          ],
+        },
+        ...REDIRECTS.map(([from, to]) => ({ path: from, element: <Redirect to={to} /> })),
         { path: '*', element: <NotFoundPage /> },
       ],
     },

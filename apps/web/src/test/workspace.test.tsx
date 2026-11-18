@@ -107,13 +107,6 @@ function engineMatrix() {
   };
 }
 
-/**
- * The shell fades pages in and out. While the previous page is still leaving, the new page
- * can be replaced once by an identical one, which would drop what a test just typed.
- * Waiting for the transition to end keeps the tests deterministic under load.
- */
-const settleTransition = () => new Promise((resolve) => setTimeout(resolve, 700));
-
 async function openProjectWithData(
   user: ReturnType<typeof userEvent.setup>,
 ): Promise<ProjectSession> {
@@ -130,7 +123,37 @@ async function openProjectWithData(
   return session;
 }
 
-describe('method workspaces', () => {
+/**
+ * The shell fades pages in and out. While the previous page is still leaving, the new page
+ * can be replaced once by an identical one, which would drop what a test just opened.
+ * Waiting for the transition to end keeps the tests deterministic under load.
+ */
+const settleTransition = () => new Promise((resolve) => setTimeout(resolve, 700));
+
+type User = ReturnType<typeof userEvent.setup>;
+
+/** The names in the ranking bars of the result step, best first. */
+function rankedNames(): string[] {
+  return within(screen.getByTestId('ranking-table'))
+    .getAllByRole('listitem')
+    .map((item) => item.querySelector('[title]')!.getAttribute('title')!);
+}
+
+async function goToResult(user: User): Promise<void> {
+  // The button turns into a link once the weights are ready.
+  const next = await screen.findByRole('link', { name: /^Next: Result/ }, { timeout: 8000 });
+  await user.click(next);
+  await screen.findByTestId('winner', {}, { timeout: 8000 });
+  await act(settleTransition);
+}
+
+async function openTraceTables(user: User, howTitle: string | RegExp): Promise<void> {
+  await user.click(screen.getByRole('button', { name: howTitle }));
+  const tables = await screen.findByTestId('trace-tables');
+  await user.click(within(tables).getByRole('button', { expanded: false }));
+}
+
+describe('decision flow', () => {
   beforeEach(() => {
     store.files = memoryFileStore();
     autosaveSettings.delayMs = false;
@@ -143,17 +166,20 @@ describe('method workspaces', () => {
   });
 
   it('asks for a project when none is open', async () => {
-    renderApp('/methods/weighting');
-    expect(await screen.findByRole('heading', { name: 'No project is open' })).toBeTruthy();
+    renderApp('/weights');
+    expect(await screen.findByRole('heading', { name: 'No decision open yet' })).toBeTruthy();
   });
 
-  it('runs CRITIC, passes the weights to MARCOS, and reads the stored analysis back without recalculating', async () => {
+  it('weights with CRITIC, ranks with MARCOS on its own, and reuses stored results', async () => {
     const user = userEvent.setup();
-    const { router } = renderApp('/methods/weighting');
+    const { router } = renderApp('/weights');
     const session = await openProjectWithData(user);
 
-    // CRITIC: weights match the engine, and the run is stored with its trace.
-    await user.click(await screen.findByTestId('run-weighting'));
+    // CRITIC is the recommended choice: the weights appear without a Run button.
+    expect(await screen.findByTestId<HTMLInputElement>('weight-mode-data')).toHaveProperty(
+      'checked',
+      true,
+    );
     await screen.findByTestId('weights-section', {}, { timeout: 8000 });
     const expectedWeights = runMethod(criticMethod, { matrix: engineMatrix() }).result;
     const stored = await session.listAnalyses();
@@ -162,30 +188,23 @@ describe('method workspaces', () => {
     const critic = await session.getAnalysis(stored[0]!.id);
     expect(critic.record.result).toEqual(expectedWeights);
     expect(critic.record.trace.steps.length).toBeGreaterThan(3);
-    // Every step of the trace is viewable.
+    // Every step of the trace is viewable on request.
+    await openTraceTables(user, 'How were these weights calculated?');
     for (const step of critic.record.trace.steps) {
       expect(screen.getByTestId(`trace-step-${step.id}`)).toBeTruthy();
     }
 
-    // One click carries the weights over to MARCOS.
-    await user.click(screen.getByTestId('use-in-marcos'));
-    await screen.findByTestId('chosen-weights');
-    expect(router.state.location.pathname).toBe('/analysis/marcos');
-    await act(settleTransition);
-    expect(screen.getByTestId('weights-analysis')).toHaveProperty('value', critic.id);
-
-    await user.click(screen.getByTestId('run-marcos'));
-    const table = await screen.findByTestId('ranking-table', {}, { timeout: 8000 });
+    // The result step ranks with these weights.
+    await goToResult(user);
+    expect(router.state.location.pathname).toBe('/result');
     const expected = runMethod(marcosMethod, {
       matrix: engineMatrix(),
       weights: { numberType: 'crisp', entries: expectedWeights.weights.entries },
     }).result;
-    const shownRanks = within(table)
-      .getAllByRole('row')
-      .slice(1)
-      .map((row) => within(row).getAllByRole('rowheader')[0]!.textContent);
     const bestFirst = [...expected.ranking].sort((a, b) => a.rank - b.rank);
-    expect(shownRanks).toEqual(bestFirst.map((entry) => `Phone ${entry.alternativeId.slice(-1)}`));
+    expect(rankedNames()).toEqual(
+      bestFirst.map((entry) => `Phone ${entry.alternativeId.slice(-1)}`),
+    );
 
     const all = await session.listAnalyses();
     expect(all.map((item) => item.methodId)).toEqual(['critic', 'marcos']);
@@ -195,19 +214,27 @@ describe('method workspaces', () => {
       workspace: 'ranking',
       weights: { source: 'analysis', analysisId: critic.id },
     });
-    const runsSoFar = runs.count;
-    expect(runsSoFar).toBe(2);
+    expect(runs.count).toBe(2);
 
-    // Opening the stored analysis in Results shows it without running anything.
-    await act(() => router.navigate(`/analysis/results?analysis=${marcos.id}`));
+    // Going back and forth reads the stored results instead of calculating again.
+    await act(() => router.navigate('/weights'));
+    await act(settleTransition);
+    await screen.findByTestId('weights-section', {}, { timeout: 8000 });
+    await goToResult(user);
+    expect(runs.count).toBe(2);
+    expect(await session.listAnalyses()).toHaveLength(2);
+
+    // Earlier calculations open without running anything.
+    await act(() => router.navigate(`/result/history?analysis=${marcos.id}`));
+    await act(settleTransition);
     expect(await screen.findByTestId('ranking-table', {}, { timeout: 8000 })).toBeTruthy();
     expect(screen.getByTestId('trace-step-final-utility')).toBeTruthy();
-    expect(runs.count).toBe(runsSoFar);
+    expect(runs.count).toBe(2);
   });
 
-  it('shows what is wrong with the data instead of running', async () => {
+  it('shows what is wrong with the data instead of calculating', async () => {
     const user = userEvent.setup();
-    renderApp('/methods/weighting');
+    renderApp('/weights');
     const session = await openProjectWithData(user);
     const dataset = session.document.model.datasets[0]!;
     const { setCells } = await import('@mateo/project');
@@ -218,21 +245,21 @@ describe('method workspaces', () => {
         ]),
       ),
     );
-    await user.click(await screen.findByTestId('run-weighting'));
     expect(await screen.findByTestId('dataset-problems')).toBeTruthy();
     expect(screen.getByText('Phone 2 has no value for Memory.')).toBeTruthy();
+    expect(screen.getByTestId('step-next')).toHaveProperty('disabled', true);
     expect(await session.listAnalyses()).toHaveLength(0);
   });
 
-  it('blocks MARCOS until every weight is entered, then runs with manual weights', async () => {
+  it('waits for every typed weight, then ranks with them', async () => {
     const user = userEvent.setup();
-    renderApp('/analysis/marcos');
+    renderApp('/weights');
     const session = await openProjectWithData(user);
-    await user.click(await screen.findByTestId('run-marcos'));
-    expect(await screen.findByText('Enter a weight for every criterion.')).toBeTruthy();
-    await user.click(screen.getByRole('button', { name: 'Fill with equal weights' }));
-    await user.click(screen.getByTestId('run-marcos'));
-    await screen.findByTestId('ranking-table', {}, { timeout: 8000 });
+    await user.click(await screen.findByTestId('weight-mode-manual'));
+    expect(screen.getByText('Type a weight for every criterion to see them.')).toBeTruthy();
+    await user.click(screen.getByRole('button', { name: 'Make them equal' }));
+    await screen.findByTestId('weights-section');
+    await goToResult(user);
     const [saved] = await session.listAnalyses();
     expect(saved!.methodId).toBe('marcos');
     expect((await session.getAnalysis(saved!.id)).configuration).toMatchObject({
@@ -242,11 +269,12 @@ describe('method workspaces', () => {
 
   it('re-ranks live when a weight slider moves and saves the scenario in the project', async () => {
     const user = userEvent.setup();
-    renderApp('/analysis/marcos');
+    renderApp('/weights');
     const session = await openProjectWithData(user);
-    await user.click(await screen.findByRole('button', { name: 'Fill with equal weights' }));
-    await user.click(screen.getByTestId('run-marcos'));
-    await screen.findByTestId('ranking-table', {}, { timeout: 8000 });
+    await user.click(await screen.findByTestId('weight-mode-manual'));
+    await user.click(screen.getByRole('button', { name: 'Make them equal' }));
+    await goToResult(user);
+    await user.click(screen.getByTestId('open-sensitivity'));
     await screen.findByTestId('sensitivity-panel');
 
     fireEvent.change(screen.getByTestId('weight-slider-1'), { target: { value: '0.8' } });
@@ -299,36 +327,56 @@ describe('method workspaces', () => {
     expect(stored[0]!.weights['crit-2']).toBeCloseTo(0.8, 12);
   });
 
-  it('runs Fuzzy MARCOS with the TFN model on a plain-number matrix', async () => {
+  it('ranks with Fuzzy MARCOS on its own when the data holds fuzzy numbers', async () => {
     const user = userEvent.setup();
-    renderApp('/analysis/marcos');
+    renderApp('/weights');
     const session = await openProjectWithData(user);
-    await user.click(await screen.findByLabelText(/Fuzzy MARCOS \(TFN\)/));
-    await user.click(screen.getByRole('button', { name: 'Fill with equal weights' }));
-    await user.click(screen.getByTestId('run-marcos'));
-    await screen.findByTestId('ranking-table', {}, { timeout: 8000 });
+    const dataset = session.document.model.datasets[0]!;
+    const { setCells, updateCriterion } = await import('@mateo/project');
+    act(() => {
+      session.execute(updateCriterion(dataset.id, 'crit-1', { numberType: 'tfn' }));
+      session.execute(
+        setCells(
+          dataset.id,
+          dataset.matrices[0]!.id,
+          VALUES.map((row, i) => ({
+            alternativeId: `alt-${i + 1}`,
+            criterionId: 'crit-1',
+            value: { kind: 'tfn', value: { l: row[0]! - 20, m: row[0]!, u: row[0]! + 20 } },
+          })),
+        ),
+      );
+    });
+    await user.click(await screen.findByTestId('weight-mode-manual'));
+    await user.click(screen.getByRole('button', { name: 'Make them equal' }));
+    await goToResult(user);
     const [saved] = await session.listAnalyses();
     expect(saved).toMatchObject({ methodId: 'fuzzy-marcos', numberType: 'tfn' });
+    await openTraceTables(user, /How was it calculated\?/);
     expect(screen.getByTestId('trace-step-defuzzification')).toBeTruthy();
   });
 
-  it('runs SWARA from an ordered list of criteria', async () => {
+  it('weights with SWARA from an ordered list of criteria', async () => {
     const user = userEvent.setup();
-    renderApp('/methods/weighting');
+    renderApp('/weights');
     const session = await openProjectWithData(user);
-    await user.click(await screen.findByLabelText(/^SWARA/));
-    await user.click(screen.getByTestId('run-weighting'));
-    expect(
-      await screen.findByText(
-        'Enter the comparative importance of every criterion except the first.',
-      ),
-    ).toBeTruthy();
+    await user.click(await screen.findByTestId('weight-mode-order'));
+    expect(screen.getByText('Answer every comparison to see the weights.')).toBeTruthy();
     await user.click(screen.getByRole('button', { name: 'Move Memory up' }));
-    await user.type(screen.getByLabelText('Comparative importance of Price'), '0,2');
-    await user.type(screen.getByLabelText('Comparative importance of Camera'), '0.3');
-    await user.click(screen.getByTestId('run-weighting'));
+    await user.type(
+      screen.getByLabelText('How much less Price matters than the criterion above it'),
+      '0,2',
+    );
+    await user.type(
+      screen.getByLabelText('How much less Camera matters than the criterion above it'),
+      '0.3',
+    );
     await screen.findByTestId('weights-section', {}, { timeout: 8000 });
-    const [saved] = await session.listAnalyses();
+    const [saved] = await waitFor(async () => {
+      const analyses = await session.listAnalyses();
+      expect(analyses).toHaveLength(1);
+      return analyses;
+    });
     const stored = await session.getAnalysis(saved!.id);
     expect(stored.methodId).toBe('swara');
     expect(stored.methodInput).toMatchObject({

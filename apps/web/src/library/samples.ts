@@ -32,7 +32,7 @@ export function isSampleId(value: string | null): value is SampleId {
 }
 
 /** Where a sample opens: the workspace of its method family. */
-export type SampleRoute = '/methods/weighting' | '/analysis/marcos';
+export type SampleRoute = '/weights' | '/result';
 
 interface SampleDefinition {
   readonly methodId: string;
@@ -42,12 +42,12 @@ interface SampleDefinition {
 }
 
 const DEFINITIONS: Readonly<Record<SampleId, SampleDefinition>> = {
-  marcos: { methodId: 'marcos', route: '/analysis/marcos', kind: 'matrix' },
-  'fuzzy-marcos': { methodId: 'fuzzy-marcos', route: '/analysis/marcos', kind: 'matrix' },
-  critic: { methodId: 'critic', route: '/methods/weighting', kind: 'matrix' },
-  merec: { methodId: 'merec', route: '/methods/weighting', kind: 'matrix' },
-  swara: { methodId: 'swara', route: '/methods/weighting', kind: 'ordered' },
-  'fuzzy-swara': { methodId: 'fuzzy-swara', route: '/methods/weighting', kind: 'ordered' },
+  marcos: { methodId: 'marcos', route: '/result', kind: 'matrix' },
+  'fuzzy-marcos': { methodId: 'fuzzy-marcos', route: '/result', kind: 'matrix' },
+  critic: { methodId: 'critic', route: '/weights', kind: 'matrix' },
+  merec: { methodId: 'merec', route: '/weights', kind: 'matrix' },
+  swara: { methodId: 'swara', route: '/weights', kind: 'ordered' },
+  'fuzzy-swara': { methodId: 'fuzzy-swara', route: '/weights', kind: 'ordered' },
 };
 
 export function sampleFixture(id: SampleId): ReferenceFixture {

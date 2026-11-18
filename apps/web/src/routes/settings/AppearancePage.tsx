@@ -17,11 +17,11 @@ import { PageHeader } from '../PageHeader';
 /** A miniature of the app in a given theme. */
 function ThemePreview({ variant }: { variant: 'light' | 'dark' | 'split' }) {
   const pane = (dark: boolean) => (
-    <div className={cn('flex h-full flex-1 gap-1 p-1.5', dark ? 'bg-[#0a1120]' : 'bg-[#f5f7fa]')}>
-      <div className={cn('w-1/4 rounded-sm', dark ? 'bg-[#101a2d]' : 'bg-white')} />
+    <div className={cn('flex h-full flex-1 gap-1 p-1.5', dark ? 'bg-[#211f31]' : 'bg-[#f5f4f9]')}>
+      <div className={cn('w-1/4 rounded-sm', dark ? 'bg-[#191827]' : 'bg-white')} />
       <div className="flex flex-1 flex-col gap-1">
-        <div className={cn('h-2 w-2/3 rounded-sm', dark ? 'bg-[#6c9bff]' : 'bg-[#1f4fd1]')} />
-        <div className={cn('flex-1 rounded-sm', dark ? 'bg-[#101a2d]' : 'bg-white')} />
+        <div className={cn('h-2 w-2/3 rounded-sm', dark ? 'bg-[#e6a6f7]' : 'bg-[#8a35ad]')} />
+        <div className={cn('flex-1 rounded-sm', dark ? 'bg-[#191827]' : 'bg-white')} />
       </div>
     </div>
   );

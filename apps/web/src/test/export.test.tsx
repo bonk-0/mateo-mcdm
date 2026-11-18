@@ -115,8 +115,9 @@ describe('export', () => {
 
   it('exports the matrix as a workbook that imports back to the same values', async () => {
     const user = userEvent.setup();
-    renderApp('/matrix');
+    renderApp('/data');
     await openProjectWithData(user);
+    await user.click(await screen.findByTestId('more-actions'));
     await user.click(await screen.findByTestId('export-matrix'));
     const dialog = await screen.findByTestId('export-dialog');
     await user.selectOptions(within(dialog).getByTestId('export-language'), 'en');
@@ -139,8 +140,9 @@ describe('export', () => {
 
   it('exports one table as CSV in the chosen language', async () => {
     const user = userEvent.setup();
-    renderApp('/matrix');
+    renderApp('/data');
     await openProjectWithData(user);
+    await user.click(await screen.findByTestId('more-actions'));
     await user.click(await screen.findByTestId('export-matrix'));
     const dialog = await screen.findByTestId('export-dialog');
     await user.selectOptions(within(dialog).getByTestId('export-format'), 'csv');
@@ -159,11 +161,11 @@ describe('export', () => {
 
   it('exports a stored analysis with every step of its trace', async () => {
     const user = userEvent.setup();
-    renderApp('/methods/weighting');
+    renderApp('/result');
     const session = await openProjectWithData(user);
-    await user.click(await screen.findByTestId('run-weighting'));
-    await screen.findByTestId('weights-section', {}, { timeout: 8000 });
-    const [summary] = await session.listAnalyses();
+    // The result step weights the criteria and ranks the alternatives without a Run button.
+    await screen.findByTestId('winner', {}, { timeout: 8000 });
+    const summary = (await session.listAnalyses()).find((item) => item.methodId === 'marcos');
     const analysis = await session.getAnalysis(summary!.id);
 
     await user.click(await screen.findByTestId('export-analysis'));
@@ -182,6 +184,5 @@ describe('export', () => {
       expect(text).toContain(`${step.index + 1}. `);
     }
     expect(text).toContain('Info.csv');
-    expect(text).toContain('Weights.csv');
   });
 });

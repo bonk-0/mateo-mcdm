@@ -1,72 +1,23 @@
 {
-  "greeting": {
-    "morning": "Günaydın",
-    "afternoon": "İyi günler",
-    "evening": "İyi akşamlar"
+  "title": "Neye karar veriyorsunuz?",
+  "lead": "Alternatiflerinizi ve kriterlerinizi içeren tabloyu getirin. Gerisini Mateo adım adım birlikte yapar.",
+  "newDecision": "Yeni karar",
+  "drop": {
+    "title": "Excel veya CSV dosyasını buraya bırakın",
+    "hint": "ya da bir dosya seçin, boş bir tabloyla başlayın veya bir örnekle deneyin.",
+    "choose": "Dosya seç",
+    "blank": "Boş tablo",
+    "sample": "Bir örnekle dene"
   },
-  "hero": {
-    "title": "Her sayısını açıklayabileceğiniz kararlar.",
-    "lead": "Tablonuzu getirin, karar modelinizi kurun ve alternatifleri klasik ve bulanık yöntemlerle sıralayın. Her sonuç girdilerine kadar izlenebilir.",
-    "newProject": "Yeni proje",
-    "openProject": "Proje aç"
-  },
-  "journey": {
-    "title": "Veriden karara dört adımda",
-    "step": "Adım {number}",
-    "open": "Git",
-    "steps": {
-      "import": {
-        "title": "Verinizi içe aktarın",
-        "description": "Yeniden yazmak yerine Excel ya da CSV dosyanızı getirin."
-      },
-      "model": {
-        "title": "Modeli kurun",
-        "description": "Kriterleri, alternatifleri ve fayda ya da maliyet yönlerini tanımlayın."
-      },
-      "weight": {
-        "title": "Kriterleri ağırlıklandırın",
-        "description": "Neyin daha önemli olduğunu CRITIC, MEREC ya da SWARA söylesin."
-      },
-      "rank": {
-        "title": "MARCOS ile sıralayın",
-        "description": "Alternatifleri sıralayın ve her adımın açılışını izleyin."
-      }
-    }
-  },
-  "methods": {
-    "title": "Bu sürümdeki yöntemler",
-    "description": "Her biri kendi özgün makalesindeki çözümlü örnekle test edilir.",
-    "groups": {
-      "weighting": {
-        "title": "Ağırlıklandırma",
-        "description": "Nesnel ve öznel kriter ağırlıkları."
-      },
-      "ranking": {
-        "title": "Sıralama",
-        "description": "Kesin ya da üçgen bulanık sayılarla fayda temelli sıralama."
-      }
-    }
+  "continue": {
+    "lead": "Kaldığınız yerden devam edin.",
+    "label": "Karar problemi",
+    "size": "{alternatives} alternatif · {criteria} kriter",
+    "action": "Devam et"
   },
   "recent": {
     "title": "Son projeler",
-    "emptyTitle": "Henüz son proje yok",
-    "emptyDescription": "Açtığınız ya da kaydettiğiniz projeler burada görünecek.",
-    "clear": "Listeyi temizle",
-    "open": "{name} projesini aç"
-  },
-  "principles": {
-    "label": "İlkeler",
-    "correct": {
-      "title": "Önce doğruluk",
-      "description": "Yayımlanmış çözümlü örneklerle doğrulanır."
-    },
-    "explainable": {
-      "title": "Her sayı açıklanır",
-      "description": "Herhangi bir sonucu girdilerine ve formülüne kadar izleyin."
-    },
-    "offline": {
-      "title": "Sizin, çevrimdışı",
-      "description": "Hesap yok, bulut yok. Verileriniz bilgisayarınızda kalır."
-    }
+    "empty": "Açtığınız ya da kaydettiğiniz projeler burada görünür.",
+    "open": "Başka bir proje aç…"
   }
 }

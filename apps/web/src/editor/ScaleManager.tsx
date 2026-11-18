@@ -8,14 +8,14 @@ import {
   type ScaleTerm,
 } from '@mateo/project';
 import { Button } from '@mateo/ui';
-import { ArrowDown, ArrowUp, FilePlus2, FolderOpen, Plus, Ruler, Trash2 } from 'lucide-react';
+import { ArrowDown, ArrowUp, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useId, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { runCommand } from '../commands/commands';
 import { useFormatters } from '../hooks/preferences';
 import { PageHeader } from '../routes/PageHeader';
-import { EmptyState } from './EditorPage';
+import { Link } from 'react-router';
+import { Notice } from '../flow/FlowPage';
 import { projectScaleFrom, uniqueScaleId } from './projectScale';
 import { MembershipChart } from './MembershipChart';
 import { useMessage, useTextRef } from './messages';
@@ -24,7 +24,7 @@ import { useDocument, useSession } from './session';
 import { fieldClass, labelClass, toolbarButtonClass } from './ui';
 
 export function ScaleManagerPage() {
-  const { t } = useTranslation(['matrix', 'nav']);
+  const { t } = useTranslation(['matrix', 'nav', 'flow']);
   const session = useSession();
   const document = useDocument(session);
   return (
@@ -40,20 +40,14 @@ export function ScaleManagerPage() {
           datasets={document.model.datasets}
         />
       ) : (
-        <EmptyState
-          icon={<Ruler className="size-8" aria-hidden />}
-          title={t('matrix:page.noProject.title')}
-          description={t('matrix:page.noProject.description')}
+        <Notice
+          title={t('flow:gate.noProject.title')}
+          description={t('flow:gate.noProject.description')}
         >
-          <Button onClick={() => runCommand('file.new')}>
-            <FilePlus2 aria-hidden />
-            {t('matrix:page.new')}
+          <Button asChild>
+            <Link to="/">{t('flow:gate.noProject.action')}</Link>
           </Button>
-          <Button variant="outline" onClick={() => runCommand('file.open')}>
-            <FolderOpen aria-hidden />
-            {t('matrix:page.open')}
-          </Button>
-        </EmptyState>
+        </Notice>
       )}
     </div>
   );

@@ -7,10 +7,10 @@ import { cn } from '@mateo/ui';
 export function LogoMark({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 32 32" className={cn('size-8', className)} aria-hidden focusable="false">
-      <rect width="32" height="32" rx="8" className="fill-navy dark:fill-primary/15" />
+      <rect width="32" height="32" rx="8" className="fill-navy dark:fill-accent" />
       <path
         d="M5 24 L11.5 8 L18 24"
-        className="fill-none stroke-[#7fa6ff]"
+        className="fill-none stroke-[#e6a6f7]"
         strokeWidth="2.6"
         strokeLinecap="round"
         strokeLinejoin="round"

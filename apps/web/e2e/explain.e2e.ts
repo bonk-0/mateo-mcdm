@@ -16,29 +16,32 @@ async function paste(page: Page, text: string): Promise<void> {
 }
 
 async function runMarcos(page: Page): Promise<void> {
-  await page.goto('/#/matrix');
-  await page.getByRole('button', { name: 'New project' }).first().click();
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Blank table' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Create' }).click();
-  await page.getByRole('button', { name: 'Create decision problem' }).click();
+  await page.getByTestId('create-dataset').click();
   await paste(page, VALUES.map((row) => row.join('\t')).join('\n'));
   await expect(page.locator('.ag-row').first()).toBeVisible();
   await expect(page.getByTestId('save-status')).toHaveText('All changes saved', {
     timeout: 10_000,
   });
-  await page.getByRole('link', { name: 'MARCOS Workspace' }).click();
+  await page.getByRole('link', { name: 'Next: Weights' }).click();
   // Let the page transition of the shell end, so that the page is not swapped under the clicks.
   await expect(page.locator('#main > div')).toHaveCSS('opacity', '1');
   await page.waitForTimeout(400);
-  await page.getByRole('button', { name: 'Fill with equal weights' }).click();
-  await page.getByTestId('run-marcos').click();
+  await page.getByTestId('weight-mode-manual').check({ force: true });
+  await page.getByRole('button', { name: 'Make them equal' }).click();
+  await page.getByRole('link', { name: 'Next: Result' }).click();
   await expect(page.getByTestId('ranking-table')).toBeVisible();
+  await expect(page.locator('#main > div')).toHaveCSS('opacity', '1');
+  await page.waitForTimeout(400);
 }
 
 test('Explain mode plays the MARCOS timeline and is operable from the keyboard', async ({
   page,
 }) => {
   await runMarcos(page);
-  // Explain sits next to the results; the results stay one click away.
+  // Explain opens below the results, which stay on screen.
   await page.getByTestId('view-explain').click();
   const player = page.getByTestId('explain-player');
   await expect(player).toHaveAttribute('data-animated', 'true');
@@ -78,7 +81,6 @@ test('Explain mode plays the MARCOS timeline and is operable from the keyboard',
   await expect(page.getByTestId('story-winner')).toContainText('ranks first');
 
   // The results are still there.
-  await page.getByTestId('view-results').click();
   await expect(page.getByTestId('ranking-table')).toBeVisible();
 });
 
