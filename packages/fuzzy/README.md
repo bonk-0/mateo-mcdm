@@ -4,18 +4,18 @@ Triangular fuzzy numbers (TFN) for every fuzzy method of Mateo, plus linguistic 
 (sub-phase P1.3, `docs/plan.md` §6.3). Pure TypeScript on top of `@mateo/engine`: no UI,
 no I/O, no randomness, no clock.
 
-| File                       | What it holds                                                                        |
-| -------------------------- | ------------------------------------------------------------------------------------ |
-| `src/tfn.ts`               | The `TFN` type `(l, m, u)`, the checked constructor and `tfnProblem`                 |
-| `src/arithmetic.ts`        | `tfnAdd`, `tfnSubtract`, `tfnMultiply`, `tfnDivide` and the scalar forms             |
-| `src/aggregation.ts`       | `tfnSum`, `tfnNorm`, `tfnMin`, `tfnMax`, arithmetic and geometric mean, min/mean/max |
-| `src/distance.ts`          | `vertexDistance` of two TFNs                                                         |
-| `src/defuzzification.ts`   | `gradedMean`, `centroid`, and both by id                                             |
-| `src/trace.ts`             | `encodeTfn`, the traced operations `tfnOps`, `TFN_EVALUATORS`                        |
-| `src/validation.ts`        | `checkTfnMatrix`, `checkTfnWeights`, issue codes                                     |
-| `src/scales.ts`            | `LinguisticScale`, `checkLinguisticScale`, term → TFN conversion                     |
-| `src/predefined-scales.ts` | 5-level, 7-level, Fuzzy MARCOS and IMF SWARA scales                                  |
-| `src/messages`             | English and Turkish texts for the i18n keys the package emits                        |
+| File                       | What it holds                                                                                      |
+| -------------------------- | -------------------------------------------------------------------------------------------------- |
+| `src/tfn.ts`               | The `TFN` type `(l, m, u)`, the checked constructor and `tfnProblem`                               |
+| `src/arithmetic.ts`        | `tfnAdd`, `tfnSubtract`, `tfnMultiply`, `tfnDivide`, `tfnPower`, scalar forms                      |
+| `src/aggregation.ts`       | `tfnSum`, `tfnProduct`, `tfnNorm`, `tfnMin`, `tfnMax`, arithmetic and geometric mean, min/mean/max |
+| `src/distance.ts`          | `vertexDistance` of two TFNs                                                                       |
+| `src/defuzzification.ts`   | `gradedMean`, `centroid`, and both by id                                                           |
+| `src/trace.ts`             | `encodeTfn`, the traced operations `tfnOps`, `TFN_EVALUATORS`                                      |
+| `src/validation.ts`        | `checkTfnMatrix`, `checkTfnWeights`, issue codes                                                   |
+| `src/scales.ts`            | `LinguisticScale`, `checkLinguisticScale`, term → TFN conversion                                   |
+| `src/predefined-scales.ts` | 5-level, 7-level, Fuzzy MARCOS and IMF SWARA scales                                                |
+| `src/messages`             | English and Turkish texts for the i18n keys the package emits                                      |
 
 ## Core ideas
 
@@ -30,16 +30,17 @@ no "the" TFN division or "the" defuzzification hidden behind a generic name.
 
 **Standard approximate arithmetic.**
 
-| Operation            | Result                                                    |
-| -------------------- | --------------------------------------------------------- |
-| `tfnAdd(a, b)`       | `(l₁ + l₂, m₁ + m₂, u₁ + u₂)`                             |
-| `tfnSubtract(a, b)`  | `(l₁ − u₂, m₁ − m₂, u₁ − l₂)`                             |
-| `tfnMultiply(a, b)`  | `(l₁·l₂, m₁·m₂, u₁·u₂)` for non-negative operands         |
-| `tfnDivide(a, b)`    | `(l₁ / u₂, m₁ / m₂, u₁ / l₂)` for `a ≥ 0`, `b > 0`        |
-| `tfnScalarDividedBy` | `(k / u, k / m, k / l)` for `k ≥ 0`, `a > 0`              |
-| `tfnMin`, `tfnMax`   | component-wise, as in the ideal solutions of Fuzzy MARCOS |
-| `gradedMean(a)`      | `(l + 4m + u) / 6`                                        |
-| `centroid(a)`        | `(l + m + u) / 3`                                         |
+| Operation            | Result                                                       |
+| -------------------- | ------------------------------------------------------------ |
+| `tfnAdd(a, b)`       | `(l₁ + l₂, m₁ + m₂, u₁ + u₂)`                                |
+| `tfnSubtract(a, b)`  | `(l₁ − u₂, m₁ − m₂, u₁ − l₂)`                                |
+| `tfnMultiply(a, b)`  | `(l₁·l₂, m₁·m₂, u₁·u₂)` for non-negative operands            |
+| `tfnDivide(a, b)`    | `(l₁ / u₂, m₁ / m₂, u₁ / l₂)` for `a ≥ 0`, `b > 0`           |
+| `tfnScalarDividedBy` | `(k / u, k / m, k / l)` for `k ≥ 0`, `a > 0`                 |
+| `tfnPower(a, w)`     | `(l^w_u, m^w_m, u^w_l)` for `a ≤ 1`, the WASPAS-F power rule |
+| `tfnMin`, `tfnMax`   | component-wise, as in the ideal solutions of Fuzzy MARCOS    |
+| `gradedMean(a)`      | `(l + 4m + u) / 6`                                           |
+| `centroid(a)`        | `(l + m + u) / 3`                                            |
 
 For operands with negative parts, products and quotients take the smallest and largest of
 the four end-point results, so the result is a valid TFN for any signs and equals the

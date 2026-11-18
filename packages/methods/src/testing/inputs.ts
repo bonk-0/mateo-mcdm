@@ -71,6 +71,37 @@ export function orderedCriteria(criteria: readonly { id: string; name: string }[
   return criteria.map(({ id, name }) => ({ id, name: textLiteral(name) }));
 }
 
+/**
+ * A small hand-made input for validation and property tests: alternatives `a1…`, criteria
+ * `c1…` and, when given, the weights.
+ */
+export function smallCrispInput(
+  values: readonly (readonly number[])[],
+  directions: readonly ('benefit' | 'cost')[],
+  weights: readonly number[] = directions.map(() => 1 / directions.length),
+) {
+  return crispInput({
+    alternatives: values.map((_, i) => `a${i + 1}`),
+    criteria: directions.map((direction, j) => ({ id: `c${j + 1}`, direction })),
+    matrix: values,
+    weights,
+  });
+}
+
+/** As `smallCrispInput`, for triangular fuzzy numbers given as `[l, m, u]` tuples. */
+export function smallTfnInput(
+  values: readonly (readonly (readonly number[])[])[],
+  directions: readonly ('benefit' | 'cost')[],
+  weights: readonly (readonly number[])[],
+) {
+  return tfnInput({
+    alternatives: values.map((_, i) => `a${i + 1}`),
+    criteria: directions.map((direction, j) => ({ id: `c${j + 1}`, direction })),
+    matrix: values,
+    weights,
+  });
+}
+
 /** A small crisp decision matrix with generated ids `a1…`, `c1…`, for property and validation tests. */
 export function smallMatrix(
   values: readonly (readonly number[])[],

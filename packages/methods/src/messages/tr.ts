@@ -580,6 +580,289 @@ export const tr: Readonly<Record<MethodsMessageKey, string>> = {
   'methods.fuzzyAras.steps.ranking.name': 'Sıralama',
   'methods.fuzzyAras.steps.ranking.explanation':
     'Alternatifler fayda derecesine göre, en yüksekten başlayarak sıralanır. Eşit değerler aynı sırayı paylaşır.',
+  // ------------------------------------------------------------ VIKOR
+  'methods.vikor.name': 'VIKOR',
+  'methods.vikor.rows.best': 'En iyi değer f*',
+  'methods.vikor.rows.worst': 'En kötü değer f⁻',
+  'methods.vikor.columns.S': 'Grup faydası S_i',
+  'methods.vikor.columns.R': 'Bireysel pişmanlık R_i',
+  'methods.vikor.columns.extremeBest': 'En iyi (en küçük)',
+  'methods.vikor.columns.extremeWorst': 'En kötü (en büyük)',
+  'methods.vikor.columns.sHat': 'Normalize S',
+  'methods.vikor.columns.rHat': 'Normalize R',
+  'methods.vikor.columns.Q': 'Uzlaşı indeksi Q_i',
+  'methods.vikor.columns.rankS': 'S sırası',
+  'methods.vikor.columns.rankR': 'R sırası',
+  'methods.vikor.columns.QDifference': 'Q_i − Q(A(1))',
+  'methods.vikor.columns.rank': 'Q sırası',
+  'methods.vikor.conditions.noRange': 'kriterde tüm alternatiflerin değeri aynıysa',
+  'methods.vikor.conditions.noSpread': 'tüm alternatiflerin S değeri (veya R değeri) aynıysa',
+  'methods.vikor.parameters.vRule.label': 'Strateji ağırlığı kuralı',
+  'methods.vikor.parameters.vRule.description':
+    'Azami grup faydası stratejisinin ağırlığı v nasıl belirlenir: aşağıda verilen değer ya da Opricovic ve Tzeng (2008) kuralı (n + 1) / (2n); burada n kriter sayısıdır.',
+  'methods.vikor.parameters.vRule.fixed': 'Aşağıda verilen v değeri',
+  'methods.vikor.parameters.vRule.opricovicTzeng2008': '(n + 1) / (2n), Opricovic ve Tzeng 2008',
+  'methods.vikor.parameters.v.label': 'Strateji ağırlığı v',
+  'methods.vikor.parameters.v.description':
+    'Q içinde grup faydası S için verilen ağırlık; bireysel pişmanlık R için 1 − v kullanılır. 0,5 klasik seçimdir (uzlaşı). Yukarıdaki kural (n + 1) / (2n) ise dikkate alınmaz.',
+  'methods.vikor.parameters.normalizeWeights.label': 'Ağırlıkları normalize et',
+  'methods.vikor.parameters.normalizeWeights.description':
+    'Her ağırlığı kullanmadan önce ağırlıkların toplamına böl, kaynakta olduğu gibi. Q ve sıralama değişmez; S ve R ağırlıklarla birlikte ölçeklenir.',
+  'methods.vikor.steps.initial-matrix.name': 'Başlangıç karar matrisi',
+  'methods.vikor.steps.initial-matrix.explanation':
+    'Her alternatifin her kriterdeki performansı, girildiği gibi.',
+  'methods.vikor.steps.weights.name': 'Kriter ağırlıkları',
+  'methods.vikor.steps.weights.explanation': 'Her kriterin önemi, girildiği gibi.',
+  'methods.vikor.steps.normalized-weights.name': 'Normalize edilmiş ağırlıklar',
+  'methods.vikor.steps.normalized-weights.explanation':
+    'Her ağırlık, ağırlıkların toplamı 1 olacak şekilde tüm ağırlıkların toplamına bölünür.',
+  'methods.vikor.steps.best-worst-values.name': 'En iyi ve en kötü değerler',
+  'methods.vikor.steps.best-worst-values.explanation':
+    'Her kriter için en iyi değer f* ve en kötü değer f⁻. Fayda kriterinde en iyi değer en büyük, maliyet kriterinde en küçük değerdir.',
+  'methods.vikor.steps.weighted-distances.name': 'En iyi değerden ağırlıklı uzaklıklar',
+  'methods.vikor.steps.weighted-distances.explanation':
+    'Her alternatifin her kriterde en iyi değerden uzaklığı; kriterin değişim aralığına oranlanır ve ağırlıkla çarpılır. 0 en iyi değerdir; en büyük uzaklık ağırlığın kendisidir. Değişim aralığı olmayan kriter 0 sayılır.',
+  'methods.vikor.steps.group-utility.name': 'Grup faydası S_i',
+  'methods.vikor.steps.group-utility.explanation':
+    'Bir alternatifin ağırlıklı uzaklıklarının toplamı: en iyi değerlerden genel olarak ne kadar uzak olduğu. Küçük değer daha iyidir.',
+  'methods.vikor.steps.individual-regret.name': 'Bireysel pişmanlık R_i',
+  'methods.vikor.steps.individual-regret.explanation':
+    'Bir alternatifin en büyük ağırlıklı uzaklığı: en kötü tekil kriteri. Küçük değer daha iyidir.',
+  'methods.vikor.steps.extremes.name': 'En iyi ve en kötü S ve R',
+  'methods.vikor.steps.extremes.explanation':
+    'Tüm alternatifler üzerinde grup faydasının ve bireysel pişmanlığın en küçük (S*, R*) ve en büyük (S⁻, R⁻) değeri.',
+  'methods.vikor.steps.normalized-measures.name': 'Normalize S ve R',
+  'methods.vikor.steps.normalized-measures.explanation':
+    'S ve R, en iyi ve en kötü değerleri arasında [0, 1] aralığına ölçeklenir. Tüm alternatiflerin S (veya R) değeri aynıysa normalize değer 0 olur.',
+  'methods.vikor.steps.strategy-weight.name': 'Strateji ağırlığı v',
+  'methods.vikor.steps.strategy-weight.explanation':
+    '{vRule, select, fixed {Grup faydasının ağırlığı, parametrelerde belirlendiği gibi.} opricovic-tzeng-2008 {Grup faydasının ağırlığı; n kriter için (n + 1) / (2n), Opricovic ve Tzeng (2008) kuralı.} other {Grup faydasının ağırlığı.}}',
+  'methods.vikor.steps.compromise-index.name': 'Uzlaşı indeksi Q_i',
+  'methods.vikor.steps.compromise-index.explanation':
+    'Q, normalize grup faydasını (ağırlık v) ve normalize bireysel pişmanlığı (ağırlık 1 − v) birleştirir. Küçük değer daha iyidir; 0 her ikisinde de en iyi demektir.',
+  'methods.vikor.steps.component-rankings.name': 'S ve R sıralamaları',
+  'methods.vikor.steps.component-rankings.explanation':
+    'Alternatifler grup faydasına ve bireysel pişmanlığa göre, en küçük önce olacak şekilde sıralanır. Kabul edilebilir kararlılık koşulu, Q ile en iyi alternatifin burada da birinci olup olmadığını sorar.',
+  'methods.vikor.steps.advantage-threshold.name': 'Kabul edilebilir üstünlük eşiği DQ',
+  'methods.vikor.steps.advantage-threshold.explanation':
+    'J alternatif için DQ = 1 / (J − 1): Q ile en iyi alternatifin tek başına kabul edilmesi için ikinciye karşı sahip olması gereken fark.',
+  'methods.vikor.steps.q-differences.name': 'En iyi Q değerinden farklar',
+  'methods.vikor.steps.q-differences.explanation':
+    'Her alternatifin Q değerinden en küçük Q değeri çıkarılır. İkinci en küçük değer, en iyi alternatifin üstünlüğüdür; fark değeri DQ’nun altında kalan alternatifler, üstünlük yetersizse uzlaşı kümesine girer.',
+  'methods.vikor.steps.ranking.name': 'Sıralama',
+  'methods.vikor.steps.ranking.explanation':
+    'Alternatifler uzlaşı indeksi Q’ya göre, en küçük önce olacak şekilde sıralanır. Eşit değerler aynı sırayı paylaşır. Uzlaşı çözümü (birden çok alternatif içerebilir) sonuçta yer alır.',
+  // ------------------------------------------------------------ EDAS
+  'methods.edas.name': 'EDAS',
+  'methods.edas.rows.average': 'Ortalama çözüm AV_j',
+  'methods.edas.columns.SP': 'Ağırlıklı pozitif toplam SP_i',
+  'methods.edas.columns.SN': 'Ağırlıklı negatif toplam SN_i',
+  'methods.edas.columns.NSP': 'Normalize NSP_i',
+  'methods.edas.columns.NSN': 'Normalize NSN_i',
+  'methods.edas.columns.AS': 'Değerlendirme skoru AS_i',
+  'methods.edas.columns.rank': 'Sıra',
+  'methods.edas.steps.initial-matrix.name': 'Başlangıç karar matrisi',
+  'methods.edas.steps.initial-matrix.explanation':
+    'Her alternatifin her kriterdeki performansı, girildiği gibi.',
+  'methods.edas.steps.weights.name': 'Kriter ağırlıkları',
+  'methods.edas.steps.weights.explanation': 'Her kriterin önemi, girildiği gibi.',
+  'methods.edas.steps.average-solution.name': 'Ortalama çözüm',
+  'methods.edas.steps.average-solution.explanation':
+    'Her kriterin tüm alternatifler üzerindeki ortalaması. Her alternatif en iyi veya en kötü alternatifle değil, bu ortalamayla karşılaştırılır.',
+  'methods.edas.steps.positive-distances.name': 'Ortalamadan pozitif uzaklık (PDA)',
+  'methods.edas.steps.positive-distances.explanation':
+    'Her alternatifin ortalamadan ne kadar daha iyi olduğu, ortalamaya oranlanarak. Fayda kriterinde ortalamanın üstündeki fazlalık, maliyet kriterinde altındaki eksiklik alınır. Daha iyi değilse 0.',
+  'methods.edas.steps.negative-distances.name': 'Ortalamadan negatif uzaklık (NDA)',
+  'methods.edas.steps.negative-distances.explanation':
+    'Her alternatifin ortalamadan ne kadar daha kötü olduğu, ortalamaya oranlanarak. Fayda kriterinde ortalamanın altındaki eksiklik, maliyet kriterinde üstündeki fazlalık alınır. Daha kötü değilse 0.',
+  'methods.edas.steps.weighted-positive-sums.name': 'Ağırlıklı pozitif toplamlar SP_i',
+  'methods.edas.steps.weighted-positive-sums.explanation':
+    'Bir alternatifin pozitif uzaklıkları kriter ağırlıklarıyla çarpılıp toplanır.',
+  'methods.edas.steps.weighted-negative-sums.name': 'Ağırlıklı negatif toplamlar SN_i',
+  'methods.edas.steps.weighted-negative-sums.explanation':
+    'Bir alternatifin negatif uzaklıkları kriter ağırlıklarıyla çarpılıp toplanır.',
+  'methods.edas.steps.normalized-positive-sums.name': 'Normalize pozitif toplamlar NSP_i',
+  'methods.edas.steps.normalized-positive-sums.explanation':
+    'Her SP, en büyük SP’ye bölünür; böylece pozitif uzaklığı en büyük olan alternatif 1 alır.',
+  'methods.edas.steps.normalized-negative-sums.name': 'Normalize negatif toplamlar NSN_i',
+  'methods.edas.steps.normalized-negative-sums.explanation':
+    '1 eksi her SN’nin en büyük SN’ye bölümü; böylece negatif uzaklığı en az olan alternatif 1 alır.',
+  'methods.edas.steps.appraisal-scores.name': 'Değerlendirme skorları AS_i',
+  'methods.edas.steps.appraisal-scores.explanation':
+    'Normalize pozitif ve negatif toplamların ortalaması. 0 ile 1 arasındadır; yüksek değer daha iyidir.',
+  'methods.edas.steps.ranking.name': 'Sıralama',
+  'methods.edas.steps.ranking.explanation':
+    'Alternatifler değerlendirme skoruna göre, en yüksek önce olacak şekilde sıralanır. Eşit değerler aynı sırayı paylaşır.',
+  // ------------------------------------------------------------ CODAS
+  'methods.codas.name': 'CODAS',
+  'methods.codas.rows.negativeIdeal': 'Negatif ideal çözüm ns_j',
+  'methods.codas.columns.E': 'Öklid uzaklığı E_i',
+  'methods.codas.columns.T': 'Manhattan uzaklığı T_i',
+  'methods.codas.columns.H': 'Değerlendirme skoru H_i',
+  'methods.codas.columns.rank': 'Sıra',
+  'methods.codas.conditions.aboveThreshold': '|E_i − E_k| ≥ τ ise',
+  'methods.codas.conditions.belowThreshold': '|E_i − E_k| < τ ise',
+  'methods.codas.parameters.tau.label': 'Eşik τ',
+  'methods.codas.parameters.tau.description':
+    'Öklid uzaklıkları τ’dan az farklı olan iki alternatif yakın kabul edilir ve bu durumda Manhattan uzaklığı belirleyici olur. Yazarlar 0,01 ile 0,05 arasında bir değer önerir (örneklerinde 0,02). τ, ağırlıklardan oluşan uzaklıklarla karşılaştırılır; bu yüzden ancak toplamı 1 olan ağırlıklarla bu anlamı taşır.',
+  'methods.codas.parameters.normalizeWeights.label': 'Ağırlıkları normalize et',
+  'methods.codas.parameters.normalizeWeights.description':
+    'Her ağırlığı kullanmadan önce ağırlıkların toplamına böl; böylece eşik τ, ağırlıkların ölçeği ne olursa olsun anlamını korur.',
+  'methods.codas.steps.initial-matrix.name': 'Başlangıç karar matrisi',
+  'methods.codas.steps.initial-matrix.explanation':
+    'Her alternatifin her kriterdeki performansı, girildiği gibi.',
+  'methods.codas.steps.weights.name': 'Kriter ağırlıkları',
+  'methods.codas.steps.weights.explanation': 'Her kriterin önemi, girildiği gibi.',
+  'methods.codas.steps.normalized-weights.name': 'Normalize edilmiş ağırlıklar',
+  'methods.codas.steps.normalized-weights.explanation':
+    'Her ağırlık, ağırlıkların toplamı 1 olacak şekilde tüm ağırlıkların toplamına bölünür.',
+  'methods.codas.steps.normalized-matrix.name': 'Normalize matris',
+  'methods.codas.steps.normalized-matrix.explanation':
+    'Her değer kendi kriterinin en iyi değerine oranlanır: fayda kriterlerinde en büyüğüne bölünür, maliyet kriterlerinde en küçük değer ona bölünür. Bir kriterde en iyi alternatif 1 alır.',
+  'methods.codas.steps.weighted-matrix.name': 'Ağırlıklı normalize matris',
+  'methods.codas.steps.weighted-matrix.explanation':
+    'Her normalize değer kendi kriterinin ağırlığıyla çarpılır.',
+  'methods.codas.steps.negative-ideal.name': 'Negatif ideal çözüm',
+  'methods.codas.steps.negative-ideal.explanation':
+    'Her kriterin en küçük ağırlıklı değeri: CODAS’ın her alternatifi karşılaştırdığı en kötü performans.',
+  'methods.codas.steps.deviations.name': 'Negatif ideal çözümden sapmalar',
+  'methods.codas.steps.deviations.explanation':
+    'Her ağırlıklı değer ile kendi kriterinin negatif ideal değeri arasındaki mutlak fark. İki uzaklığın da terimleridir.',
+  'methods.codas.steps.distances.name': 'Öklid ve Manhattan uzaklıkları',
+  'methods.codas.steps.distances.explanation':
+    'Her alternatifin negatif ideal çözüme uzaklığı: Öklid uzaklığı (sapmaların kareleri toplamının karekökü) ve Manhattan uzaklığı (sapmaların toplamı). Büyük uzaklık daha iyidir.',
+  'methods.codas.steps.threshold.name': 'Eşik τ',
+  'methods.codas.steps.threshold.explanation': 'Eşik, parametrelerde belirlendiği gibi.',
+  'methods.codas.steps.relative-assessment.name': 'Göreli değerlendirme matrisi',
+  'methods.codas.steps.relative-assessment.explanation':
+    'i alternatifinin (satır) k alternatifinden (sütun) ne kadar iyi olduğu: Öklid uzaklıklarının farkı; Öklid farkı en az τ ise buna Manhattan uzaklıklarının farkı da eklenir.',
+  'methods.codas.steps.assessment-scores.name': 'Değerlendirme skorları H_i',
+  'methods.codas.steps.assessment-scores.explanation':
+    'Göreli değerlendirme matrisinin her satırının toplamı. Yüksek değer daha iyidir.',
+  'methods.codas.steps.ranking.name': 'Sıralama',
+  'methods.codas.steps.ranking.explanation':
+    'Alternatifler değerlendirme skoruna göre, en yüksek önce olacak şekilde sıralanır. Eşit değerler aynı sırayı paylaşır.',
+  // ------------------------------------------------------------ WASPAS
+  'methods.waspas.name': 'WASPAS',
+  'methods.waspas.columns.wsm': 'Ağırlıklı toplam Q1_i',
+  'methods.waspas.columns.wpm': 'Ağırlıklı çarpım Q2_i',
+  'methods.waspas.columns.wsmVariance': 'Q1_i varyansı',
+  'methods.waspas.columns.wpmVariance': 'Q2_i varyansı',
+  'methods.waspas.columns.lambda': 'En uygun λ_i',
+  'methods.waspas.columns.Q': 'Birleşik ölçüt Q_i',
+  'methods.waspas.columns.rank': 'Sıra',
+  'methods.waspas.parameters.lambdaRule.label': 'λ kuralı',
+  'methods.waspas.parameters.lambdaRule.description':
+    'λ, birleşik ölçütte ağırlıklı toplamın payıdır; ağırlıklı çarpım 1 − λ alır. Sabit bir sayı, her alternatif için sonucun varyansını en küçük yapan değer (Zavadskas ve diğ. 2012) ya da iki skorun toplamlarından hesaplanan tek bir değer (WASPAS-F, Turskis ve diğ. 2015) olabilir.',
+  'methods.waspas.parameters.lambdaRule.fixed': 'Sabit λ değeri',
+  'methods.waspas.parameters.lambdaRule.optimal': 'Her alternatif için en uygun λ',
+  'methods.waspas.parameters.lambdaRule.pooled': 'Birleşik λ (WASPAS-F)',
+  'methods.waspas.parameters.lambda.label': 'λ değeri',
+  'methods.waspas.parameters.lambda.description':
+    'Kural sabit değer olduğunda kullanılır. 0,5 toplama ve çarpıma aynı ağırlığı verir; 1 yalnızca ağırlıklı toplam, 0 yalnızca ağırlıklı çarpımdır.',
+  'methods.waspas.parameters.relativeError.label': 'Normalize değerlerin göreli hatası',
+  'methods.waspas.parameters.relativeError.description':
+    'En uygun λ tarafından kullanılır: her normalize değerin, kendisinin bu oranı kadar bir hatayla bilindiği varsayılır (0,05 yüzde 5 demektir). Yalnızca varyanslar arasındaki oran önemlidir, bu yüzden sonuç buna çok az bağlıdır.',
+  'methods.waspas.parameters.normalizeWeights.label': 'Ağırlıkları normalize et',
+  'methods.waspas.parameters.normalizeWeights.description':
+    'Her ağırlığı kullanmadan önce ağırlıkların toplamına böl. WASPAS toplamı 1 olan ağırlıkları varsayar; bu seçenek kapalıyken toplamı 1 olmayan ağırlıklar uyarı verir.',
+  'methods.waspas.steps.initial-matrix.name': 'Başlangıç karar matrisi',
+  'methods.waspas.steps.initial-matrix.explanation':
+    'Her alternatifin her kriterdeki performansı, girildiği gibi.',
+  'methods.waspas.steps.weights.name': 'Kriter ağırlıkları',
+  'methods.waspas.steps.weights.explanation': 'Her kriterin önemi, girildiği gibi.',
+  'methods.waspas.steps.normalized-weights.name': 'Normalize edilmiş ağırlıklar',
+  'methods.waspas.steps.normalized-weights.explanation':
+    'Her ağırlık, ağırlıkların toplamı 1 olacak şekilde tüm ağırlıkların toplamına bölünür.',
+  'methods.waspas.steps.normalized-matrix.name': 'Normalize matris',
+  'methods.waspas.steps.normalized-matrix.explanation':
+    'Her değer kendi kriterinin en iyi değerine oranlanır: fayda kriterlerinde en büyüğüne bölünür, maliyet kriterlerinde en küçük değer ona bölünür. Bir kriterde en iyi alternatif 1 alır.',
+  'methods.waspas.steps.wsm-terms.name': 'Ağırlıklı toplam terimleri',
+  'methods.waspas.steps.wsm-terms.explanation':
+    'Her normalize değer kendi kriterinin ağırlığıyla çarpılır.',
+  'methods.waspas.steps.wpm-terms.name': 'Ağırlıklı çarpım terimleri',
+  'methods.waspas.steps.wpm-terms.explanation':
+    'Her normalize değer kendi kriterinin ağırlığı kuvvetine yükseltilir.',
+  'methods.waspas.steps.wsm.name': 'Ağırlıklı toplam modeli (WSM)',
+  'methods.waspas.steps.wsm.explanation': 'Bir alternatifin ağırlıklı toplam terimlerinin toplamı.',
+  'methods.waspas.steps.wpm.name': 'Ağırlıklı çarpım modeli (WPM)',
+  'methods.waspas.steps.wpm.explanation': 'Bir alternatifin ağırlıklı çarpım terimlerinin çarpımı.',
+  'methods.waspas.steps.normalized-variances.name': 'Normalize değerlerin varyansları',
+  'methods.waspas.steps.normalized-variances.explanation':
+    'Varsayılan göreli hata altında her normalize değerin varyansı: hata ile değerin çarpımının karesi.',
+  'methods.waspas.steps.wsm-variance.name': 'Ağırlıklı toplamın varyansı',
+  'methods.waspas.steps.wsm-variance.explanation':
+    'Bir alternatifin normalize değerleri değiştiğinde ağırlıklı toplamının ne kadar değiştiği: ağırlıkların kareleri ile değerlerin varyanslarının çarpımlarının toplamı.',
+  'methods.waspas.steps.wpm-variance.name': 'Ağırlıklı çarpımın varyansı',
+  'methods.waspas.steps.wpm-variance.explanation':
+    'Ağırlıklı çarpım için aynısı; çarpım bir değere, çarpımın kendisi ve ağırlıkla orantılı, değerle ters orantılı tepki verir.',
+  'methods.waspas.steps.lambda.name': 'λ değeri',
+  'methods.waspas.steps.lambda.explanation':
+    '{lambdaRule, select, fixed {Ağırlıklı toplamın payı, parametrelerde belirlendiği gibi.} optimal {Her alternatif için birleşik ölçütünün varyansını en küçük yapan λ: çarpımın varyansının, iki varyansın toplamına bölümü.} pooled {Tüm alternatifler için tek bir λ: ağırlıklı çarpımların toplamının iki skorun toplamına bölümü (WASPAS-F).} other {Ağırlıklı toplamın payı.}}',
+  'methods.waspas.steps.joint-criterion.name': 'Birleşik ölçüt Q_i',
+  'methods.waspas.steps.joint-criterion.explanation':
+    'λ çarpı ağırlıklı toplam artı 1 − λ çarpı ağırlıklı çarpım. Yüksek değer daha iyidir.',
+  'methods.waspas.steps.ranking.name': 'Sıralama',
+  'methods.waspas.steps.ranking.explanation':
+    'Alternatifler birleşik ölçüte göre, en yüksek önce olacak şekilde sıralanır. Eşit değerler aynı sırayı paylaşır.',
+  // ------------------------------------------------------------ Fuzzy WASPAS
+  'methods.fuzzyWaspas.name': 'Bulanık WASPAS',
+  'methods.fuzzyWaspas.columns.wsmSum': 'Bulanık toplam Q̃_i',
+  'methods.fuzzyWaspas.columns.wpmProduct': 'Bulanık çarpım P̃_i',
+  'methods.fuzzyWaspas.columns.Q': 'Ağırlıklı toplam Q_i',
+  'methods.fuzzyWaspas.columns.P': 'Ağırlıklı çarpım P_i',
+  'methods.fuzzyWaspas.columns.K': 'Birleşik ölçüt K_i',
+  'methods.fuzzyWaspas.columns.rank': 'Sıra',
+  'methods.fuzzyWaspas.parameters.lambdaRule.label': 'λ kuralı',
+  'methods.fuzzyWaspas.parameters.lambdaRule.description':
+    'λ, birleşik ölçütte ağırlıklı toplamın payıdır. Makale iki skorun toplamlarından hesaplanan tek bir birleşik değer kullanır; sabit bir sayı da seçilebilir. Alternatif başına en uygun λ kesin değerlerin varyanslarını gerektirir ve yalnızca WASPAS’ta bulunur.',
+  'methods.fuzzyWaspas.parameters.defuzzification.label': 'Durulaştırma',
+  'methods.fuzzyWaspas.parameters.defuzzification.description':
+    'Her alternatifin bulanık toplamı ve bulanık çarpımı kesin sayıya nasıl çevrilir. Makale ağırlık merkezini kullanır.',
+  'methods.fuzzyWaspas.parameters.defuzzification.centroid': 'Ağırlık merkezi (l + m + u) / 3',
+  'methods.fuzzyWaspas.parameters.defuzzification.gradedMean':
+    'Derecelendirilmiş ortalama (l + 4m + u) / 6',
+  'methods.fuzzyWaspas.parameters.normalizeWeights.description':
+    'Her kesin ağırlığı kullanmadan önce ağırlıkların toplamına böl. Bulanık ağırlıklar bu şekilde normalize edilemez.',
+  'methods.fuzzyWaspas.steps.initial-matrix.name': 'Başlangıç karar matrisi',
+  'methods.fuzzyWaspas.steps.initial-matrix.explanation':
+    'Her alternatifin her kriterdeki üçgensel bulanık performansı, girildiği gibi.',
+  'methods.fuzzyWaspas.steps.weights.name': 'Kriter ağırlıkları',
+  'methods.fuzzyWaspas.steps.weights.explanation':
+    'Her kriterin önemi, girildiği gibi: üçgensel bulanık sayılar ya da kesin sayılar.',
+  'methods.fuzzyWaspas.steps.normalized-weights.name': 'Normalize edilmiş ağırlıklar',
+  'methods.fuzzyWaspas.steps.normalized-weights.explanation':
+    'Her ağırlık, ağırlıkların toplamı 1 olacak şekilde tüm ağırlıkların toplamına bölünür.',
+  'methods.fuzzyWaspas.steps.fuzzy-weights.name': 'Ağırlıklar bulanık sayı olarak',
+  'methods.fuzzyWaspas.steps.fuzzy-weights.explanation':
+    'Kesin bir ağırlık w, bulanık değerlerle kullanılabilmesi için (w, w, w) üçgensel bulanık sayısıdır.',
+  'methods.fuzzyWaspas.steps.normalized-matrix.name': 'Normalize matris',
+  'methods.fuzzyWaspas.steps.normalized-matrix.explanation':
+    'Fayda değerleri kendi kriterlerinin en büyük üst değerine bölünür. Maliyet kriterlerinde en küçük alt değer her değere bölünür; bu, alt ve üst değerlerin yerini değiştirir. En iyi alternatif 1’e ulaşır.',
+  'methods.fuzzyWaspas.steps.wsm-matrix.name': 'Ağırlıklı toplam terimleri',
+  'methods.fuzzyWaspas.steps.wsm-matrix.explanation':
+    'Her normalize bulanık değer kendi kriterinin bulanık ağırlığıyla çarpılır.',
+  'methods.fuzzyWaspas.steps.wpm-matrix.name': 'Ağırlıklı çarpım terimleri',
+  'methods.fuzzyWaspas.steps.wpm-matrix.explanation':
+    'Her normalize bulanık değer kendi kriterinin bulanık ağırlığı kuvvetine yükseltilir: alt değer üst ağırlığa, orta değer orta ağırlığa, üst değer alt ağırlığa (değerler en çok 1 dir).',
+  'methods.fuzzyWaspas.steps.wsm-sums.name': 'Bulanık toplamlar Q̃_i',
+  'methods.fuzzyWaspas.steps.wsm-sums.explanation':
+    'Bir alternatifin ağırlıklı toplam terimlerinin bileşen bileşen toplamı.',
+  'methods.fuzzyWaspas.steps.wpm-products.name': 'Bulanık çarpımlar P̃_i',
+  'methods.fuzzyWaspas.steps.wpm-products.explanation':
+    'Bir alternatifin ağırlıklı çarpım terimlerinin bileşen bileşen çarpımı.',
+  'methods.fuzzyWaspas.steps.defuzzified-scores.name': 'Kesin skorlar Q_i ve P_i',
+  'methods.fuzzyWaspas.steps.defuzzified-scores.explanation':
+    'Bulanık toplamlar ve çarpımlar {defuzzification, select, graded-mean {derecelendirilmiş ortalama (l + 4m + u) / 6} centroid {ağırlık merkezi (l + m + u) / 3} other {seçilen formül}} ile kesin sayılara çevrilir.',
+  'methods.fuzzyWaspas.steps.lambda.name': 'λ değeri',
+  'methods.fuzzyWaspas.steps.lambda.explanation':
+    '{lambdaRule, select, fixed {Ağırlıklı toplamın payı, parametrelerde belirlendiği gibi.} pooled {Tüm alternatifler için tek bir λ: ağırlıklı çarpımların toplamının iki skorun toplamına bölümü (Turskis ve diğ. 2015).} other {Ağırlıklı toplamın payı.}}',
+  'methods.fuzzyWaspas.steps.joint-criterion.name': 'Birleşik ölçüt K_i',
+  'methods.fuzzyWaspas.steps.joint-criterion.explanation':
+    'λ çarpı ağırlıklı toplam artı 1 − λ çarpı ağırlıklı çarpım. Yüksek değer daha iyidir.',
+  'methods.fuzzyWaspas.steps.ranking.name': 'Sıralama',
+  'methods.fuzzyWaspas.steps.ranking.explanation':
+    'Alternatifler birleşik ölçüte göre, en yüksek önce olacak şekilde sıralanır. Eşit değerler aynı sırayı paylaşır.',
   // ------------------------------------------------------------ DEMATEL
   'methods.dematel.name': 'DEMATEL',
   'methods.dematel.columns.rowSum': 'Satır toplamı',
@@ -791,6 +1074,30 @@ export const tr: Readonly<Record<MethodsMessageKey, string>> = {
     '"{id}" fayda kriterinin alt değeri l, optimal değer dahil her alternatifte 0. Bulanık normalizasyon üst değerleri alt değerlerin toplamına böler; bu toplam burada 0. En az bir alternatife 0’dan büyük bir alt değer verin.',
   'validation.fuzzy-aras.zero-optimal-sum':
     'Optimal alternatifin bulanık optimallik fonksiyonu S̃ 0 olduğundan fayda dereceleri K = S / S₀ hesaplanamaz. Optimal alternatife, ağırlığı olan bir kriterde 0’dan büyük bir değer verin.',
+  'validation.vikor.no-discrimination':
+    'Tüm alternatiflerin grup faydası S ve bireysel pişmanlığı R aynı, bu yüzden uzlaşı indeksi Q hesaplanamaz: alternatifleri ayıran bir şey yok.',
+  'validation.edas.zero-average':
+    '"{id}" kriterinin ortalaması 0, bu yüzden ortalamadan uzaklıkları hesaplanamaz.',
+  'validation.edas.zero-positive-sums':
+    'Hiçbir alternatif ağırlıklı hiçbir kriterde ortalamadan daha iyi değil, bu yüzden pozitif toplamlar SP normalize edilemez. Bu durum tüm alternatifler birbirine benzediğinde ortaya çıkar.',
+  'validation.edas.zero-negative-sums':
+    'Hiçbir alternatif ağırlıklı hiçbir kriterde ortalamadan daha kötü değil, bu yüzden negatif toplamlar SN normalize edilemez. Bu durum tüm alternatifler birbirine benzediğinde ortaya çıkar.',
+  'validation.codas.zero-cost-value':
+    '"{id}" maliyet kriterinin bu hücresi 0. CODAS en küçük değeri maliyet kriterlerinin değerlerine böler, bu yüzden bu değerler sıfırdan büyük olmalıdır.',
+  'validation.codas.zero-ideal-value':
+    '"{id}" fayda kriterinin tüm değerleri 0, bu yüzden CODAS onu normalize edemez.',
+  'validation.waspas.zero-cost-value':
+    '"{id}" maliyet kriterinin bu hücresi 0. WASPAS en küçük değeri maliyet kriterlerinin değerlerine böler, bu yüzden bu değerler sıfırdan büyük olmalıdır.',
+  'validation.waspas.zero-ideal-value':
+    '"{id}" fayda kriterinin tüm değerleri 0, bu yüzden WASPAS onu normalize edemez.',
+  'validation.fuzzy-waspas.unsupported-weights':
+    'Ağırlıklar "{numberType}" sayı türünü kullanıyor. Bulanık WASPAS üçgensel bulanık ya da kesin ağırlıkları kabul eder.',
+  'validation.fuzzy-waspas.zero-cost-value':
+    '"{id}" maliyet kriterinin bu hücresindeki alt değer l 0. Bulanık WASPAS maliyet kriterlerinin değerlerine böler, bu yüzden bu değerler sıfırdan büyük olmalıdır.',
+  'validation.fuzzy-waspas.zero-ideal-value':
+    '"{id}" fayda kriterinin üst değerleri u hepsi 0, bu yüzden Bulanık WASPAS onu normalize edemez.',
+  'validation.fuzzy-waspas.normalize-fuzzy-weights':
+    'Ağırlıkları normalize etme seçeneği, tek bir normalizasyonu olmayan üçgensel bulanık ağırlıklarla kullanılamaz. Seçeneği kapatın ya da kesin ağırlıklar girin.',
   'validation.dematel.relation-shape':
     '{expert, number}. uzmanın matrisinde her faktör için bir satır ve bir sütun olmak üzere {order, number} satır ve {order, number} sütun bulunmalıdır.',
   'validation.dematel.non-zero-diagonal':

@@ -29,6 +29,7 @@ import {
   tfnMin,
   tfnMinMeanMax,
   tfnNorm,
+  tfnProduct,
   tfnSum,
 } from './aggregation';
 import {
@@ -38,6 +39,7 @@ import {
   tfnDivideByScalar,
   tfnMultiply,
   tfnMultiplyByScalar,
+  tfnPower,
   tfnScalarDividedBy,
   tfnScalarMinus,
   tfnSubtract,
@@ -118,6 +120,12 @@ export interface TfnOperationSpec {
   readonly evaluate: (args: readonly OperandValue[]) => OperandValue;
 }
 
+const tfnTfnToCrisp = (fn: (a: TFN, b: TFN) => number): TfnOperationSpec => ({
+  operands: ['tfn', 'tfn'],
+  result: 'crisp',
+  evaluate: (args) => fn(args[0] as TFN, args[1] as TFN),
+});
+
 const tfnTfn = (fn: (a: TFN, b: TFN) => TFN): TfnOperationSpec => ({
   operands: ['tfn', 'tfn'],
   result: 'tfn',
@@ -142,12 +150,6 @@ const tfnList = (fn: (values: readonly TFN[]) => TFN): TfnOperationSpec => ({
   evaluate: (args) => fn(args as readonly TFN[]),
 });
 
-const tfnTfnToCrisp = (fn: (a: TFN, b: TFN) => number): TfnOperationSpec => ({
-  operands: ['tfn', 'tfn'],
-  result: 'crisp',
-  evaluate: (args) => fn(args[0] as TFN, args[1] as TFN),
-});
-
 const tfnToCrisp = (fn: (a: TFN) => number): TfnOperationSpec => ({
   operands: ['tfn'],
   result: 'crisp',
@@ -160,6 +162,7 @@ export const TFN_OPERATIONS = {
   'tfn.subtract': tfnTfn(tfnSubtract),
   'tfn.multiply': tfnTfn(tfnMultiply),
   'tfn.divide': tfnTfn(tfnDivide),
+  'tfn.power': tfnTfn(tfnPower),
   'tfn.add-scalar': tfnScalar(tfnAddScalar),
   'tfn.subtract-scalar': tfnScalar(tfnSubtractScalar),
   'tfn.scalar-minus': scalarTfn(tfnScalarMinus),
@@ -168,12 +171,13 @@ export const TFN_OPERATIONS = {
   'tfn.scalar-divided-by': scalarTfn(tfnScalarDividedBy),
   'tfn.sum': tfnList(tfnSum),
   'tfn.norm': tfnList(tfnNorm),
+  'tfn.product': tfnList(tfnProduct),
+  'tfn.vertex-distance': tfnTfnToCrisp(vertexDistance),
   'tfn.min': tfnList(tfnMin),
   'tfn.max': tfnList(tfnMax),
   'tfn.arithmetic-mean': tfnList(tfnArithmeticMean),
   'tfn.geometric-mean': tfnList(tfnGeometricMean),
   'tfn.min-mean-max': tfnList(tfnMinMeanMax),
-  'tfn.vertex-distance': tfnTfnToCrisp(vertexDistance),
   'tfn.graded-mean': tfnToCrisp(gradedMean),
   'tfn.centroid': tfnToCrisp(centroid),
   'tfn.lower': tfnToCrisp((a) => a.l),
@@ -279,6 +283,11 @@ const binary =
   (a: TfnOperand, b: TfnOperand): Tracked<TFN> =>
     apply(operation, [liftTfn(a), liftTfn(b)]);
 
+const binaryToCrisp =
+  (operation: TfnOperationId) =>
+  (a: TfnOperand, b: TfnOperand): Tracked<number> =>
+    apply(operation, [liftTfn(a), liftTfn(b)]);
+
 const withScalar =
   (operation: TfnOperationId) =>
   (a: TfnOperand, k: ScalarOperand): Tracked<TFN> =>
@@ -301,11 +310,6 @@ const aggregate =
     }
     return apply(operation, list);
   };
-
-const binaryToCrisp =
-  (operation: TfnOperationId) =>
-  (a: TfnOperand, b: TfnOperand): Tracked<number> =>
-    apply(operation, [liftTfn(a), liftTfn(b)]);
 
 const toCrisp =
   (operation: TfnOperationId) =>
@@ -338,6 +342,8 @@ export const tfnOps = {
   subtract: binary('tfn.subtract'),
   multiply: binary('tfn.multiply'),
   divide: binary('tfn.divide'),
+  /** `a ^ b` with the power rule `(l^w_u, m^w_m, u^w_l)`; see `tfnPower`. */
+  power: binary('tfn.power'),
   addScalar: withScalar('tfn.add-scalar'),
   subtractScalar: withScalar('tfn.subtract-scalar'),
   scalarMinus: scalarFirst('tfn.scalar-minus'),
@@ -347,13 +353,14 @@ export const tfnOps = {
   sum: aggregate('tfn.sum'),
   /** `(√Σ lₖ², √Σ mₖ², √Σ uₖ²)` of non-negative TFNs: the norm of each component. */
   norm: aggregate('tfn.norm'),
+  product: aggregate('tfn.product'),
+  /** Vertex distance of two TFNs, a crisp number. */
+  vertexDistance: binaryToCrisp('tfn.vertex-distance'),
   min: aggregate('tfn.min'),
   max: aggregate('tfn.max'),
   arithmeticMean: aggregate('tfn.arithmetic-mean'),
   geometricMean: aggregate('tfn.geometric-mean'),
   minMeanMax: aggregate('tfn.min-mean-max'),
-  /** Vertex distance of two TFNs, a crisp number. */
-  vertexDistance: binaryToCrisp('tfn.vertex-distance'),
   gradedMean: toCrisp('tfn.graded-mean'),
   centroid: toCrisp('tfn.centroid'),
   /** The formula chosen by a method parameter; recorded as that formula's own operation. */

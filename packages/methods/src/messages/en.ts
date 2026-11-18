@@ -576,6 +576,289 @@ export const en = {
   'methods.fuzzyAras.steps.ranking.name': 'Ranking',
   'methods.fuzzyAras.steps.ranking.explanation':
     'Alternatives ordered by utility degree, highest first. Equal values share a rank.',
+  // ------------------------------------------------------------ VIKOR
+  'methods.vikor.name': 'VIKOR',
+  'methods.vikor.rows.best': 'Best value f*',
+  'methods.vikor.rows.worst': 'Worst value f⁻',
+  'methods.vikor.columns.S': 'Group utility S_i',
+  'methods.vikor.columns.R': 'Individual regret R_i',
+  'methods.vikor.columns.extremeBest': 'Best (smallest)',
+  'methods.vikor.columns.extremeWorst': 'Worst (largest)',
+  'methods.vikor.columns.sHat': 'Normalized S',
+  'methods.vikor.columns.rHat': 'Normalized R',
+  'methods.vikor.columns.Q': 'Compromise index Q_i',
+  'methods.vikor.columns.rankS': 'Rank by S',
+  'methods.vikor.columns.rankR': 'Rank by R',
+  'methods.vikor.columns.QDifference': 'Q_i − Q(A(1))',
+  'methods.vikor.columns.rank': 'Rank by Q',
+  'methods.vikor.conditions.noRange': 'when every alternative has the same value on the criterion',
+  'methods.vikor.conditions.noSpread': 'when all alternatives have the same S (or the same R)',
+  'methods.vikor.parameters.vRule.label': 'Strategy weight rule',
+  'methods.vikor.parameters.vRule.description':
+    'How the weight v of the strategy of the maximum group utility is chosen: the value given below, or the rule (n + 1) / (2n) of Opricovic and Tzeng (2008), where n is the number of criteria.',
+  'methods.vikor.parameters.vRule.fixed': 'The value of v given below',
+  'methods.vikor.parameters.vRule.opricovicTzeng2008': '(n + 1) / (2n), Opricovic and Tzeng 2008',
+  'methods.vikor.parameters.v.label': 'Strategy weight v',
+  'methods.vikor.parameters.v.description':
+    'The weight of the group utility S in Q; the individual regret R gets 1 − v. 0.5 is the classical choice (consensus). Ignored when the rule above is (n + 1) / (2n).',
+  'methods.vikor.parameters.normalizeWeights.label': 'Normalize weights',
+  'methods.vikor.parameters.normalizeWeights.description':
+    'Divide every weight by the sum of the weights before they are used, as the reference does. Q and the ranking do not change; S and R scale with the weights.',
+  'methods.vikor.steps.initial-matrix.name': 'Initial decision matrix',
+  'methods.vikor.steps.initial-matrix.explanation':
+    'The performance of every alternative on every criterion, as entered.',
+  'methods.vikor.steps.weights.name': 'Criterion weights',
+  'methods.vikor.steps.weights.explanation': 'The importance of each criterion, as entered.',
+  'methods.vikor.steps.normalized-weights.name': 'Normalized weights',
+  'methods.vikor.steps.normalized-weights.explanation':
+    'Each weight divided by the sum of all weights, so that the weights sum to 1.',
+  'methods.vikor.steps.best-worst-values.name': 'Best and worst values',
+  'methods.vikor.steps.best-worst-values.explanation':
+    'For each criterion the best value f* and the worst value f⁻. For a benefit criterion the best value is the largest; for a cost criterion it is the smallest.',
+  'methods.vikor.steps.weighted-distances.name': 'Weighted distances from the best value',
+  'methods.vikor.steps.weighted-distances.explanation':
+    'How far each alternative is from the best value on each criterion, as a share of the range of the criterion and multiplied by its weight. 0 is the best value; the weight is the largest possible distance. A criterion without a range counts as 0.',
+  'methods.vikor.steps.group-utility.name': 'Group utility S_i',
+  'methods.vikor.steps.group-utility.explanation':
+    'The sum of the weighted distances of an alternative: how far it is from the best values overall. Smaller is better.',
+  'methods.vikor.steps.individual-regret.name': 'Individual regret R_i',
+  'methods.vikor.steps.individual-regret.explanation':
+    'The largest weighted distance of an alternative: its worst single criterion. Smaller is better.',
+  'methods.vikor.steps.extremes.name': 'Best and worst S and R',
+  'methods.vikor.steps.extremes.explanation':
+    'The smallest (S*, R*) and largest (S⁻, R⁻) value of the group utility and of the individual regret over all alternatives.',
+  'methods.vikor.steps.normalized-measures.name': 'Normalized S and R',
+  'methods.vikor.steps.normalized-measures.explanation':
+    'S and R rescaled to [0, 1] between their best and worst values. If all alternatives have the same S (or R), its normalized value is 0.',
+  'methods.vikor.steps.strategy-weight.name': 'Strategy weight v',
+  'methods.vikor.steps.strategy-weight.explanation':
+    '{vRule, select, fixed {The weight of the group utility, as set in the parameters.} opricovic-tzeng-2008 {The weight of the group utility, (n + 1) / (2n) with n criteria, the rule of Opricovic and Tzeng (2008).} other {The weight of the group utility.}}',
+  'methods.vikor.steps.compromise-index.name': 'Compromise index Q_i',
+  'methods.vikor.steps.compromise-index.explanation':
+    'Q combines the normalized group utility (weight v) and the normalized individual regret (weight 1 − v). Smaller is better; 0 means best on both.',
+  'methods.vikor.steps.component-rankings.name': 'Rankings by S and R',
+  'methods.vikor.steps.component-rankings.explanation':
+    'The alternatives ranked by group utility and by individual regret, smallest first. The acceptable stability condition asks whether the best alternative by Q is also first here.',
+  'methods.vikor.steps.advantage-threshold.name': 'Acceptable advantage threshold DQ',
+  'methods.vikor.steps.advantage-threshold.explanation':
+    'DQ = 1 / (J − 1) for J alternatives: the lead that the best alternative by Q needs over the second to be accepted on its own.',
+  'methods.vikor.steps.q-differences.name': 'Differences from the best Q',
+  'methods.vikor.steps.q-differences.explanation':
+    'Q of each alternative minus the smallest Q. The second smallest value is the advantage of the best alternative; alternatives whose difference is below DQ belong to the compromise set when the advantage is too small.',
+  'methods.vikor.steps.ranking.name': 'Ranking',
+  'methods.vikor.steps.ranking.explanation':
+    'Alternatives ordered by compromise index Q, smallest first. Equal values share a rank. The compromise solution (which may hold several alternatives) is in the result.',
+  // ------------------------------------------------------------ EDAS
+  'methods.edas.name': 'EDAS',
+  'methods.edas.rows.average': 'Average solution AV_j',
+  'methods.edas.columns.SP': 'Weighted positive sum SP_i',
+  'methods.edas.columns.SN': 'Weighted negative sum SN_i',
+  'methods.edas.columns.NSP': 'Normalized NSP_i',
+  'methods.edas.columns.NSN': 'Normalized NSN_i',
+  'methods.edas.columns.AS': 'Appraisal score AS_i',
+  'methods.edas.columns.rank': 'Rank',
+  'methods.edas.steps.initial-matrix.name': 'Initial decision matrix',
+  'methods.edas.steps.initial-matrix.explanation':
+    'The performance of every alternative on every criterion, as entered.',
+  'methods.edas.steps.weights.name': 'Criterion weights',
+  'methods.edas.steps.weights.explanation': 'The importance of each criterion, as entered.',
+  'methods.edas.steps.average-solution.name': 'Average solution',
+  'methods.edas.steps.average-solution.explanation':
+    'The mean of each criterion over all alternatives. Every alternative is compared with this average, not with the best or worst alternative.',
+  'methods.edas.steps.positive-distances.name': 'Positive distance from average (PDA)',
+  'methods.edas.steps.positive-distances.explanation':
+    'How much better than the average each alternative is, as a share of the average. For a benefit criterion that is the excess above the average; for a cost criterion, the shortfall below it. 0 when it is not better.',
+  'methods.edas.steps.negative-distances.name': 'Negative distance from average (NDA)',
+  'methods.edas.steps.negative-distances.explanation':
+    'How much worse than the average each alternative is, as a share of the average. For a benefit criterion that is the shortfall below the average; for a cost criterion, the excess above it. 0 when it is not worse.',
+  'methods.edas.steps.weighted-positive-sums.name': 'Weighted positive sums SP_i',
+  'methods.edas.steps.weighted-positive-sums.explanation':
+    'The positive distances of an alternative, multiplied by the criterion weights and added up.',
+  'methods.edas.steps.weighted-negative-sums.name': 'Weighted negative sums SN_i',
+  'methods.edas.steps.weighted-negative-sums.explanation':
+    'The negative distances of an alternative, multiplied by the criterion weights and added up.',
+  'methods.edas.steps.normalized-positive-sums.name': 'Normalized positive sums NSP_i',
+  'methods.edas.steps.normalized-positive-sums.explanation':
+    'Each SP divided by the largest SP, so the alternative with the most positive distance gets 1.',
+  'methods.edas.steps.normalized-negative-sums.name': 'Normalized negative sums NSN_i',
+  'methods.edas.steps.normalized-negative-sums.explanation':
+    '1 minus each SN divided by the largest SN, so the alternative with the least negative distance gets 1.',
+  'methods.edas.steps.appraisal-scores.name': 'Appraisal scores AS_i',
+  'methods.edas.steps.appraisal-scores.explanation':
+    'The mean of the normalized positive and negative sums. It lies between 0 and 1; a higher value is better.',
+  'methods.edas.steps.ranking.name': 'Ranking',
+  'methods.edas.steps.ranking.explanation':
+    'Alternatives ordered by appraisal score, highest first. Equal values share a rank.',
+  // ------------------------------------------------------------ CODAS
+  'methods.codas.name': 'CODAS',
+  'methods.codas.rows.negativeIdeal': 'Negative-ideal solution ns_j',
+  'methods.codas.columns.E': 'Euclidean distance E_i',
+  'methods.codas.columns.T': 'Taxicab distance T_i',
+  'methods.codas.columns.H': 'Assessment score H_i',
+  'methods.codas.columns.rank': 'Rank',
+  'methods.codas.conditions.aboveThreshold': 'when |E_i − E_k| ≥ τ',
+  'methods.codas.conditions.belowThreshold': 'when |E_i − E_k| < τ',
+  'methods.codas.parameters.tau.label': 'Threshold τ',
+  'methods.codas.parameters.tau.description':
+    'Two alternatives whose Euclidean distances differ by less than τ are considered close, and then the taxicab distance decides. The authors recommend a value between 0.01 and 0.05 (0.02 in their example). τ is compared with distances built from the weights, so it only means this with weights that sum to 1.',
+  'methods.codas.parameters.normalizeWeights.label': 'Normalize weights',
+  'methods.codas.parameters.normalizeWeights.description':
+    'Divide every weight by the sum of the weights before they are used, so that the threshold τ keeps its meaning whatever the scale of the weights.',
+  'methods.codas.steps.initial-matrix.name': 'Initial decision matrix',
+  'methods.codas.steps.initial-matrix.explanation':
+    'The performance of every alternative on every criterion, as entered.',
+  'methods.codas.steps.weights.name': 'Criterion weights',
+  'methods.codas.steps.weights.explanation': 'The importance of each criterion, as entered.',
+  'methods.codas.steps.normalized-weights.name': 'Normalized weights',
+  'methods.codas.steps.normalized-weights.explanation':
+    'Each weight divided by the sum of all weights, so that the weights sum to 1.',
+  'methods.codas.steps.normalized-matrix.name': 'Normalized matrix',
+  'methods.codas.steps.normalized-matrix.explanation':
+    'Each value divided by the best value of its criterion: by the largest for benefit criteria, and the smallest divided by it for cost criteria. The best alternative on a criterion gets 1.',
+  'methods.codas.steps.weighted-matrix.name': 'Weighted normalized matrix',
+  'methods.codas.steps.weighted-matrix.explanation':
+    'Every normalized value multiplied by the weight of its criterion.',
+  'methods.codas.steps.negative-ideal.name': 'Negative-ideal solution',
+  'methods.codas.steps.negative-ideal.explanation':
+    'The smallest weighted value of each criterion: the worst performance that CODAS measures every alternative against.',
+  'methods.codas.steps.deviations.name': 'Deviations from the negative ideal',
+  'methods.codas.steps.deviations.explanation':
+    'The absolute difference between each weighted value and the negative-ideal value of its criterion. They are the terms of both distances.',
+  'methods.codas.steps.distances.name': 'Euclidean and taxicab distances',
+  'methods.codas.steps.distances.explanation':
+    'The distance of each alternative from the negative ideal: the Euclidean distance (square root of the sum of squared deviations) and the taxicab distance (sum of deviations). A larger distance is better.',
+  'methods.codas.steps.threshold.name': 'Threshold τ',
+  'methods.codas.steps.threshold.explanation': 'The threshold, as set in the parameters.',
+  'methods.codas.steps.relative-assessment.name': 'Relative assessment matrix',
+  'methods.codas.steps.relative-assessment.explanation':
+    'How much better alternative i (row) is than alternative k (column): the difference of the Euclidean distances, plus the difference of the taxicab distances when the Euclidean difference is at least τ.',
+  'methods.codas.steps.assessment-scores.name': 'Assessment scores H_i',
+  'methods.codas.steps.assessment-scores.explanation':
+    'The sum of each row of the relative assessment matrix. A higher value is better.',
+  'methods.codas.steps.ranking.name': 'Ranking',
+  'methods.codas.steps.ranking.explanation':
+    'Alternatives ordered by assessment score, highest first. Equal values share a rank.',
+  // ------------------------------------------------------------ WASPAS
+  'methods.waspas.name': 'WASPAS',
+  'methods.waspas.columns.wsm': 'Weighted sum Q1_i',
+  'methods.waspas.columns.wpm': 'Weighted product Q2_i',
+  'methods.waspas.columns.wsmVariance': 'Variance of Q1_i',
+  'methods.waspas.columns.wpmVariance': 'Variance of Q2_i',
+  'methods.waspas.columns.lambda': 'Optimal λ_i',
+  'methods.waspas.columns.Q': 'Joint criterion Q_i',
+  'methods.waspas.columns.rank': 'Rank',
+  'methods.waspas.parameters.lambdaRule.label': 'Rule for λ',
+  'methods.waspas.parameters.lambdaRule.description':
+    'λ is the share of the weighted sum in the joint criterion, the weighted product gets 1 − λ. It can be a fixed number, the value that minimizes the variance of the result for each alternative (Zavadskas et al. 2012), or one value computed from the totals of both scores (WASPAS-F, Turskis et al. 2015).',
+  'methods.waspas.parameters.lambdaRule.fixed': 'Fixed value of λ',
+  'methods.waspas.parameters.lambdaRule.optimal': 'Optimal λ for each alternative',
+  'methods.waspas.parameters.lambdaRule.pooled': 'Pooled λ (WASPAS-F)',
+  'methods.waspas.parameters.lambda.label': 'Value of λ',
+  'methods.waspas.parameters.lambda.description':
+    'Used when the rule is a fixed value. 0.5 gives the sum and the product the same weight; 1 is the weighted sum alone and 0 the weighted product alone.',
+  'methods.waspas.parameters.relativeError.label': 'Relative error of the normalized values',
+  'methods.waspas.parameters.relativeError.description':
+    'Used by the optimal λ: every normalized value is assumed to be known up to this share of itself (0.05 is 5 %). Only the ratio between the variances matters, so the result changes very little with it.',
+  'methods.waspas.parameters.normalizeWeights.label': 'Normalize weights',
+  'methods.waspas.parameters.normalizeWeights.description':
+    'Divide every weight by the sum of the weights before they are used. WASPAS assumes weights that sum to 1; without this option, weights that do not give a warning.',
+  'methods.waspas.steps.initial-matrix.name': 'Initial decision matrix',
+  'methods.waspas.steps.initial-matrix.explanation':
+    'The performance of every alternative on every criterion, as entered.',
+  'methods.waspas.steps.weights.name': 'Criterion weights',
+  'methods.waspas.steps.weights.explanation': 'The importance of each criterion, as entered.',
+  'methods.waspas.steps.normalized-weights.name': 'Normalized weights',
+  'methods.waspas.steps.normalized-weights.explanation':
+    'Each weight divided by the sum of all weights, so that the weights sum to 1.',
+  'methods.waspas.steps.normalized-matrix.name': 'Normalized matrix',
+  'methods.waspas.steps.normalized-matrix.explanation':
+    'Each value divided by the best value of its criterion: by the largest for benefit criteria, and the smallest divided by it for cost criteria. The best alternative on a criterion gets 1.',
+  'methods.waspas.steps.wsm-terms.name': 'Weighted sum terms',
+  'methods.waspas.steps.wsm-terms.explanation':
+    'Every normalized value multiplied by the weight of its criterion.',
+  'methods.waspas.steps.wpm-terms.name': 'Weighted product terms',
+  'methods.waspas.steps.wpm-terms.explanation':
+    'Every normalized value raised to the power of the weight of its criterion.',
+  'methods.waspas.steps.wsm.name': 'Weighted sum model (WSM)',
+  'methods.waspas.steps.wsm.explanation': 'The sum of the weighted sum terms of an alternative.',
+  'methods.waspas.steps.wpm.name': 'Weighted product model (WPM)',
+  'methods.waspas.steps.wpm.explanation':
+    'The product of the weighted product terms of an alternative.',
+  'methods.waspas.steps.normalized-variances.name': 'Variances of the normalized values',
+  'methods.waspas.steps.normalized-variances.explanation':
+    'The variance of every normalized value under the assumed relative error: the square of the error times the value.',
+  'methods.waspas.steps.wsm-variance.name': 'Variance of the weighted sum',
+  'methods.waspas.steps.wsm-variance.explanation':
+    'How much the weighted sum of an alternative varies when its normalized values vary: the sum of the squared weights times the variances of the values.',
+  'methods.waspas.steps.wpm-variance.name': 'Variance of the weighted product',
+  'methods.waspas.steps.wpm-variance.explanation':
+    'The same for the weighted product, which reacts to a value in proportion to the product itself and the weight, and inversely to the value.',
+  'methods.waspas.steps.lambda.name': 'Value of λ',
+  'methods.waspas.steps.lambda.explanation':
+    '{lambdaRule, select, fixed {The share of the weighted sum, as set in the parameters.} optimal {The λ of each alternative that minimizes the variance of its joint criterion: the variance of the product divided by the sum of both variances.} pooled {One λ for all alternatives: the total of the weighted products divided by the total of both scores (WASPAS-F).} other {The share of the weighted sum.}}',
+  'methods.waspas.steps.joint-criterion.name': 'Joint criterion Q_i',
+  'methods.waspas.steps.joint-criterion.explanation':
+    'λ times the weighted sum plus 1 − λ times the weighted product. A higher value is better.',
+  'methods.waspas.steps.ranking.name': 'Ranking',
+  'methods.waspas.steps.ranking.explanation':
+    'Alternatives ordered by the joint criterion, highest first. Equal values share a rank.',
+  // ------------------------------------------------------------ Fuzzy WASPAS
+  'methods.fuzzyWaspas.name': 'Fuzzy WASPAS',
+  'methods.fuzzyWaspas.columns.wsmSum': 'Fuzzy sum Q̃_i',
+  'methods.fuzzyWaspas.columns.wpmProduct': 'Fuzzy product P̃_i',
+  'methods.fuzzyWaspas.columns.Q': 'Weighted sum Q_i',
+  'methods.fuzzyWaspas.columns.P': 'Weighted product P_i',
+  'methods.fuzzyWaspas.columns.K': 'Joint criterion K_i',
+  'methods.fuzzyWaspas.columns.rank': 'Rank',
+  'methods.fuzzyWaspas.parameters.lambdaRule.label': 'Rule for λ',
+  'methods.fuzzyWaspas.parameters.lambdaRule.description':
+    'λ is the share of the weighted sum in the joint criterion. The paper uses one pooled value computed from the totals of both scores; a fixed number is also possible. The optimal λ per alternative needs variances of crisp values and is only available in WASPAS.',
+  'methods.fuzzyWaspas.parameters.defuzzification.label': 'Defuzzification',
+  'methods.fuzzyWaspas.parameters.defuzzification.description':
+    'How the fuzzy sum and the fuzzy product of each alternative are turned into crisp numbers. The paper uses the centroid.',
+  'methods.fuzzyWaspas.parameters.defuzzification.centroid': 'Centroid (l + m + u) / 3',
+  'methods.fuzzyWaspas.parameters.defuzzification.gradedMean': 'Graded mean (l + 4m + u) / 6',
+  'methods.fuzzyWaspas.parameters.normalizeWeights.description':
+    'Divide every crisp weight by the sum of the weights before they are used. Fuzzy weights cannot be normalized this way.',
+  'methods.fuzzyWaspas.steps.initial-matrix.name': 'Initial decision matrix',
+  'methods.fuzzyWaspas.steps.initial-matrix.explanation':
+    'The triangular fuzzy performance of every alternative on every criterion, as entered.',
+  'methods.fuzzyWaspas.steps.weights.name': 'Criterion weights',
+  'methods.fuzzyWaspas.steps.weights.explanation':
+    'The importance of each criterion, as entered: triangular fuzzy numbers or crisp numbers.',
+  'methods.fuzzyWaspas.steps.normalized-weights.name': 'Normalized weights',
+  'methods.fuzzyWaspas.steps.normalized-weights.explanation':
+    'Each weight divided by the sum of all weights, so that the weights sum to 1.',
+  'methods.fuzzyWaspas.steps.fuzzy-weights.name': 'Weights as fuzzy numbers',
+  'methods.fuzzyWaspas.steps.fuzzy-weights.explanation':
+    'A crisp weight w is the triangular fuzzy number (w, w, w), so that it can be used with fuzzy values.',
+  'methods.fuzzyWaspas.steps.normalized-matrix.name': 'Normalized matrix',
+  'methods.fuzzyWaspas.steps.normalized-matrix.explanation':
+    'Benefit values divided by the largest upper value of their criterion. For cost criteria the smallest lower value is divided by each value, which turns lower and upper values around. The best alternative reaches 1.',
+  'methods.fuzzyWaspas.steps.wsm-matrix.name': 'Weighted sum terms',
+  'methods.fuzzyWaspas.steps.wsm-matrix.explanation':
+    'Every normalized fuzzy value multiplied by the fuzzy weight of its criterion.',
+  'methods.fuzzyWaspas.steps.wpm-matrix.name': 'Weighted product terms',
+  'methods.fuzzyWaspas.steps.wpm-matrix.explanation':
+    'Every normalized fuzzy value raised to the power of the fuzzy weight of its criterion: the lower value to the upper weight, the modal value to the modal weight and the upper value to the lower weight (the values are at most 1).',
+  'methods.fuzzyWaspas.steps.wsm-sums.name': 'Fuzzy sums Q̃_i',
+  'methods.fuzzyWaspas.steps.wsm-sums.explanation':
+    'The sum of the weighted sum terms of an alternative, component by component.',
+  'methods.fuzzyWaspas.steps.wpm-products.name': 'Fuzzy products P̃_i',
+  'methods.fuzzyWaspas.steps.wpm-products.explanation':
+    'The product of the weighted product terms of an alternative, component by component.',
+  'methods.fuzzyWaspas.steps.defuzzified-scores.name': 'Crisp scores Q_i and P_i',
+  'methods.fuzzyWaspas.steps.defuzzified-scores.explanation':
+    'The fuzzy sums and products turned into crisp numbers with the {defuzzification, select, graded-mean {graded mean (l + 4m + u) / 6} centroid {centroid (l + m + u) / 3} other {selected formula}}.',
+  'methods.fuzzyWaspas.steps.lambda.name': 'Value of λ',
+  'methods.fuzzyWaspas.steps.lambda.explanation':
+    '{lambdaRule, select, fixed {The share of the weighted sum, as set in the parameters.} pooled {One λ for all alternatives: the total of the weighted products divided by the total of both scores (Turskis et al. 2015).} other {The share of the weighted sum.}}',
+  'methods.fuzzyWaspas.steps.joint-criterion.name': 'Joint criterion K_i',
+  'methods.fuzzyWaspas.steps.joint-criterion.explanation':
+    'λ times the weighted sum plus 1 − λ times the weighted product. A higher value is better.',
+  'methods.fuzzyWaspas.steps.ranking.name': 'Ranking',
+  'methods.fuzzyWaspas.steps.ranking.explanation':
+    'Alternatives ordered by the joint criterion, highest first. Equal values share a rank.',
   // ------------------------------------------------------------ DEMATEL
   'methods.dematel.name': 'DEMATEL',
   'methods.dematel.columns.rowSum': 'Row sum',
@@ -786,6 +1069,30 @@ export const en = {
     'The lower value l of benefit criterion "{id}", the optimal one included, is 0 for every alternative. Fuzzy normalization divides the upper values by the sum of the lower values, which is 0 here. Give at least one alternative a lower value above 0.',
   'validation.fuzzy-aras.zero-optimal-sum':
     'The fuzzy optimality function S̃ of the optimal alternative is 0, so the utility degrees K = S / S₀ cannot be calculated. Give the optimal alternative a value above 0 on a criterion that has weight.',
+  'validation.vikor.no-discrimination':
+    'Every alternative has the same group utility S and the same individual regret R, so the compromise index Q cannot be calculated: nothing separates the alternatives.',
+  'validation.edas.zero-average':
+    'The average of criterion "{id}" is 0, so its distances from the average cannot be calculated.',
+  'validation.edas.zero-positive-sums':
+    'No alternative is better than the average on any weighted criterion, so the positive sums SP cannot be normalized. This happens when all alternatives are alike.',
+  'validation.edas.zero-negative-sums':
+    'No alternative is worse than the average on any weighted criterion, so the negative sums SN cannot be normalized. This happens when all alternatives are alike.',
+  'validation.codas.zero-cost-value':
+    'This cell of cost criterion "{id}" is 0. CODAS divides the smallest value by the values of cost criteria, so they must be greater than zero.',
+  'validation.codas.zero-ideal-value':
+    'Every value of benefit criterion "{id}" is 0, so CODAS cannot normalize it.',
+  'validation.waspas.zero-cost-value':
+    'This cell of cost criterion "{id}" is 0. WASPAS divides the smallest value by the values of cost criteria, so they must be greater than zero.',
+  'validation.waspas.zero-ideal-value':
+    'Every value of benefit criterion "{id}" is 0, so WASPAS cannot normalize it.',
+  'validation.fuzzy-waspas.unsupported-weights':
+    'The weights use the number type "{numberType}". Fuzzy WASPAS accepts triangular fuzzy or crisp weights.',
+  'validation.fuzzy-waspas.zero-cost-value':
+    'The lower value l of this cell of cost criterion "{id}" is 0. Fuzzy WASPAS divides by the values of cost criteria, so they must be greater than zero.',
+  'validation.fuzzy-waspas.zero-ideal-value':
+    'The upper values u of benefit criterion "{id}" are all 0, so Fuzzy WASPAS cannot normalize it.',
+  'validation.fuzzy-waspas.normalize-fuzzy-weights':
+    'The option to normalize the weights cannot be used with triangular fuzzy weights, which have no unique normalization. Turn it off, or enter crisp weights.',
   'validation.dematel.relation-shape':
     'The matrix of expert {expert, number} must have {order, number} rows and {order, number} columns, one for each factor.',
   'validation.dematel.non-zero-diagonal':

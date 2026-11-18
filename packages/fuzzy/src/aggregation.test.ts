@@ -8,6 +8,7 @@ import {
   tfnMin,
   tfnMinMeanMax,
   tfnNorm,
+  tfnProduct,
   tfnSum,
 } from './index';
 
@@ -41,6 +42,16 @@ describe('TFN norm', () => {
 });
 
 describe('TFN aggregation', () => {
+  it('multiplies component by component', () => {
+    expect(tfnProduct([tfn(1, 2, 4), tfn(3, 5, 6), tfn(2, 2, 8)])).toEqual({
+      l: 6,
+      m: 20,
+      u: 192,
+    });
+    // Signs are handled by the pairwise product.
+    expect(tfnProduct([tfn(-1, 2, 3), tfn(2, 2, 2)])).toEqual({ l: -2, m: 4, u: 6 });
+  });
+
   it('sums component by component', () => {
     expect(tfnSum(judgements)).toEqual({ l: 6, m: 9, u: 18 });
     expect(tfnSum([tfn(1, 2, 3)])).toEqual({ l: 1, m: 2, u: 3 });
@@ -110,6 +121,7 @@ describe('TFN aggregation', () => {
       tfnGeometricMean,
       tfnMinMeanMax,
       tfnNorm,
+      tfnProduct,
     ]) {
       expect(errorCode(() => aggregate([]))).toBe('INVALID_ARGUMENT');
     }

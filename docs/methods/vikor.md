@@ -21,6 +21,14 @@
 - J = 2 gives DQ = 1, so C1 can only hold if Q(A(2)) = 1.
 - Zero weights are allowed (W5 has three).
 
+## Implementation
+
+`packages/methods/vikor` (P2.4). Parameters: `vRule` (`fixed`, the default, or `opricovic-tzeng-2008`), `v` (a number in [0, 1], default 0.5, used when the rule is `fixed`) and `normalizeWeights` (default on, as in the reference; Q and the ranking do not depend on it, S and R do). The fixtures' `"v": "opricovic-tzeng-2008"` is `vRule: 'opricovic-tzeng-2008'`; the golden tests use it, and a test shows that v = 0.5 does not reproduce Table 7.
+
+The trace holds every intermediate table: best and worst values, the weighted distances, S, R, their extremes, the normalized S and R, v, Q, the rankings by S and R, DQ and the differences Q_i − Q(A(1)). The result adds the compromise solution: the set, C1 with its threshold and difference, and C2 with the rankings of A(1) by S and R. Equal Q values at the top are ranked equally; then C1 fails (the difference is 0) and the set holds every alternative within DQ. Differences within 1e-12 of DQ count as reaching it, so a difference that equals DQ in exact arithmetic is not lost to round-off.
+
+At least two alternatives are required (DQ = 1 / (J − 1)). Criteria without a range are warned about and contribute 0. When every alternative has the same S and the same R, Q is undefined and validation fails with `vikor.no-discrimination`; if only one of the two has no range, its normalized value is 0.
+
 ## Worked example
 
 Fixtures: `packages/methods/vikor/fixtures/opricovic-2008-w1.json` and `-w5.json`. Hydropower planning on the Drina river, six alternatives, eight criteria. S, R and Q of Table 7 are reproduced at three decimals for both weight sets; the compromise solution is {A5} for W1 and {A5, A6} for W5 (C1 fails). No errata.
