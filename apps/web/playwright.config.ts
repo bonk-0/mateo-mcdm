@@ -14,6 +14,10 @@ export default defineConfig({
     baseURL: 'http://localhost:4173',
     viewport: { width: 1500, height: 1000 },
     trace: 'off',
+    // Chromium on Linux turns a download's suggested name into a file system name using the
+    // locale. In the POSIX locale every non-ASCII letter ("Adsız proje - MARCOS.xlsx") makes it
+    // fall back to "download", so the browser is started with a UTF-8 locale.
+    launchOptions: { env: { ...process.env, LC_ALL: 'C.UTF-8' } },
   },
   webServer: {
     command: 'pnpm preview',

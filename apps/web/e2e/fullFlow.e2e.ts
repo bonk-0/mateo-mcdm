@@ -93,6 +93,9 @@ for (const language of ['en', 'tr'] as const) {
     await expect(page.getByTestId('export-dialog')).toBeVisible();
     const download = page.waitForEvent('download');
     await page.getByTestId('export-save').click();
-    expect((await download).suggestedFilename()).toMatch(/\.xlsx$/);
+    // Not just the extension: the name keeps the project name and its non-ASCII letters.
+    expect((await download).suggestedFilename()).toBe(
+      `${label(language, 'project', 'untitled')} - MARCOS.xlsx`,
+    );
   });
 }
