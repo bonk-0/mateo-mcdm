@@ -40,6 +40,14 @@ async function openProject(
   return getProjectController()!.session!;
 }
 
+/** The criterion and alternative details are behind the "More" menu. */
+async function openDetails(user: ReturnType<typeof userEvent.setup>): Promise<void> {
+  await user.click(screen.getByTestId('more-actions'));
+  await user.click(
+    await screen.findByRole('menuitemcheckbox', { name: 'Criterion and alternative details' }),
+  );
+}
+
 describe('decision matrix editor page', () => {
   beforeEach(() => {
     store.files = memoryFileStore();
@@ -51,17 +59,16 @@ describe('decision matrix editor page', () => {
   });
 
   it('asks for a project when none is open', async () => {
-    renderApp('/matrix');
-    expect(await screen.findByRole('heading', { name: 'No project is open' })).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'New project' })).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'Open project' })).toBeTruthy();
+    renderApp('/data');
+    expect(await screen.findByRole('heading', { name: 'No decision open yet' })).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'Go to the start page' })).toBeTruthy();
   });
 
   it('creates a decision problem and shows the grid', async () => {
     const user = userEvent.setup();
-    renderApp('/matrix');
+    renderApp('/data');
     const session = await openProject(user);
-    await user.click(await screen.findByRole('button', { name: 'Create decision problem' }));
+    await user.click(await screen.findByRole('button', { name: 'Blank table' }));
     expect(await screen.findByTestId('grid-stub')).toBeTruthy();
     const dataset = session.document.model.datasets[0]!;
     expect(dataset.name).toBe('Decision problem');
@@ -72,9 +79,11 @@ describe('decision matrix editor page', () => {
 
   it('undoes and redoes, naming the step in the button', async () => {
     const user = userEvent.setup();
-    renderApp('/matrix');
+    renderApp('/data');
     const session = await openProject(user);
-    await user.click(await screen.findByRole('button', { name: 'Create decision problem' }));
+    await user.click(await screen.findByRole('button', { name: 'Blank table' }));
+    // The grid is stubbed here, so criteria are added from the details panel.
+    await openDetails(user);
     await user.click(screen.getByRole('button', { name: 'Add criterion' }));
     await user.click(screen.getByRole('button', { name: 'Add criterion' }));
     expect(session.document.model.datasets[0]!.criteria.map((c) => c.code)).toEqual(['C1', 'C2']);
@@ -93,9 +102,10 @@ describe('decision matrix editor page', () => {
 
   it('edits a criterion in the panel and groups typing into one undo step', async () => {
     const user = userEvent.setup();
-    renderApp('/matrix');
+    renderApp('/data');
     const session = await openProject(user);
-    await user.click(await screen.findByRole('button', { name: 'Create decision problem' }));
+    await user.click(await screen.findByRole('button', { name: 'Blank table' }));
+    await openDetails(user);
     await user.click(screen.getByRole('button', { name: 'Add criterion' }));
 
     const name = screen.getByRole('textbox', { name: 'Name' });
@@ -115,9 +125,10 @@ describe('decision matrix editor page', () => {
 
   it('switching a criterion to fuzzy numbers converts its numbers in one step', async () => {
     const user = userEvent.setup();
-    renderApp('/matrix');
+    renderApp('/data');
     const session = await openProject(user);
-    await user.click(await screen.findByRole('button', { name: 'Create decision problem' }));
+    await user.click(await screen.findByRole('button', { name: 'Blank table' }));
+    await openDetails(user);
     await user.click(screen.getByRole('button', { name: 'Add criterion' }));
     await user.click(screen.getByRole('tab', { name: 'Alternatives' }));
     await user.click(screen.getByRole('button', { name: 'Add alternative' }));
@@ -153,9 +164,9 @@ describe('decision matrix editor page', () => {
   it('is fully translated to Turkish', async () => {
     const user = userEvent.setup();
     useSettings.getState().update({ language: 'tr' });
-    renderApp('/matrix', { language: 'tr' });
+    renderApp('/data', { language: 'tr' });
     await openProject(user, { dialog: 'Yeni proje', create: 'Oluştur' });
-    expect(await screen.findByRole('button', { name: 'Karar problemi oluştur' })).toBeTruthy();
+    expect(await screen.findByRole('button', { name: 'Boş tablo' })).toBeTruthy();
   });
 });
 
@@ -171,7 +182,7 @@ describe('linguistic scale manager', () => {
 
   it('asks for a project when none is open', async () => {
     renderApp('/settings/scales');
-    expect(await screen.findByRole('heading', { name: 'No project is open' })).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: 'No decision open yet' })).toBeTruthy();
   });
 
   it('adds a predefined scale, previews it and reports invalid values', async () => {

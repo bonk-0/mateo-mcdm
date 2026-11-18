@@ -1,21 +1,5 @@
 {
-  "run": "Run",
   "running": "Running…",
-  "runFailed": "The calculation failed: {message}",
-  "gate": {
-    "noProject": {
-      "title": "No project is open",
-      "description": "Create or open a project to run methods on its decision problem."
-    },
-    "newProject": "New project",
-    "openProject": "Open project",
-    "noDataset": {
-      "title": "This project has no decision problem yet",
-      "description": "Add alternatives, criteria and values in the Decision Matrix first."
-    },
-    "toMatrix": "Open the Decision Matrix",
-    "dataset": "Decision problem"
-  },
   "problems": {
     "title": "The data cannot be used yet",
     "no-matrix": "The decision problem has no decision matrix.",
@@ -59,99 +43,16 @@
     "steps": "Calculation steps",
     "stepsHint": "Every intermediate table of the calculation, exactly as the engine recorded it."
   },
-  "weighting": {
-    "method": "Weighting method",
-    "methodHint": {
-      "critic": "Objective weights from contrast and conflict between criteria.",
-      "merec": "Objective weights from the effect of removing each criterion.",
-      "swara": "Subjective weights from comparative importance of ranked criteria.",
-      "fuzzySwara": "SWARA with linguistic comparisons turned into triangular fuzzy numbers."
-    },
-    "input": "Input",
-    "matrixInput": "Uses the decision matrix of {alternatives} alternatives and {criteria} criteria.",
-    "openMatrix": "Open the Decision Matrix",
-    "moveUp": "Move {name} up",
-    "moveDown": "Move {name} down",
-    "swara": {
-      "hint": "Order the criteria from most to least important, then give the comparative importance s_j of each criterion compared with the one above it.",
-      "importance": "s_j",
-      "importanceOf": "Comparative importance of {name}",
-      "incomplete": "Enter the comparative importance of every criterion except the first."
-    },
-    "fuzzySwara": {
-      "hint": "Order the criteria from most to least significant, then pick how much less significant each one is than the one above it.",
-      "term": "Comparison",
-      "termOf": "Comparison for {name}",
-      "choose": "Choose…",
-      "incomplete": "Choose a comparison for every criterion except the first."
-    },
-    "useInMarcos": "Use these weights in MARCOS"
-  },
   "marcos": {
-    "overview": {
-      "title": "Overview",
-      "text": "Decision problem “{name}” with {alternatives} alternatives and {criteria} criteria."
-    },
-    "input": {
-      "title": "Input data",
-      "empty": "There is no data yet.",
-      "caption": "Decision matrix"
-    },
-    "criteria": {
-      "title": "Criteria configuration",
-      "hint": "Benefit criteria are better when larger, cost criteria when smaller. Change them in the Decision Matrix.",
-      "code": "Code",
-      "name": "Name",
-      "direction": "Direction",
-      "unit": "Unit",
-      "benefit": "Benefit",
-      "cost": "Cost"
-    },
     "weights": {
-      "title": "Weighting configuration",
-      "source": {
-        "manual": "Enter the weights",
-        "analysis": "Use a weighting analysis",
-        "sample": "Weights of the method library sample"
-      },
-      "sum": "Sum of the weights: {sum}",
-      "equal": "Fill with equal weights",
-      "incomplete": "Enter a weight for every criterion.",
-      "noAnalysis": "Choose a weighting analysis first.",
-      "noneAvailable": "There is no weighting analysis for this decision problem yet.",
-      "toWeighting": "Run a weighting method",
-      "analysis": "Weighting analysis",
-      "choose": "Choose…",
-      "stale": "The data changed after this weighting analysis was run."
-    },
-    "model": {
-      "title": "Fuzzy model",
-      "classical": {
-        "title": "Classical MARCOS",
-        "hint": "Plain numbers only."
-      },
-      "tfn": {
-        "title": "Fuzzy MARCOS (TFN)",
-        "hint": "Triangular fuzzy numbers; plain numbers and linguistic terms are converted."
-      }
-    },
-    "calculation": {
-      "title": "Calculation"
-    },
-    "results": {
-      "title": "Intermediate tables and final ranking",
-      "open": "Open in Results"
-    },
-    "sensitivity": {
-      "title": "Sensitivity analysis"
+      "sum": "Sum of the weights: {sum}"
     }
   },
   "results": {
     "empty": {
       "title": "No analyses yet",
-      "description": "Run a weighting method or MARCOS. Every run is stored in the project and shows up here.",
-      "weighting": "Weighting",
-      "marcos": "MARCOS"
+      "description": "Every calculation of the result step is stored in the project and shows up here.",
+      "result": "Go to the result"
     },
     "list": "Stored analyses",
     "kind": {
@@ -200,10 +101,5 @@
       "delete": "Delete {name}",
       "best": "Best: {name}"
     }
-  },
-  "sensitivityPage": {
-    "choose": "Analysis",
-    "none": "There is no MARCOS analysis for this decision problem yet.",
-    "toMarcos": "Run MARCOS"
   }
 }

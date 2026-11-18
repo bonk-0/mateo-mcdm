@@ -1,0 +1,104 @@
+{
+  "dataset": "Karar problemi",
+  "calculating": "Hesaplanıyor…",
+  "failed": "Hesaplama durdu: {message}",
+  "gate": {
+    "noProject": {
+      "title": "Henüz açık bir karar yok",
+      "description": "Başlangıç ekranından yeni bir karara başlayın ya da bir proje açın.",
+      "action": "Başlangıca git"
+    },
+    "noData": {
+      "title": "Önce verilerinizi girin",
+      "description": "Hesaplama için alternatifleriniz ve kriterleriniz gerekiyor.",
+      "action": "Verilere git"
+    }
+  },
+  "data": {
+    "next": "Sonraki: Ağırlıklar",
+    "empty": {
+      "title": "Verilerinizi getirin",
+      "description": "Bir Excel veya CSV dosyası içe aktarın, Excel’den kopyaladığınız aralığı buraya Ctrl+V ile yapıştırın ya da boş bir tabloyla başlayın.",
+      "import": "Dosya içe aktar",
+      "blank": "Boş tablo"
+    }
+  },
+  "weights": {
+    "recommended": "Önerilen",
+    "result": "Kriter ağırlıkları",
+    "how": "Bu ağırlıklar nasıl hesaplandı?",
+    "next": "Sonraki: Sonuç",
+    "data": {
+      "title": "Veriden hesaplansın",
+      "hint": "Alternatifleri birbirinden en çok ayıran kriterler en çok ağırlığı alır.",
+      "method": "Yöntem:",
+      "critic": "Her kriterin ne kadar değiştiğine ve diğerlerinden ne kadar farklı olduğuna bakar.",
+      "merec": "Bir kriter çıkarıldığında sonucun ne kadar değiştiğine bakar."
+    },
+    "order": {
+      "title": "Önem sırasını ben vereyim",
+      "choice": "Kriterleri sıralayın ve her birinin ne kadar daha az önemli olduğunu söyleyin (SWARA).",
+      "hint": "En önemli en üstte. Her kriter için bir üsttekinden ne kadar daha az önemli olduğunu yazın: 0 eşit önemde, 0,2 yüzde 20 daha az demek.",
+      "hintTerms": "En önemli en üstte. Her kriter için bir üsttekinden ne kadar daha az önemli olduğunu seçin.",
+      "answerWith": "Cevap biçimi",
+      "numbers": "Sayılarla",
+      "terms": "Sözcüklerle",
+      "lessThanPrevious": "Bir üsttekinden şu kadar az önemli:",
+      "importanceOf": "{name} bir üstteki kriterden ne kadar az önemli",
+      "termOf": "{name} bir üstteki kriterden ne kadar az önemli",
+      "chooseTerm": "Seçin…",
+      "moveUp": "{name} yukarı taşı",
+      "moveDown": "{name} aşağı taşı"
+    },
+    "manual": {
+      "title": "Ağırlıkları kendim yazayım",
+      "choice": "Elinizde hazır ağırlıklar ya da yüzdeler varsa.",
+      "weightOf": "{name} ağırlığı",
+      "sum": "Toplam: {sum}",
+      "scaled": "Oranları korunarak toplamı 1 olacak şekilde ölçeklenir.",
+      "equal": "Eşit dağıt"
+    },
+    "sample": {
+      "title": "Makaledeki ağırlıklar",
+      "choice": "Örneğin alındığı makalede yayımlanan ağırlıklar.",
+      "hint": "Bunlar örneğin alındığı makaledeki ağırlıklar; sonuç yayımlanan sonuçla aynı çıkar."
+    },
+    "incomplete": {
+      "data": "Hesaplanıyor…",
+      "order": "Ağırlıkları görmek için her karşılaştırmayı cevaplayın.",
+      "manual": "Ağırlıkları görmek için her kritere bir ağırlık yazın.",
+      "sample": "Örneğin ağırlıkları bu verilere uymuyor."
+    }
+  },
+  "result": {
+    "best": "En iyi seçenek",
+    "bestTied": "En iyi seçenekler (eşit)",
+    "score": "Fayda",
+    "ranking": "Sıralama",
+    "basis": "Hesaplama: {methods}.",
+    "changeWeights": "Ağırlıkları değiştir",
+    "weightsManual": "sizin ağırlıklarınız",
+    "weightsSample": "makaledeki ağırlıklar",
+    "explain": {
+      "title": "Nasıl hesaplandı?",
+      "hint": "Her adım, formülü ve gerçek sayılarıyla."
+    },
+    "sensitivity": {
+      "title": "Ağırlıklar değişirse?",
+      "hint": "Ağırlıkları oynatın, sıralamanın değişimini izleyin."
+    },
+    "export": {
+      "title": "Excel’e aktar",
+      "hint": "Hesaplamanın tüm tablolarıyla tek dosya."
+    },
+    "details": "Ayrıntılar: fayda fonksiyonları, grafikler ve katkılar",
+    "noWeights": {
+      "title": "Ağırlıklar henüz hazır değil",
+      "description": "Önce ağırlıklar adımını tamamlayın.",
+      "action": "Ağırlıklara git"
+    }
+  },
+  "how": {
+    "tables": "Hesaplamanın tüm tabloları"
+  }
+}

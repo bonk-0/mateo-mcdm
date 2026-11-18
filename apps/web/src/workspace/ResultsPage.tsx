@@ -7,9 +7,17 @@ import { useMessage } from '../editor/messages';
 import { useFormatters } from '../hooks/preferences';
 import { AnalysisView, methodKey } from './AnalysisView';
 import { isCurrent, kindOfMethod } from './analyses';
-import { WorkspaceGate, type WorkspaceContext } from './WorkspaceGate';
+import type { ProjectDocument, ProjectSession } from '@mateo/project';
+import { Notice, StepHeader } from '../flow/FlowPage';
+import { useDocument, useSession } from '../editor/session';
 
-function ResultsWorkspace({ session, document }: Pick<WorkspaceContext, 'session' | 'document'>) {
+function ResultsWorkspace({
+  session,
+  document,
+}: {
+  session: ProjectSession;
+  document: ProjectDocument;
+}) {
   const { t } = useTranslation('workspace');
   const message = useMessage();
   const formatters = useFormatters();
@@ -46,18 +54,11 @@ function ResultsWorkspace({ session, document }: Pick<WorkspaceContext, 'session
   if (list === null) return null;
   if (list.length === 0) {
     return (
-      <section className="flex min-h-[40vh] flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-border bg-surface p-8 text-center">
-        <h2 className="text-lg font-semibold">{t('results.empty.title')}</h2>
-        <p className="max-w-md text-sm text-muted-foreground">{t('results.empty.description')}</p>
-        <div className="flex gap-2">
-          <Button asChild>
-            <Link to="/methods/weighting">{t('results.empty.weighting')}</Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link to="/analysis/marcos">{t('results.empty.marcos')}</Link>
-          </Button>
-        </div>
-      </section>
+      <Notice title={t('results.empty.title')} description={t('results.empty.description')}>
+        <Button asChild>
+          <Link to="/result">{t('results.empty.result')}</Link>
+        </Button>
+      </Notice>
     );
   }
   const datasetName = (id: string) =>
@@ -72,7 +73,7 @@ function ResultsWorkspace({ session, document }: Pick<WorkspaceContext, 'session
                 type="button"
                 aria-current={item.id === selected ? 'true' : undefined}
                 onClick={() =>
-                  void navigate(`/analysis/results?analysis=${encodeURIComponent(item.id)}`)
+                  void navigate(`/result/history?analysis=${encodeURIComponent(item.id)}`)
                 }
                 className={`w-full rounded-lg border p-3 text-left text-sm ${item.id === selected ? 'border-primary bg-accent' : 'border-border bg-surface hover:bg-muted'}`}
               >
@@ -103,14 +104,24 @@ function ResultsWorkspace({ session, document }: Pick<WorkspaceContext, 'session
 }
 
 export function ResultsPage() {
-  const { t } = useTranslation('nav');
+  const { t } = useTranslation(['nav', 'flow']);
+  const session = useSession();
+  const document = useDocument(session);
   return (
-    <WorkspaceGate
-      title={t('items.results.title')}
-      description={t('items.results.description')}
-      needsDataset={false}
-    >
-      {({ session, document }) => <ResultsWorkspace session={session} document={document} />}
-    </WorkspaceGate>
+    <div className="flex flex-col gap-8">
+      <StepHeader title={t('items.history.title')} description={t('items.history.description')} />
+      {session && document ? (
+        <ResultsWorkspace session={session} document={document} />
+      ) : (
+        <Notice
+          title={t('flow:gate.noProject.title')}
+          description={t('flow:gate.noProject.description')}
+        >
+          <Button asChild>
+            <Link to="/">{t('flow:gate.noProject.action')}</Link>
+          </Button>
+        </Notice>
+      )}
+    </div>
   );
 }

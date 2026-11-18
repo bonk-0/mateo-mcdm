@@ -1,0 +1,104 @@
+{
+  "dataset": "Decision problem",
+  "calculating": "Calculating…",
+  "failed": "The calculation stopped: {message}",
+  "gate": {
+    "noProject": {
+      "title": "No decision open yet",
+      "description": "Start a new decision or open a project on the start page.",
+      "action": "Go to the start page"
+    },
+    "noData": {
+      "title": "Enter your data first",
+      "description": "The calculation needs your alternatives and criteria.",
+      "action": "Go to Data"
+    }
+  },
+  "data": {
+    "next": "Next: Weights",
+    "empty": {
+      "title": "Bring your data",
+      "description": "Import an Excel or CSV file, paste a range copied from Excel here with Ctrl+V, or start with a blank table.",
+      "import": "Import a file",
+      "blank": "Blank table"
+    }
+  },
+  "weights": {
+    "recommended": "Recommended",
+    "result": "Criterion weights",
+    "how": "How were these weights calculated?",
+    "next": "Next: Result",
+    "data": {
+      "title": "Calculate them from the data",
+      "hint": "The criteria that tell the alternatives apart the most count the most.",
+      "method": "Method:",
+      "critic": "Looks at how much each criterion varies and how it differs from the others.",
+      "merec": "Looks at how much the result changes when a criterion is left out."
+    },
+    "order": {
+      "title": "I’ll rank their importance",
+      "choice": "Put the criteria in order and say how much less each one matters (SWARA).",
+      "hint": "Most important first. For each criterion, say how much less it matters than the one above it: 0 means equally important, 0.2 means 20% less.",
+      "hintTerms": "Most important first. For each criterion, choose how much less it matters than the one above it.",
+      "answerWith": "Answer with",
+      "numbers": "Numbers",
+      "terms": "Words",
+      "lessThanPrevious": "Less important than the one above by",
+      "importanceOf": "How much less {name} matters than the criterion above it",
+      "termOf": "How much less {name} matters than the criterion above it",
+      "chooseTerm": "Choose…",
+      "moveUp": "Move {name} up",
+      "moveDown": "Move {name} down"
+    },
+    "manual": {
+      "title": "I’ll type the weights",
+      "choice": "If you already have the weights or percentages.",
+      "weightOf": "Weight of {name}",
+      "sum": "Sum: {sum}",
+      "scaled": "They are scaled to add up to 1, keeping their proportions.",
+      "equal": "Make them equal"
+    },
+    "sample": {
+      "title": "The paper’s weights",
+      "choice": "The weights printed in the example’s paper.",
+      "hint": "These are the weights of the paper the example comes from, so the result matches the published one."
+    },
+    "incomplete": {
+      "data": "Calculating…",
+      "order": "Answer every comparison to see the weights.",
+      "manual": "Type a weight for every criterion to see them.",
+      "sample": "The example’s weights do not fit this data."
+    }
+  },
+  "result": {
+    "best": "Best choice",
+    "bestTied": "Best choices (tied)",
+    "score": "Utility",
+    "ranking": "Ranking",
+    "basis": "Calculated with {methods}.",
+    "changeWeights": "Change the weights",
+    "weightsManual": "your weights",
+    "weightsSample": "the paper’s weights",
+    "explain": {
+      "title": "How was it calculated?",
+      "hint": "Every step with its formula and the real numbers."
+    },
+    "sensitivity": {
+      "title": "What if the weights change?",
+      "hint": "Move the weights and watch the ranking update."
+    },
+    "export": {
+      "title": "Export to Excel",
+      "hint": "One file with every table of the calculation."
+    },
+    "details": "Details: utility functions, charts and contributions",
+    "noWeights": {
+      "title": "The weights are not ready yet",
+      "description": "Finish the weights step first.",
+      "action": "Go to Weights"
+    }
+  },
+  "how": {
+    "tables": "All tables of the calculation"
+  }
+}

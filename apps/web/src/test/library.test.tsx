@@ -130,20 +130,21 @@ describe('Method Library', () => {
     // Without a project the button creates one first.
     expect(screen.getByTestId('sample-open-marcos').textContent).toMatch(/Create a project/u);
     const session = await createProject(user);
-    await user.click(
-      await screen.findByRole('button', { name: 'Open in workspace with sample data' }),
-    );
+    await user.click(await screen.findByRole('button', { name: 'Try it with the sample data' }));
 
-    await waitFor(() => expect(router.state.location.pathname).toBe('/analysis/marcos'));
+    await waitFor(() => expect(router.state.location.pathname).toBe('/result'));
     expect(session.document.model.datasets).toHaveLength(1);
     await act(settleTransition);
-    // The matrix of the paper and its weights are filled in.
-    const table = await screen.findByTestId('input-matrix');
-    expect(within(table).getAllByRole('row')).toHaveLength(9);
-    await user.click(await screen.findByTestId('run-marcos'));
-    await screen.findByTestId('ranking-table', {}, { timeout: 8000 });
+    // The result step ranks the matrix of the paper with its weights, without a Run button.
+    await screen.findByTestId('winner', {}, { timeout: 8000 });
+    expect(session.document.model.datasets[0]!.alternatives).toHaveLength(8);
 
-    const [saved] = await session.listAnalyses();
+    const [saved] = await waitFor(async () => {
+      const analyses = await session.listAnalyses();
+      expect(analyses).toHaveLength(1);
+      return analyses;
+    });
+    expect(saved!.methodId).toBe('marcos');
     const stored = await session.getAnalysis(saved!.id);
     const ranks = (stored.record.result as { ranking: { rank: number }[] }).ranking.map(
       (entry) => entry.rank,
@@ -153,7 +154,7 @@ describe('Method Library', () => {
     // Opening the sample again reuses its decision problem.
     await act(() => router.navigate('/learn/library/marcos'));
     await user.click(await screen.findByTestId('sample-open-marcos'));
-    await waitFor(() => expect(router.state.location.pathname).toBe('/analysis/marcos'));
+    await waitFor(() => expect(router.state.location.pathname).toBe('/result'));
     expect(session.document.model.datasets).toHaveLength(1);
   });
 
@@ -163,16 +164,18 @@ describe('Method Library', () => {
     await screen.findByTestId('library-page-swara');
     const session = await createProject(user);
     await user.click(await screen.findByTestId('sample-open-swara'));
-    await waitFor(() => expect(router.state.location.pathname).toBe('/methods/weighting'));
+    await waitFor(() => expect(router.state.location.pathname).toBe('/weights'));
     await act(settleTransition);
 
-    expect(screen.getByRole('radio', { name: /SWARA/u, checked: true }) ?? null).toBeTruthy();
+    expect(await screen.findByTestId<HTMLInputElement>('weight-mode-order')).toHaveProperty(
+      'checked',
+      true,
+    );
     expect(
       screen.getByLabelText<HTMLInputElement>(
-        'Comparative importance of Price of dispute resolution',
+        'How much less Price of dispute resolution matters than the criterion above it',
       ).value,
     ).toBe('0.15');
-    await user.click(screen.getByTestId('run-weighting'));
     await screen.findByTestId('weights-section', {}, { timeout: 8000 });
 
     const [saved] = await session.listAnalyses();
@@ -193,10 +196,8 @@ describe('Method Library', () => {
     await screen.findByTestId('library-page-fuzzy-marcos');
     const session = await createProject(user);
     await user.click(await screen.findByTestId('sample-open-fuzzy-marcos'));
-    await waitFor(() => expect(router.state.location.pathname).toBe('/analysis/marcos'));
+    await waitFor(() => expect(router.state.location.pathname).toBe('/result'));
     await act(settleTransition);
-    expect(await screen.findByTestId('sample-weights')).toBeTruthy();
-    await user.click(screen.getByTestId('run-marcos'));
     await screen.findByTestId('ranking-table', {}, { timeout: 15000 });
 
     const [saved] = await session.listAnalyses();

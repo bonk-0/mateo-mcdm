@@ -56,6 +56,25 @@ export function ExportButton({
   );
 }
 
+/** The export dialog without its button, for callers that open it from a menu. */
+export function ExportDialog({
+  source,
+  hint,
+  onClose,
+}: {
+  source: ExportSource;
+  hint?: string;
+  onClose: () => void;
+}) {
+  return (
+    <Dialog open onOpenChange={(open) => !open && onClose()}>
+      <DialogContent data-testid="export-dialog">
+        <ExportForm source={source} hint={hint} onDone={onClose} />
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function ExportForm({
   source,
   hint,

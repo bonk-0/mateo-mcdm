@@ -28,19 +28,6 @@
     "unknownTerm": "“{term}” is not a term of this criterion’s scale.",
     "label": "Problem"
   },
-  "page": {
-    "noProject": {
-      "title": "No project is open",
-      "description": "Create or open a project to edit its decision matrix."
-    },
-    "new": "New project",
-    "open": "Open project",
-    "noDataset": {
-      "title": "This project has no decision problem yet",
-      "description": "Create one, then type or paste your alternatives, criteria and values."
-    },
-    "createDataset": "Create decision problem"
-  },
   "dataset": {
     "defaultName": "Decision problem",
     "label": "Decision problem",
@@ -60,23 +47,26 @@
     "redo": "Redo",
     "redoWith": "Redo: {label}",
     "insertRowAbove": "Insert row above",
-    "insertRowBelow": "Insert row below",
     "deleteRows": "Delete selected rows",
     "insertColumnLeft": "Insert column to the left",
-    "insertColumnRight": "Insert column to the right",
     "deleteColumns": "Delete selected columns",
     "bulkEdit": "Bulk edit",
-    "hint": "Select a cell and paste from Excel with Ctrl+V. Shift+arrows extend the selection.",
+    "hint": "Select a cell and paste from Excel with Ctrl+V.",
     "search": "Search the matrix",
     "searchPlaceholder": "Search…",
     "filters": "Column filters",
     "onlyIssues": "Only rows with problems",
-    "clearView": "Clear sort and filters",
     "viewActive": "The view is sorted or filtered, so rows cannot be dragged to a new position.",
     "panel": {
-      "show": "Show criteria and alternatives",
-      "hide": "Hide criteria and alternatives"
-    }
+      "details": "Criterion and alternative details"
+    },
+    "addAlternative": "Alternative",
+    "addCriterion": "Criterion",
+    "more": "More",
+    "find": "Search and filter",
+    "import": "Import a file…",
+    "export": "Export…",
+    "sources": "Imported files"
   },
   "summary": {
     "invalid": "{count, plural, one {# invalid cell} other {# invalid cells}}",
@@ -244,5 +234,13 @@
     "select": "Scale",
     "noScales": "No scales",
     "sourceEdited": "Based on “{name}”"
+  },
+  "directions": {
+    "label": "Better when:",
+    "benefit": "higher",
+    "cost": "lower",
+    "toggle": "Click to switch between higher is better and lower is better",
+    "ariaBenefit": "{name}: higher is better. Switch to lower is better.",
+    "ariaCost": "{name}: lower is better. Switch to higher is better."
   }
 }

@@ -1,39 +1,55 @@
-import { Button } from '@mateo/ui';
+import {
+  Button,
+  cn,
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@mateo/ui';
 import {
   addDataset,
   addMatrix,
   randomId,
   removeDataset,
-  updateDataset,
+  updateCriterion,
   type Dataset,
   type ProjectDocument,
   type ProjectSession,
 } from '@mateo/project';
 import {
-  ArrowDownToLine,
   ArrowLeftToLine,
-  ArrowRightToLine,
   ArrowUpToLine,
-  Filter,
-  FolderOpen,
+  Download,
   FilePlus2,
-  PanelRight,
+  FileSpreadsheet,
+  Filter,
+  MoreHorizontal,
   Plus,
   Redo2,
-  CheckCircle2,
   Table2,
   Trash2,
   Undo2,
+  Upload,
   Wand2,
   X,
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { toast } from 'sonner';
-import { runCommand } from '../commands/commands';
 import { useFormatters } from '../hooks/preferences';
-import { PageHeader } from '../routes/PageHeader';
+import { clipboardInput, type ImportInput } from '../dataCenter/wizard';
+import { useImporter } from '../dataCenter/useImporter';
+import {
+  DatasetSwitcher,
+  Notice,
+  StepFooter,
+  StepHeader,
+  useActiveDataset,
+} from '../flow/FlowPage';
+import { useFlowState } from '../flow/state';
 import {
   bulkEdit,
   clearSelection,
@@ -57,36 +73,32 @@ import { AlternativesPanel, CriteriaPanel } from './Panels';
 import { CODE_COLUMN, NAME_COLUMN, type ParseContext, type Range } from './plan';
 import { RowCache, summarize } from './rows';
 import { useDocument, useIsDirty, useSession } from './session';
-import { MatrixExportButton } from '../export/buttons';
+import { MatrixExportDialog } from '../export/buttons';
 import { fieldClass, toolbarButtonClass } from './ui';
 
 export function EditorPage() {
-  const { t } = useTranslation(['matrix', 'nav']);
+  const { t } = useTranslation(['matrix', 'nav', 'flow']);
   const session = useSession();
   const document = useDocument(session);
   return (
-    <div className="flex flex-col">
-      <PageHeader
-        title={t('nav:items.matrix.title')}
-        description={t('nav:items.matrix.description')}
-      />
+    <div className="flex flex-col gap-6">
       {session && document ? (
         <ProjectEditor session={session} document={document} />
       ) : (
-        <EmptyState
-          icon={<Table2 className="size-8" aria-hidden />}
-          title={t('matrix:page.noProject.title')}
-          description={t('matrix:page.noProject.description')}
-        >
-          <Button onClick={() => runCommand('file.new')}>
-            <FilePlus2 aria-hidden />
-            {t('matrix:page.new')}
-          </Button>
-          <Button variant="outline" onClick={() => runCommand('file.open')}>
-            <FolderOpen aria-hidden />
-            {t('matrix:page.open')}
-          </Button>
-        </EmptyState>
+        <>
+          <StepHeader
+            title={t('nav:items.data.title')}
+            description={t('nav:items.data.description')}
+          />
+          <Notice
+            title={t('flow:gate.noProject.title')}
+            description={t('flow:gate.noProject.description')}
+          >
+            <Button asChild>
+              <Link to="/">{t('flow:gate.noProject.action')}</Link>
+            </Button>
+          </Notice>
+        </>
       )}
     </div>
   );
@@ -128,6 +140,51 @@ export function newDataset(name: string): Dataset {
   };
 }
 
+/** Where a decision starts when the project has no data yet: a file, a paste or a blank table. */
+function DataStart({
+  onImport,
+  onCreate,
+}: {
+  onImport: (input?: ImportInput | null) => void;
+  onCreate: () => void;
+}) {
+  const { t } = useTranslation(['flow', 'dataCenter']);
+  // A range copied in Excel and pasted anywhere on this screen starts an import.
+  useEffect(() => {
+    const onPaste = (event: ClipboardEvent) => {
+      const target = event.target;
+      if (
+        target instanceof HTMLElement &&
+        target.closest('input, textarea, select, [role="dialog"]')
+      ) {
+        return;
+      }
+      const text = event.clipboardData?.getData('text/plain') ?? '';
+      if (!/[\t\n]/u.test(text.trim())) return;
+      event.preventDefault();
+      onImport(clipboardInput(text, t('dataCenter:upload.paste.fileName')));
+    };
+    globalThis.document.addEventListener('paste', onPaste);
+    return () => globalThis.document.removeEventListener('paste', onPaste);
+  }, [onImport, t]);
+  return (
+    <EmptyState
+      icon={<Table2 className="size-8" aria-hidden />}
+      title={t('flow:data.empty.title')}
+      description={t('flow:data.empty.description')}
+    >
+      <Button onClick={() => onImport()} data-testid="import-file">
+        <Upload aria-hidden />
+        {t('flow:data.empty.import')}
+      </Button>
+      <Button variant="outline" onClick={onCreate} data-testid="create-dataset">
+        <Plus aria-hidden />
+        {t('flow:data.empty.blank')}
+      </Button>
+    </EmptyState>
+  );
+}
+
 function ProjectEditor({
   session,
   document,
@@ -135,44 +192,59 @@ function ProjectEditor({
   session: ProjectSession;
   document: ProjectDocument;
 }) {
-  const { t } = useTranslation('matrix');
-  // The Data Center opens the editor on the dataset it has just imported.
+  const { t } = useTranslation(['matrix', 'nav', 'flow']);
+  const dataset = useActiveDataset(document);
+  const setDataset = useFlowState((state) => state.setDataset);
+  const importer = useImporter(session, setDataset);
+  const openImport = importer.open;
+
+  // The start page hands over a file dropped on it, or asks for the import dialog.
   const location = useLocation();
-  const requested = (location.state as { datasetId?: string } | null)?.datasetId ?? null;
-  const [datasetId, setDatasetId] = useState<string | null>(requested);
-  const datasets = document.model.datasets;
-  const dataset = datasets.find((item) => item.id === datasetId) ?? datasets[0];
+  const navigate = useNavigate();
+  const handed = location.state as { importInput?: ImportInput; importFile?: boolean } | null;
+  useEffect(() => {
+    if (!handed?.importInput && !handed?.importFile) return;
+    openImport(handed.importInput ?? null);
+    void navigate(location.pathname, { replace: true, state: null });
+  }, [handed, openImport, navigate, location.pathname]);
 
   const create = () => {
-    const created = newDataset(t('dataset.defaultName'));
+    const created = newDataset(t('matrix:dataset.defaultName'));
     session.execute(addDataset(created));
     session.history.sealMerge();
-    setDatasetId(created.id);
+    setDataset(created.id);
   };
 
-  if (!dataset) {
-    return (
-      <EmptyState
-        icon={<Table2 className="size-8" aria-hidden />}
-        title={t('page.noDataset.title')}
-        description={t('page.noDataset.description')}
-      >
-        <Button onClick={create}>
-          <Plus aria-hidden />
-          {t('page.createDataset')}
-        </Button>
-      </EmptyState>
-    );
-  }
   return (
-    <MatrixEditor
-      key={dataset.id}
-      session={session}
-      document={document}
-      dataset={dataset}
-      onSelectDataset={setDatasetId}
-      onCreateDataset={create}
-    />
+    <>
+      <StepHeader
+        title={t('nav:items.data.title')}
+        description={t('nav:items.data.description')}
+        aside={dataset ? <DatasetSwitcher document={document} dataset={dataset} /> : null}
+      />
+      {dataset ? (
+        <MatrixEditor
+          key={dataset.id}
+          session={session}
+          document={document}
+          dataset={dataset}
+          onCreateDataset={create}
+          onImport={openImport}
+        />
+      ) : (
+        <DataStart onImport={openImport} onCreate={create} />
+      )}
+      {importer.dialog}
+      {dataset && (
+        <StepFooter
+          next={{
+            to: '/weights',
+            label: t('flow:data.next'),
+            disabled: dataset.alternatives.length === 0 || dataset.criteria.length === 0,
+          }}
+        />
+      )}
+    </>
   );
 }
 
@@ -180,14 +252,14 @@ function MatrixEditor({
   session,
   document,
   dataset,
-  onSelectDataset,
   onCreateDataset,
+  onImport,
 }: {
   session: ProjectSession;
   document: ProjectDocument;
   dataset: Dataset;
-  onSelectDataset: (id: string) => void;
   onCreateDataset: () => void;
+  onImport: () => void;
 }) {
   const { t } = useTranslation('matrix');
   const message = useMessage();
@@ -216,7 +288,10 @@ function MatrixEditor({
   const [showFilters, setShowFilters] = useState(false);
   const [onlyIssues, setOnlyIssues] = useState(false);
   const [viewActive, setViewActive] = useState(false);
-  const [panel, setPanel] = useState<'criteria' | 'alternatives' | null>('criteria');
+  const [panel, setPanel] = useState<'criteria' | 'alternatives' | null>(null);
+  const [findOpen, setFindOpen] = useState(false);
+  const [exportOpen, setExportOpen] = useState(false);
+  const navigate = useNavigate();
   const [bulkOpen, setBulkOpen] = useState(false);
   const [criterionId, setCriterionId] = useState<string | null>(null);
   const [alternativeId, setAlternativeId] = useState<string | null>(null);
@@ -417,50 +492,20 @@ function MatrixEditor({
     </button>
   );
 
+  const issues = summary.invalidCells + summary.duplicateCodes;
+  const toggleDirection = (id: string, direction: 'benefit' | 'cost') => {
+    session.execute(
+      updateCriterion(dataset.id, id, { direction: direction === 'benefit' ? 'cost' : 'benefit' }),
+    );
+    session.history.sealMerge();
+  };
+
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap items-end gap-3">
-        <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
-          {document.model.datasets.length > 1 && (
-            <select
-              className={`${fieldClass} w-48!`}
-              aria-label={t('dataset.label')}
-              value={dataset.id}
-              onChange={(event) => onSelectDataset(event.target.value)}
-            >
-              {document.model.datasets.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.name}
-                </option>
-              ))}
-            </select>
-          )}
-          <input
-            className={`${fieldClass} w-60!`}
-            aria-label={t('dataset.name')}
-            value={dataset.name}
-            onChange={(event) =>
-              session.execute(updateDataset(dataset.id, { name: event.target.value }))
-            }
-            onBlur={() => session.history.sealMerge()}
-          />
-          {button(t('dataset.add'), <Plus aria-hidden />, onCreateDataset)}
-          {button(t('dataset.remove'), <Trash2 aria-hidden />, removeCurrentDataset)}
-        </div>
-        <p
-          className="text-xs text-muted-foreground"
-          role="status"
-          data-testid="save-status"
-          data-dirty={dirty}
-        >
-          {dirty ? t('status.pending') : t('status.saved')}
-        </p>
-      </div>
-
       <div
         role="toolbar"
         aria-label={t('toolbar.label')}
-        className="flex flex-wrap items-center gap-1.5 rounded-lg border border-border bg-surface p-1.5"
+        className="flex flex-wrap items-center gap-1.5"
       >
         {button(
           undoEntry
@@ -479,141 +524,228 @@ function MatrixEditor({
           { disabled: !history.canRedo, testId: 'redo' },
         )}
         <span className="mx-1 h-5 w-px bg-border" aria-hidden />
-        {button(
-          t('toolbar.insertRowAbove'),
-          <ArrowUpToLine aria-hidden />,
-          () => insertAlternative(env, 'above'),
-          { testId: 'insert-row-above' },
-        )}
-        {button(
-          t('toolbar.insertRowBelow'),
-          <ArrowDownToLine aria-hidden />,
-          () => insertAlternative(env, 'below'),
-          { testId: 'insert-row-below' },
-        )}
-        {button(t('toolbar.deleteRows'), <Trash2 aria-hidden />, () => deleteAlternatives(env), {
-          disabled: !hasSelection,
-          testId: 'delete-rows',
-        })}
-        <span className="mx-1 h-5 w-px bg-border" aria-hidden />
-        {button(
-          t('toolbar.insertColumnLeft'),
-          <ArrowLeftToLine aria-hidden />,
-          () => insertCriterion(env, 'left'),
-          { testId: 'insert-column-left' },
-        )}
-        {button(
-          t('toolbar.insertColumnRight'),
-          <ArrowRightToLine aria-hidden />,
-          () => insertCriterion(env, 'right'),
-          { testId: 'insert-column-right' },
-        )}
-        {button(t('toolbar.deleteColumns'), <X aria-hidden />, () => deleteCriteria(env), {
-          disabled: !hasSelection,
-          testId: 'delete-columns',
-        })}
-        <span className="mx-1 h-5 w-px bg-border" aria-hidden />
-        {button(t('toolbar.bulkEdit'), <Wand2 aria-hidden />, () => setBulkOpen(true), {
-          disabled: !hasSelection,
-          testId: 'bulk-edit',
-        })}
-        <span className="mx-1 h-5 w-px bg-border" aria-hidden />
-        <input
-          type="search"
-          className={`${fieldClass} h-8 w-48!`}
-          aria-label={t('toolbar.search')}
-          placeholder={t('toolbar.searchPlaceholder')}
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-        />
-        <button
-          type="button"
-          className={toolbarButtonClass}
-          aria-label={t('toolbar.filters')}
-          title={t('toolbar.filters')}
-          aria-pressed={showFilters}
-          onClick={() => setShowFilters((value) => !value)}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => insertAlternative(envRef.current, 'below')}
+          data-testid="insert-row-below"
         >
-          <Filter aria-hidden />
-        </button>
-        <label className="flex items-center gap-1.5 px-1 text-xs text-muted-foreground">
-          <input
-            type="checkbox"
-            checked={onlyIssues}
-            onChange={(event) => setOnlyIssues(event.target.checked)}
-          />
-          {t('toolbar.onlyIssues')}
-        </label>
-        {(viewActive || search !== '' || onlyIssues) && (
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              gridRef.current?.clearView();
-              setSearch('');
-              setOnlyIssues(false);
-            }}
-          >
-            {t('toolbar.clearView')}
-          </Button>
-        )}
+          <Plus aria-hidden />
+          {t('toolbar.addAlternative')}
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => insertCriterion(envRef.current, 'right')}
+          data-testid="insert-column-right"
+        >
+          <Plus aria-hidden />
+          {t('toolbar.addCriterion')}
+        </Button>
         <span className="ml-auto" />
-        <MatrixExportButton
-          document={document}
-          dataset={dataset}
-          variant="ghost"
-          testId="export-matrix"
-        />
-        <button
-          type="button"
-          className={toolbarButtonClass}
-          aria-label={panel ? t('toolbar.panel.hide') : t('toolbar.panel.show')}
-          title={panel ? t('toolbar.panel.hide') : t('toolbar.panel.show')}
-          aria-pressed={panel !== null}
-          onClick={() => setPanel((value) => (value ? null : 'criteria'))}
+        <p
+          className="px-2 text-xs text-muted-foreground"
+          role="status"
+          data-testid="save-status"
+          data-dirty={dirty}
         >
-          <PanelRight aria-hidden />
-        </button>
+          {dirty ? t('status.pending') : t('status.saved')}
+        </p>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="sm" data-testid="more-actions">
+              <MoreHorizontal aria-hidden />
+              {t('toolbar.more')}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-64">
+            <DropdownMenuItem
+              onSelect={() => insertAlternative(envRef.current, 'above')}
+              data-testid="insert-row-above"
+            >
+              <ArrowUpToLine aria-hidden />
+              {t('toolbar.insertRowAbove')}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onSelect={() => insertCriterion(envRef.current, 'left')}
+              data-testid="insert-column-left"
+            >
+              <ArrowLeftToLine aria-hidden />
+              {t('toolbar.insertColumnLeft')}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              disabled={!hasSelection}
+              onSelect={() => deleteAlternatives(envRef.current)}
+              data-testid="delete-rows"
+            >
+              <Trash2 aria-hidden />
+              {t('toolbar.deleteRows')}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              disabled={!hasSelection}
+              onSelect={() => deleteCriteria(envRef.current)}
+              data-testid="delete-columns"
+            >
+              <X aria-hidden />
+              {t('toolbar.deleteColumns')}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              disabled={!hasSelection}
+              onSelect={() => setBulkOpen(true)}
+              data-testid="bulk-edit"
+            >
+              <Wand2 aria-hidden />
+              {t('toolbar.bulkEdit')}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuCheckboxItem
+              checked={findOpen}
+              onCheckedChange={(checked) => {
+                setFindOpen(checked);
+                if (!checked) {
+                  gridRef.current?.clearView();
+                  setSearch('');
+                  setShowFilters(false);
+                  setOnlyIssues(false);
+                }
+              }}
+              data-testid="toggle-find"
+            >
+              {t('toolbar.find')}
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem
+              checked={panel !== null}
+              onCheckedChange={(checked) => setPanel(checked ? 'criteria' : null)}
+              data-testid="toggle-panel"
+            >
+              {t('toolbar.panel.details')}
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onSelect={onImport} data-testid="menu-import">
+              <Upload aria-hidden />
+              {t('toolbar.import')}
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => setExportOpen(true)} data-testid="export-matrix">
+              <Download aria-hidden />
+              {t('toolbar.export')}
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => void navigate('/data/sources')}>
+              <FileSpreadsheet aria-hidden />
+              {t('toolbar.sources')}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onSelect={onCreateDataset}>
+              <FilePlus2 aria-hidden />
+              {t('dataset.add')}
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={removeCurrentDataset}>
+              <Trash2 aria-hidden />
+              {t('dataset.remove')}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-        <span>
-          {t('summary.size', {
-            alternatives: dataset.alternatives.length,
-            criteria: dataset.criteria.length,
-          })}
-        </span>
-        <span aria-hidden>·</span>
-        {summary.invalidCells + summary.duplicateCodes === 0 ? (
-          <span className="inline-flex items-center gap-1 text-success">
-            <CheckCircle2 className="size-3.5" aria-hidden />
-            {t('summary.ok')}
-          </span>
-        ) : (
-          <>
-            {summary.invalidCells > 0 && (
-              <span
-                className="rounded-full bg-danger/10 px-2 py-0.5 text-danger"
-                data-testid="invalid-count"
+      {dataset.criteria.length > 0 && (
+        <div
+          className="flex flex-wrap items-center gap-2 text-sm"
+          data-testid="criteria-directions"
+        >
+          <span className="text-muted-foreground">{t('directions.label')}</span>
+          {dataset.criteria.map((criterion) => {
+            const benefit = criterion.direction === 'benefit';
+            const name = criterion.name || criterion.code;
+            return (
+              <button
+                key={criterion.id}
+                type="button"
+                onClick={() => toggleDirection(criterion.id, criterion.direction)}
+                title={t('directions.toggle')}
+                aria-label={t(benefit ? 'directions.ariaBenefit' : 'directions.ariaCost', { name })}
+                className={cn(
+                  'inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-medium transition-colors hover:brightness-110',
+                  benefit
+                    ? 'border-success/40 bg-success/10 text-success'
+                    : 'border-danger/40 bg-danger/10 text-danger',
+                )}
               >
-                {t('summary.invalid', { count: summary.invalidCells })}
-              </span>
-            )}
-            {summary.duplicateCodes > 0 && (
-              <span className="rounded-full bg-warning/10 px-2 py-0.5 text-warning">
-                {t('summary.duplicates', { count: summary.duplicateCodes })}
-              </span>
-            )}
-          </>
-        )}
-        {summary.emptyCells > 0 && <span>{t('summary.empty', { count: summary.emptyCells })}</span>}
-        {viewActive && <span className="text-warning">{t('toolbar.viewActive')}</span>}
-        <span className="ml-auto hidden lg:inline">{t('toolbar.hint')}</span>
-      </div>
+                <span className="max-w-40 truncate text-foreground">{name}</span>
+                <span aria-hidden>{benefit ? '↑' : '↓'}</span>
+                <span>{t(benefit ? 'directions.benefit' : 'directions.cost')}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {findOpen && (
+        <div className="flex flex-wrap items-center gap-2 rounded-lg border border-border bg-surface p-2">
+          <input
+            type="search"
+            className={`${fieldClass} h-8 w-56!`}
+            aria-label={t('toolbar.search')}
+            placeholder={t('toolbar.searchPlaceholder')}
+            value={search}
+            autoFocus
+            onChange={(event) => setSearch(event.target.value)}
+          />
+          <button
+            type="button"
+            className={toolbarButtonClass}
+            aria-label={t('toolbar.filters')}
+            title={t('toolbar.filters')}
+            aria-pressed={showFilters}
+            onClick={() => setShowFilters((value) => !value)}
+          >
+            <Filter aria-hidden />
+          </button>
+          <label className="flex items-center gap-1.5 px-1 text-xs text-muted-foreground">
+            <input
+              type="checkbox"
+              checked={onlyIssues}
+              onChange={(event) => setOnlyIssues(event.target.checked)}
+            />
+            {t('toolbar.onlyIssues')}
+          </label>
+          {viewActive && <span className="text-xs text-warning">{t('toolbar.viewActive')}</span>}
+        </div>
+      )}
+
+      {(issues > 0 || hasRows) && (
+        <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+          <span>
+            {t('summary.size', {
+              alternatives: dataset.alternatives.length,
+              criteria: dataset.criteria.length,
+            })}
+          </span>
+          {summary.invalidCells > 0 && (
+            <button
+              type="button"
+              className="rounded-full bg-danger/10 px-2 py-0.5 text-danger hover:underline"
+              data-testid="invalid-count"
+              onClick={() => {
+                setFindOpen(true);
+                setOnlyIssues(true);
+              }}
+            >
+              {t('summary.invalid', { count: summary.invalidCells })}
+            </button>
+          )}
+          {summary.duplicateCodes > 0 && (
+            <span className="rounded-full bg-warning/10 px-2 py-0.5 text-warning">
+              {t('summary.duplicates', { count: summary.duplicateCodes })}
+            </span>
+          )}
+          {summary.emptyCells > 0 && (
+            <span>{t('summary.empty', { count: summary.emptyCells })}</span>
+          )}
+          {!hasRows && <span>{t('toolbar.hint')}</span>}
+        </div>
+      )}
 
       <div className="flex min-h-0 flex-col gap-4 lg:flex-row">
-        <div className="h-[32rem] min-w-0 flex-1 lg:h-[calc(100dvh-24rem)] lg:min-h-[28rem]">
+        <div className="h-[28rem] min-w-0 flex-1 lg:h-[calc(100dvh-26rem)] lg:min-h-[24rem]">
           <MatrixGrid
             ref={gridRef}
             dataset={dataset}
@@ -675,6 +807,13 @@ function MatrixEditor({
         onOpenChange={setBulkOpen}
         onApply={(operation) => bulkEdit(env, operation)}
       />
+      {exportOpen && (
+        <MatrixExportDialog
+          document={document}
+          dataset={dataset}
+          onClose={() => setExportOpen(false)}
+        />
+      )}
     </div>
   );
 }

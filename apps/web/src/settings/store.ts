@@ -22,7 +22,6 @@ export interface Settings {
   readonly displayPrecision: DisplayPrecision;
   readonly theme: ThemePreference;
   readonly motion: MotionPreference;
-  readonly sidebarCollapsed: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -32,7 +31,6 @@ export const DEFAULT_SETTINGS: Settings = {
   displayPrecision: 4,
   theme: 'system',
   motion: 'system',
-  sidebarCollapsed: false,
 };
 
 interface SettingsActions {
@@ -56,7 +54,6 @@ const validators: { [K in keyof Settings]: (value: unknown) => value is Settings
   displayPrecision: oneOf(DISPLAY_PRECISIONS),
   theme: oneOf(['system', 'light', 'dark'] as const),
   motion: oneOf(['system', 'reduce', 'full'] as const),
-  sidebarCollapsed: (v): v is boolean => typeof v === 'boolean',
 };
 
 /** Keeps only valid stored values so a damaged or outdated entry never breaks the app. */

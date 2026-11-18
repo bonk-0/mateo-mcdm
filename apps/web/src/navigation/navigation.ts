@@ -1,187 +1,92 @@
-import {
-  BookOpen,
-  Boxes,
-  Calculator,
-  Database,
-  FolderOpen,
-  GitCompareArrows,
-  Home,
-  Info,
-  Languages,
-  ListOrdered,
-  type LucideIcon,
-  Network,
-  Table2,
-  Palette,
-  Ruler,
-  Scale,
-  ShieldAlert,
-  SlidersHorizontal,
-  Sparkles,
-  Target,
-  Trophy,
-  Users,
-  Workflow,
-} from 'lucide-react';
+/**
+ * The places of the app. Mateo is one guided path, Data → Weights → Result, with two
+ * side areas (Learn and Settings) reached from the top bar. There is no sidebar: every
+ * screen belongs to one step of the path or to one side area.
+ */
 
-/** Main phases from docs/plan.md §3. Items of later phases stay hidden until they ship. */
-export type Phase = 1 | 2 | 3 | 4;
+/** The steps of the decision path, in order. */
+export const FLOW_STEPS = ['data', 'weights', 'result'] as const;
+export type FlowStepId = (typeof FLOW_STEPS)[number];
 
-/** The phase the app is currently built for. */
-export const CURRENT_PHASE: Phase = 1;
+export type AreaId = 'start' | FlowStepId | 'learn' | 'settings';
 
-export type NavSectionId = 'home' | 'methods' | 'analysis' | 'learn' | 'settings';
-
-export type NavItemId =
-  | 'home'
-  | 'projects'
-  | 'dataCenter'
-  | 'matrix'
-  | 'weighting'
-  | 'ranking'
-  | 'dematel'
-  | 'riskAssessment'
-  | 'hybridBuilder'
-  | 'marcos'
-  | 'results'
-  | 'sensitivity'
-  | 'comparison'
-  | 'groupDecisions'
-  | 'batch'
+export type PageId =
+  | 'start'
+  | 'data'
+  | 'dataSources'
+  | 'weights'
+  | 'result'
+  | 'history'
   | 'library'
   | 'playground'
-  | 'practice'
   | 'languageFormats'
   | 'appearance'
   | 'scales'
   | 'about';
 
-export interface NavItem {
-  readonly id: NavItemId;
+export interface Page {
+  readonly id: PageId;
   readonly path: string;
-  readonly icon: LucideIcon;
-  /** First main phase in which the item is visible. */
-  readonly phase: Phase;
-  /** Sub-phase that builds the screen; set while the route is still a placeholder. */
-  readonly plannedIn?: string;
+  /** The step of the path or the side area the page belongs to. */
+  readonly area: AreaId;
 }
 
-export interface NavSection {
-  readonly id: NavSectionId;
-  readonly items: readonly NavItem[];
-}
-
-/** The full navigation tree from docs/plan.md §12. */
-export const NAVIGATION: readonly NavSection[] = [
-  {
-    id: 'home',
-    items: [
-      { id: 'home', path: '/', icon: Home, phase: 1 },
-      { id: 'projects', path: '/projects', icon: FolderOpen, phase: 1, plannedIn: 'P1.8' },
-      { id: 'dataCenter', path: '/data-center', icon: Database, phase: 1 },
-      { id: 'matrix', path: '/matrix', icon: Table2, phase: 1 },
-    ],
-  },
-  {
-    id: 'methods',
-    items: [
-      { id: 'weighting', path: '/methods/weighting', icon: Scale, phase: 1 },
-      { id: 'ranking', path: '/methods/ranking', icon: ListOrdered, phase: 1 },
-      { id: 'dematel', path: '/methods/dematel', icon: Network, phase: 2, plannedIn: 'P2.8' },
-      {
-        id: 'riskAssessment',
-        path: '/methods/risk',
-        icon: ShieldAlert,
-        phase: 3,
-        plannedIn: 'P3.5',
-      },
-      {
-        id: 'hybridBuilder',
-        path: '/methods/hybrid',
-        icon: Workflow,
-        phase: 2,
-        plannedIn: 'P2.9',
-      },
-    ],
-  },
-  {
-    id: 'analysis',
-    items: [
-      { id: 'marcos', path: '/analysis/marcos', icon: Target, phase: 1 },
-      { id: 'results', path: '/analysis/results', icon: Trophy, phase: 1 },
-      {
-        id: 'sensitivity',
-        path: '/analysis/sensitivity',
-        icon: SlidersHorizontal,
-        phase: 1,
-      },
-      {
-        id: 'comparison',
-        path: '/analysis/comparison',
-        icon: GitCompareArrows,
-        phase: 2,
-        plannedIn: 'P2.10',
-      },
-      {
-        id: 'groupDecisions',
-        path: '/analysis/groups',
-        icon: Users,
-        phase: 3,
-        plannedIn: 'P3.4',
-      },
-      { id: 'batch', path: '/analysis/batch', icon: Boxes, phase: 3, plannedIn: 'P3.7' },
-    ],
-  },
-  {
-    id: 'learn',
-    items: [
-      { id: 'library', path: '/learn/library', icon: BookOpen, phase: 1 },
-      {
-        id: 'playground',
-        path: '/learn/playground',
-        icon: Sparkles,
-        phase: 1,
-      },
-      { id: 'practice', path: '/learn/practice', icon: Calculator, phase: 4, plannedIn: 'P4.5' },
-    ],
-  },
-  {
-    id: 'settings',
-    items: [
-      { id: 'languageFormats', path: '/settings/language', icon: Languages, phase: 1 },
-      { id: 'appearance', path: '/settings/appearance', icon: Palette, phase: 1 },
-      { id: 'scales', path: '/settings/scales', icon: Ruler, phase: 1 },
-      { id: 'about', path: '/settings/about', icon: Info, phase: 1 },
-    ],
-  },
+export const PAGES: readonly Page[] = [
+  { id: 'start', path: '/', area: 'start' },
+  { id: 'data', path: '/data', area: 'data' },
+  { id: 'dataSources', path: '/data/sources', area: 'data' },
+  { id: 'weights', path: '/weights', area: 'weights' },
+  { id: 'result', path: '/result', area: 'result' },
+  { id: 'history', path: '/result/history', area: 'result' },
+  { id: 'library', path: '/learn/library', area: 'learn' },
+  { id: 'playground', path: '/learn/playground', area: 'learn' },
+  { id: 'languageFormats', path: '/settings/language', area: 'settings' },
+  { id: 'appearance', path: '/settings/appearance', area: 'settings' },
+  { id: 'scales', path: '/settings/scales', area: 'settings' },
+  { id: 'about', path: '/settings/about', area: 'settings' },
 ];
 
-/** Navigation with only the items that have shipped in `phase`; empty sections are dropped. */
-export function visibleNavigation(phase: Phase = CURRENT_PHASE): NavSection[] {
-  return NAVIGATION.map((section) => ({
-    ...section,
-    items: section.items.filter((item) => item.phase <= phase),
-  })).filter((section) => section.items.length > 0);
-}
+/** The tabs of a side area, in order. */
+export const AREA_PAGES: Readonly<Record<'learn' | 'settings', readonly PageId[]>> = {
+  learn: ['library', 'playground'],
+  settings: ['languageFormats', 'appearance', 'scales', 'about'],
+};
 
-export interface NavMatch {
-  readonly section: NavSection;
-  readonly item: NavItem;
+export function pathOf(id: PageId): string {
+  const page = PAGES.find((item) => item.id === id);
+  if (!page) throw new Error(`Unknown page ${id}`);
+  return page.path;
 }
 
 /**
- * Finds the visible item for a route path. A page below an item's path belongs to the item,
- * so `/learn/library/marcos` is the Method Library.
+ * Addresses of the earlier, sidebar-based layout. Links saved before the redesign (and the
+ * Method Library's sample links in older files) keep working.
  */
-export function findNavItem(path: string, phase: Phase = CURRENT_PHASE): NavMatch | undefined {
-  const sections = visibleNavigation(phase);
-  for (const section of sections) {
-    const item = section.items.find((i) => i.path === path);
-    if (item) return { section, item };
-  }
-  for (const section of sections) {
-    const item = section.items.find((i) => i.path !== '/' && path.startsWith(`${i.path}/`));
-    if (item) return { section, item };
-  }
-  return undefined;
+export const REDIRECTS: readonly (readonly [from: string, to: string])[] = [
+  ['/projects', '/'],
+  ['/data-center', '/data/sources'],
+  ['/matrix', '/data'],
+  ['/methods/weighting', '/weights'],
+  ['/methods/ranking', '/result'],
+  ['/analysis/marcos', '/result'],
+  ['/analysis/sensitivity', '/result'],
+  ['/analysis/results', '/result/history'],
+];
+
+/**
+ * The page for a route path. A path below a page's path belongs to that page, so
+ * `/learn/library/marcos` is the Method Library.
+ */
+export function findPage(path: string): Page | undefined {
+  const exact = PAGES.find((page) => page.path === path);
+  if (exact) return exact;
+  return PAGES.filter((page) => page.path !== '/' && path.startsWith(`${page.path}/`)).sort(
+    (a, b) => b.path.length - a.path.length,
+  )[0];
+}
+
+/** The step of the decision path a route belongs to, if any. */
+export function flowStepOf(path: string): FlowStepId | null {
+  const area = findPage(path)?.area;
+  return (FLOW_STEPS as readonly string[]).includes(area ?? '') ? (area as FlowStepId) : null;
 }

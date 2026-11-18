@@ -48,7 +48,7 @@ export function DatasetProblems({
           {t('problems.more', { count: problems.length - MAX })}
         </p>
       )}
-      <Link to="/matrix" className="mt-2 inline-block font-medium text-primary underline">
+      <Link to="/data" className="mt-2 inline-block font-medium text-primary underline">
         {t('problems.fix')}
       </Link>
     </div>

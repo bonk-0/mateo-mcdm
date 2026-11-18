@@ -42,10 +42,10 @@
     "noAnimation": "A step-by-step animation of this method is not available yet. The tables below show the same calculation: open any cell to see how it was calculated."
   },
   "sample": {
-    "text": "The sample is the reference example: the same numbers as the paper, so the workspace reproduces its printed result.",
-    "textOrdered": "The sample lists the criteria in order of importance with the assessments of the paper. The workspace fills them in for you.",
+    "text": "The sample is the reference example: the same numbers as the paper, so Mateo reproduces its printed result.",
+    "textOrdered": "The sample lists the criteria in order of importance with the assessments of the paper. Mateo fills them in for you.",
     "download": "Download sample data (CSV)",
-    "open": "Open in workspace with sample data",
+    "open": "Try it with the sample data",
     "openNew": "Create a project and open the sample",
     "noProject": "The sample is added to the open project as a new decision problem. No project is open yet.",
     "added": "Sample data added to the project.",

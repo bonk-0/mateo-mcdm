@@ -2,33 +2,35 @@ import { TooltipProvider } from '@mateo/ui';
 import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Outlet, useLocation } from 'react-router';
+import { useLocation, useOutlet } from 'react-router';
 import { Toaster } from 'sonner';
 import { useResolvedTheme, useReducedMotion } from '../hooks/preferences';
-import { findNavItem } from '../navigation/navigation';
+import { findPage } from '../navigation/navigation';
 import { DesktopBridge } from '../platform/DesktopBridge';
 import { isDesktop } from '../platform/runtime';
 import { ProjectFiles } from '../project/ProjectFiles';
-import { Sidebar } from './Sidebar';
 import { SkipLink } from './SkipLink';
 import { TopBar } from './TopBar';
 
 export function AppShell() {
   const { t } = useTranslation(['nav', 'shell']);
   const { pathname } = useLocation();
-  const match = findNavItem(pathname);
+  const page = findPage(pathname);
+  // The page as it is now. A page that is fading out keeps its own content, so the next
+  // page is built once, when it comes in, instead of first inside the leaving one.
+  const outlet = useOutlet();
   const reducedMotion = useReducedMotion();
   const theme = useResolvedTheme();
   const mainRef = useRef<HTMLElement>(null);
   const firstRender = useRef(true);
 
-  const pageTitle = match ? t(`nav:items.${match.item.id}.title`) : t('shell:notFound.title');
+  const pageTitle = page ? t(`nav:items.${page.id}.title`) : t('shell:notFound.title');
   useEffect(() => {
     document.title = `${pageTitle} · Mateo`;
   }, [pageTitle]);
 
   // Move focus to the content after navigation so keyboard and screen reader users
-  // land on the new page instead of staying in the sidebar.
+  // land on the new page instead of staying in the top bar.
   useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false;
@@ -43,9 +45,8 @@ export function AppShell() {
       <TooltipProvider delayDuration={300}>
         <SkipLink />
         <div className="flex h-dvh overflow-hidden bg-background">
-          <Sidebar />
           <div className="flex min-w-0 flex-1 flex-col">
-            <TopBar match={match} />
+            <TopBar />
             <main
               id="main"
               ref={mainRef}
@@ -60,9 +61,9 @@ export function AppShell() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.18, ease: [0.2, 0, 0, 1] }}
-                  className={`mx-auto w-full px-6 py-8 ${match?.item.id === 'matrix' ? 'max-w-[110rem]' : 'max-w-6xl'}`}
+                  className={`mx-auto w-full px-4 py-8 sm:px-6 ${page?.id === 'data' ? 'max-w-[110rem]' : 'max-w-5xl'}`}
                 >
-                  <Outlet />
+                  {outlet}
                 </motion.div>
               </AnimatePresence>
             </main>

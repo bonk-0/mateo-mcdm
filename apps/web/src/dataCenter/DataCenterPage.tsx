@@ -9,11 +9,10 @@ import {
 } from '@mateo/project';
 import { Badge, Button } from '@mateo/ui';
 import {
+  ArrowLeft,
   ClipboardPaste,
   Download,
-  FilePlus2,
   FileSpreadsheet,
-  FolderOpen,
   Table2,
   Trash2,
   Upload,
@@ -21,12 +20,11 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router';
-import { runCommand } from '../commands/commands';
-import { EmptyState } from '../editor/EditorPage';
 import { useDocument, useSession } from '../editor/session';
 import { useFormatters } from '../hooks/preferences';
 import { MatrixExportButton } from '../export/buttons';
-import { PageHeader } from '../routes/PageHeader';
+import { Notice, StepHeader } from '../flow/FlowPage';
+import { useFlowState } from '../flow/state';
 import { ImportWizard } from './ImportWizard';
 import { IssueList } from './steps';
 import { clipboardInput, type ImportInput } from './wizard';
@@ -66,32 +64,35 @@ function useRecords(session: ProjectSession): { records: Records; reload: () => 
 }
 
 export function DataCenterPage() {
-  const { t } = useTranslation(['dataCenter', 'nav']);
+  const { t } = useTranslation(['dataCenter', 'nav', 'flow']);
   const session = useSession();
   const document = useDocument(session);
   return (
-    <div className="flex flex-col">
-      <PageHeader
-        title={t('nav:items.dataCenter.title')}
-        description={t('nav:items.dataCenter.description')}
-      />
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-2">
+        <Link
+          to="/data"
+          className="inline-flex items-center gap-1 self-start text-sm text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="size-4" aria-hidden />
+          {t('nav:items.data.title')}
+        </Link>
+        <StepHeader
+          title={t('nav:items.dataSources.title')}
+          description={t('nav:items.dataSources.description')}
+        />
+      </div>
       {session && document ? (
         <DataCenter session={session} document={document} />
       ) : (
-        <EmptyState
-          icon={<FileSpreadsheet className="size-8" aria-hidden />}
-          title={t('dataCenter:page.noProject.title')}
-          description={t('dataCenter:page.noProject.description')}
+        <Notice
+          title={t('flow:gate.noProject.title')}
+          description={t('flow:gate.noProject.description')}
         >
-          <Button onClick={() => runCommand('file.new')}>
-            <FilePlus2 aria-hidden />
-            {t('dataCenter:page.new')}
+          <Button asChild>
+            <Link to="/">{t('flow:gate.noProject.action')}</Link>
           </Button>
-          <Button variant="outline" onClick={() => runCommand('file.open')}>
-            <FolderOpen aria-hidden />
-            {t('dataCenter:page.open')}
-          </Button>
-        </EmptyState>
+        </Notice>
       )}
     </div>
   );
@@ -152,7 +153,8 @@ function DataCenter({ session, document }: { session: ProjectSession; document: 
           onImported={(datasetId) => {
             setWizard(null);
             reload();
-            void navigate('/matrix', { state: { datasetId } });
+            useFlowState.getState().setDataset(datasetId);
+            void navigate('/data');
           }}
         />
       )}
@@ -229,7 +231,7 @@ function DatasetsSection({
                 </p>
               </div>
               <Button asChild variant="outline" size="sm">
-                <Link to="/matrix" state={{ datasetId: dataset.id }}>
+                <Link to="/data" onClick={() => useFlowState.getState().setDataset(dataset.id)}>
                   {t('page.datasets.open')}
                 </Link>
               </Button>

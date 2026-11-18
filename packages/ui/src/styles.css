@@ -1,6 +1,12 @@
 /*
- * Mateo design tokens (docs/plan.md §14): calm, minimal, scientific.
- * White and light-gray surfaces with navy and blue accents, plus a dark mode.
+ * Mateo design tokens: calm and quiet, with violet-tinted neutrals and one orchid accent.
+ *
+ * The dark theme follows the Aevitas palette: cards and bars sit darker than the page and
+ * the text is a soft lavender white. The light theme mirrors it: the same hues, white cards
+ * on a lavender-grey page, and a deeper orchid so the accent keeps its contrast on white.
+ *
+ * Ten text tones (red … pink) are shared by charts and states. Each one is tuned for the
+ * theme it is used in, so a tone stays readable as text on both backgrounds.
  *
  * Import after `tailwindcss` in the app stylesheet. The `.dark` class on <html>
  * switches to dark tokens; `data-reduced-motion="true"` on <html> disables motion.
@@ -11,30 +17,45 @@
 :root {
   color-scheme: light;
 
-  --background: #f5f7fa;
+  --background: #f5f4f9;
   --surface: #ffffff;
-  --muted: #eef1f6;
-  --foreground: #0f1c36;
-  --muted-foreground: #4f5b70;
-  --border: #dde3ec;
-  --primary: #1f4fd1;
-  --primary-hover: #1a43b3;
+  --muted: #eceaf3;
+  --foreground: #1c1a2b;
+  --muted-foreground: #5f5d73;
+  /* Placeholder and inactive text: quieter than labels. */
+  --faint: #8b89a0;
+  --border: #dcd9e6;
+  --primary: #8a35ad;
+  --primary-hover: #742a93;
   --primary-foreground: #ffffff;
-  --accent: #e3ecfd;
-  --accent-foreground: #1a3a8a;
-  --navy: #13254a;
-  --navy-foreground: #ffffff;
-  --ring: #2f6bff;
-  --success: #157f4a;
-  --warning: #a15c00;
-  --danger: #c0262d;
+  --accent: #f4e8fa;
+  --accent-foreground: #6b2687;
+  --navy: #211f31;
+  --navy-foreground: #ebeaf5;
+  --ring: #8a35ad;
+
+  /* Text tones, darkened for white surfaces (each at least 4.5:1 on white). */
+  --tone-red: #c93a3a;
+  --tone-orange: #a85a12;
+  --tone-gold: #8a6a00;
+  --tone-green: #3d7a2c;
+  --tone-cyan: #127a6e;
+  --tone-teal: #3f7b86;
+  --tone-blue: #2f78b8;
+  --tone-azure: #2463d6;
+  --tone-purple: #7a49c9;
+  --tone-pink: #a03f78;
+
+  --success: var(--tone-green);
+  --warning: var(--tone-orange);
+  --danger: var(--tone-red);
 
   /* Data series, ordered for maximum distinction between neighbours. */
-  --series-1: #1f4fd1;
-  --series-2: #0e9384;
-  --series-3: #c2610c;
-  --series-4: #8a3ffc;
-  --series-5: #d12771;
+  --series-1: var(--tone-azure);
+  --series-2: var(--tone-orange);
+  --series-3: var(--tone-cyan);
+  --series-4: var(--tone-purple);
+  --series-5: var(--tone-pink);
 
   --radius: 0.625rem;
 
@@ -50,29 +71,32 @@
 .dark {
   color-scheme: dark;
 
-  --background: #0a1120;
-  --surface: #101a2d;
-  --muted: #17233a;
-  --foreground: #e7ecf5;
-  --muted-foreground: #a3afc4;
-  --border: #243250;
-  --primary: #6c9bff;
-  --primary-hover: #8aafff;
-  --primary-foreground: #0a1120;
-  --accent: #1b2d52;
-  --accent-foreground: #cfe0ff;
-  --navy: #0d1830;
-  --navy-foreground: #e7ecf5;
-  --ring: #6c9bff;
-  --success: #4ccf8d;
-  --warning: #f2b45a;
-  --danger: #ff7a7f;
+  --background: #211f31;
+  --surface: #191827;
+  --muted: #2c2b41;
+  --foreground: #ebeaf5;
+  --muted-foreground: #aaa9bd;
+  --faint: #777a99;
+  --border: #42435b;
+  --primary: #e6a6f7;
+  --primary-hover: #cc64ee;
+  --primary-foreground: #040105;
+  --accent: #48495e;
+  --accent-foreground: #ebeaf5;
+  --navy: #141322;
+  --navy-foreground: #ebeaf5;
+  --ring: #e6a6f7;
 
-  --series-1: #6c9bff;
-  --series-2: #3cc9b5;
-  --series-3: #f29b4c;
-  --series-4: #b48cff;
-  --series-5: #ff6fa8;
+  --tone-red: #e76363;
+  --tone-orange: #f7ad6b;
+  --tone-gold: #ffe79c;
+  --tone-green: #b5d6a5;
+  --tone-cyan: #94e2d5;
+  --tone-teal: #73a5ad;
+  --tone-blue: #9cc6ef;
+  --tone-azure: #89b4fa;
+  --tone-purple: #cba6f7;
+  --tone-pink: #c67ba5;
 }
 
 @theme inline {
@@ -93,6 +117,17 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-danger: var(--danger);
+  --color-faint: var(--faint);
+  --color-tone-red: var(--tone-red);
+  --color-tone-orange: var(--tone-orange);
+  --color-tone-gold: var(--tone-gold);
+  --color-tone-green: var(--tone-green);
+  --color-tone-cyan: var(--tone-cyan);
+  --color-tone-teal: var(--tone-teal);
+  --color-tone-blue: var(--tone-blue);
+  --color-tone-azure: var(--tone-azure);
+  --color-tone-purple: var(--tone-purple);
+  --color-tone-pink: var(--tone-pink);
   --color-series-1: var(--series-1);
   --color-series-2: var(--series-2);
   --color-series-3: var(--series-3);

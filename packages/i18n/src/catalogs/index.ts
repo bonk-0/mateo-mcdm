@@ -7,6 +7,7 @@
  */
 import enDataCenter from './en/dataCenter.json';
 import enExport from './en/export.json';
+import enFlow from './en/flow.json';
 import enExplain from './en/explain.json';
 import enHome from './en/home.json';
 import enLibrary from './en/library.json';
@@ -18,6 +19,7 @@ import enShell from './en/shell.json';
 import enWorkspace from './en/workspace.json';
 import trDataCenter from './tr/dataCenter.json';
 import trExport from './tr/export.json';
+import trFlow from './tr/flow.json';
 import trExplain from './tr/explain.json';
 import trHome from './tr/home.json';
 import trLibrary from './tr/library.json';
@@ -33,6 +35,7 @@ export const NAMESPACES = [
   'shell',
   'nav',
   'home',
+  'flow',
   'settings',
   'project',
   'matrix',
@@ -51,6 +54,7 @@ export const resources = {
     shell: enShell,
     nav: enNav,
     home: enHome,
+    flow: enFlow,
     settings: enSettings,
     project: enProject,
     matrix: enMatrix,
@@ -64,6 +68,7 @@ export const resources = {
     shell: trShell,
     nav: trNav,
     home: trHome,
+    flow: trFlow,
     settings: trSettings,
     project: trProject,
     matrix: trMatrix,

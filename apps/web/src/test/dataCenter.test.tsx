@@ -71,15 +71,13 @@ describe('Data Center', () => {
   });
 
   it('asks for a project when none is open', async () => {
-    renderApp('/data-center');
-    expect(
-      await screen.findByRole('heading', { name: 'Open a project to import data' }),
-    ).toBeTruthy();
+    renderApp('/data/sources');
+    expect(await screen.findByRole('heading', { name: 'No decision open yet' })).toBeTruthy();
   });
 
   it('imports a Turkish XLSX through every step and stores the original file', async () => {
     const user = userEvent.setup();
-    renderApp('/data-center');
+    renderApp('/data/sources');
     const session = await openProject(user);
     await openWizard(user, fixture('08-tr-tez-tablosu.xlsx'));
 
@@ -150,7 +148,7 @@ describe('Data Center', () => {
 
   it('imports an English CSV with fuzzy numbers in cells', async () => {
     const user = userEvent.setup();
-    renderApp('/data-center');
+    renderApp('/data/sources');
     const session = await openProject(user);
     await openWizard(user, fixture('15-en-tfn-in-cells.csv'));
     expect(await screen.findByTestId('step-structure')).toBeTruthy(); // no sheet step for CSV
@@ -177,7 +175,7 @@ describe('Data Center', () => {
 
   it('does not guess an ambiguous number format and shows both readings', async () => {
     const user = userEvent.setup();
-    renderApp('/data-center');
+    renderApp('/data/sources');
     const session = await openProject(user);
     await openWizard(user, fixture('05-ambiguous-thousands.csv'));
     await next(user); // columns
@@ -205,7 +203,7 @@ describe('Data Center', () => {
 
   it('starts an import from text pasted anywhere on the page', async () => {
     const user = userEvent.setup();
-    renderApp('/data-center');
+    renderApp('/data/sources');
     const session = await openProject(user);
     await screen.findByTestId('import-file');
     act(() => {
@@ -234,7 +232,7 @@ describe('Data Center', () => {
 
   it('lists the original file, the import history and the saved profile', async () => {
     const user = userEvent.setup();
-    const { router } = renderApp('/data-center');
+    const { router } = renderApp('/data/sources');
     await openProject(user);
     await openWizard(user, fixture('08-tr-tez-tablosu.xlsx'));
     await next(user);
@@ -245,7 +243,7 @@ describe('Data Center', () => {
     await user.click(screen.getByTestId('confirm-import'));
     await screen.findByTestId('grid-stub');
 
-    await act(() => router.navigate('/data-center'));
+    await act(() => router.navigate('/data/sources'));
     const files = await screen.findByTestId('file-list');
     expect(within(files).getByText('08-tr-tez-tablosu.xlsx')).toBeTruthy();
     const history = await screen.findByTestId('history-list');
@@ -260,7 +258,7 @@ describe('Data Center', () => {
 
   it('applies a saved profile to a similar file', async () => {
     const user = userEvent.setup();
-    const { router } = renderApp('/data-center');
+    const { router } = renderApp('/data/sources');
     const session = await openProject(user);
     // First import: choose directions and save them as a profile.
     await openWizard(user, fixture('08-tr-tez-tablosu.xlsx'));
@@ -274,7 +272,7 @@ describe('Data Center', () => {
     expect(await session.listImportProfiles()).toHaveLength(1);
 
     // Second import of the same file with the profile: no direction has to be chosen again.
-    await act(() => router.navigate('/data-center'));
+    await act(() => router.navigate('/data/sources'));
     await user.click(await screen.findByTestId('import-file'));
     await waitFor(() => screen.getByRole('combobox', { name: 'Import profile' }));
     await user.selectOptions(
@@ -307,7 +305,7 @@ describe('Data Center', () => {
       findUntranslated(screen.getByTestId('import-wizard')).filter(
         (text) => !FILE_TEXTS.some((name) => text.includes(name)),
       );
-    renderApp('/data-center', { i18n });
+    renderApp('/data/sources', { i18n });
     await waitFor(() => expect(getProjectController()).not.toBeNull());
     act(() => runCommand('file.new'));
     await user.click(
@@ -334,7 +332,7 @@ describe('Data Center', () => {
   it('is available in Turkish', async () => {
     const user = userEvent.setup();
     act(() => useSettings.getState().update({ language: 'tr' }));
-    renderApp('/data-center', { language: 'tr' });
+    renderApp('/data/sources', { language: 'tr' });
     await waitFor(() => expect(getProjectController()).not.toBeNull());
     act(() => runCommand('file.new'));
     await user.click(

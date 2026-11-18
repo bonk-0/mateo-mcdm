@@ -109,7 +109,7 @@ function WeightsSection({ analysis }: { analysis: StoredAnalysis }) {
   );
 }
 
-function RankingSection({ analysis }: { analysis: StoredAnalysis }) {
+export function RankingSection({ analysis }: { analysis: StoredAnalysis }) {
   const { t } = useTranslation('workspace');
   const textOf = useTextRef();
   const formatters = useFormatters();

@@ -293,42 +293,25 @@ Unchanged in intent from `base-plan.md` §6–7, with these clarifications:
 
 ## 12. Navigation
 
+Mateo is one guided path with two side areas. There is no sidebar: a top bar holds the open project (with the File commands), the steps of the path, and links to Learn and Settings.
+
 ```
-MATEO
+Start            What are you deciding? Drop a file, start blank, or try an example.
 
-HOME
-    Home
-    Projects
-    Data Center
+1. Data          The decision matrix. Imported files live one level down (Data → Imported files).
+2. Weights       Calculated from the data (CRITIC or MEREC), from an order of importance
+                 (SWARA, numbers or words), or typed in.
+3. Result        The best choice and the ranking (MARCOS, or Fuzzy MARCOS when the data or
+                 the weights are fuzzy). "How was it calculated?", "What if the weights
+                 change?" and Export sit under the result. Earlier calculations: Result → history.
 
-METHODS
-    Weighting
-    Ranking
-    DEMATEL
-    Risk Assessment
-    Hybrid Builder
-
-ANALYSIS
-    MARCOS Workspace
-    Results
-    Sensitivity
-    Method Comparison
-    Group Decisions
-    Batch Analysis
-
-LEARN
-    Method Library
-    Fuzzy Playground
-    Practice Center
-
-SETTINGS
-    Language and Formats
-    Appearance
-    Scales and Templates
-    About
+Learn            Method Library · Fuzzy Playground
+Settings         Language and formats · Appearance · Linguistic scales · About
 ```
 
-Items that belong to later phases are hidden until they ship.
+Calculations run as soon as their inputs are complete; there is no Run button. A calculation is stored in the project once: asking for the same one again reads the stored analysis.
+
+The earlier sidebar addresses (`/matrix`, `/methods/weighting`, `/analysis/marcos` and so on) redirect to their place in the path, so saved links keep working. Methods of later phases (DEMATEL, group decisions, method comparison and so on) join the path as choices inside a step, not as new top-level places.
 
 ---
 
@@ -342,7 +325,7 @@ Project versioning stores immutable snapshots of the model inside the `.mateo` f
 
 ## 14. Design system
 
-Carried over from `base-plan.md` §24: calm, minimal, scientific. White and light-gray surfaces with navy and blue accents in light mode, plus a dark mode. Desktop-first layout with a collapsible sidebar, dense but readable tables, tabular numerals for all numbers, and consistent motion timing shared by UI transitions and Explain mode.
+Carried over from `base-plan.md` §24: calm, minimal, scientific. Light surfaces with a violet accent and a matching dark mode derived from the Aevitas palette, plus ten tone colours for charts and status. Desktop-first layout with a top bar and a three-step path (§12), dense but readable tables, tabular numerals for all numbers, and consistent motion timing shared by UI transitions and Explain mode.
 
 ---
 

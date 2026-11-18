@@ -1,11 +1,8 @@
 {
+  "appName": "Mateo",
+  "home": "Mateo, başlangıç sayfası",
   "skipToContent": "İçeriğe geç",
   "mainNavigation": "Ana gezinme",
-  "breadcrumb": "Konum",
-  "collapseSidebar": "Kenar çubuğunu daralt",
-  "expandSidebar": "Kenar çubuğunu genişlet",
-  "noProject": "Açık proje yok",
-  "browserBuild": "Tarayıcı sürümü",
   "notifications": "Bildirimler",
   "closeNotification": "Bildirimi kapat",
   "notFound": {
@@ -13,20 +10,7 @@
     "description": "Bu sayfa mevcut değil. Taşınmış olabilir ya da bağlantı eksik olabilir."
   },
   "placeholder": {
-    "comingSoon": "Yakında",
     "backHome": "Ana Sayfa’ya dön"
-  },
-  "language": {
-    "change": "Dili değiştir",
-    "label": "Dil",
-    "system": "Sistem ({language})"
-  },
-  "theme": {
-    "change": "Temayı değiştir",
-    "label": "Tema",
-    "system": "Sistem",
-    "light": "Açık",
-    "dark": "Koyu"
   },
   "menu": {
     "file": "Dosya",
@@ -53,6 +37,8 @@
     "services": "Servisler",
     "hide": "Mateo’yu Gizle",
     "hideOthers": "Diğerlerini Gizle",
-    "showAll": "Tümünü Göster"
-  }
+    "showAll": "Tümünü Göster",
+    "newProject": "Yeni proje"
+  },
+  "projectMenu": "Proje menüsü"
 }
