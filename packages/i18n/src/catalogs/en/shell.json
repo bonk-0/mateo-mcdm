@@ -13,32 +13,18 @@
     "backHome": "Back to Home"
   },
   "menu": {
-    "file": "File",
-    "new": "New",
+    "newProject": "New project",
     "open": "Open…",
+    "import": "Open from computer…",
     "recent": "Open Recent",
-    "recentEmpty": "No recent projects",
-    "clearRecent": "Clear Recent",
     "save": "Save",
     "saveAs": "Save As…",
-    "quit": "Quit Mateo",
-    "edit": "Edit",
-    "undo": "Undo",
-    "redo": "Redo",
-    "cut": "Cut",
-    "copy": "Copy",
-    "paste": "Paste",
-    "selectAll": "Select All",
-    "window": "Window",
-    "minimize": "Minimize",
-    "fullscreen": "Toggle Full Screen",
-    "closeWindow": "Close Window",
-    "about": "About Mateo",
-    "services": "Services",
-    "hide": "Hide Mateo",
-    "hideOthers": "Hide Others",
-    "showAll": "Show All",
-    "newProject": "New project"
+    "export": "Download .mateo file"
   },
-  "projectMenu": "Project menu"
+  "projectMenu": "Project menu",
+  "update": {
+    "ready": "A new version of Mateo is ready.",
+    "reload": "Reload",
+    "offlineReady": "Mateo now works offline too."
+  }
 }

@@ -8,7 +8,7 @@ export interface KeyValueStore {
 }
 
 export interface RecentProject {
-  /** File path (desktop) or file name (browser). */
+  /** File name in the browser's project storage. */
   readonly location: string;
   /** Project name at the time it was last used. */
   readonly name: string;

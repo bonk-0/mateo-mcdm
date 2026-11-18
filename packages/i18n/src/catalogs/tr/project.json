@@ -1,12 +1,7 @@
 {
   "untitled": "Adsız proje",
   "unsavedChanges": "Kaydedilmemiş değişiklikler",
-  "dialogs": {
-    "filterName": "Mateo projesi",
-    "newTitle": "Yeni proje oluştur",
-    "openTitle": "Proje aç",
-    "saveAsTitle": "Projeyi farklı kaydet"
-  },
+  "fileType": "Mateo projesi",
   "unsaved": {
     "title": "“{name}” projesindeki değişiklikler kaydedilsin mi?",
     "description": "Kaydetmezseniz değişiklikleriniz kaybolur.",
@@ -19,19 +14,24 @@
     "opened": "“{name}” açıldı",
     "saved": "“{name}” kaydedildi",
     "alreadyOpen": "“{name}” zaten açık.",
-    "noProject": "Kaydedilecek açık bir proje yok."
+    "noProject": "Kaydedilecek açık bir proje yok.",
+    "imported": "“{name}” bilgisayarınızdan açıldı",
+    "exported": "“{name}” indirildi"
   },
   "failed": {
     "new": "Proje oluşturulamadı",
     "open": "Proje açılamadı",
     "save": "Proje kaydedilemedi",
     "saveAs": "Projenin kopyası kaydedilemedi",
+    "import": "Dosya açılamadı",
+    "export": "Proje indirilemedi",
     "close": "Proje düzgün kapatılamadı"
   },
   "browser": {
     "newTitle": "Yeni proje",
     "saveAsTitle": "Projeyi farklı kaydet",
-    "nameDescription": "Projeler bu tarayıcıda saklanır. Masaüstü uygulaması bunları dosya olarak kaydeder.",
+    "importTitle": "Projeyi şu adla sakla",
+    "nameDescription": "Projeler bu bilgisayardaki bu tarayıcıda saklanır. Başka bir yerde kopyasını tutmak ya da başka bir bilgisayarda açmak için .mateo dosyası olarak indirin.",
     "nameLabel": "Proje adı",
     "create": "Oluştur",
     "save": "Kaydet",
@@ -39,6 +39,7 @@
     "openTitle": "Proje aç",
     "openDescription": "Bu tarayıcıda saklanan projeler.",
     "openEmpty": "Bu tarayıcıda henüz saklanan proje yok.",
+    "fromComputer": "Bu bilgisayardan…",
     "replaceTitle": "“{name}” değiştirilsin mi?",
     "replaceDescription": "Bu adla bir proje zaten bu tarayıcıda saklanıyor. Değiştirirseniz içeriği silinir.",
     "replace": "Değiştir"
@@ -50,6 +51,7 @@
     "MIGRATION_FAILED": "Bu proje güncel dosya biçimine yükseltilemedi. Dosya değiştirilmedi.",
     "LOCATION_NOT_EMPTY": "Bu konumda zaten bir dosya var.",
     "NOT_FOUND": "Dosya veya öğe bulunamadı.",
+    "IN_USE": "Bu proje başka bir sekmede veya pencerede açık. Orada kapatın ya da o sekmede devam edin.",
     "PROJECT_CLOSED": "Proje kapalı.",
     "INVALID_ARGUMENT": "Bu değişiklik projeye kaydedilemiyor.",
     "STORAGE_FAILED": "Proje okunamadı veya yazılamadı. Dosyaya erişilebildiğinden ve yeterli boş alan olduğundan emin olun.",

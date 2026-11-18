@@ -10,6 +10,7 @@
  * - `vikor`, `edas`, `codas`, `waspas` (with `fuzzy-waspas`): the first ranking methods of
  *   Phase 2 (P2.4). Fuzzy VIKOR is deferred; fuzzy EDAS and CODAS use trapezoidal numbers
  *   and wait for P3.2 (docs/phases/phase-2.md, P2.1 decisions).
+ * - `dematel`: DEMATEL and fuzzy DEMATEL, with weights from prominence (P2.3).
  * - `REFERENCE_FIXTURES`: the P1.4 worked examples as data (P1.17).
  */
 export const PACKAGE_NAME = '@mateo/methods';
@@ -18,6 +19,7 @@ export * from '../bwm';
 export * from '../codas';
 export * from '../critic';
 export * from '../edas';
+export * from '../dematel';
 export * from '../fucom';
 export * from '../fuzzy-marcos';
 export * from '../lopcow';

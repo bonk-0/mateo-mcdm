@@ -1,4 +1,4 @@
-/** Reads locale preferences from the operating system through the browser or webview. */
+/** Reads locale preferences from the operating system through the browser. */
 
 const FALLBACK_LOCALE = 'en-US';
 

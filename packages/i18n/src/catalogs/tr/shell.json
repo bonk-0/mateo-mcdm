@@ -13,32 +13,18 @@
     "backHome": "Ana Sayfa’ya dön"
   },
   "menu": {
-    "file": "Dosya",
-    "new": "Yeni",
+    "newProject": "Yeni proje",
     "open": "Aç…",
+    "import": "Bilgisayardan aç…",
     "recent": "Son Kullanılanlar",
-    "recentEmpty": "Son proje yok",
-    "clearRecent": "Listeyi Temizle",
     "save": "Kaydet",
     "saveAs": "Farklı Kaydet…",
-    "quit": "Mateo’dan Çık",
-    "edit": "Düzen",
-    "undo": "Geri Al",
-    "redo": "Yinele",
-    "cut": "Kes",
-    "copy": "Kopyala",
-    "paste": "Yapıştır",
-    "selectAll": "Tümünü Seç",
-    "window": "Pencere",
-    "minimize": "Simge Durumuna Küçült",
-    "fullscreen": "Tam Ekranı Aç/Kapat",
-    "closeWindow": "Pencereyi Kapat",
-    "about": "Mateo Hakkında",
-    "services": "Servisler",
-    "hide": "Mateo’yu Gizle",
-    "hideOthers": "Diğerlerini Gizle",
-    "showAll": "Tümünü Göster",
-    "newProject": "Yeni proje"
+    "export": ".mateo dosyası olarak indir"
   },
-  "projectMenu": "Proje menüsü"
+  "projectMenu": "Proje menüsü",
+  "update": {
+    "ready": "Mateo’nun yeni bir sürümü hazır.",
+    "reload": "Yeniden yükle",
+    "offlineReady": "Mateo artık çevrimdışı da çalışıyor."
+  }
 }

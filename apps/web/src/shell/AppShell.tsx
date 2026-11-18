@@ -6,9 +6,8 @@ import { useLocation, useOutlet } from 'react-router';
 import { Toaster } from 'sonner';
 import { useResolvedTheme, useReducedMotion } from '../hooks/preferences';
 import { findPage } from '../navigation/navigation';
-import { DesktopBridge } from '../platform/DesktopBridge';
-import { isDesktop } from '../platform/runtime';
 import { ProjectFiles } from '../project/ProjectFiles';
+import { AppUpdate } from './AppUpdate';
 import { SkipLink } from './SkipLink';
 import { TopBar } from './TopBar';
 
@@ -78,7 +77,7 @@ export function AppShell() {
           toastOptions={{ closeButtonAriaLabel: t('shell:closeNotification') }}
         />
         <ProjectFiles />
-        {isDesktop() && <DesktopBridge />}
+        <AppUpdate />
       </TooltipProvider>
     </MotionConfig>
   );

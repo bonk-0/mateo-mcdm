@@ -1,9 +1,7 @@
 /**
  * Sample data for tests of project files: a dataset with crisp, TFN and linguistic cells
  * whose numbers are easy to damage, and a genuine engine run to store as an analysis.
- *
- * Published as `@mateo/project/testing` so that the desktop app can run the same data
- * through the real Tauri SQL plugin. Test code only.
+ * Test code only.
  */
 import {
   createTraceBuilder,

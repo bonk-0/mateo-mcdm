@@ -16,7 +16,7 @@ import type { SessionEnvironment } from './session';
 import { ProjectSession } from './session';
 
 export interface ProjectRepositoryOptions {
-  /** `createTauriStorage(...)` on the desktop, `createWasmStorage(...)` in the browser. */
+  /** Usually `createWasmStorage(...)`. */
   readonly storage: StorageAdapter;
   /** Version of the app, recorded in files and analyses. */
   readonly appVersion: string;
@@ -143,7 +143,6 @@ export function createProjectRepository(options: ProjectRepositoryOptions): Proj
         const id = environment.newId();
         assertValidId(id, 'project');
         const createdAt = now();
-        await connection.prepareForWriting();
         await runMigrations(connection, 0, migrations, migrationContext);
         await connection.transaction([
           statement(
@@ -196,7 +195,6 @@ export function createProjectRepository(options: ProjectRepositoryOptions): Proj
             toVersion: schemaVersion,
           });
         }
-        await connection.prepareForWriting();
         await runMigrations(connection, header.schemaVersion, migrations, migrationContext);
         return await start(connection, location);
       });
