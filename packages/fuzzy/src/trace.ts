@@ -28,6 +28,7 @@ import {
   tfnMax,
   tfnMin,
   tfnMinMeanMax,
+  tfnProduct,
   tfnSum,
 } from './aggregation';
 import {
@@ -37,6 +38,7 @@ import {
   tfnDivideByScalar,
   tfnMultiply,
   tfnMultiplyByScalar,
+  tfnPower,
   tfnScalarDividedBy,
   tfnScalarMinus,
   tfnSubtract,
@@ -152,6 +154,7 @@ export const TFN_OPERATIONS = {
   'tfn.subtract': tfnTfn(tfnSubtract),
   'tfn.multiply': tfnTfn(tfnMultiply),
   'tfn.divide': tfnTfn(tfnDivide),
+  'tfn.power': tfnTfn(tfnPower),
   'tfn.add-scalar': tfnScalar(tfnAddScalar),
   'tfn.subtract-scalar': tfnScalar(tfnSubtractScalar),
   'tfn.scalar-minus': scalarTfn(tfnScalarMinus),
@@ -159,6 +162,7 @@ export const TFN_OPERATIONS = {
   'tfn.divide-by-scalar': tfnScalar(tfnDivideByScalar),
   'tfn.scalar-divided-by': scalarTfn(tfnScalarDividedBy),
   'tfn.sum': tfnList(tfnSum),
+  'tfn.product': tfnList(tfnProduct),
   'tfn.min': tfnList(tfnMin),
   'tfn.max': tfnList(tfnMax),
   'tfn.arithmetic-mean': tfnList(tfnArithmeticMean),
@@ -323,6 +327,8 @@ export const tfnOps = {
   subtract: binary('tfn.subtract'),
   multiply: binary('tfn.multiply'),
   divide: binary('tfn.divide'),
+  /** `a ^ b` with the power rule `(l^w_u, m^w_m, u^w_l)`; see `tfnPower`. */
+  power: binary('tfn.power'),
   addScalar: withScalar('tfn.add-scalar'),
   subtractScalar: withScalar('tfn.subtract-scalar'),
   scalarMinus: scalarFirst('tfn.scalar-minus'),
@@ -330,6 +336,7 @@ export const tfnOps = {
   divideByScalar: withScalar('tfn.divide-by-scalar'),
   scalarDividedBy: scalarFirst('tfn.scalar-divided-by'),
   sum: aggregate('tfn.sum'),
+  product: aggregate('tfn.product'),
   min: aggregate('tfn.min'),
   max: aggregate('tfn.max'),
   arithmeticMean: aggregate('tfn.arithmetic-mean'),

@@ -8,6 +8,7 @@
  */
 import { EngineError, maximum, mean, minimum, product, sum } from '@mateo/engine';
 import type { TFN } from './tfn';
+import { tfnMultiply } from './arithmetic';
 import { makeTfn } from './tfn';
 
 function assertNotEmpty(values: readonly TFN[], operation: string): void {
@@ -26,6 +27,16 @@ const upper = (values: readonly TFN[]): number[] => values.map((value) => value.
 export function tfnSum(values: readonly TFN[]): TFN {
   assertNotEmpty(values, 'tfnSum');
   return makeTfn(sum(lower(values)), sum(modal(values)), sum(upper(values)));
+}
+
+/**
+ * `Π aₖ`, multiplied strictly left to right from `(1, 1, 1)` with `tfnMultiply`: for
+ * non-negative TFNs `(Π lₖ, Π mₖ, Π uₖ)`, and a valid TFN for any signs. Degenerate TFNs
+ * give exactly the crisp product.
+ */
+export function tfnProduct(values: readonly TFN[]): TFN {
+  assertNotEmpty(values, 'tfnProduct');
+  return values.reduce<TFN>((total, value) => tfnMultiply(total, value), makeTfn(1, 1, 1));
 }
 
 /**

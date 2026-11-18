@@ -9,6 +9,11 @@ import { describe, expect, it } from 'vitest';
 import marcosFixture from '../marcos/fixtures/damjanovic-2022-s1.json';
 import fuzzyFixture from '../fuzzy-marcos/fixtures/stankovic-2020.json';
 import type { MethodsMessageKey } from './index';
+import codasFixture from '../codas/fixtures/keshavarz-ghorabaee-2016.json';
+import edasFixture from '../edas/fixtures/keshavarz-ghorabaee-2015.json';
+import vikorFixture from '../vikor/fixtures/opricovic-2008-w5.json';
+import waspasFixture from '../waspas/fixtures/zavadskas-2012.json';
+import fuzzyWaspasFixture from '../waspas/fixtures/turskis-2015-fuzzy.json';
 import { loadHighsSolver } from '@mateo/solver';
 import bwmFixture from '../bwm/fixtures/rezaei-car.json';
 import fucomFixture from '../fucom/fixtures/pamucar-2018-example-2.json';
@@ -16,7 +21,12 @@ import dematelFixture from '../dematel/fixtures/chen-2018.json';
 import lopcowFixture from '../lopcow/fixtures/biswas-2024.json';
 import {
   BWM_ISSUE_CODES,
+  CODAS_ISSUE_CODES,
   CRITIC_ISSUE_CODES,
+  EDAS_ISSUE_CODES,
+  FUZZY_WASPAS_ISSUE_CODES,
+  VIKOR_ISSUE_CODES,
+  WASPAS_ISSUE_CODES,
   DEMATEL_ISSUE_CODES,
   FUCOM_ISSUE_CODES,
   LOPCOW_ISSUE_CODES,
@@ -27,7 +37,12 @@ import {
   SWARA_ISSUE_CODES,
   METHODS_MESSAGES,
   bwmMethod,
+  codasMethod,
   criticMethod,
+  edasMethod,
+  fuzzyWaspasMethod,
+  vikorMethod,
+  waspasMethod,
   dematelMethod,
   fucomMethod,
   fuzzyDematelMethod,
@@ -96,6 +111,11 @@ describe('method messages', () => {
       ...Object.values(LOPCOW_ISSUE_CODES),
       ...Object.values(FUCOM_ISSUE_CODES),
       ...Object.values(BWM_ISSUE_CODES),
+      ...Object.values(VIKOR_ISSUE_CODES),
+      ...Object.values(EDAS_ISSUE_CODES),
+      ...Object.values(CODAS_ISSUE_CODES),
+      ...Object.values(WASPAS_ISSUE_CODES),
+      ...Object.values(FUZZY_WASPAS_ISSUE_CODES),
       ...Object.values(DEMATEL_ISSUE_CODES),
     ]) {
       expect(known.has(messageKeyForCode(code)), code).toBe(true);
@@ -112,6 +132,9 @@ describe('method messages', () => {
       othersToWorst: bwmFixture.input.othersToWorst,
     };
     const ranked = orderedCriteria(fucomFixture.input.ranking.map((id) => ({ id, name: id })));
+    const vikorInput = crispInput(vikorFixture.input);
+    const waspasInput = crispInput(waspasFixture.input);
+    const fuzzyWaspasInput = tfnInput(fuzzyWaspasFixture.input);
     const dematelInput = {
       factors: dematelFixture.input.factors.map((id) => ({ id, name: textLiteral(id) })),
       relations: [dematelFixture.input.directRelation, dematelFixture.input.directRelation],
@@ -123,6 +146,33 @@ describe('method messages', () => {
       ),
     };
     const traces = [
+      ...(['fixed', 'opricovic-tzeng-2008'] as const).map(
+        (vRule) => runMethod(vikorMethod, vikorInput, { vRule, normalizeWeights: false }).trace,
+      ),
+      runMethod(vikorMethod, vikorInput).trace,
+      runMethod(edasMethod, crispInput(edasFixture.input)).trace,
+      runMethod(codasMethod, crispInput(codasFixture.input)).trace,
+      ...(['fixed', 'optimal', 'pooled'] as const).map(
+        (lambdaRule) =>
+          runMethod(waspasMethod, waspasInput, { lambdaRule, normalizeWeights: true }).trace,
+      ),
+      ...(['pooled', 'fixed'] as const).flatMap((lambdaRule) =>
+        (['centroid', 'graded-mean'] as const).map(
+          (defuzzification) =>
+            runMethod(fuzzyWaspasMethod, fuzzyWaspasInput, { lambdaRule, defuzzification }).trace,
+        ),
+      ),
+      runMethod(
+        fuzzyWaspasMethod,
+        {
+          ...fuzzyWaspasInput,
+          weights: crispWeights(
+            fuzzyWaspasFixture.input.criteria.map((c) => c.id),
+            [1, 2, 3, 4, 5, 6, 7, 8],
+          ),
+        },
+        { normalizeWeights: true },
+      ).trace,
       runMethod(lopcowMethod, crispMatrixInput(lopcowFixture.input)).trace,
       runMethod(dematelMethod, { ...dematelInput, relations: [dematelInput.relations[0]!] }).trace,
       runMethod(dematelMethod, dematelInput, {
@@ -198,6 +248,11 @@ describe('method messages', () => {
       lopcowMethod,
       fucomMethod,
       bwmMethod,
+      vikorMethod,
+      edasMethod,
+      codasMethod,
+      waspasMethod,
+      fuzzyWaspasMethod,
       dematelMethod,
       fuzzyDematelMethod,
     ];

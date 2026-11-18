@@ -12,6 +12,7 @@ import {
   tfnDivideByScalar,
   tfnMultiply,
   tfnMultiplyByScalar,
+  tfnPower,
   tfnScalarDividedBy,
   tfnScalarMinus,
   tfnSubtract,
@@ -125,5 +126,33 @@ describe('TFN arithmetic', () => {
     );
     const difference = tfnScalarMinus(0, tfn(0, 0, 0));
     expect(Object.is(difference.l, 0)).toBe(true);
+  });
+});
+
+describe('TFN power', () => {
+  it('follows the power rule of fuzzy WASPAS for a base up to 1', () => {
+    // (l^w_u, m^w_m, u^w_l) = (0.25^1, 0.5^0.5, 1^0.25... ) with exact binary values:
+    expect(tfnPower(tfn(0.25, 0.25, 0.5), tfn(0.5, 1, 2))).toEqual({
+      l: 0.25 ** 2,
+      m: 0.25 ** 1,
+      u: 0.5 ** 0.5,
+    });
+  });
+
+  it('swaps the end points for a base above 1', () => {
+    expect(tfnPower(tfn(2, 4, 8), tfn(1, 1, 2))).toEqual({ l: 2, m: 4, u: 64 });
+  });
+
+  it('gives the crisp power for degenerate operands', () => {
+    expect(tfnPower(tfn(0.3, 0.3, 0.3), tfn(0.7, 0.7, 0.7))).toEqual({
+      l: 0.3 ** 0.7,
+      m: 0.3 ** 0.7,
+      u: 0.3 ** 0.7,
+    });
+  });
+
+  it('rejects a negative base or exponent', () => {
+    expect(errorCode(() => tfnPower(tfn(-1, 1, 2), tfn(1, 1, 1)))).toBe('INVALID_ARGUMENT');
+    expect(errorCode(() => tfnPower(tfn(1, 1, 2), tfn(-1, 1, 1)))).toBe('INVALID_ARGUMENT');
   });
 });

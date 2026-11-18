@@ -29,6 +29,8 @@ import {
   tfnMinMeanMax,
   tfnMultiply,
   tfnMultiplyByScalar,
+  tfnPower,
+  tfnProduct,
   tfnScalarDividedBy,
   tfnScalarMinus,
   tfnSubtract,
@@ -54,6 +56,9 @@ const tfnFrom = (component: fc.Arbitrary<number>): fc.Arbitrary<TFN> =>
     const [l, m, u] = [a, b, c].sort((x, y) => x - y) as [number, number, number];
     return tfn(l, m, u);
   });
+
+/** Bases and exponents of the power rule: small enough that no power overflows. */
+const smallNonNegative = fc.oneof(number(0, 20), fc.integer({ min: 0, max: 5 }));
 
 const anyTfn = tfnFrom(anyNumber);
 const positiveTfn = tfnFrom(positiveNumber);
@@ -118,6 +123,7 @@ describe('degenerate TFNs (x, x, x) equal crisp results', () => {
         expectCrisp(tfnMin(values), minimum(xs));
         expectCrisp(tfnMax(values), maximum(xs));
         expectCrisp(tfnArithmeticMean(values), mean(xs));
+        expectCrisp(tfnProduct(values), product(xs));
         const combined = tfnMinMeanMax(values);
         expect(combined.l === minimum(xs)).toBe(true);
         expect(combined.u === maximum(xs)).toBe(true);
@@ -127,6 +133,14 @@ describe('degenerate TFNs (x, x, x) equal crisp results', () => {
     fc.assert(
       fc.property(fc.array(positiveNumber, { minLength: 1, maxLength: 12 }), (xs) => {
         expectCrisp(tfnGeometricMean(xs.map(fromCrisp)), Math.pow(product(xs), 1 / xs.length));
+      }),
+    );
+  });
+
+  it('power', () => {
+    fc.assert(
+      fc.property(smallNonNegative, smallNonNegative, (x, w) => {
+        expectCrisp(tfnPower(fromCrisp(x), fromCrisp(w)), x ** w);
       }),
     );
   });
@@ -173,6 +187,12 @@ describe('closure: valid operands give a valid TFN', () => {
     fc.assert(
       fc.property(fc.array(nonNegativeTfn, { minLength: 1, maxLength: 12 }), (values) => {
         expect(isTfn(tfnGeometricMean(values))).toBe(true);
+        expect(isTfn(tfnProduct(values))).toBe(true);
+      }),
+    );
+    fc.assert(
+      fc.property(tfnFrom(smallNonNegative), tfnFrom(smallNonNegative), (base, exponent) => {
+        expect(isTfn(tfnPower(base, exponent))).toBe(true);
       }),
     );
   });

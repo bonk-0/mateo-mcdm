@@ -18,6 +18,10 @@
 - max SP = 0 (every alternative at or below average on every criterion, only with one alternative or identical rows) or max SN = 0: undefined; Mateo should report it rather than divide by zero.
 - Scaling all weights by a constant does not change NSP, NSN or AS.
 
+## Implementation
+
+`packages/methods/edas` (P2.4) has no parameters. The weights are used as entered: NSP, NSN and AS do not change when every weight is scaled, so there is no normalisation step and no warning for weights that do not sum to 1. Beyond the edge cases above, the method rejects negative data (an average that is 0 or negative has no meaning as a divisor). The trace holds AV, PDA, NDA, SP, SN, NSP, NSN and AS.
+
 ## Worked example
 
 Fixture: `packages/methods/edas/fixtures/keshavarz-ghorabaee-2015.json`. ABC inventory classification: 47 SKUs, three beneficial criteria. The paper says the weights are "equally distributed" but prints none; the printed SP and SN are plain sums, so the fixture uses weights of 1 (any equal weights give the same AS).

@@ -87,7 +87,7 @@ Conventions:
 | MOORA | as CRITIC; optional `weights` |
 | ARAS | as MARCOS plus `optimal` (the decision maker's optimal alternative, one value per criterion) |
 
-Results may hold strings, for example VIKOR's `compromiseSolution` (alternative ids); they are compared exactly. Phase 2 `parameters` include VIKOR `v` (a number or `"opricovic-tzeng-2008"`), CODAS `tau`, WASPAS `lambda` (a number, `"optimal"` or `"pooled"`) and `relativeError`, LOPCOW `standardDeviation` and DEMATEL `normalization`.
+Results may hold strings, for example VIKOR's `compromiseSolution` (alternative ids); they are compared exactly. Phase 2 `parameters` include VIKOR `v` (a number or `"opricovic-tzeng-2008"`), CODAS `tau`, WASPAS `lambda` (a number, `"optimal"` or `"pooled"`) and `relativeError`, LOPCOW `standardDeviation` and DEMATEL `normalization`. The methods take them as separate parameters (P2.4): VIKOR `v` as `vRule` (`"opricovic-tzeng-2008"`) plus `v` (a number), WASPAS `lambda` as `lambdaRule` (`"optimal"`, `"pooled"`) plus `lambda` (a number).
 
 ## How golden tests use a fixture
 
