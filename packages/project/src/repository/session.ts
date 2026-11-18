@@ -98,7 +98,7 @@ export class ProjectSession {
     });
   }
 
-  /** File path (desktop) or file name (browser) of the project. */
+  /** File name of the project in the browser's project storage. */
   get location(): string {
     return this.where;
   }
@@ -213,12 +213,6 @@ export class ProjectSession {
       if (location === this.where) return;
       await this.connection.copyTo(location);
       const next = await this.environment.storage.open(location, { create: false });
-      try {
-        await next.prepareForWriting();
-      } catch (error) {
-        await next.close().catch(() => undefined);
-        throw error;
-      }
       const previous = this.connection;
       this.connection = next;
       this.where = location;

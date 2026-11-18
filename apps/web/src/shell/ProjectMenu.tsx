@@ -6,7 +6,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@mateo/ui';
-import { ChevronDown, FilePlus2, FolderOpen, Save } from 'lucide-react';
+import { ChevronDown, Download, FilePlus2, FolderOpen, Save, Upload } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { runCommand } from '../commands/commands';
 import { useProjectState } from '../project/store';
@@ -44,6 +44,10 @@ export function ProjectMenu() {
           <FolderOpen aria-hidden />
           {t('shell:menu.open')}
         </DropdownMenuItem>
+        <DropdownMenuItem onSelect={() => runCommand('file.import')}>
+          <Upload aria-hidden />
+          {t('shell:menu.import')}
+        </DropdownMenuItem>
         {project && (
           <>
             <DropdownMenuItem onSelect={() => runCommand('file.save')}>
@@ -53,6 +57,10 @@ export function ProjectMenu() {
             <DropdownMenuItem onSelect={() => runCommand('file.saveAs')}>
               <span className="size-4" aria-hidden />
               {t('shell:menu.saveAs')}
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => runCommand('file.export')}>
+              <Download aria-hidden />
+              {t('shell:menu.export')}
             </DropdownMenuItem>
           </>
         )}
@@ -64,7 +72,7 @@ export function ProjectMenu() {
               <DropdownMenuItem
                 key={item.location}
                 title={item.location}
-                onSelect={() => runCommand('file.open', { paths: [item.location] })}
+                onSelect={() => runCommand('file.open', { location: item.location })}
               >
                 <span className="truncate">{item.name}</span>
               </DropdownMenuItem>

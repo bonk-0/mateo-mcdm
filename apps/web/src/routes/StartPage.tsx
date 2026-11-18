@@ -11,6 +11,7 @@ import { useMessage } from '../editor/messages';
 import { useDocument, useSession } from '../editor/session';
 import { useFormatters } from '../hooks/preferences';
 import { fileNameOf } from '../project/platform';
+import { isProjectFileName, readProjectFile } from '../project/ProjectFiles';
 import { useProjectState } from '../project/store';
 
 /** What to do once the project the person asked for is open. */
@@ -81,9 +82,7 @@ function useIntent(session: ProjectSession | null) {
   };
 }
 
-async function readDropped(event: DragEvent): Promise<ImportInput | null> {
-  const file = event.dataTransfer.files[0];
-  if (!file) return null;
+async function readDropped(file: File): Promise<ImportInput> {
   return {
     name: file.name,
     bytes: new Uint8Array(await file.arrayBuffer()),
@@ -115,7 +114,7 @@ function RecentProjects() {
                 type="button"
                 className="flex w-full items-center justify-between gap-3 rounded-md px-2 py-2 text-left text-sm hover:bg-muted"
                 title={item.location}
-                onClick={() => runCommand('file.open', { paths: [item.location] })}
+                onClick={() => runCommand('file.open', { location: item.location })}
               >
                 <span className="truncate font-medium">{item.name}</span>
                 <span className="shrink-0 text-xs text-muted-foreground">
@@ -158,8 +157,14 @@ export function StartPage() {
   const onDrop = async (event: DragEvent) => {
     event.preventDefault();
     setDragging(false);
-    const input = await readDropped(event);
-    if (input) start({ kind: 'import', input }, false);
+    const file = event.dataTransfer.files[0];
+    if (!file) return;
+    // A project file is opened as a project; anything else is data to import.
+    if (isProjectFileName(file.name)) {
+      runCommand('file.import', { file: await readProjectFile(file) });
+      return;
+    }
+    start({ kind: 'import', input: await readDropped(file) }, false);
   };
 
   return (

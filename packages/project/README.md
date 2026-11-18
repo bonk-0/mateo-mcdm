@@ -2,20 +2,20 @@
 
 The `.mateo` project file (sub-phase P1.8, `docs/plan.md` §4, §5 and §13): schema, migrations, storage adapters, the repository API the UI uses, snapshots, and undo/redo for model edits. The file format itself is documented in [`docs/project-file.md`](../../docs/project-file.md).
 
-Like the engine, this package has no UI, Tauri or DOM imports. The app passes the platform pieces in.
+Like the engine, this package has no UI or DOM imports. The app passes the browser pieces in (SQLite module, file store, `navigator.locks`).
 
 | Folder            | What it holds                                                                |
 | ----------------- | ---------------------------------------------------------------------------- |
 | `src/model`       | In-memory project model, cell values, ids, structural validation             |
 | `src/schema`      | Frozen schema version 1, migration list and runner, file identification      |
 | `src/sql`         | `SqlConnection` and `StorageAdapter`, the interface both storages implement  |
-| `src/storage`     | Tauri SQL plugin adapter, SQLite WebAssembly adapter, browser file stores    |
+| `src/storage`     | SQLite WebAssembly adapter, browser file stores, project locks               |
 | `src/repository`  | `createProjectRepository`, `ProjectSession`, load, incremental save, records |
 | `src/history`     | `History` (undo/redo) and the model edit commands                            |
 | `src/autosave.ts` | The autosave hook                                                            |
 | `src/recent.ts`   | Recent projects list                                                         |
 | `src/messages`    | English and Turkish texts for error and command keys                         |
-| `src/testing`     | Test helpers: sample project, a stand-in for the Tauri plugin                |
+| `src/testing`     | Test helpers: sample project, test storage                                   |
 
 ## Using it
 
@@ -24,23 +24,20 @@ import {
   createAutosave,
   createProjectRepository,
   createRecentProjects,
-  createTauriStorage,
   createWasmStorage,
   opfsFileStore,
+  webProjectLocks,
   setCells,
   crispCell,
 } from '@mateo/project';
+import sqlite3InitModule from '@sqlite.org/sqlite-wasm';
 
-// Desktop: the app owns the Tauri import.
-import Database from '@tauri-apps/plugin-sql';
-const storage = createTauriStorage({ load: (path, options) => Database.load(path, options) });
-
-// Browser: the app loads SQLite and picks where files live.
-// import sqlite3InitModule from '@sqlite.org/sqlite-wasm';
-// const storage = createWasmStorage({
-//   sqlite3: () => sqlite3InitModule(),
-//   files: opfsFileStore(await navigator.storage.getDirectory()),
-// });
+// The app loads SQLite, picks where files live and shares locks between its tabs.
+const storage = createWasmStorage({
+  sqlite3: () => sqlite3InitModule(),
+  files: opfsFileStore(await navigator.storage.getDirectory()),
+  locks: webProjectLocks(navigator.locks),
+});
 
 const repository = createProjectRepository({
   storage,
@@ -48,7 +45,7 @@ const repository = createProjectRepository({
   recent: createRecentProjects(localStorage),
 });
 
-const session = await repository.create('/home/me/suppliers.mateo', { name: 'Suppliers' });
+const session = await repository.create('Suppliers.mateo', { name: 'Suppliers' });
 // or: await repository.open(path, { beforeMigrate: offerBackup })
 
 const autosave = createAutosave(session, { onError: showSaveError });
@@ -82,7 +79,7 @@ await session.close();
 
 **Exact numbers.** Model numbers are stored as JSON text. Do not add `REAL` columns for values that must round-trip; see the format document.
 
-**The two storages.** `SqlConnection` is deliberately small: `select`, an atomic list of statements, and `copyTo`. The Tauri SQL plugin runs every call on an arbitrary pooled connection, so there is no `begin`/`commit`; the reasons and the other plugin behaviours the adapter handles are in `src/storage/tauri.ts`. Tests run every scenario against both adapters: the real SQLite WebAssembly build, and a stand-in for the plugin (`src/testing/fake-tauri.ts`) that is backed by the same engine and reproduces those behaviours.
+**Storage.** `SqlConnection` is deliberately small: `select`, an atomic list of statements, and `copyTo`; there is no `begin`/`commit`, so a transaction is never left open between calls. `createWasmStorage` implements it with SQLite WebAssembly on an in-memory copy of the file, writing the whole file back to the `FileStore` after each transaction; with `locks` a project is open in one tab at a time (`IN_USE` otherwise). Why this design and what it costs: [`docs/project-file.md`](../../docs/project-file.md#storage). Tests run the real SQLite WebAssembly build over in-memory files (`src/testing/harness.ts`).
 
 ## Changing the schema
 

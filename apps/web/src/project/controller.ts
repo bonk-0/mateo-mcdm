@@ -9,17 +9,17 @@ import {
   type RecentProject,
   type RecentProjects,
 } from '@mateo/project';
-import { projectNameFromLocation, type ProjectPlatform } from './platform';
+import { projectNameFromLocation, type ProjectFileInput, type ProjectPlatform } from './platform';
 
 /** The answer to "save changes before closing?". */
 export type UnsavedChoice = 'save' | 'discard' | 'cancel';
 
-export type ProjectAction = 'new' | 'open' | 'save' | 'saveAs' | 'close';
+export type ProjectAction = 'new' | 'open' | 'save' | 'saveAs' | 'import' | 'export' | 'close';
 
 /** What the controller tells the user about, through `notify`. */
 export type ProjectNotice =
   | {
-      readonly kind: 'created' | 'opened' | 'saved';
+      readonly kind: 'created' | 'opened' | 'saved' | 'imported' | 'exported';
       readonly name: string;
       readonly location: string;
     }
@@ -65,10 +65,11 @@ export interface ProjectState {
 }
 
 /**
- * Runs the File menu: new, open, save, save as and the recent projects list, on top of
- * the `@mateo/project` repository. It keeps at most one project open, asks before unsaved
- * changes would be lost, and reports results and errors through `notify` instead of
- * throwing, so every caller (menu, buttons, files opened by the OS) behaves the same.
+ * Runs the File menu: new, open, save, save as, the recent projects list, and bringing a
+ * `.mateo` file in from the computer or out to it, on top of the `@mateo/project`
+ * repository. It keeps at most one project open, asks before unsaved changes would be
+ * lost, and reports results and errors through `notify` instead of throwing, so every
+ * caller (menu, buttons, dropped files) behaves the same.
  */
 export interface ProjectController {
   /** The open project, for screens that read or edit it. */
@@ -81,6 +82,20 @@ export interface ProjectController {
   openProject(location?: string): Promise<void>;
   save(): Promise<void>;
   saveAs(): Promise<void>;
+  /**
+   * Brings a `.mateo` file from the computer into the browser's project storage, under a
+   * name the user confirms, and opens it. The file is checked before anything is stored.
+   */
+  importProject(file: ProjectFileInput): Promise<void>;
+  /** Saves the open project and gives it to the user as a `.mateo` file. */
+  exportProject(): Promise<void>;
+  /** Whether the open project has changes that are not stored yet. */
+  hasUnsavedChanges(): boolean;
+  /**
+   * Runs a pending autosave now, for example when the page is being hidden. Does nothing
+   * with autosave off: then only the user saves. Failures are reported through `notify`.
+   */
+  flush(): Promise<void>;
   /**
    * Closes the open project, asking about unsaved changes first. Resolves `false` when the
    * user chose to keep it open (or saving failed), for example to cancel closing the window.
@@ -207,6 +222,29 @@ export function createProjectController(options: ProjectControllerOptions): Proj
     }
   }
 
+  /**
+   * Opens `location` after unsaved changes were settled. The previous project stays open
+   * until the new one is known to work.
+   */
+  async function openAt(location: string, action: 'open' | 'import'): Promise<void> {
+    let opened: ProjectSession;
+    try {
+      opened = await repository.open(location);
+    } catch (error) {
+      // A recent project that was moved or deleted leaves the list.
+      if (isProjectError(error, 'NOT_FOUND')) recent.remove(location);
+      fail(action, error, location);
+      return;
+    }
+    await closeCurrent();
+    setSession(opened);
+    notify({
+      kind: action === 'open' ? 'opened' : 'imported',
+      name: opened.document.info.name,
+      location,
+    });
+  }
+
   function fail(action: ProjectAction, error: unknown, location?: string): void {
     notify({ kind: 'failed', action, error, ...(location === undefined ? {} : { location }) });
   }
@@ -264,19 +302,7 @@ export function createProjectController(options: ProjectControllerOptions): Proj
           return;
         }
         if (!(await settleUnsaved())) return;
-        let opened: ProjectSession;
-        try {
-          opened = await repository.open(location);
-        } catch (error) {
-          // A recent project that was moved or deleted leaves the list.
-          if (isProjectError(error, 'NOT_FOUND')) recent.remove(location);
-          fail('open', error, location);
-          return;
-        }
-        // The previous project stays open until the new one is known to work.
-        await closeCurrent();
-        setSession(opened);
-        notify({ kind: 'opened', name: opened.document.info.name, location });
+        await openAt(location, 'open');
       }),
 
     save: () =>
@@ -317,6 +343,68 @@ export function createProjectController(options: ProjectControllerOptions): Proj
           fail('saveAs', error, location);
         }
       }),
+
+    importProject: (file) =>
+      exclusive(undefined, async () => {
+        try {
+          await platform.checkProjectFile(file.bytes);
+        } catch (error) {
+          fail('import', error, file.name);
+          return;
+        }
+        let location: string | null;
+        try {
+          location = await platform.chooseImportLocation(projectNameFromLocation(file.name));
+        } catch (error) {
+          fail('import', error);
+          return;
+        }
+        if (location === null) return;
+        if (!(await settleUnsaved())) return;
+        // Replacing the open project: it is closed first, its changes were settled above.
+        if (session?.location === location) await closeCurrent();
+        try {
+          await platform.writeProjectFile(location, file.bytes);
+        } catch (error) {
+          fail('import', error, location);
+          return;
+        }
+        await openAt(location, 'import');
+      }),
+
+    exportProject: () =>
+      exclusive(undefined, async () => {
+        const current = session;
+        if (!current) {
+          notify({ kind: 'noProject' });
+          return;
+        }
+        try {
+          // The file holds what is saved, so pending edits are saved first.
+          if (current.isDirty) await current.save();
+          if (await platform.exportProjectFile(current.location)) {
+            notify({
+              kind: 'exported',
+              name: current.document.info.name,
+              location: current.location,
+            });
+          }
+        } catch (error) {
+          fail('export', error, current.location);
+        }
+      }),
+
+    hasUnsavedChanges: () => session?.isDirty ?? false,
+
+    async flush() {
+      const current = session;
+      if (!autosave || !current?.isDirty) return;
+      try {
+        await autosave.flush();
+      } catch (error) {
+        fail('save', error, current.location);
+      }
+    },
 
     closeProject: () =>
       exclusive(false, async () => {

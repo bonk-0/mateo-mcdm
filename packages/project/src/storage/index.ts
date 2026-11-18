@@ -1,3 +1,3 @@
 export * from './file-store';
-export * from './tauri';
+export * from './locks';
 export * from './wasm';

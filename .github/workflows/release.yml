@@ -1,9 +1,8 @@
-name: Release installers
+name: Release web build
 
-# Builds the desktop installers on all three platforms from a locked dependency set.
-# Run by hand, or push a tag such as v0.1.0. Installers are uploaded as workflow artifacts.
-# Code signing is optional: set the secrets listed in docs/release-notes/README.md and the
-# installers are signed; without them the build is reproducible but unsigned.
+# Builds the web app from a locked dependency set and uploads it as one archive. The
+# archive is the whole app: static files that any HTTPS host can serve from any folder
+# (docs/release-notes/README.md). Run by hand, or push a tag such as v0.1.0.
 on:
   workflow_dispatch:
   push:
@@ -13,40 +12,13 @@ permissions:
   contents: read
 
 jobs:
-  installers:
-    name: Installer (${{ matrix.name }})
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 60
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: Windows
-            os: windows-latest
-            bundles: nsis,msi
-            artifact: mateo-windows
-            paths: |
-              apps/desktop/src-tauri/target/release/bundle/nsis/*.exe
-              apps/desktop/src-tauri/target/release/bundle/msi/*.msi
-          - name: macOS
-            os: macos-latest
-            bundles: dmg
-            artifact: mateo-macos
-            paths: apps/desktop/src-tauri/target/release/bundle/dmg/*.dmg
-          - name: Linux
-            os: ubuntu-24.04
-            bundles: deb,appimage
-            artifact: mateo-linux
-            paths: |
-              apps/desktop/src-tauri/target/release/bundle/deb/*.deb
-              apps/desktop/src-tauri/target/release/bundle/appimage/*.AppImage
+  web:
+    name: Web build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
     env:
-      # Same inputs, same bytes where the toolchain allows it.
+      # Same inputs, same bytes: file times in the archive come from here.
       SOURCE_DATE_EPOCH: '1767225600'
-      TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-      APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-      APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-      APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
     steps:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
@@ -55,29 +27,20 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
 
-      - name: Install system libraries for Tauri
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
-
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: apps/desktop/src-tauri
-
       - name: Install
         run: pnpm install --frozen-lockfile
 
       - name: Build web app
         run: pnpm build
 
-      - name: Build installers
-        run: pnpm --filter @mateo/desktop exec tauri build --bundles ${{ matrix.bundles }} -- --locked
+      - name: Archive
+        working-directory: apps/web/dist
+        run: |
+          find . -exec touch -h -d "@${SOURCE_DATE_EPOCH}" {} +
+          find . -type f | LC_ALL=C sort | zip -X -q -@ "$GITHUB_WORKSPACE/mateo-web.zip"
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.artifact }}
-          path: ${{ matrix.paths }}
+          name: mateo-web
+          path: mateo-web.zip
           if-no-files-found: error
-          retention-days: 30

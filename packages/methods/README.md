@@ -10,6 +10,7 @@ P1.4 (`docs/methods/fixtures.md`) and a golden test that reproduces the fixture.
 | `copras/`       | COPRAS, Fuzzy COPRAS (defuzzify, then COPRAS) | P2.5      | [docs/methods/copras.md](../../docs/methods/copras.md)             |
 | `moora/`        | MOORA, Fuzzy MOORA (not yet verified)         | P2.5      | [docs/methods/moora.md](../../docs/methods/moora.md)               |
 | `aras/`         | ARAS, ARAS-F (not yet verified)               | P2.5      | [docs/methods/aras.md](../../docs/methods/aras.md)                 |
+| `dematel/`      | DEMATEL, fuzzy DEMATEL (TFN, unverified)      | P2.3      | [docs/methods/dematel.md](../../docs/methods/dematel.md)           |
 
 `src/index.ts` exports every method, its issue codes and `METHODS_MESSAGES` (English and
 Turkish texts for every step, label, parameter and validation key the methods emit).

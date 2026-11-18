@@ -2,7 +2,7 @@
 
 **Status:** Draft v1 (supersedes `base-plan.md` where they differ)
 **Product name:** Mateo
-**Product type:** Local-first desktop application for classical and fuzzy multi-criteria decision making (MCDM)
+**Product type:** Local-first web app for classical and fuzzy multi-criteria decision making (MCDM)
 
 `base-plan.md` remains the idea foundation. This document turns it into decisions: scope per phase, architecture, technology, method formulations, and resolutions of the open points in the base plan.
 
@@ -13,10 +13,10 @@
 | Topic | Decision |
 |---|---|
 | Name | **Mateo**. "Fuzzy Decision Studio" is not used anywhere. |
-| Usage model | **Local, single user.** No accounts, no server, no cloud storage. Works fully offline. |
-| Distribution | Desktop app (Windows, macOS, Linux) built with Tauri. The same UI also runs as a browser build for development and demos. |
-| Calculation engine | **TypeScript, running in the app itself.** Instant recalculation, live animations and offline use without a backend. |
-| Project storage | One project = one `.mateo` file (an SQLite database) that the user saves wherever they like. |
+| Usage model | **Local, single user.** No accounts, no server-side code, no cloud storage. Works fully offline once loaded. |
+| Distribution | **Web app.** Static files served from any HTTPS host; installable from the browser (PWA) and fully usable offline after the first visit. No desktop app (see §4.1). |
+| Calculation engine | **TypeScript, running in the browser.** Instant recalculation, live animations and offline use without a backend. |
+| Project storage | One project = one `.mateo` file (an SQLite database). Projects are kept in the browser's own storage and saved automatically; the user downloads a project as a `.mateo` file to keep it anywhere, back it up or move it, and opens one from the computer (§4.1). |
 | UI languages | **Turkish and English** at launch, built on an i18n layer that makes adding more languages a translation task, not a code change. |
 | Method formulations | The original, most widely cited paper for each method (see §7). Every method ships with golden tests reproducing that paper's worked example. |
 | Animations | A first-class "Explain" mode designed to engage, driven only by real engine output (see §8). |
@@ -50,7 +50,7 @@ The full scope of `base-plan.md` remains the long-term target. It is delivered i
 ### Phase 1 — Foundation and MARCOS (first release)
 
 - App shell, navigation, TR/EN i18n, light and dark themes.
-- Project files (`.mateo`): create, open, save, recent projects, autosave.
+- Project files (`.mateo`): create, open, save, recent projects, autosave; open from and download to the computer.
 - Data Center: Excel (XLSX, XLS, XLSM data only) and CSV/TSV import wizard with structure detection, locale-aware number parsing, validation and preview. Reusable import profiles.
 - Decision Matrix Editor (classical and TFN cells), criteria and alternatives management, benefit/cost directions.
 - Linguistic scale manager with predefined and custom TFN scales and membership function previews.
@@ -93,13 +93,12 @@ The full scope of `base-plan.md` remains the long-term target. It is delivered i
 
 ## 4. Architecture
 
-Mateo is a local-first application. All computation, storage and rendering happen on the user's machine.
+Mateo is a local-first web app. All computation, storage and rendering happen in the user's browser; the host only serves static files.
 
 ```
 mateo/
 ├── apps/
-│   ├── desktop/        Tauri shell (file dialogs, native menus, file associations)
-│   └── web/            React UI (also runs standalone in a browser for dev/demo)
+│   └── web/            The app: React UI, browser project storage, service worker (offline, install)
 ├── packages/
 │   ├── engine/         Pure TypeScript calculation engine, no UI dependencies
 │   ├── fuzzy/          Fuzzy number types and arithmetic (TFN, later trapezoidal etc.)
@@ -120,6 +119,18 @@ mateo/
 - Heavy work (batch runs, large sensitivity sweeps) runs in Web Workers so the UI stays responsive and can be cancelled.
 - The UI never computes numbers itself. Charts, tables and animations only display engine output.
 
+### 4.1 Running in the browser
+
+Mateo was planned as a desktop app; it is a web app instead. Everything a desktop shell gave is provided by the web platform, and no part of the product needs a server.
+
+- **Offline and install.** A service worker stores every file of the build on the first visit, so the app opens and runs without a connection afterwards, and can be installed from the browser as an app with its own window. A new version is downloaded in the background and starts when the user reloads, never in the middle of work.
+- **Projects.** Each project is a `.mateo` SQLite file kept in the origin private file system (IndexedDB where the browser cannot write there). SQLite runs as WebAssembly on an in-memory copy, and every save replaces the stored file atomically, so a crash or a closed tab loses at most the edits of the last moments (autosave runs a second or two after an edit, and at once when the page is hidden) and never damages the file. Details and the reasons for this design are in [`docs/project-file.md`](project-file.md#storage).
+- **Files in and out.** "Download .mateo file" gives the user the project as a file (with a save dialog where the browser has one); "Open from computer" and dropping a `.mateo` file bring one in, after it is checked. The file is the same format everywhere, so this is also how a project moves between browsers and computers.
+- **Keeping data.** Browser storage can be cleared by the browser when space runs low or by the user. Mateo asks the browser to keep it (persistent storage) when the first project is stored, shows the answer under Settings → About, and recommends downloading projects worth keeping. Browsers are more willing to keep the storage of an installed app.
+- **One tab per project.** A project is open in one tab at a time (Web Locks); a second tab is told it is in use instead of silently overwriting the first tab's work.
+- **Security.** A Content Security Policy allows only the app's own files (plus WebAssembly compilation); nothing is loaded from elsewhere, and uploaded files are never executed (§9).
+- **Browsers.** Current Chrome, Edge, Firefox and Safari (the "widely available" web baseline). Layout is designed for laptop and desktop screens first.
+
 ---
 
 ## 5. Technology choices
@@ -127,8 +138,8 @@ mateo/
 | Concern | Choice | Why |
 |---|---|---|
 | Language | TypeScript (strict) | One language for engine and UI; the engine can run in the browser and in workers. |
-| Desktop shell | Tauri 2 | Small installers, native file dialogs, works offline. |
-| UI | React + Vite | Mature ecosystem; Next.js adds server features a local app does not need. |
+| Delivery | Static web app; service worker and web app manifest via `vite-plugin-pwa` (Workbox) | Offline use and installation without a server or an installer (§4.1). |
+| UI | React + Vite | Mature ecosystem; Next.js adds server features a static local-first app does not need. |
 | Styling and components | Tailwind CSS + Radix-based components (shadcn/ui) | Accessible primitives, consistent design system. |
 | Spreadsheet grid | AG Grid Community | Copy/paste from Excel, large data, frozen rows/columns, custom cell editors for fuzzy cells. |
 | Charts | Apache ECharts | Rich chart types, good tooltips and export. |
@@ -137,9 +148,9 @@ mateo/
 | Formulas | KaTeX | Fast LaTeX rendering with highlighting of individual terms. |
 | Excel/CSV reading | SheetJS (reading XLSX/XLS/XLSM) + Papa Parse (CSV/TSV) | Broad format coverage, no macro execution. |
 | Excel writing | ExcelJS | Styled, multi-sheet workbooks. |
-| DOCX / PDF reports | `docx` library; PDF from a print-ready HTML report | Same report template feeds both outputs. |
+| DOCX / PDF reports | `docx` library; PDF from a print-ready HTML report through the browser's print dialog | Same report template feeds both outputs, generated in the browser. |
 | Optimization (BWM) | HiGHS compiled to WebAssembly | Reliable LP/QP solver that runs locally. FUCOM's model has a closed-form optimum and needs no solver (docs/methods/fucom.md). |
-| Storage | SQLite (`.mateo` file) via Tauri SQL plugin; SQLite WASM in the browser build | Single portable file, transactional, supports history. |
+| Storage | SQLite WebAssembly (`.mateo` file) kept in the origin private file system, IndexedDB as fallback; Web Locks for one tab per project | Single portable file, transactional, supports history; works in every current browser without cross-origin isolation. |
 | i18n | i18next with ICU message format; `Intl` for numbers and dates | Plurals, interpolation, locale-aware formatting. |
 | Testing | Vitest (unit, golden tests), Playwright (end-to-end) | Fast, TypeScript-native. |
 | State | Zustand + immutable project snapshots | Simple, works with undo/redo. |
@@ -211,7 +222,7 @@ The Phase 1 rows were verified in P1.4 and the Phase 2 rows in P2.1; formulation
 | Fuzzy SWARA (TFN) | IMF SWARA: Vrtagić, Softić, Subotić, Stević, Dordevic, Ponjavic (2021), *Axioms* 10(2), 92, doi:10.3390/axioms10020092 (chosen over the Chang-scale variant, see `docs/methods/swara.md`) |
 | FUCOM | Pamučar, Stević, Sremac (2018), *Symmetry* 10(9), 393, doi:10.3390/sym10090393. Fuzzy FUCOM deferred (no reproducible example) |
 | BWM | Rezaei (2015), *Omega* 53, 49–57, doi:10.1016/j.omega.2014.11.009; linear model: Rezaei (2016), *Omega* 64, 126–130, doi:10.1016/j.omega.2015.12.001 (both paywalled; example from the author's slides at bestworstmethod.com). Fuzzy BWM (Guo, Zhao 2017) deferred: paywalled |
-| DEMATEL | Gabus, Fontela (1972/1973), Battelle Geneva Research Centre (not online; formulation and example from Chen, Tzeng, Huang (2018), *Technological and Economic Development of Economy* 24(2), 600–614, doi:10.3846/20294913.2016.1216471). Fuzzy: Lin, Wu (2008), *Expert Systems with Applications* 34(1), 205–213, doi:10.1016/j.eswa.2006.08.012 (paywalled, no golden test yet; see `docs/methods/dematel.md`) |
+| DEMATEL | Gabus, Fontela (1972/1973), Battelle Geneva Research Centre (not online; formulation and example from Chen, Tzeng, Huang (2018), *Technological and Economic Development of Economy* 24(2), 600–614, doi:10.3846/20294913.2016.1216471). Fuzzy: Lin, Wu (2008), *Expert Systems with Applications* 34(1), 205–213, doi:10.1016/j.eswa.2006.08.012 (paywalled; implemented in P2.3 with property tests only and marked unverified, no golden test yet; see `docs/methods/dematel.md`) |
 | VIKOR | Opricovic, Tzeng (2004), *European Journal of Operational Research* 156(2), 445–455, doi:10.1016/S0377-2217(03)00020-1 (paywalled; formulation and example from Opricovic, Tzeng (2008), *Yugoslav Journal of Operations Research* 18(2), 187–203, doi:10.2298/YUJOR0802187O). Fuzzy VIKOR (Opricovic 2011, *ESWA* 38(10)) deferred: paywalled |
 | EDAS | Keshavarz Ghorabaee, Zavadskas, Olfat, Turskis (2015), *Informatica* 26(3), 435–451, doi:10.15388/Informatica.2015.57. Fuzzy: Keshavarz Ghorabaee et al. (2016), *IJCCC* 11(3), 358–371, doi:10.15837/ijccc.2016.3.2557 (trapezoidal, no fixture yet) |
 | CODAS | Keshavarz Ghorabaee, Zavadskas, Turskis, Antucheviciene (2016), *Economic Computation and Economic Cybernetics Studies and Research* 50(3), 25–44 (no DOI; RePEc cys:ecocyb:v:50:y:2016:i:3:p:25-44). Fuzzy: Keshavarz Ghorabaee et al. (2017), *Journal of Business Economics and Management* 18(1), 1–19, doi:10.3846/16111699.2016.1278559 (trapezoidal, no fixture yet) |
@@ -269,7 +280,7 @@ Unchanged in intent from `base-plan.md` §6–7, with these clarifications:
 | Open point | Resolution |
 |---|---|
 | Two product names | Only **Mateo** is used. |
-| Server stack (Next.js, FastAPI, PostgreSQL, Celery, Redis, S3) | Replaced by a local-first TypeScript stack (§5). Background jobs become Web Workers; storage becomes the `.mateo` file. |
+| Server stack (Next.js, FastAPI, PostgreSQL, Celery, Redis, S3) | Replaced by a local-first TypeScript stack (§5). Background jobs become Web Workers; storage becomes the `.mateo` file in the browser; the app is served as static files. |
 | Authentication, roles, project permissions, sharing | Not applicable to a local single-user app. Sharing means sending the `.mateo` file or an export. Security focuses on safe file handling. |
 | Dashboard | Becomes the **Home** screen: recent projects, quick import, start MARCOS, recently used methods. No usage statistics. |
 | DEMATEL listed both as weighting method and as module | One DEMATEL workspace. It produces cause–effect analysis and, optionally, criterion weights, which then appear as a weight source in the Hybrid Builder. |
@@ -287,7 +298,7 @@ Unchanged in intent from `base-plan.md` §6–7, with these clarifications:
 - English is the source language; Turkish is complete at release. A CI check fails when a key is missing in any shipped language.
 - Method names stay in their standard form (MARCOS, CRITIC...). Descriptive terms are translated (for example "utility degree" / "fayda derecesi").
 - Formulas use the notation of the source paper in every language.
-- The UI language, the number format used for display, and the number format used for import are three independent settings, each defaulting from the operating system.
+- The UI language, the number format used for display, and the number format used for import are three independent settings, each defaulting from the browser's language settings.
 - Reports are generated in the language selected at export time, independent of the UI language.
 
 ---
@@ -326,7 +337,7 @@ Project versioning stores immutable snapshots of the model inside the `.mateo` f
 
 ## 14. Design system
 
-Carried over from `base-plan.md` §24: calm, minimal, scientific. Light surfaces with a violet accent and a matching dark mode derived from the Aevitas palette, plus ten tone colours for charts and status. Desktop-first layout with a top bar and a three-step path (§12), dense but readable tables, tabular numerals for all numbers, and consistent motion timing shared by UI transitions and Explain mode.
+Carried over from `base-plan.md` §24: calm, minimal, scientific. Light surfaces with a violet accent and a matching dark mode derived from the Aevitas palette, plus ten tone colours for charts and status. Layout for laptop and desktop screens first, with a top bar and a three-step path (§12), dense but readable tables, tabular numerals for all numbers, and consistent motion timing shared by UI transitions and Explain mode.
 
 ---
 

@@ -2,7 +2,7 @@
   "name": "mateo",
   "version": "0.0.0",
   "private": true,
-  "description": "Local-first desktop application for classical and fuzzy multi-criteria decision making.",
+  "description": "Local-first web app for classical and fuzzy multi-criteria decision making.",
   "type": "module",
   "packageManager": "pnpm@10.28.0",
   "engines": {
@@ -21,7 +21,6 @@
     "e2e": "pnpm build && pnpm --filter @mateo/web e2e",
     "i18n:check": "node tooling/check-i18n.ts",
     "dev": "pnpm --filter @mateo/web dev",
-    "dev:desktop": "pnpm --filter @mateo/desktop dev",
     "build": "pnpm --filter @mateo/web build",
     "verify": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm i18n:check && pnpm test && pnpm test:coverage"
   },
