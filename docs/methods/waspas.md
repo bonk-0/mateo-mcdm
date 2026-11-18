@@ -18,6 +18,12 @@
 - A zero normalised value makes Q2 = 0 and the optimal-λ variance undefined (division by x̄_ij): reject zero data for WPM, or warn and fall back to fixed λ.
 - Cost criteria need positive data.
 
+## Implementation
+
+`packages/methods/waspas` (P2.4) holds two methods. **`waspas`** (crisp): `lambdaRule` (`fixed`, the default, `optimal` or `pooled`), `lambda` (default 0.5, used when `fixed`), `relativeError` (default 0.05, used by `optimal`) and `normalizeWeights` (default off, with a warning when the weights do not sum to 1, because the WPM exponents assume it; the printed weights of the reference example sum to 1.0001). The fixture's `"lambda": "optimal"` is `lambdaRule: 'optimal'`. The optimal λ needs strictly positive data, because Eq. 17 divides by the normalised values; the other rules accept zeros in benefit criteria. **`fuzzy-waspas`** (WASPAS-F): `lambdaRule` (`pooled`, the default, or `fixed`), `lambda`, `defuzzification` (`centroid`, the default, or `graded-mean`) and `normalizeWeights` (crisp weights only). Weights may be TFNs or crisp numbers; crisp weights become (w, w, w) in a step of their own. The optimal λ is not offered for TFNs: its variances are defined for crisp values.
+
+The power rule and the product of TFNs are `tfnPower` and `tfnProduct` in `@mateo/fuzzy` (P2.4). For a base above 1 `tfnPower` takes the smallest and largest end-point powers, like the other products, and equals the paper's (l^w_u, m^w_m, u^w_l) for the normalised values (at most 1). With degenerate TFNs and the pooled λ, `fuzzy-waspas` gives exactly the results of `waspas`; a test checks it.
+
 ## Worked examples
 
 **Crisp.** `packages/methods/waspas/fixtures/zavadskas-2012.json`: building facades, four alternatives, twelve criteria. WPM reproduced exactly; ranking a4 > a2 > a3 > a1 reproduced.

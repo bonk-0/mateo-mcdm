@@ -337,6 +337,12 @@ describe('TFN evaluators', () => {
     expect(evaluate('tfn.sum', [triple(1, 2, 3), triple(1, 1, 1), triple(0, 0, 1)])).toEqual({
       value: triple(2, 3, 5),
     });
+    expect(evaluate('tfn.product', [triple(1, 2, 3), triple(2, 2, 2), triple(1, 1, 1)])).toEqual({
+      value: triple(2, 4, 6),
+    });
+    expect(evaluate('tfn.power', [triple(0.25, 0.25, 0.5), triple(1, 1, 2)])).toEqual({
+      value: triple(0.0625, 0.25, 0.5),
+    });
     expect(evaluate('tfn.graded-mean', [triple(1, 2, 9)])).toEqual({ value: 3 });
     expect(evaluate('tfn.from-crisp', [2])).toEqual({ value: triple(2, 2, 2) });
   });

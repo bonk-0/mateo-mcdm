@@ -126,3 +126,32 @@ export function tfnScalarDividedBy(k: number, a: TFN): TFN {
   const byU = k / a.u;
   return makeTfn(Math.min(byL, byU), k / a.m, Math.max(byL, byU));
 }
+
+/**
+ * `a ^ b`, the power rule of fuzzy WASPAS (Turskis et al. 2015, Eq. 13): `(l^w_u, m^w_m, u^w_l)`
+ * for a base `a ≤ 1`, where raising to a larger power lowers the value. The support is
+ * `[min, max]` of the four end-point powers, so the result is a valid TFN for any base and
+ * equals that textbook formula exactly whenever it applies (a base `≤ 1`); for a base above
+ * 1 the roles of the end points swap. The peak is `m^w_m`.
+ *
+ * Defined for a non-negative base and a non-negative exponent; throws
+ * `EngineError('INVALID_ARGUMENT')` otherwise.
+ */
+export function tfnPower(base: TFN, exponent: TFN): TFN {
+  if (base.l < 0 || exponent.l < 0) {
+    throw new EngineError(
+      'INVALID_ARGUMENT',
+      '"tfnPower" is defined for a non-negative base and a non-negative exponent.',
+      {
+        operation: 'tfnPower',
+        base: [base.l, base.m, base.u],
+        exponent: [exponent.l, exponent.m, exponent.u],
+      },
+    );
+  }
+  const ll = base.l ** exponent.l;
+  const lu = base.l ** exponent.u;
+  const ul = base.u ** exponent.l;
+  const uu = base.u ** exponent.u;
+  return makeTfn(Math.min(ll, lu, ul, uu), base.m ** exponent.m, Math.max(ll, lu, ul, uu));
+}
