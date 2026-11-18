@@ -49,10 +49,11 @@ import type { NamedCriterion } from '../src/criteria';
 import { checkCriterionList, checkNumberList, criterionAxisItems } from '../src/criteria';
 import type { BwmVectors, WeightBound } from './model';
 import { linearOptimum, nonlinearXi, weightBound } from './model';
+import { inputThreshold, THRESHOLD_CRITERIA, THRESHOLD_SCALES } from './consistency';
 import { BWM_OPERATIONS, bwmOptions } from './operations';
 
 export const BWM_ID = 'bwm';
-export const BWM_VERSION = '1.0.0';
+export const BWM_VERSION = '1.1.0';
 
 /** The 1-9 scale of the comparisons. */
 export const BWM_SCALE = { min: 1, max: 9 } as const;
@@ -75,6 +76,8 @@ export const BWM_ISSUE_CODES = {
    * more important, but a_iW > a_jW, so i is).
    */
   ordinalInconsistency: 'bwm.ordinal-inconsistency',
+  /** Warning: Liang et al. (2020) give no CR^I threshold for this number of criteria. */
+  thresholdUnavailable: 'bwm.threshold-unavailable',
 } as const;
 
 export interface BwmInput {
@@ -96,8 +99,24 @@ export interface BwmWeightInterval {
   readonly centre: number;
 }
 
-export type BwmResult = WeightingResult<number> &
-  (
+/**
+ * The input-based consistency check of Liang, Brunelli & Rezaei (2020), computed from the
+ * two vectors alone, for both models.
+ */
+export interface BwmInputConsistency {
+  /** CR^I_j in criteria order. */
+  readonly ratios: readonly number[];
+  /** CR^I = max_j CR^I_j. */
+  readonly ratio: number;
+  /** Threshold for this number of criteria and scale; null when the paper gives none. */
+  readonly threshold: number | null;
+  /** CR^I ≤ threshold; null when there is no threshold to judge by. */
+  readonly acceptable: boolean | null;
+}
+
+export type BwmResult = WeightingResult<number> & {
+  readonly inputConsistency: BwmInputConsistency;
+} & (
     | {
         readonly model: 'nonlinear';
         /** ξ*. */
@@ -138,6 +157,17 @@ export const BWM_REFERENCES: readonly Reference[] = [
     note: 'Linear model and the interval weights of the nonlinear model (paywalled, not read); see rezaei2019.',
   },
   {
+    id: 'liang2020',
+    authors: ['Liang, F.', 'Brunelli, M.', 'Rezaei, J.'],
+    year: 2020,
+    title: 'Consistency issues in the best worst method: Measurements and thresholds',
+    source: 'Omega',
+    volume: '96',
+    pages: '102175',
+    doi: '10.1016/j.omega.2019.102175',
+    note: 'Input-based consistency ratio CR^I and its thresholds (Eq. 6-7, Table 3), read in the open-access full text.',
+  },
+  {
     id: 'rezaei2019',
     authors: ['Rezaei, J.'],
     year: 2019,
@@ -166,6 +196,14 @@ const parameters = defineParameters({
       { value: 'linear', labelKey: key('parameters.model.linear') },
     ],
   },
+  scale: {
+    type: 'integer',
+    labelKey: key('parameters.scale.label'),
+    descriptionKey: key('parameters.scale.description'),
+    default: BWM_SCALE.max,
+    min: THRESHOLD_SCALES.min,
+    max: BWM_SCALE.max,
+  },
 });
 
 function checkCriterionId(
@@ -185,7 +223,7 @@ function checkCriterionId(
   return true;
 }
 
-function validateBwm(input: BwmInput, v: ValidationCollector) {
+function validateBwm(input: BwmInput, scale: number, v: ValidationCollector) {
   if (typeof input !== 'object' || input === null) {
     v.error(ISSUE_CODES.inputMalformed, {
       params: { input: 'criteria' },
@@ -215,9 +253,9 @@ function validateBwm(input: BwmInput, v: ValidationCollector) {
   ] as const) {
     if (!usable) continue;
     (values as readonly number[]).forEach((value, index) => {
-      if (value < BWM_SCALE.min || value > BWM_SCALE.max) {
+      if (value < BWM_SCALE.min || value > scale) {
         v.error(BWM_ISSUE_CODES.outOfScale, {
-          params: { value, min: BWM_SCALE.min, max: BWM_SCALE.max },
+          params: { value, min: BWM_SCALE.min, max: scale },
           location: { input: slot, column: { index, id: ids[index]! } },
         });
       }
@@ -249,6 +287,13 @@ function validateBwm(input: BwmInput, v: ValidationCollector) {
     });
   }
   if (v.hasErrors) return;
+
+  if (n > THRESHOLD_CRITERIA.max) {
+    v.warning(BWM_ISSUE_CODES.thresholdUnavailable, {
+      params: { count: n, max: THRESHOLD_CRITERIA.max },
+      location: { input: 'criteria' },
+    });
+  }
 
   // Ordinal consistency (Rezaei 2015): visible before running, so the user can fix it.
   for (let i = 0; i < n; i += 1) {
@@ -294,9 +339,9 @@ export const bwmMethod = defineMethod({
   references: BWM_REFERENCES,
   requires: ['linear-solver'],
 
-  validate(input: BwmInput) {
+  validate(input: BwmInput, params) {
     const v = createValidation();
-    validateBwm(input, v);
+    validateBwm(input, params.scale, v);
     return v.result();
   },
 
@@ -330,6 +375,75 @@ export const bwmMethod = defineMethod({
       values: [[...input.othersToWorst]],
     });
     const preferences = [term(bo.row(0), 'a_B'), term(ow.row(0), 'a_W')] as const;
+
+    // CR^I needs no solver: it is shown before the optimization, as in the paper, where it
+    // gives feedback while the comparisons are entered.
+    const aBW = term(bo.at(vectors.worst), 'a');
+    const ratios = tb.rowVector<number>({
+      ...step('input-consistency'),
+      formulas: [
+        formula(
+          'local',
+          String.raw`{{CRj}} = \frac{ \left| {{aB}} \cdot {{aW}} - {{a}} \right| }{ {{a}}^2 - {{a}} }`,
+          [
+            ['CRj', String.raw`CR^I_j`],
+            ['aB', 'a_{Bj}'],
+            ['aW', 'a_{jW}'],
+            ['a', 'a_{BW}'],
+          ],
+        ),
+      ],
+      items,
+      row: quantity('cri', key('rows.inputRatio')),
+      cell: (column) =>
+        crisp.divide(
+          crisp.abs(
+            crisp.subtract(
+              crisp.multiply(term(bo.at(column.index), 'aB'), term(ow.at(column.index), 'aW')),
+              aBW,
+            ),
+          ),
+          crisp.multiply(aBW, crisp.subtract(aBW, 1)),
+        ),
+    });
+    const ratio = tb.scalar<number>({
+      ...step('input-consistency-ratio'),
+      formulas: [
+        formula('max', String.raw`{{CR}} = \max_j {{CRj}}`, [
+          ['CR', String.raw`CR^I`],
+          ['CRj', String.raw`CR^I_j`],
+        ]),
+      ],
+      value: term(crisp.max(ratios.all()), 'CR'),
+    });
+    const thresholdValue = inputThreshold(ids.length, params.scale);
+    const threshold =
+      thresholdValue === null
+        ? null
+        : tb.scalar<number>({
+            ...step('input-threshold'),
+            role: 'result',
+            explanationParams: { count: ids.length, scale: params.scale },
+            formulas: [
+              formula('verdict', String.raw`{{CR}} \le {{T}}`, [
+                ['CR', String.raw`CR^I`],
+                ['T', String.raw`T_{n,m}`],
+              ]),
+            ],
+            value: term(
+              derive(BWM_OPERATIONS.inputThreshold, [], thresholdValue, encodeCrisp, {
+                criteria: ids.length,
+                scale: params.scale,
+              }),
+              'T',
+            ),
+          });
+    const inputConsistency: BwmInputConsistency = {
+      ratios: (ratios.values()[0] as number[]).slice(),
+      ratio: ratio.at().value,
+      threshold: threshold === null ? null : threshold.at().value,
+      acceptable: threshold === null ? null : ratio.at().value <= threshold.at().value,
+    };
 
     if (params.model === 'linear') {
       const optimum = linearOptimum(solver, vectors);
@@ -377,6 +491,7 @@ export const bwmMethod = defineMethod({
       });
       const result: BwmResult = {
         model: 'linear',
+        inputConsistency,
         xi: xi.at().value,
         weights: crispWeights(ids, weights.values()[0] as number[]),
       };
@@ -467,7 +582,6 @@ export const bwmMethod = defineMethod({
     });
 
     // CI(a_BW) = ((1 + 2a) − √(1 + 8a)) / 2, the smaller root of ξ² − (1 + 2a) ξ + a² − a = 0.
-    const aBW = term(bo.at(vectors.worst), 'a');
     const ci = tb.scalar<number>({
       ...step('consistency-index'),
       formulas: [
@@ -520,6 +634,7 @@ export const bwmMethod = defineMethod({
     const centre = centres.values()[0] as number[];
     const result: BwmResult = {
       model: 'nonlinear',
+      inputConsistency,
       xi: xi.at().value,
       consistencyIndex: ci.at().value,
       consistencyRatio: cr.at().value,

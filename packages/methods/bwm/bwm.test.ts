@@ -22,6 +22,7 @@ import type { GoldenFixture, GoldenSpec } from '../src/testing/golden';
 import type { BwmInput, BwmResult } from './bwm';
 import { BWM_ISSUE_CODES, bwmMethod } from './bwm';
 import fixture from './fixtures/rezaei-car.json';
+import { inputThreshold, localInputRatio } from './consistency';
 import { BWM_OPERATIONS, bwmOperationEvaluators } from './operations';
 
 const solver = await loadHighsSolver();
@@ -123,6 +124,9 @@ describe('BWM: golden test, nonlinear model (Rezaei 2015, slides 21-23)', () => 
     expect(record.trace.steps.map((step) => step.id)).toEqual([
       'best-to-others',
       'others-to-worst',
+      'input-consistency',
+      'input-consistency-ratio',
+      'input-threshold',
       'optimal-xi',
       'weight-intervals',
       'interval-centres',
@@ -130,7 +134,7 @@ describe('BWM: golden test, nonlinear model (Rezaei 2015, slides 21-23)', () => 
       'consistency-ratio',
       'weights',
     ]);
-    const xi = record.trace.steps[2]!;
+    const xi = record.trace.steps[5]!;
     expect(xi.explanationParams).toEqual({ solver: `HiGHS ${solver.version}` });
     expect(xi.formulas[0]!.template).toContain(String.raw`\min \xi`);
     const node = xi.output.cells[0]![0]!.derivation;
@@ -176,6 +180,9 @@ describe('BWM: golden test, linear model (Rezaei 2016, slide 25)', () => {
     expect(record.trace.steps.map((step) => step.id)).toEqual([
       'best-to-others',
       'others-to-worst',
+      'input-consistency',
+      'input-consistency-ratio',
+      'input-threshold',
       'linear-xi',
       'weights',
     ]);
@@ -438,5 +445,97 @@ describe('BWM: validation', () => {
         params: { first: 'quality', second: 'comfort' },
       }),
     ]);
+  });
+});
+
+describe('BWM: input-based consistency (Liang, Brunelli & Rezaei 2020)', () => {
+  it('reproduces Table 3 of the paper, scales 3-9 by 3-9 criteria', () => {
+    const table = [
+      [0.1667, 0.1667, 0.1667, 0.1667, 0.1667, 0.1667, 0.1667],
+      [0.1121, 0.1529, 0.1898, 0.2206, 0.2527, 0.2577, 0.2683],
+      [0.1354, 0.1994, 0.2306, 0.2546, 0.2716, 0.2844, 0.296],
+      [0.133, 0.199, 0.2643, 0.3044, 0.3144, 0.3221, 0.3262],
+      [0.1294, 0.2457, 0.2819, 0.3029, 0.3144, 0.3251, 0.3403],
+      [0.1309, 0.2521, 0.2958, 0.3154, 0.3408, 0.362, 0.3657],
+      [0.1359, 0.2681, 0.3062, 0.3337, 0.3517, 0.362, 0.3662],
+    ];
+    table.forEach((row, r) =>
+      row.forEach((value, c) => expect(inputThreshold(c + 3, r + 3)).toBe(value)),
+    );
+    // The paper's own example: five criteria on a scale of 1 to 8.
+    expect(inputThreshold(5, 8)).toBe(0.2958);
+    expect(inputThreshold(2, 9)).toBe(0);
+    expect(inputThreshold(10, 9)).toBeNull();
+    expect(inputThreshold(5, 2)).toBeNull();
+    expect(inputThreshold(5, 10)).toBeNull();
+  });
+
+  it('computes CR^I for the car example: the largest local ratio decides', () => {
+    // a_BW = 8: |2·4 − 8| = 0, |1·8 − 8| = 0, |4·4 − 8| = 8, |3·2 − 8| = 2, |8·1 − 8| = 0.
+    const { result, trace } = run(input());
+    const ic = result.inputConsistency;
+    expect(ic.ratios).toEqual([0, 0, 8 / 56, 2 / 56, 0]);
+    expect(ic.ratio).toBe(8 / 56);
+    expect(ic.threshold).toBe(0.3062);
+    expect(ic.acceptable).toBe(true);
+    expect(trace.steps.find((s) => s.id === 'input-threshold')?.role).toBe('result');
+  });
+
+  it('is the same for both models and matches the direct formula', () => {
+    const nl = run(input(), 'nonlinear').result.inputConsistency;
+    const lin = run(input(), 'linear').result.inputConsistency;
+    expect(lin).toEqual(nl);
+    const bo = fixture.input.bestToOthers;
+    const ow = fixture.input.othersToWorst;
+    expect(nl.ratios).toEqual(bo.map((a, j) => localInputRatio(a, ow[j]!, 8)));
+  });
+
+  it('rejects comparisons above the threshold and accepts fully consistent ones', () => {
+    // a_BW = 4, a_B· · a_·W = 4, 4, 2 → ratios 0, 0, 0, 2/12.
+    const consistent = {
+      criteria: criteria(['a', 'b', 'c', 'd']),
+      best: 'a',
+      worst: 'd',
+      bestToOthers: [1, 2, 2, 4],
+      othersToWorst: [4, 2, 2, 1],
+    };
+    expect(run(consistent).result.inputConsistency).toMatchObject({ ratio: 0, acceptable: true });
+    // a_Bj · a_jW = 9 for c against a_BW = 4: CR^I = 5/12 = 0.4167 > 0.2681.
+    const poor = { ...consistent, bestToOthers: [1, 3, 3, 4], othersToWorst: [4, 3, 3, 1] };
+    const ic = run(poor).result.inputConsistency;
+    expect(ic.ratio).toBeCloseTo(5 / 12, 12);
+    expect(ic).toMatchObject({ threshold: 0.2681, acceptable: false });
+  });
+
+  it('uses the scale parameter for the threshold and the range check', () => {
+    const at9 = runMethod(bwmMethod, input(), { scale: 9 }, { solver });
+    expect(at9.result.inputConsistency.threshold).toBe(0.3062);
+    const small = {
+      criteria: criteria(['a', 'b', 'c']),
+      best: 'a',
+      worst: 'c',
+      bestToOthers: [1, 2, 4],
+      othersToWorst: [4, 2, 1],
+    };
+    const r = runMethod(bwmMethod, small, { scale: 5 }, { solver, verifyTrace: audit });
+    expect(r.result.inputConsistency.threshold).toBe(0.1354);
+    expect(() => runMethod(bwmMethod, input(), { scale: 5 }, { solver })).toThrow(
+      MethodValidationError,
+    );
+  });
+
+  it('has no verdict, and warns, for more criteria than the paper covers', () => {
+    const ids = Array.from({ length: 10 }, (_, i) => `c${i}`);
+    const big = {
+      criteria: criteria(ids),
+      best: 'c0',
+      worst: 'c9',
+      bestToOthers: ids.map((_, i) => (i === 0 ? 1 : i === 9 ? 5 : 2)),
+      othersToWorst: ids.map((_, i) => (i === 9 ? 1 : i === 0 ? 5 : 2)),
+    };
+    const validation = validateMethodRun(bwmMethod, big, { model: 'linear' });
+    expect(validation.warnings.map((w) => w.code)).toContain(BWM_ISSUE_CODES.thresholdUnavailable);
+    const ic = run(big, 'linear').result.inputConsistency;
+    expect(ic).toMatchObject({ threshold: null, acceptable: null });
   });
 });
