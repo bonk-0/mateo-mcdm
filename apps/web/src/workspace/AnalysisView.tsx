@@ -1,7 +1,7 @@
 import type { ValidationIssue } from '@mateo/engine';
 import type { StoredAnalysis } from '@mateo/project';
 import { Badge, Tabs, TabsContent, TabsList, TabsTrigger } from '@mateo/ui';
-import { ChartColumn, Clapperboard, TriangleAlert } from 'lucide-react';
+import { ChartColumn, GraduationCap, TriangleAlert } from 'lucide-react';
 import { useMemo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMessage, useTextRef } from '../editor/messages';
@@ -289,13 +289,13 @@ export function AnalysisView({
               {tExplain('view.results')}
             </TabsTrigger>
             <TabsTrigger value="explain" data-testid="view-explain">
-              <Clapperboard aria-hidden />
+              <GraduationCap aria-hidden />
               {tExplain('view.explain')}
             </TabsTrigger>
           </TabsList>
           <TabsContent value="results">{results}</TabsContent>
           <TabsContent value="explain">
-            <ExplainPanel trace={trace} explanation={explanation} />
+            <ExplainPanel trace={trace} explanation={explanation} followResult />
           </TabsContent>
         </Tabs>
       ) : (

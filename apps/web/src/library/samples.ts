@@ -12,7 +12,7 @@ import { executeJob, type ParameterValues } from '../workspace/runnerCore';
 
 /**
  * Sample data of the Method Library: the reference example of each method (P1.4 fixture) as
- * engine input for the animated example, as a dataset for the workspace and as a CSV file.
+ * engine input for the reference example, as a dataset for the workspace and as a CSV file.
  * The numbers are always the ones printed in the source paper; nothing is rounded here.
  */
 

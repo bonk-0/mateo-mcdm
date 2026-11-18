@@ -10,8 +10,11 @@ import {
   sampleFixture,
   samplePreset,
   sampleKind,
+  sampleMethodId,
   type SampleId,
 } from './samples';
+import { fitsLesson, sequenceFor } from '@mateo/explain';
+import { runLessonExample } from './lessonExamples';
 
 const LABELS = {
   alternative: 'Alternative',
@@ -175,4 +178,20 @@ describe('sample files', () => {
     ).toBe(true);
     expect(samplePreset('marcos').weights).toEqual([0.247, 0.247, 0.309, 0.197]);
   });
+});
+
+describe('lesson examples', () => {
+  it('names every sample after its method, which the Learn home relies on', () => {
+    for (const id of SAMPLE_IDS) expect(sampleMethodId(id)).toBe(id);
+  });
+
+  it.each(SAMPLE_IDS.map((id) => [id] as const))(
+    'the phone example of %s runs and fits its lesson',
+    (id) => {
+      const record = runLessonExample(id);
+      const sequence = sequenceFor(record.trace.methodId)!;
+      expect(record.warnings).toEqual([]);
+      expect(fitsLesson(record.trace, sequence)).toBe(true);
+    },
+  );
 });

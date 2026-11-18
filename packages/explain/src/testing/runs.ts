@@ -52,20 +52,6 @@ export function marcosRun(params: { normalizeWeights?: boolean } = {}) {
   );
 }
 
-/** A 10 × 8 run: the size the timeline must animate smoothly (P1.13). */
-export function largeMarcosRun() {
-  const values = Array.from({ length: 10 }, (_, i) =>
-    Array.from({ length: 8 }, (_, j) => 10 + ((i * 7 + j * 13 + i * j) % 29)),
-  );
-  const directions = Array.from({ length: 8 }, (_, j) =>
-    j % 3 === 0 ? ('cost' as const) : ('benefit' as const),
-  );
-  return runMethod(marcosMethod, {
-    matrix: matrixOf(values, directions, 'crisp'),
-    weights: weightsOf([0.2, 0.1, 0.15, 0.1, 0.15, 0.1, 0.1, 0.1]),
-  });
-}
-
 const fuzzy = (x: number): TFN => ({ l: x * 0.9, m: x, u: x * 1.1 });
 
 export function fuzzyMarcosRun(

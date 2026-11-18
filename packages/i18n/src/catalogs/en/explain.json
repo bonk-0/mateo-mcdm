@@ -2,64 +2,644 @@
   "view": {
     "label": "Analysis view",
     "results": "Results",
-    "explain": "Explain"
+    "explain": "How it was calculated"
   },
-  "panel": {
-    "label": "Explanation",
-    "timeline": "Step by step",
-    "story": "Story of the result"
-  },
-  "player": {
-    "label": "Step-by-step explanation",
-    "steps": "Steps",
+  "lesson": {
+    "label": "Lesson",
+    "steps": "Steps of the lesson",
     "stepOf": "Step {current} of {total}",
-    "sceneOf": "Scene {current} of {total}",
-    "kind": {
-      "formula": "Formula on one example",
-      "fill": "All values"
-    },
-    "play": "Play",
-    "pause": "Pause",
-    "replay": "Play again from the start",
-    "previous": "Previous scene",
-    "next": "Next scene",
-    "first": "Go to the start",
-    "last": "Go to the end",
-    "position": "Position in the explanation",
-    "positionText": "Scene {current} of {total}: {name}",
-    "speed": "Speed",
-    "speedValue": "{speed}×",
-    "show": "Show",
-    "formula": "Formula",
-    "substitution": "Numbers",
-    "explanation": "Explanation",
-    "animations": "Animations",
-    "reducedMotion": "Reduced motion is on, so every step is shown complete and nothing moves.",
-    "shortcuts": "Keyboard: Space plays or pauses, the left and right arrow keys step, Home and End go to the start and the end.",
-    "announce": "{step}: {kind}"
-  },
-  "formula": {
-    "title": "Formula",
-    "exampleRow": "Example row",
-    "exampleColumn": "Example column",
-    "withNumbers": "With the numbers of {cell}",
-    "entered": "{cell} was entered as input. No formula produced it.",
-    "carried": "{cell} is carried over unchanged from {source}.",
-    "noFormula": "The engine recorded no formula for {cell}. Open the calculation to see its operands.",
-    "terms": "Terms of the formula",
+    "goTo": "Step {current}: {title}",
+    "announce": "Step {current} of {total}: {title}",
+    "back": "Back",
+    "next": "Next",
+    "parts": "Parts of this step",
+    "from": "Calculated from: {step}",
+    "calculation": "The calculation of the selected cell",
+    "meaning": "What does it mean?",
+    "showFormula": "Show the formula",
+    "hideFormula": "Hide the formula",
     "termValues": "{count, plural, one {# value} other {# values}}",
-    "highlight": "Highlight {term} in the tables",
-    "howCalculated": "How was this calculated?"
+    "derivation": "Every operand of this cell",
+    "entered": "{cell} is part of the data you entered. Nothing was calculated here; the next steps start from these values.",
+    "carried": "{cell} is copied unchanged from {step}.",
+    "noFormula": "No formula was recorded for {cell}.",
+    "pickHint": "Click any cell of the tables to see how it was calculated.",
+    "explainCell": "Explain {cell}",
+    "wholeTables": "Show the whole tables",
+    "focusTables": "Show only the rows and columns in use",
+    "cellName": "{row}, {column}"
   },
-  "stage": {
-    "sources": "Calculated from",
-    "output": "Result of this step",
-    "cellName": "{row}, {column}",
-    "focused": "Large table: {rows} of {totalRows} rows and {columns} of {totalColumns} columns are shown. Choose another example row or column to bring it into view.",
-    "bar": "Size",
-    "rank": "Rank",
-    "item": "Item",
-    "value": "Value"
+  "lessons": {
+    "marcos": {
+      "steps": {
+        "decision": {
+          "title": "The decision",
+          "idea": "Everything starts from the table of alternatives and criteria, and from the weight of each criterion.",
+          "why": "Each criterion is either a benefit (higher is better) or a cost (lower is better). The weights say how much each criterion counts: the larger the weight, the more it moves the result."
+        },
+        "reference": {
+          "title": "Best and worst",
+          "idea": "Two imaginary alternatives are added: one with the best value of every criterion (ideal) and one with the worst (anti-ideal).",
+          "why": "MARCOS judges every alternative by comparing it with these two reference rows. For a benefit criterion the best value is the largest; for a cost criterion it is the smallest."
+        },
+        "normalize": {
+          "title": "Compare with the best",
+          "idea": "Every value is compared with the best value of its criterion.",
+          "why": "Criteria have different units, such as money, hours and points, which cannot be added up. After this step every value lies between 0 and 1, and 1 always means as good as the best."
+        },
+        "weigh": {
+          "title": "Weigh and add up",
+          "idea": "Each 0–1 value is multiplied by the weight of its criterion, and the results of a row are added up.",
+          "why": "This way important criteria count for more. The sum S of a row is the overall performance of that alternative; the ideal row has the largest possible sum."
+        },
+        "degrees": {
+          "title": "Compare with both references",
+          "idea": "Each sum is divided by the sum of the anti-ideal row (K⁻) and by the sum of the ideal row (K⁺).",
+          "why": "K⁻ shows how far an alternative is above the worst, K⁺ how close it comes to the best. MARCOS uses both to find a balanced score."
+        },
+        "utility": {
+          "title": "One final score",
+          "idea": "The two degrees are combined into utility functions and then into one final utility f(K).",
+          "why": "The final utility is a compromise between being close to the ideal and far from the anti-ideal. The higher it is, the better the alternative."
+        },
+        "ranking": {
+          "title": "Why this order?",
+          "idea": "The alternatives are ordered by their final utility, highest first.",
+          "why": "Below: the winner, the criteria that carried it, and where the runner-up is ahead or behind."
+        }
+      },
+      "formulas": {
+        "normalized-weights": {
+          "normalized-weight": {
+            "how": "The weight of {cell} is divided by the sum of all weights.",
+            "meaning": "{value} of the total weight goes to {cell}. The normalized weights add up to 1."
+          }
+        },
+        "extended-matrix": {
+          "anti-ideal-benefit": {
+            "how": "{column} is a benefit criterion (higher is better), so its worst value is the smallest one in the column. It goes into the anti-ideal row.",
+            "meaning": "{value} is the lowest value any alternative has on {column}. No alternative does worse."
+          },
+          "anti-ideal-cost": {
+            "how": "{column} is a cost criterion (lower is better), so its worst value is the largest one in the column. It goes into the anti-ideal row.",
+            "meaning": "{value} is the highest, and so the worst, value on {column}."
+          },
+          "ideal-benefit": {
+            "how": "For the benefit criterion {column} the best value is the largest one in the column. It goes into the ideal row.",
+            "meaning": "{value} is the target on {column}: in the next step every alternative is measured against it."
+          },
+          "ideal-cost": {
+            "how": "For the cost criterion {column} the best value is the smallest one in the column. It goes into the ideal row.",
+            "meaning": "{value} is the target on {column}: in the next step every alternative is measured against it."
+          }
+        },
+        "normalized-matrix": {
+          "benefit": {
+            "how": "{column} is a benefit criterion: the value of {row} is divided by the best (ideal) value of the column.",
+            "meaning": "On {column}, {row} reaches {value} of the best value. 1 would mean it is the best."
+          },
+          "cost": {
+            "how": "{column} is a cost criterion, so the division is turned around: the best (smallest) value is divided by the value of {row}.",
+            "meaning": "On {column}, {row} scores {value}. The lower the cost, the closer the result is to 1, and 1 is the best."
+          }
+        },
+        "weighted-matrix": {
+          "weighted": {
+            "how": "The 0–1 value of {row} on {column} is multiplied by the weight of {column}.",
+            "meaning": "{value} is what {column} contributes to the score of {row}. A heavier criterion contributes more."
+          }
+        },
+        "sums": {
+          "sum": {
+            "how": "The weighted values in the row of {cell} are added up.",
+            "meaning": "{value} is the overall performance S of {cell}. The ideal row has the largest possible sum."
+          }
+        },
+        "utility-degrees": {
+          "k-minus": {
+            "how": "The sum of {row} is divided by the sum of the anti-ideal row.",
+            "meaning": "{row} performs {value} times as well as the worst possible alternative. Larger is better."
+          },
+          "k-plus": {
+            "how": "The sum of {row} is divided by the sum of the ideal row.",
+            "meaning": "{row} reaches {value} of the ideal. 1 would mean it is as good as the ideal on every criterion."
+          }
+        },
+        "utility-functions": {
+          "f-k-minus": {
+            "how": "The utility with respect to the anti-ideal: K⁺ divided by K⁺ + K⁻. Note the crossover: K⁺ is in the numerator, as the authors define it.",
+            "meaning": "{value} is the share of K⁺ in K⁺ + K⁻. Because K⁻ and K⁺ are both proportional to S, it is the same for every alternative."
+          },
+          "f-k-plus": {
+            "how": "The utility with respect to the ideal: K⁻ divided by K⁺ + K⁻.",
+            "meaning": "{value} is the share of K⁻ in K⁺ + K⁻. It is also the same for every alternative."
+          }
+        },
+        "final-utility": {
+          "final-utility": {
+            "how": "K⁺ and K⁻ of {cell} are added up and divided by a term made from the two utility functions.",
+            "meaning": "{value} is the final utility of {cell}. The alternative with the highest value ranks first."
+          }
+        }
+      }
+    },
+    "fuzzyMarcos": {
+      "steps": {
+        "decision": {
+          "title": "The decision",
+          "idea": "Everything starts from ratings as triangular fuzzy numbers (l, m, u), and from the weight of each criterion.",
+          "why": "A fuzzy value says: between l and u, most likely m. Ratings given in words, such as good or poor, become such triangles through a linguistic scale. The weights say how much each criterion counts."
+        },
+        "reference": {
+          "title": "Best and worst",
+          "idea": "The ideal and anti-ideal rows take the best and the worst l, m and u of every criterion.",
+          "why": "As in MARCOS, every alternative is compared with these two rows. Each of the three numbers of a triangle is handled on its own."
+        },
+        "normalize": {
+          "title": "Compare with the best",
+          "idea": "Every triangle is divided by one number of the ideal: its u for a benefit criterion, its l for a cost criterion.",
+          "why": "This brings every criterion to a common scale between 0 and 1, and the three numbers stay in order, l ≤ m ≤ u."
+        },
+        "weigh": {
+          "title": "Weigh and add up",
+          "idea": "Each triangle is multiplied by the weight of its criterion, and the triangles of a row are added up.",
+          "why": "Important criteria count for more, and the uncertainty of every rating is carried along to the sum."
+        },
+        "degrees": {
+          "title": "Compare with both references",
+          "idea": "Each fuzzy sum is divided by the fuzzy sum of the anti-ideal row (K̃⁻) and of the ideal row (K̃⁺).",
+          "why": "In a fuzzy division l is divided by u, m by m and u by l, so the result is still a valid triangle and keeps all of the uncertainty."
+        },
+        "utility": {
+          "title": "A common yardstick",
+          "idea": "The two degrees of each alternative are added up (T̃), the largest sum D̃ becomes one number, and the utility functions are the degrees divided by it.",
+          "why": "Dividing by the same number puts the utility functions of every alternative on one scale."
+        },
+        "crisp": {
+          "title": "One number per alternative",
+          "idea": "Each fuzzy result becomes one number, and these numbers give the final utility.",
+          "why": "Triangles cannot be ordered directly. One number per alternative makes the ranking possible."
+        },
+        "ranking": {
+          "title": "Why this order?",
+          "idea": "The alternatives are ordered by their final utility, highest first.",
+          "why": "Below: the winner, the criteria that carried it, and where the runner-up is ahead or behind."
+        }
+      },
+      "formulas": {
+        "normalized-weights": {
+          "normalized-weight": {
+            "how": "The weight of {cell} is divided by the sum of all weights.",
+            "meaning": "{value} of the total weight goes to {cell}. The normalized weights add up to 1."
+          }
+        },
+        "extended-matrix": {
+          "anti-ideal-benefit": {
+            "how": "{column} is a benefit criterion: the anti-ideal takes the smallest l, the smallest m and the smallest u of the column.",
+            "meaning": "{value} is the worst rating on {column}, number by number."
+          },
+          "anti-ideal-cost": {
+            "how": "{column} is a cost criterion: the anti-ideal takes the largest l, the largest m and the largest u of the column.",
+            "meaning": "{value} is the worst rating on {column}, number by number."
+          },
+          "ideal-benefit": {
+            "how": "{column} is a benefit criterion: the ideal takes the largest l, the largest m and the largest u of the column.",
+            "meaning": "{value} is the best rating on {column}, number by number."
+          },
+          "ideal-cost": {
+            "how": "{column} is a cost criterion: the ideal takes the smallest l, the smallest m and the smallest u of the column.",
+            "meaning": "{value} is the best rating on {column}, number by number."
+          }
+        },
+        "normalized-matrix": {
+          "benefit": {
+            "how": "Each of the three numbers of {row} on {column} is divided by the upper value u of the ideal.",
+            "meaning": "{value} is the rating of {row} on {column} as a share of the best. Numbers close to 1 are close to the ideal."
+          },
+          "cost": {
+            "how": "For a cost criterion the lower value l of the ideal is divided by each number of {row}. l and u swap places, so the order l ≤ m ≤ u still holds.",
+            "meaning": "{value} is the rating of {row} on {column} as a share of the best. Numbers close to 1 are close to the ideal."
+          }
+        },
+        "weighted-matrix": {
+          "weighted": {
+            "how": "The fuzzy value of {row} on {column} is multiplied by the weight of {column}, number by number.",
+            "meaning": "{value} is what {column} contributes to {row}, together with its uncertainty."
+          }
+        },
+        "sums": {
+          "sum": {
+            "how": "The weighted fuzzy values in the row of {cell} are added up, number by number.",
+            "meaning": "{value} is the fuzzy overall performance of {cell}."
+          }
+        },
+        "utility-degrees": {
+          "k-minus": {
+            "how": "The fuzzy sum of {row} is divided by the fuzzy sum of the anti-ideal row: l by u, m by m and u by l.",
+            "meaning": "{row} performs about {value} times as well as the worst possible alternative."
+          },
+          "k-plus": {
+            "how": "The fuzzy sum of {row} is divided by the fuzzy sum of the ideal row, with the same fuzzy division.",
+            "meaning": "{row} reaches about {value} of the ideal."
+          }
+        },
+        "utility-degree-sums": {
+          "t": {
+            "how": "The two fuzzy utility degrees of {cell} are added up, number by number.",
+            "meaning": "{value} is T̃ of {cell}: both comparisons together."
+          }
+        },
+        "max-utility-degree-sum": {
+          "d": {
+            "how": "D̃ takes the largest l, the largest m and the largest u among all T̃.",
+            "meaning": "{value} is the largest combined degree: the yardstick of the next step."
+          }
+        },
+        "max-utility-degree-sum-crisp": {
+          "df": {
+            "how": "D̃ is turned into one number (defuzzified).",
+            "meaning": "Every fuzzy utility function is divided by {value}."
+          }
+        },
+        "utility-functions": {
+          "f-k-minus": {
+            "how": "The utility of {row} with respect to the anti-ideal: K̃⁺ divided by df_crisp. Note the crossover, as the authors define it.",
+            "meaning": "{value} is the fuzzy utility function f(K̃⁻) of {row}."
+          },
+          "f-k-plus": {
+            "how": "The utility of {row} with respect to the ideal: K̃⁻ divided by df_crisp.",
+            "meaning": "{value} is the fuzzy utility function f(K̃⁺) of {row}."
+          }
+        },
+        "defuzzification": {
+          "defuzzify": {
+            "how": "The fuzzy value of {row} under {column} is turned into one number (defuzzified).",
+            "meaning": "{value} is the number the final utility uses."
+          }
+        },
+        "final-utility": {
+          "final-utility": {
+            "how": "The crisp K⁺ and K⁻ of {cell} are added up and divided by a term made from the two crisp utility functions.",
+            "meaning": "{value} is the final utility of {cell}. The alternative with the highest value ranks first."
+          }
+        }
+      }
+    },
+    "critic": {
+      "steps": {
+        "data": {
+          "title": "The data",
+          "idea": "CRITIC finds the weights from the data alone: nobody has to say which criterion matters more.",
+          "why": "It looks at two things: how much a criterion separates the alternatives, and how much it says something the other criteria do not."
+        },
+        "normalize": {
+          "title": "Scale to 0–1",
+          "idea": "Every column is rescaled so that its worst value becomes 0 and its best value becomes 1.",
+          "why": "Only then can columns with different units be compared. For a cost criterion the lowest value becomes 1."
+        },
+        "contrast": {
+          "title": "How much does it separate?",
+          "idea": "For each criterion: the mean, how far each value is from the mean, and the standard deviation σ.",
+          "why": "If every alternative scores about the same on a criterion, it cannot help to choose between them. A large σ means strong contrast."
+        },
+        "correlation": {
+          "title": "Does it repeat another criterion?",
+          "idea": "The correlation r of every pair of criteria is calculated.",
+          "why": "A correlation close to 1 means two criteria move together and say almost the same thing. Close to 0 or negative, they say different things."
+        },
+        "information": {
+          "title": "How much new information?",
+          "idea": "Conflict adds up 1 − r over all criteria, and the information content is C = σ × conflict.",
+          "why": "A criterion carries a lot of information when it separates the alternatives well and disagrees with the other criteria."
+        },
+        "weights": {
+          "title": "Information becomes weight",
+          "idea": "The weight of each criterion is its share of the total information.",
+          "why": "The weights add up to 1. The criterion with the most information gets the largest weight."
+        }
+      },
+      "formulas": {
+        "normalized-matrix": {
+          "benefit": {
+            "how": "For the benefit criterion {column}: (value of {row} − worst value) ÷ (best value − worst value).",
+            "meaning": "On {column}, {row} stands at {value} on the way from the worst value (0) to the best (1)."
+          },
+          "cost": {
+            "how": "For the cost criterion {column}, where the largest value is the worst: (worst value − value of {row}) ÷ (worst value − best value).",
+            "meaning": "On {column}, {row} stands at {value} on the way from the worst value (0) to the best (1)."
+          }
+        },
+        "means": {
+          "mean": {
+            "how": "The normalized values of {cell} are added up and divided by the number of alternatives.",
+            "meaning": "{value} is the average of {cell}. The next step measures how far each value is from it."
+          }
+        },
+        "deviations": {
+          "deviation": {
+            "how": "The mean of {column} is subtracted from the normalized value of {row}.",
+            "meaning": "On {column}, {row} is {value} away from the average. A negative value is below the average."
+          }
+        },
+        "standard-deviations": {
+          "sigma": {
+            "how": "The squared deviations of {cell} are averaged, and the square root is taken.",
+            "meaning": "{value} is the contrast of {cell}: the larger it is, the more the alternatives differ on this criterion."
+          }
+        },
+        "correlation-matrix": {
+          "pearson": {
+            "how": "The deviations of {row} and {column} are multiplied alternative by alternative, added up, and divided by n and by both standard deviations.",
+            "meaning": "{value} is the correlation of {row} and {column}: close to 1 they move together, close to −1 in opposite directions."
+          }
+        },
+        "conflict": {
+          "conflict": {
+            "how": "For {cell}, 1 − r is added up over every criterion.",
+            "meaning": "{value} is the conflict of {cell}: the less it correlates with the others, the larger it is."
+          }
+        },
+        "information-content": {
+          "information": {
+            "how": "The standard deviation of {cell} is multiplied by its conflict.",
+            "meaning": "{value} is the information content C of {cell}."
+          }
+        },
+        "weights": {
+          "weight": {
+            "how": "The information content of {cell} is divided by the total information of all criteria.",
+            "meaning": "{cell} gets {value} of the total weight."
+          }
+        }
+      }
+    },
+    "merec": {
+      "steps": {
+        "data": {
+          "title": "The data",
+          "idea": "MEREC finds the weights from the data alone, by asking what happens when a criterion is left out.",
+          "why": "A criterion whose removal changes the performance of the alternatives a lot is important."
+        },
+        "normalize": {
+          "title": "Distance from the worst",
+          "idea": "Every value is divided so that the worst value of its column becomes 1 and better values become smaller.",
+          "why": "This is the reverse of most methods, on purpose: the logarithms of the next step grow as values move away from the worst, so a better performance gives a larger number."
+        },
+        "performance": {
+          "title": "Overall performance",
+          "idea": "The overall performance S of each alternative is calculated from the logarithms of its values.",
+          "why": "|ln n| is 0 for the worst value and grows for better ones. S sums them up over all criteria."
+        },
+        "removal": {
+          "title": "Leave one criterion out",
+          "idea": "S is calculated again for every alternative, each time without one criterion.",
+          "why": "Comparing with the full S shows how much each criterion contributes."
+        },
+        "effects": {
+          "title": "Removal effect",
+          "idea": "The removal effect E of a criterion adds up how much S changes when the criterion is left out.",
+          "why": "The larger the change, the more the criterion matters for telling the alternatives apart."
+        },
+        "weights": {
+          "title": "Effect becomes weight",
+          "idea": "The weight of each criterion is its share of the total removal effect.",
+          "why": "The weights add up to 1. The criterion with the largest effect gets the largest weight."
+        }
+      },
+      "formulas": {
+        "normalized-matrix": {
+          "benefit": {
+            "how": "For the benefit criterion {column}: the smallest value of the column ÷ the value of {row}.",
+            "meaning": "{value}: 1 would be the worst value on {column}. The smaller the number, the better {row} is."
+          },
+          "cost": {
+            "how": "For the cost criterion {column}: the value of {row} ÷ the largest value of the column.",
+            "meaning": "{value}: 1 would be the worst value on {column}. The smaller the number, the better {row} is."
+          }
+        },
+        "absolute-logs": {
+          "abs-ln": {
+            "how": "The absolute natural logarithm of the normalized value of {row} on {column}.",
+            "meaning": "{value}: 0 stands for the worst value, larger numbers for values further from it."
+          }
+        },
+        "overall-performance": {
+          "overall": {
+            "how": "The absolute logarithms of {cell} are averaged over all criteria, 1 is added, and the natural logarithm is taken.",
+            "meaning": "{value} is the overall performance S of {cell} with every criterion."
+          }
+        },
+        "removal-performance": {
+          "removal": {
+            "how": "Like S of {row}, but without the term of {column}. The divisor stays the number of all criteria.",
+            "meaning": "{value} is the performance of {row} when {column} is left out."
+          }
+        },
+        "removal-effects": {
+          "effect": {
+            "how": "For {cell}, the difference |S′ − S| is added up over all alternatives.",
+            "meaning": "{value} is the removal effect of {cell}."
+          }
+        },
+        "weights": {
+          "weight": {
+            "how": "The removal effect of {cell} is divided by the sum of all effects.",
+            "meaning": "{cell} gets {value} of the total weight."
+          }
+        }
+      }
+    },
+    "swara": {
+      "steps": {
+        "order": {
+          "title": "Order of importance",
+          "idea": "An expert lists the criteria from the most to the least important and says how much less important each one is than the one before.",
+          "why": "This comparative importance s is a small number: the larger it is, the bigger the drop from the previous criterion. The first criterion has none; it is the reference."
+        },
+        "coefficients": {
+          "title": "Coefficients",
+          "idea": "Each comparative importance s becomes a coefficient k = s + 1.",
+          "why": "The first criterion gets k = 1. A larger k means a bigger step down from the previous criterion."
+        },
+        "chain": {
+          "title": "Step by step down the list",
+          "idea": "Going down the list, the value of each criterion is the value of the previous one divided by its coefficient.",
+          "why": "So importance falls step by step, exactly as much as the expert said."
+        },
+        "weights": {
+          "title": "Weights that add up to 1",
+          "idea": "The values are divided by their sum.",
+          "why": "Only the proportions between the criteria matter. After this step the weights add up to 1."
+        }
+      },
+      "formulas": {
+        "coefficients": {
+          "first": {
+            "how": "{cell} is the most important criterion, so its coefficient is 1.",
+            "meaning": "{value}: the reference the other criteria are compared with."
+          },
+          "coefficient": {
+            "how": "1 is added to the comparative importance of {cell}.",
+            "meaning": "{value}: the larger it is, the bigger the drop in importance from the previous criterion."
+          }
+        },
+        "recalculated-weights": {
+          "first": {
+            "how": "The first criterion starts the chain with 1.",
+            "meaning": "{value}: the starting point of the chain."
+          },
+          "recalculated": {
+            "how": "The value of the previous criterion is divided by the coefficient of {cell}.",
+            "meaning": "{value} is the importance of {cell} compared with the first criterion."
+          }
+        },
+        "weights": {
+          "weight": {
+            "how": "The value of {cell} is divided by the sum of all values.",
+            "meaning": "{cell} gets {value} of the total weight."
+          }
+        }
+      }
+    },
+    "fuzzySwara": {
+      "steps": {
+        "order": {
+          "title": "Order of importance",
+          "idea": "An expert lists the criteria by importance and says in words how much less important each one is than the one before.",
+          "why": "Words such as weakly less significant become triangular fuzzy numbers through the IMF SWARA scale. The first criterion has none; it is the reference."
+        },
+        "coefficients": {
+          "title": "Coefficients",
+          "idea": "Each assessment s̃ becomes a fuzzy coefficient k̃ = s̃ + 1.",
+          "why": "The first criterion gets (1, 1, 1). A larger coefficient means a bigger step down from the previous criterion."
+        },
+        "chain": {
+          "title": "Step by step down the list",
+          "idea": "Going down the list, each fuzzy value is the previous one divided by its coefficient, and then all of them are added up.",
+          "why": "Importance falls step by step. The fuzzy division (l by u, m by m, u by l) keeps the uncertainty of the words."
+        },
+        "fuzzyWeights": {
+          "title": "Fuzzy weights",
+          "idea": "Each fuzzy value is divided by the fuzzy sum.",
+          "why": "This gives every criterion its share of the importance, still as a triangle."
+        },
+        "weights": {
+          "title": "One number per criterion",
+          "idea": "Each fuzzy weight becomes one number, and the numbers are scaled so that they add up to 1.",
+          "why": "Other methods, such as MARCOS, need one weight per criterion."
+        }
+      },
+      "formulas": {
+        "coefficients": {
+          "first": {
+            "how": "{cell} is the most important criterion, so its coefficient is (1, 1, 1).",
+            "meaning": "{value}: the reference the other criteria are compared with."
+          },
+          "coefficient": {
+            "how": "1 is added to each number of the assessment of {cell}.",
+            "meaning": "{value}: the larger it is, the bigger the drop in importance from the previous criterion."
+          }
+        },
+        "recalculated-weights": {
+          "first": {
+            "how": "The first criterion starts the chain with (1, 1, 1).",
+            "meaning": "{value}: the starting point of the chain."
+          },
+          "recalculated": {
+            "how": "The fuzzy value of the previous criterion is divided by the coefficient of {cell}: l by u, m by m and u by l.",
+            "meaning": "{value} is the importance of {cell} compared with the first criterion."
+          }
+        },
+        "recalculated-weights-sum": {
+          "sum": {
+            "how": "The fuzzy values of all criteria are added up, number by number.",
+            "meaning": "{value} is the total the fuzzy weights are calculated from."
+          }
+        },
+        "fuzzy-weights": {
+          "weight": {
+            "how": "The fuzzy value of {cell} is divided by the fuzzy sum.",
+            "meaning": "{value} is the fuzzy weight of {cell}."
+          }
+        },
+        "crisp-weights": {
+          "defuzzify": {
+            "how": "The fuzzy weight of {cell} is turned into one number (defuzzified).",
+            "meaning": "{value} is the crisp weight of {cell} before scaling. These numbers do not add up to exactly 1."
+          }
+        },
+        "weights": {
+          "normalized": {
+            "how": "The crisp weight of {cell} is divided by the sum of all crisp weights.",
+            "meaning": "{cell} gets {value} of the total weight."
+          }
+        }
+      }
+    }
+  },
+  "lessonExample": {
+    "phone": "Phone {name}",
+    "criteria": {
+      "price": "Price (₺)",
+      "battery": "Battery (hours)",
+      "camera": "Camera (points)"
+    }
+  },
+  "fuzzyLesson": {
+    "steps": {
+      "why": {
+        "title": "Why not one number?",
+        "idea": "People often cannot give an exact number, only a range: about 7.",
+        "why": "A crisp number pretends to be certain. A fuzzy number keeps the range in the calculation."
+      },
+      "triangle": {
+        "title": "Three numbers",
+        "idea": "About 7 can be written with three numbers: the least it can be, the most likely value, and the most it can be.",
+        "why": "Together they draw a triangle. Its height at a point shows how plausible that value is: full at the most likely value, zero outside the range."
+      },
+      "scale": {
+        "title": "From words to triangles",
+        "idea": "A linguistic scale gives every word a triangle.",
+        "why": "Experts can answer in words, such as high or low, and Mateo calculates with the triangle of each word."
+      },
+      "arithmetic": {
+        "title": "Calculating with triangles",
+        "idea": "Two triangles are added by adding their l, their m and their u.",
+        "why": "The uncertainty grows with every step: the sum is wider than both numbers. Other operations follow similar rules."
+      },
+      "try": {
+        "title": "Try it yourself",
+        "idea": "Drag the corners of two triangles and watch the result.",
+        "why": "Every result below is calculated by Mateo's fuzzy arithmetic, the same one the methods use."
+      }
+    },
+    "triple": "({l}, {m}, {u})",
+    "points": {
+      "l": "the least it can be",
+      "m": "the most likely value (the peak)",
+      "u": "the most it can be"
+    },
+    "why": {
+      "chart": "The crisp number 7 and the fuzzy number about 7",
+      "exact": "Exactly 7: a single line",
+      "about": "About 7: a triangle",
+      "meaning": "The triangle says: certainly not below 5 or above 9, and most likely 7."
+    },
+    "triangle": {
+      "chart": "The triangle of about 7",
+      "meaning": "Writing {value} says: between the first and the last number, most likely the middle one. The numbers are always in order, l ≤ m ≤ u."
+    },
+    "scale": {
+      "chart": "The triangles of the 5-level scale",
+      "meaning": "When a rating such as High is entered, Mateo calculates with its triangle. The scales of a project are set up under Settings."
+    },
+    "arithmetic": {
+      "chart": "A, B and their sum",
+      "how": "l + l, m + m, u + u:",
+      "single": "To rank alternatives, a triangle is finally turned into one number. With the graded mean (l + 4m + u) / 6, {value} becomes {mean}.",
+      "meaning": "Fuzzy methods carry the whole triangle through every step and only turn it into one number at the end."
+    },
+    "next": "See it in Fuzzy MARCOS"
   },
   "table": {
     "rowsShown": "{shown} of {total} rows are shown.",
@@ -160,167 +740,6 @@
     },
     "fuzzyNote": "Fuzzy values are ordered by their most likely value m.",
     "unavailable": "This analysis has no ranking to tell a story about."
-  },
-  "sequences": {
-    "marcos": {
-      "normalized-weights": {
-        "normalized-weight": "Each weight is divided by the sum of all weights, so that the weights add up to 1."
-      },
-      "extended-matrix": {
-        "anti-ideal-benefit": "For a benefit criterion the worst value is the smallest one in its column. It goes into the anti-ideal row (AAI).",
-        "anti-ideal-cost": "For a cost criterion the worst value is the largest one in its column. It goes into the anti-ideal row (AAI).",
-        "ideal-benefit": "For a benefit criterion the best value is the largest one in its column. It goes into the ideal row (AI).",
-        "ideal-cost": "For a cost criterion the best value is the smallest one in its column. It goes into the ideal row (AI)."
-      },
-      "normalized-matrix": {
-        "benefit": "A value of a benefit criterion is divided by the ideal value of that criterion. The closer the result is to 1, the closer the alternative is to the ideal.",
-        "cost": "For a cost criterion the division is turned around: the ideal value is divided by the value. A lower cost gives a result closer to 1."
-      },
-      "weighted-matrix": {
-        "weighted": "The normalized value is multiplied by the weight of its criterion, so important criteria count for more."
-      },
-      "sums": {
-        "sum": "The weighted values of a row are added up. This is done for every alternative and also for the anti-ideal and ideal rows."
-      },
-      "utility-degrees": {
-        "k-minus": "K⁻ compares an alternative with the anti-ideal solution: its sum divided by the sum of the anti-ideal row. Larger is better.",
-        "k-plus": "K⁺ compares an alternative with the ideal solution: its sum divided by the sum of the ideal row. The closer to 1, the closer to the ideal."
-      },
-      "utility-functions": {
-        "f-k-minus": "The utility function in relation to the anti-ideal solution. Note the crossover: K⁺ is in the numerator.",
-        "f-k-plus": "The utility function in relation to the ideal solution, with K⁻ in the numerator."
-      },
-      "final-utility": {
-        "final-utility": "The final utility combines both utility degrees and both utility functions into one number. The highest value wins."
-      }
-    },
-    "fuzzyMarcos": {
-      "normalized-weights": {
-        "normalized-weight": "Each weight is divided by the sum of all weights, so that the weights add up to 1."
-      },
-      "extended-matrix": {
-        "anti-ideal-benefit": "For a benefit criterion the anti-ideal value takes the smallest l, the smallest m and the smallest u of the column.",
-        "anti-ideal-cost": "For a cost criterion the anti-ideal value takes the largest l, the largest m and the largest u of the column.",
-        "ideal-benefit": "For a benefit criterion the ideal value takes the largest l, the largest m and the largest u of the column.",
-        "ideal-cost": "For a cost criterion the ideal value takes the smallest l, the smallest m and the smallest u of the column."
-      },
-      "normalized-matrix": {
-        "benefit": "Each component of a benefit value is divided by one number: the upper value u of the ideal.",
-        "cost": "For a cost criterion the lower value l of the ideal is divided by each component. The components swap places, so that l ≤ m ≤ u still holds."
-      },
-      "weighted-matrix": {
-        "weighted": "The normalized fuzzy value is multiplied by the weight of its criterion, component by component."
-      },
-      "sums": {
-        "sum": "The weighted fuzzy values of a row are added up component by component, for every alternative and for the anti-ideal and ideal rows."
-      },
-      "utility-degrees": {
-        "k-minus": "K̃⁻ is the fuzzy sum of an alternative divided by the fuzzy sum of the anti-ideal row. In fuzzy division l is divided by u, m by m and u by l.",
-        "k-plus": "K̃⁺ is the fuzzy sum of an alternative divided by the fuzzy sum of the ideal row, with the same fuzzy division."
-      },
-      "utility-degree-sums": {
-        "t": "The two fuzzy utility degrees of an alternative are added component by component."
-      },
-      "max-utility-degree-sum": {
-        "d": "D̃ takes the largest l, the largest m and the largest u among all T̃."
-      },
-      "max-utility-degree-sum-crisp": {
-        "df": "D̃ is turned into one crisp number with the graded mean. Every fuzzy utility function is divided by this number."
-      },
-      "utility-functions": {
-        "f-k-minus": "The fuzzy utility function in relation to the anti-ideal solution: K̃⁺ divided by df_crisp. Note the crossover.",
-        "f-k-plus": "The fuzzy utility function in relation to the ideal solution: K̃⁻ divided by df_crisp."
-      },
-      "defuzzification": {
-        "defuzzify": "Each fuzzy utility degree and utility function is turned into one crisp number, so that the final utility can be calculated."
-      },
-      "final-utility": {
-        "final-utility": "The final utility combines the crisp utility degrees and utility functions into one number. The highest value wins."
-      }
-    },
-    "critic": {
-      "normalized-matrix": {
-        "benefit": "Each value of a benefit criterion is rescaled to the range 0 to 1: the worst value of the column becomes 0 and the best becomes 1.",
-        "cost": "Each value of a cost criterion is rescaled to the range 0 to 1: the lowest value of the column becomes 1 and the highest becomes 0."
-      },
-      "means": {
-        "mean": "The mean of each normalized column is the centre the deviations of the next step are measured from."
-      },
-      "deviations": {
-        "deviation": "Each normalized value minus the mean of its column. The next two steps use these deviations."
-      },
-      "standard-deviations": {
-        "sigma": "The standard deviation of a normalized column measures its contrast intensity: the more the alternatives differ on a criterion, the larger it is."
-      },
-      "correlation-matrix": {
-        "pearson": "The Pearson correlation of two criteria is the sum of the products of their deviations from the mean, divided by n times both standard deviations."
-      },
-      "conflict": {
-        "conflict": "The conflict of a criterion adds up one minus its correlation with every criterion. A criterion that correlates little with the others carries more conflict."
-      },
-      "information-content": {
-        "information": "The information content of a criterion is its standard deviation multiplied by its conflict."
-      },
-      "weights": {
-        "weight": "Each information content is divided by the sum of all of them, so that the weights add up to 1."
-      }
-    },
-    "merec": {
-      "normalized-matrix": {
-        "benefit": "For a benefit criterion the smallest value of the column is divided by the value, so the best performance gets 1 and smaller values get less.",
-        "cost": "For a cost criterion the value is divided by the largest value of the column, so the best performance gets the smallest ratio."
-      },
-      "absolute-logs": {
-        "abs-ln": "The absolute value of the natural logarithm of each normalized value measures how far it is from 1."
-      },
-      "overall-performance": {
-        "overall": "The overall performance of an alternative is the logarithm of one plus the mean of its absolute logarithms."
-      },
-      "removal-performance": {
-        "removal": "The performance is calculated again with one criterion left out. This is done for every alternative and every criterion."
-      },
-      "removal-effects": {
-        "effect": "The removal effect of a criterion adds up how much the performance of each alternative changes when that criterion is left out."
-      },
-      "weights": {
-        "weight": "Each removal effect is divided by the sum of all of them, so that the weights add up to 1."
-      }
-    },
-    "swara": {
-      "coefficients": {
-        "first": "The most important criterion has the coefficient 1.",
-        "coefficient": "The coefficient of a criterion is its comparative importance, compared to the criterion before it, plus 1."
-      },
-      "recalculated-weights": {
-        "first": "The most important criterion starts with the value 1.",
-        "recalculated": "Each value is the value of the criterion before it divided by the coefficient of this criterion."
-      },
-      "weights": {
-        "weight": "Each recalculated value is divided by the sum of all of them, so that the weights add up to 1."
-      }
-    },
-    "fuzzySwara": {
-      "coefficients": {
-        "first": "The most important criterion has the coefficient (1, 1, 1).",
-        "coefficient": "The coefficient of a criterion is its fuzzy comparative importance plus 1. Adding 1 moves the whole triangle to the right."
-      },
-      "recalculated-weights": {
-        "first": "The most important criterion starts with the value (1, 1, 1).",
-        "recalculated": "Each fuzzy value is the value of the criterion before it divided by the coefficient of this criterion."
-      },
-      "recalculated-weights-sum": {
-        "sum": "The fuzzy values of all criteria are added up, component by component."
-      },
-      "fuzzy-weights": {
-        "weight": "Each fuzzy value is divided by the fuzzy sum, so that the weights are fuzzy numbers that add up to about 1."
-      },
-      "crisp-weights": {
-        "defuzzify": "Each fuzzy weight is turned into one number with the chosen defuzzification method."
-      },
-      "weights": {
-        "normalized": "The defuzzified weights are divided by their sum, so that the crisp weights add up to 1."
-      }
-    }
   },
   "playground": {
     "title": "Fuzzy Playground",

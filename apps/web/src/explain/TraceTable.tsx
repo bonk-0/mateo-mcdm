@@ -36,6 +36,8 @@ export interface TraceTableProps {
    * drawing every step of a large analysis at once froze the page for seconds.
    */
   readonly rowLimit?: number;
+  /** Whole numbers without decimals (a price of 20 000, not 20 000.0000). */
+  readonly plainIntegers?: boolean;
 }
 
 const MOVES: Readonly<Record<string, readonly [number, number]>> = {
@@ -62,6 +64,7 @@ export function TraceTable({
   register,
   testId,
   rowLimit,
+  plainIntegers = false,
 }: TraceTableProps) {
   const textOf = useTextRef();
   const { t } = useTranslation('explain');
@@ -159,7 +162,7 @@ export function TraceTable({
                   ref={register ? (element) => register(ref, element) : undefined}
                   className="inline-block"
                 >
-                  <Value value={cell.value} />
+                  <Value value={cell.value} whole={plainIntegers} />
                   {fuzzyEnd > 0 && tfnOfValue(cell.value) && (
                     <span className="mt-0.5 block">
                       <TfnGlyph value={tfnOfValue(cell.value)!} to={fuzzyEnd} />

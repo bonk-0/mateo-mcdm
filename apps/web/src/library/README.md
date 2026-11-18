@@ -2,17 +2,17 @@
 
 | Route                  | Screen                                                                    |
 | ---------------------- | ------------------------------------------------------------------------- |
-| `/learn/library`       | Cards of the Phase 1 methods (`LibraryIndexPage.tsx`)                     |
+| `/learn/library`       | Learn: three questions, each with its lessons (`LibraryIndexPage.tsx`)    |
 | `/learn/library/:page` | One method: MARCOS, Fuzzy MARCOS, CRITIC, MEREC, SWARA (`MethodPage.tsx`) |
 
-The page template is the one in `docs/phases/phase-1.md`: introduction, purpose, inputs, supported number types, steps and formulas, animated example, sample data, properties and edge cases, references, related methods. SWARA has two variants (SWARA and IMF SWARA) on one page.
+A method page opens with its purpose and a lesson: the method run step by step on a small example of three phones (`lessonExamples.ts`), small enough to follow every number by eye. The template of `docs/phases/phase-1.md` (introduction, inputs, supported number types, steps and formulas, the paper's reference example, sample data, properties and edge cases, references) follows in a folded **Reference** section, then related methods. SWARA has two variants (SWARA and IMF SWARA) on one page.
 
 ## Where the content comes from
 
 - **Prose** (introduction, purpose, inputs, number types, notes) is in the `library` catalog (`packages/i18n/src/catalogs/{en,tr}/library.json`), written from `docs/methods/*.md`. `methods.ts` lists which entries each page shows and holds the references.
 - **Steps and formulas** are not written by hand. `MethodPage.tsx` runs the reference example through the real method and reads each step's name, explanation and formulas from the calculation trace, so a page cannot disagree with the implementation. Step texts are the engine's own English and Turkish messages.
 - **The reference example** is the P1.4 fixture of the method (`REFERENCE_FIXTURES` in `@mateo/methods`), run on every visit by `runSample` (`samples.ts`).
-- **The animated example** is `explanationOf(trace)` from the Explain panel. Methods without an explain sequence show the trace tables instead; when P1.14 registers the weighting sequences in `@mateo/explain`, their pages switch to the player with no change here.
+- **The lesson** is `explanationOf(trace)` of the phone example, run through the real method with its default parameters. `library.test.ts` checks that every example runs without warnings and fits its lesson.
 - **References** are data and are never translated. `library.test.ts` checks that every DOI also appears in the method's `docs/methods` page, that the source of the example is cited, and that the first reference is the one P1.4 names.
 
 ## Sample data

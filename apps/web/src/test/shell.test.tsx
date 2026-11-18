@@ -22,7 +22,7 @@ describe('app shell', () => {
     expect(within(nav).queryByRole('list', { name: 'Steps of the decision' })).toBeNull();
   });
 
-  it('opens a side area on its first tab and marks the link as current', async () => {
+  it('opens Learn and marks the link as current', async () => {
     const user = userEvent.setup();
     const { router } = renderApp('/');
     const nav = await screen.findByRole('navigation', { name: 'Main navigation' });
@@ -30,7 +30,7 @@ describe('app shell', () => {
     await import('../library/LibraryIndexPage');
     await user.click(within(nav).getByRole('link', { name: 'Learn' }));
     expect(
-      await screen.findByRole('heading', { level: 1, name: 'Method Library' }, { timeout: 10_000 }),
+      await screen.findByRole('heading', { level: 1, name: 'Learn' }, { timeout: 10_000 }),
     ).toBeTruthy();
     expect(router.state.location.pathname).toBe('/learn/library');
     expect(within(nav).getByRole('link', { name: 'Learn' }).getAttribute('aria-current')).toBe(

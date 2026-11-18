@@ -1,20 +1,44 @@
 {
-  "index": {
-    "weightingTitle": "Ağırlıklandırma yöntemleri",
-    "weightingText": "Kriterlerin önemini veriden ya da uzman yargısından türetir.",
-    "rankingTitle": "Sıralama yöntemleri",
-    "rankingText": "Kriter ağırlıklarını kullanarak alternatifleri sıralar.",
-    "open": "Başvuru sayfasını oku"
+  "home": {
+    "weighting": {
+      "where": "Adım 2: Ağırlıklar",
+      "question": "Her kriter ne kadar önemli?",
+      "text": "Kriter ağırlıklarını veriden ya da bir uzmanın yargısından türetin."
+    },
+    "ranking": {
+      "where": "Adım 3: Sonuç",
+      "question": "Hangi seçenek en iyisi?",
+      "text": "Kriterlerin ağırlıkları belli olunca seçenekleri sıralayın."
+    },
+    "fuzzy": {
+      "where": "Bulanık sayılar",
+      "question": "Değerler kesin değilse ne olur?",
+      "text": "Tam olarak 7 yerine \"yaklaşık 7\" ile çalışın."
+    },
+    "steps": "{count, plural, one {# adım} other {# adım}}",
+    "tryIt": "Deneyin"
+  },
+  "lesson": {
+    "moreLessons": "Diğer dersler",
+    "ownData": "Kendi verinizle deneyin"
+  },
+  "lessonExample": {
+    "marcos": "Bu derste üç telefon (A, B ve C) fiyat (düşük olan iyi), pil ömrü ve kamera puanı (yüksek olan iyi) üzerinden sıralanır. En önemlisi fiyat, sonra pil, sonra kamera. Aşağıdaki her sayı gerçek yöntemle hesaplanır.",
+    "fuzzy-marcos": "MARCOS dersindeki üç telefon, ama her değer \"yaklaşık\" bir sayı: fiyat yaklaşık 20.000, pil yaklaşık 30 saat. Her değer bir üçgen bulanık sayıdır ve aşağıdaki her sayı gerçek yöntemle hesaplanır.",
+    "critic": "Bu derste üç telefonun (A, B ve C) fiyat, pil ömrü ve kamera puanı kriterlerinin ağırlıkları yalnızca veriden türetilir. Aşağıdaki her sayı gerçek yöntemle hesaplanır.",
+    "merec": "Bu derste üç telefonun (A, B ve C) fiyat, pil ömrü ve kamera puanı kriterlerinin ağırlıkları, kriterler birer birer çıkarılarak türetilir. Aşağıdaki her sayı gerçek yöntemle hesaplanır.",
+    "swara": "Bir uzman telefon kriterlerini sıralar: önce fiyat, sonra pil ömrü, sonra kamera puanı. Her birinin bir öncekinden ne kadar daha az önemli olduğunu söyler. Aşağıdaki her sayı gerçek yöntemle hesaplanır.",
+    "fuzzy-swara": "SWARA dersindeki sıra (fiyat, sonra pil ömrü, sonra kamera puanı), ama uzman \"biraz daha az önemli\" gibi sözcüklerle yanıt verir. Aşağıdaki her sayı gerçek yöntemle hesaplanır."
   },
   "page": {
-    "back": "Yöntem Kütüphanesi",
+    "back": "Öğren",
     "section": {
+      "lesson": "Adım adım öğren",
       "introduction": "Giriş",
-      "purpose": "Amaç",
       "inputs": "Girdiler",
       "numberTypes": "Desteklenen sayı türleri",
       "steps": "Adımlar ve formüller",
-      "example": "Animasyonlu örnek",
+      "example": "Başvuru örneği",
       "sample": "Örnek veri",
       "notes": "Özellikler ve sınır durumlar",
       "references": "Kaynaklar",
@@ -22,7 +46,9 @@
     },
     "variant": "Yöntemin türü",
     "stepsText": "Aşağıdaki formüller motorun kullandığı formüllerdir: bu sayfa onları başvuru örneğinin hesap izinden okur, bu yüzden uygulamadan farklı olamazlar. Her adım, izdeki bir tablodur.",
-    "formulaWhen": "Geçerli olduğu durum: {condition}"
+    "formulaWhen": "Geçerli olduğu durum: {condition}",
+    "reference": "Başvuru: formüller, sınır durumlar ve kaynaklar",
+    "referenceHint": "Motorun kullandığı haliyle formüller, makalenin kendi örneği ve yöntemin özellikleri."
   },
   "family": {
     "weighting": "Ağırlıklandırma yöntemi",
@@ -38,8 +64,7 @@
       "original": "yöntemin özgün makalesi.",
       "substitute": "yöntemin yazarlarından birinin açık erişimli bir uygulaması; özgün makale tam olarak okunamadığı için (bkz. docs/methods)."
     },
-    "location": "Basıldığı yer: {location}.",
-    "noAnimation": "Bu yöntem için adım adım animasyon henüz yok. Aşağıdaki tablolar aynı hesabı gösterir: bir hücreyi açarak nasıl hesaplandığını görebilirsiniz."
+    "location": "Basıldığı yer: {location}."
   },
   "sample": {
     "text": "Örnek, başvuru örneğinin kendisidir: makaledeki sayıların aynısı, böylece Mateo basılı sonucu yeniden üretir.",

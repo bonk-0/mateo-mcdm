@@ -18,6 +18,7 @@ export type PageId =
   | 'result'
   | 'history'
   | 'library'
+  | 'fuzzyLesson'
   | 'playground'
   | 'languageFormats'
   | 'appearance'
@@ -39,6 +40,7 @@ export const PAGES: readonly Page[] = [
   { id: 'result', path: '/result', area: 'result' },
   { id: 'history', path: '/result/history', area: 'result' },
   { id: 'library', path: '/learn/library', area: 'learn' },
+  { id: 'fuzzyLesson', path: '/learn/fuzzy', area: 'learn' },
   { id: 'playground', path: '/learn/playground', area: 'learn' },
   { id: 'languageFormats', path: '/settings/language', area: 'settings' },
   { id: 'appearance', path: '/settings/appearance', area: 'settings' },
@@ -46,9 +48,11 @@ export const PAGES: readonly Page[] = [
   { id: 'about', path: '/settings/about', area: 'settings' },
 ];
 
-/** The tabs of a side area, in order. */
-export const AREA_PAGES: Readonly<Record<'learn' | 'settings', readonly PageId[]>> = {
-  learn: ['library', 'playground'],
+/**
+ * The tabs of a side area, in order. Learn has none: its home page lists every lesson, and
+ * each lesson links back to it.
+ */
+export const AREA_PAGES: Readonly<Record<'settings', readonly PageId[]>> = {
   settings: ['languageFormats', 'appearance', 'scales', 'about'],
 };
 

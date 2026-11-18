@@ -1,12 +1,13 @@
 import type { Trace } from '@mateo/engine';
 import { symbolicLatex } from '@mateo/explain';
-import { Badge, Tabs, TabsContent, TabsList, TabsTrigger } from '@mateo/ui';
-import { ArrowLeft, ExternalLink } from 'lucide-react';
+import { Badge, Button, Tabs, TabsContent, TabsList, TabsTrigger } from '@mateo/ui';
+import { ArrowLeft, ArrowRight, ExternalLink } from 'lucide-react';
 import { useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
 import { useMessage, useTextRef } from '../editor/messages';
 import { explanationOf, ExplainPanel } from '../explain/ExplainPanel';
+import { Disclosure } from '../flow/parts';
 import { Formula } from '../explain/Formula';
 import { NotFoundPage } from '../routes/NotFoundPage';
 import { PageHeader } from '../routes/PageHeader';
@@ -18,6 +19,7 @@ import {
   type LibraryVariant,
   type Reference,
 } from './methods';
+import { runLessonExample } from './lessonExamples';
 import { runSample, sampleFixture } from './samples';
 import { SampleActions } from './SampleActions';
 
@@ -93,13 +95,12 @@ function StepsAndFormulas({ trace }: { trace: Trace }) {
   );
 }
 
-/** The animated example: the Explain player on the reference dataset, once a sequence exists. */
-function Example({ sampleId, trace }: { sampleId: LibraryVariant['sampleId']; trace: Trace }) {
+/** The paper's worked example: every table of its run, with the source it was taken from. */
+function PaperExample({ sampleId, trace }: { sampleId: LibraryVariant['sampleId']; trace: Trace }) {
   const { t } = useTranslation('library');
   const fixture = sampleFixture(sampleId);
-  const explanation = useMemo(() => explanationOf(trace), [trace]);
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <p className="max-w-3xl text-sm text-muted-foreground">
         {t('example.text', {
           citation: `${fixture.source.citation} (${fixture.source.doi}). ${t(
@@ -108,16 +109,7 @@ function Example({ sampleId, trace }: { sampleId: LibraryVariant['sampleId']; tr
         })}{' '}
         {t('example.location', { location: fixture.source.location })}
       </p>
-      {explanation ? (
-        <ExplainPanel trace={trace} explanation={explanation} />
-      ) : (
-        <div className="space-y-3">
-          <p className="text-sm text-muted-foreground" data-testid="library-no-animation">
-            {t('example.noAnimation')}
-          </p>
-          <TraceTables trace={trace} />
-        </div>
-      )}
+      <TraceTables trace={trace} />
     </div>
   );
 }
@@ -148,16 +140,20 @@ function ReferenceList({ references }: { references: readonly Reference[] }) {
   );
 }
 
-function VariantBody({ variant }: { variant: LibraryVariant }) {
+/** Inputs, formulas, the paper's example, sample data, edge cases and references. */
+function Reference({ page, variant }: { page: LibraryPage; variant: LibraryVariant }) {
   const { t } = useTranslation('library');
   const { sampleId } = variant;
-  // The reference example runs again whenever the page opens, with the real method.
+  // The paper's example runs with the real method whenever the reference is opened.
   const record = useMemo(() => runSample(sampleId), [sampleId]);
   // The entries of a variant are named by `methods.ts`, so their keys are built from data.
   const text = t as unknown as (key: string) => string;
   const key = `variants.${sampleId}`;
   return (
-    <div className="space-y-10" data-testid={`library-variant-${sampleId}`}>
+    <div className="space-y-10" data-testid={`library-reference-${sampleId}`}>
+      <Section id={`introduction-${sampleId}`} title={t('page.section.introduction')}>
+        <p className="max-w-3xl text-sm">{t(`pages.${page.id}.introduction`)}</p>
+      </Section>
       <Section id={`inputs-${sampleId}`} title={t('page.section.inputs')}>
         <ul className="list-disc space-y-1.5 pl-5 text-sm">
           {variant.inputs.map((input) => (
@@ -174,7 +170,7 @@ function VariantBody({ variant }: { variant: LibraryVariant }) {
         <StepsAndFormulas trace={record.trace} />
       </Section>
       <Section id={`example-${sampleId}`} title={t('page.section.example')}>
-        <Example sampleId={sampleId} trace={record.trace} />
+        <PaperExample sampleId={sampleId} trace={record.trace} />
       </Section>
       <Section id={`sample-${sampleId}`} title={t('page.section.sample')}>
         <SampleActions sampleId={sampleId} />
@@ -195,18 +191,60 @@ function VariantBody({ variant }: { variant: LibraryVariant }) {
   );
 }
 
+/** One variant of a method: its lesson on the phone example, then the reference on request. */
+function VariantBody({ page, variant }: { page: LibraryPage; variant: LibraryVariant }) {
+  const { t } = useTranslation('library');
+  const { sampleId } = variant;
+  const record = useMemo(() => runLessonExample(sampleId), [sampleId]);
+  const explanation = useMemo(() => explanationOf(record.trace), [record]);
+  return (
+    <div className="space-y-8" data-testid={`library-variant-${sampleId}`}>
+      <Section id={`lesson-${sampleId}`} title={t('page.section.lesson')}>
+        <p className="max-w-3xl text-sm text-muted-foreground" data-testid="lesson-example">
+          {t(`lessonExample.${sampleId}`)}
+        </p>
+        {explanation && (
+          <div className="rounded-xl border border-border bg-surface/60 p-4 sm:p-5">
+            <ExplainPanel
+              trace={record.trace}
+              explanation={explanation}
+              finish={
+                <>
+                  <Button variant="outline" asChild>
+                    <Link to={libraryPath()}>{t('lesson.moreLessons')}</Link>
+                  </Button>
+                  <Button asChild>
+                    <Link to="/" data-testid="lesson-own-data">
+                      {t('lesson.ownData')}
+                      <ArrowRight aria-hidden />
+                    </Link>
+                  </Button>
+                </>
+              }
+            />
+          </div>
+        )}
+      </Section>
+      <Disclosure
+        title={t('page.reference')}
+        hint={t('page.referenceHint')}
+        testId={`library-reference-toggle-${sampleId}`}
+      >
+        <Reference page={page} variant={variant} />
+      </Disclosure>
+    </div>
+  );
+}
+
 function PageBody({ page }: { page: LibraryPage }) {
   const { t } = useTranslation('library');
   const [selected, setSelected] = useState<string>(page.variants[0]!.sampleId);
   const variants = page.variants;
   return (
-    <div className="space-y-10">
-      <Section id="introduction" title={t('page.section.introduction')}>
-        <p className="max-w-3xl text-sm">{t(`pages.${page.id}.introduction`)}</p>
-      </Section>
-      <Section id="purpose" title={t('page.section.purpose')}>
-        <p className="max-w-3xl text-sm">{t(`pages.${page.id}.purpose`)}</p>
-      </Section>
+    <div className="space-y-8">
+      <p className="max-w-3xl text-sm" data-testid="library-purpose">
+        {t(`pages.${page.id}.purpose`)}
+      </p>
       {variants.length > 1 ? (
         <Tabs value={selected} onValueChange={setSelected} className="space-y-6">
           <TabsList aria-label={t('page.variant')}>
@@ -218,12 +256,12 @@ function PageBody({ page }: { page: LibraryPage }) {
           </TabsList>
           {variants.map((variant) => (
             <TabsContent key={variant.sampleId} value={variant.sampleId}>
-              <VariantBody variant={variant} />
+              <VariantBody page={page} variant={variant} />
             </TabsContent>
           ))}
         </Tabs>
       ) : (
-        <VariantBody variant={variants[0]!} />
+        <VariantBody page={page} variant={variants[0]!} />
       )}
       <Section id="related" title={t('page.section.related')}>
         <ul className="flex flex-wrap gap-2" data-testid="library-related">
@@ -243,7 +281,10 @@ function PageBody({ page }: { page: LibraryPage }) {
   );
 }
 
-/** One method of the library: the template of docs/phases/phase-1.md, P1.17. */
+/**
+ * One method of the library: what it is for, a lesson on a small example, and the reference
+ * of docs/phases/phase-1.md (P1.17) behind a fold.
+ */
 export function MethodPage() {
   const { t } = useTranslation('library');
   const { pageId } = useParams();

@@ -2,64 +2,644 @@
   "view": {
     "label": "Analiz görünümü",
     "results": "Sonuçlar",
-    "explain": "Açıkla"
+    "explain": "Nasıl hesaplandı?"
   },
-  "panel": {
-    "label": "Açıklama",
-    "timeline": "Adım adım",
-    "story": "Sonucun hikâyesi"
-  },
-  "player": {
-    "label": "Adım adım açıklama",
-    "steps": "Adımlar",
+  "lesson": {
+    "label": "Ders",
+    "steps": "Dersin adımları",
     "stepOf": "Adım {current} / {total}",
-    "sceneOf": "Sahne {current} / {total}",
-    "kind": {
-      "formula": "Formül, tek örnek üzerinde",
-      "fill": "Tüm değerler"
-    },
-    "play": "Oynat",
-    "pause": "Duraklat",
-    "replay": "Baştan oynat",
-    "previous": "Önceki sahne",
-    "next": "Sonraki sahne",
-    "first": "Başa git",
-    "last": "Sona git",
-    "position": "Açıklamadaki konum",
-    "positionText": "Sahne {current} / {total}: {name}",
-    "speed": "Hız",
-    "speedValue": "{speed}×",
-    "show": "Göster",
-    "formula": "Formül",
-    "substitution": "Sayılar",
-    "explanation": "Açıklama",
-    "animations": "Animasyonlar",
-    "reducedMotion": "Azaltılmış hareket açık olduğu için her adım tamamlanmış olarak gösterilir ve hiçbir şey hareket etmez.",
-    "shortcuts": "Klavye: Boşluk oynatır veya duraklatır, sol ve sağ ok tuşları adım atar, Home ve End başa ve sona gider.",
-    "announce": "{step}: {kind}"
-  },
-  "formula": {
-    "title": "Formül",
-    "exampleRow": "Örnek satır",
-    "exampleColumn": "Örnek sütun",
-    "withNumbers": "{cell} hücresinin sayılarıyla",
-    "entered": "{cell} girdi olarak girildi. Onu bir formül üretmedi.",
-    "carried": "{cell}, {source} hücresinden değişmeden aktarıldı.",
-    "noFormula": "Motor {cell} için bir formül kaydetmedi. İşlenenlerini görmek için hesaplamayı açın.",
-    "terms": "Formülün terimleri",
+    "goTo": "Adım {current}: {title}",
+    "announce": "Adım {current} / {total}: {title}",
+    "back": "Geri",
+    "next": "Devam",
+    "parts": "Bu adımın bölümleri",
+    "from": "Şundan hesaplandı: {step}",
+    "calculation": "Seçili hücrenin hesabı",
+    "meaning": "Bu ne demek?",
+    "showFormula": "Formülü göster",
+    "hideFormula": "Formülü gizle",
     "termValues": "{count, plural, one {# değer} other {# değer}}",
-    "highlight": "{term} terimini tablolarda vurgula",
-    "howCalculated": "Bu nasıl hesaplandı?"
+    "derivation": "Bu hücrenin tüm işlenenleri",
+    "entered": "{cell} sizin girdiğiniz verinin bir parçası. Burada bir şey hesaplanmadı; sonraki adımlar bu değerlerden başlar.",
+    "carried": "{cell}, {step} adımından değişmeden alındı.",
+    "noFormula": "{cell} için bir formül kaydedilmedi.",
+    "pickHint": "Nasıl hesaplandığını görmek için tablolardaki herhangi bir hücreye tıklayın.",
+    "explainCell": "{cell} hücresini açıkla",
+    "wholeTables": "Tabloların tamamını göster",
+    "focusTables": "Yalnızca kullanılan satır ve sütunları göster",
+    "cellName": "{row}, {column}"
   },
-  "stage": {
-    "sources": "Şunlardan hesaplandı",
-    "output": "Bu adımın sonucu",
-    "cellName": "{row}, {column}",
-    "focused": "Büyük tablo: {totalRows} satırdan {rows} tanesi ve {totalColumns} sütundan {columns} tanesi gösteriliyor. Başka bir örnek satır veya sütun seçerek onu görünüme getirin.",
-    "bar": "Büyüklük",
-    "rank": "Sıra",
-    "item": "Öğe",
-    "value": "Değer"
+  "lessons": {
+    "marcos": {
+      "steps": {
+        "decision": {
+          "title": "Karar",
+          "idea": "Her şey seçenekler ve kriterler tablosuyla, bir de her kriterin ağırlığıyla başlar.",
+          "why": "Her kriter ya faydadır (yüksek olan iyi) ya maliyettir (düşük olan iyi). Ağırlıklar her kriterin ne kadar sayıldığını söyler: ağırlık büyüdükçe kriter sonucu daha çok etkiler."
+        },
+        "reference": {
+          "title": "En iyi ve en kötü",
+          "idea": "Tabloya iki hayali seçenek eklenir: her kriterin en iyi değerini taşıyan ideal ve en kötü değerini taşıyan anti-ideal.",
+          "why": "MARCOS her seçeneği bu iki referans satırla karşılaştırarak değerlendirir. Fayda kriterinde en iyi değer en büyük olandır, maliyet kriterinde en küçük olan."
+        },
+        "normalize": {
+          "title": "En iyiyle karşılaştır",
+          "idea": "Her değer, kendi kriterindeki en iyi değerle karşılaştırılır.",
+          "why": "Kriterlerin birimleri farklıdır: para, saat, puan. Bunlar toplanamaz. Bu adımdan sonra her değer 0 ile 1 arasındadır ve 1 her zaman en iyi kadar iyi demektir."
+        },
+        "weigh": {
+          "title": "Ağırlıklandır ve topla",
+          "idea": "0–1 arası her değer kendi kriterinin ağırlığıyla çarpılır, sonra bir satırdaki sonuçlar toplanır.",
+          "why": "Böylece önemli kriterler daha çok sayılır. Bir satırın toplamı S, o seçeneğin genel performansıdır; ideal satır mümkün olan en büyük toplama sahiptir."
+        },
+        "degrees": {
+          "title": "İki referansla karşılaştır",
+          "idea": "Her toplam, anti-ideal satırın toplamına (K⁻) ve ideal satırın toplamına (K⁺) bölünür.",
+          "why": "K⁻ bir seçeneğin en kötünün ne kadar üstünde olduğunu, K⁺ en iyiye ne kadar yaklaştığını gösterir. MARCOS dengeli bir puan için ikisini birlikte kullanır."
+        },
+        "utility": {
+          "title": "Tek bir son puan",
+          "idea": "İki derece önce fayda fonksiyonlarında, sonra tek bir son fayda değerinde f(K) birleştirilir.",
+          "why": "Son fayda, ideale yakın olmakla anti-idealden uzak olmak arasında bir uzlaşmadır. Değer büyüdükçe seçenek daha iyidir."
+        },
+        "ranking": {
+          "title": "Neden bu sıra?",
+          "idea": "Seçenekler son fayda değerlerine göre, en yüksekten başlayarak sıralanır.",
+          "why": "Aşağıda: kazanan, onu öne çıkaran kriterler ve ikinci seçeneğin nerede önde, nerede geride olduğu."
+        }
+      },
+      "formulas": {
+        "normalized-weights": {
+          "normalized-weight": {
+            "how": "{cell} ağırlığı, tüm ağırlıkların toplamına bölünür.",
+            "meaning": "Toplam ağırlığın {value} kadarı {cell} kriterine düşüyor. Normalleştirilmiş ağırlıkların toplamı 1'dir."
+          }
+        },
+        "extended-matrix": {
+          "anti-ideal-benefit": {
+            "how": "{column} bir fayda kriteri (yüksek olan iyi), bu yüzden en kötü değer sütundaki en küçük değerdir. Bu değer anti-ideal satırına yazılır.",
+            "meaning": "{value}, {column} kriterinde herhangi bir seçeneğin aldığı en düşük değer. Hiçbir seçenek bundan kötü değil."
+          },
+          "anti-ideal-cost": {
+            "how": "{column} bir maliyet kriteri (düşük olan iyi), bu yüzden en kötü değer sütundaki en büyük değerdir. Bu değer anti-ideal satırına yazılır.",
+            "meaning": "{value}, {column} kriterindeki en yüksek, yani en kötü değer."
+          },
+          "ideal-benefit": {
+            "how": "Fayda kriteri olan {column} için en iyi değer sütundaki en büyük değerdir. Bu değer ideal satırına yazılır.",
+            "meaning": "{value}, {column} kriterindeki hedef değer: sonraki adımda her seçenek bununla ölçülür."
+          },
+          "ideal-cost": {
+            "how": "Maliyet kriteri olan {column} için en iyi değer sütundaki en küçük değerdir. Bu değer ideal satırına yazılır.",
+            "meaning": "{value}, {column} kriterindeki hedef değer: sonraki adımda her seçenek bununla ölçülür."
+          }
+        },
+        "normalized-matrix": {
+          "benefit": {
+            "how": "{column} bir fayda kriteri: {row} seçeneğinin değeri, sütundaki en iyi (ideal) değere bölünür.",
+            "meaning": "{row} seçeneği {column} kriterinde en iyi değerin {value} katına ulaşıyor. 1 olsaydı en iyisi olurdu."
+          },
+          "cost": {
+            "how": "{column} bir maliyet kriteri, bu yüzden bölme ters çevrilir: en iyi (en küçük) değer, {row} seçeneğinin değerine bölünür.",
+            "meaning": "{row} seçeneği {column} kriterinde {value} puan alıyor. Maliyet düştükçe sonuç 1'e yaklaşır; 1 en iyisi demektir."
+          }
+        },
+        "weighted-matrix": {
+          "weighted": {
+            "how": "{row} seçeneğinin {column} kriterindeki 0–1 arası değeri, {column} ağırlığıyla çarpılır.",
+            "meaning": "{value}, {column} kriterinin {row} seçeneğinin puanına katkısı. Ağırlığı büyük kriter daha çok katkı yapar."
+          }
+        },
+        "sums": {
+          "sum": {
+            "how": "{cell} satırındaki ağırlıklı değerler toplanır.",
+            "meaning": "{value}, {cell} için genel performans S. İdeal satır mümkün olan en büyük toplama sahiptir."
+          }
+        },
+        "utility-degrees": {
+          "k-minus": {
+            "how": "{row} seçeneğinin toplamı, anti-ideal satırın toplamına bölünür.",
+            "meaning": "{row} seçeneği, olabilecek en kötü seçeneğin {value} katı kadar iyi. Büyük olan iyidir."
+          },
+          "k-plus": {
+            "how": "{row} seçeneğinin toplamı, ideal satırın toplamına bölünür.",
+            "meaning": "{row} seçeneği idealin {value} katına ulaşıyor. 1 olsaydı her kriterde ideal kadar iyi olurdu."
+          }
+        },
+        "utility-functions": {
+          "f-k-minus": {
+            "how": "Anti-ideale göre fayda: K⁺, K⁺ + K⁻ toplamına bölünür. Çaprazlamaya dikkat: yazarların tanımına göre pay kısmında K⁺ bulunur.",
+            "meaning": "{value}, K⁺ değerinin K⁺ + K⁻ içindeki payı. K⁻ ve K⁺ ikisi de S ile orantılı olduğu için bu değer her seçenekte aynıdır."
+          },
+          "f-k-plus": {
+            "how": "İdeale göre fayda: K⁻, K⁺ + K⁻ toplamına bölünür.",
+            "meaning": "{value}, K⁻ değerinin K⁺ + K⁻ içindeki payı. Bu değer de her seçenekte aynıdır."
+          }
+        },
+        "final-utility": {
+          "final-utility": {
+            "how": "{cell} için K⁺ ve K⁻ toplanır ve iki fayda fonksiyonundan oluşan bir terime bölünür.",
+            "meaning": "{value}, {cell} için son fayda değeri. En yüksek değere sahip seçenek birinci olur."
+          }
+        }
+      }
+    },
+    "fuzzyMarcos": {
+      "steps": {
+        "decision": {
+          "title": "Karar",
+          "idea": "Her şey üçgen bulanık sayı (l, m, u) olarak verilen puanlarla ve her kriterin ağırlığıyla başlar.",
+          "why": "Bulanık bir değer şunu söyler: l ile u arasında, büyük olasılıkla m. İyi ya da kötü gibi sözcüklerle verilen puanlar, dilsel bir ölçekle bu tür üçgenlere dönüşür. Ağırlıklar her kriterin ne kadar sayıldığını söyler."
+        },
+        "reference": {
+          "title": "En iyi ve en kötü",
+          "idea": "İdeal ve anti-ideal satırlar, her kriterin en iyi ve en kötü l, m ve u değerlerini alır.",
+          "why": "MARCOS'ta olduğu gibi her seçenek bu iki satırla karşılaştırılır. Üçgenin üç sayısının her biri ayrı ayrı ele alınır."
+        },
+        "normalize": {
+          "title": "En iyiyle karşılaştır",
+          "idea": "Her üçgen, idealin tek bir sayısına bölünür: fayda kriterinde u değerine, maliyet kriterinde l değerine.",
+          "why": "Böylece her kriter 0 ile 1 arasında ortak bir ölçeğe gelir ve üç sayı sırasını korur: l ≤ m ≤ u."
+        },
+        "weigh": {
+          "title": "Ağırlıklandır ve topla",
+          "idea": "Her üçgen kendi kriterinin ağırlığıyla çarpılır, sonra bir satırdaki üçgenler toplanır.",
+          "why": "Önemli kriterler daha çok sayılır ve her puanın belirsizliği toplama kadar taşınır."
+        },
+        "degrees": {
+          "title": "İki referansla karşılaştır",
+          "idea": "Her bulanık toplam, anti-ideal satırın (K̃⁻) ve ideal satırın (K̃⁺) bulanık toplamına bölünür.",
+          "why": "Bulanık bölmede l, u ile; m, m ile; u, l ile bölünür. Sonuç yine geçerli bir üçgendir ve belirsizliğin tamamını korur."
+        },
+        "utility": {
+          "title": "Ortak bir ölçü",
+          "idea": "Her seçeneğin iki derecesi toplanır (T̃), en büyük toplam D̃ tek bir sayıya dönüşür ve fayda fonksiyonları derecelerin bu sayıya bölümüdür.",
+          "why": "Hepsini aynı sayıya bölmek, her seçeneğin fayda fonksiyonlarını tek bir ölçeğe getirir."
+        },
+        "crisp": {
+          "title": "Her seçeneğe tek sayı",
+          "idea": "Her bulanık sonuç tek bir sayıya dönüşür ve bu sayılar son fayda değerini verir.",
+          "why": "Üçgenler doğrudan sıralanamaz. Her seçenek için tek bir sayı, sıralamayı mümkün kılar."
+        },
+        "ranking": {
+          "title": "Neden bu sıra?",
+          "idea": "Seçenekler son fayda değerlerine göre, en yüksekten başlayarak sıralanır.",
+          "why": "Aşağıda: kazanan, onu öne çıkaran kriterler ve ikinci seçeneğin nerede önde, nerede geride olduğu."
+        }
+      },
+      "formulas": {
+        "normalized-weights": {
+          "normalized-weight": {
+            "how": "{cell} ağırlığı, tüm ağırlıkların toplamına bölünür.",
+            "meaning": "Toplam ağırlığın {value} kadarı {cell} kriterine düşüyor. Normalleştirilmiş ağırlıkların toplamı 1'dir."
+          }
+        },
+        "extended-matrix": {
+          "anti-ideal-benefit": {
+            "how": "{column} bir fayda kriteri: anti-ideal, sütundaki en küçük l, en küçük m ve en küçük u değerini alır.",
+            "meaning": "{value}, {column} kriterindeki en kötü puan, sayı sayı."
+          },
+          "anti-ideal-cost": {
+            "how": "{column} bir maliyet kriteri: anti-ideal, sütundaki en büyük l, en büyük m ve en büyük u değerini alır.",
+            "meaning": "{value}, {column} kriterindeki en kötü puan, sayı sayı."
+          },
+          "ideal-benefit": {
+            "how": "{column} bir fayda kriteri: ideal, sütundaki en büyük l, en büyük m ve en büyük u değerini alır.",
+            "meaning": "{value}, {column} kriterindeki en iyi puan, sayı sayı."
+          },
+          "ideal-cost": {
+            "how": "{column} bir maliyet kriteri: ideal, sütundaki en küçük l, en küçük m ve en küçük u değerini alır.",
+            "meaning": "{value}, {column} kriterindeki en iyi puan, sayı sayı."
+          }
+        },
+        "normalized-matrix": {
+          "benefit": {
+            "how": "{row} seçeneğinin {column} kriterindeki üç sayısının her biri, idealin üst değeri u'ya bölünür.",
+            "meaning": "{value}, {row} seçeneğinin {column} kriterindeki puanının en iyiye oranı. 1'e yakın sayılar ideale yakındır."
+          },
+          "cost": {
+            "how": "Maliyet kriterinde idealin alt değeri l, {row} seçeneğinin her sayısına bölünür. l ile u yer değiştirir, böylece l ≤ m ≤ u sırası korunur.",
+            "meaning": "{value}, {row} seçeneğinin {column} kriterindeki puanının en iyiye oranı. 1'e yakın sayılar ideale yakındır."
+          }
+        },
+        "weighted-matrix": {
+          "weighted": {
+            "how": "{row} seçeneğinin {column} kriterindeki bulanık değeri, {column} ağırlığıyla sayı sayı çarpılır.",
+            "meaning": "{value}, {column} kriterinin {row} seçeneğine katkısı, belirsizliğiyle birlikte."
+          }
+        },
+        "sums": {
+          "sum": {
+            "how": "{cell} satırındaki ağırlıklı bulanık değerler sayı sayı toplanır.",
+            "meaning": "{value}, {cell} için bulanık genel performans."
+          }
+        },
+        "utility-degrees": {
+          "k-minus": {
+            "how": "{row} seçeneğinin bulanık toplamı, anti-ideal satırın bulanık toplamına bölünür: l, u ile; m, m ile; u, l ile.",
+            "meaning": "{row} seçeneği, olabilecek en kötü seçeneğin yaklaşık {value} katı kadar iyi."
+          },
+          "k-plus": {
+            "how": "{row} seçeneğinin bulanık toplamı, aynı bulanık bölmeyle ideal satırın bulanık toplamına bölünür.",
+            "meaning": "{row} seçeneği idealin yaklaşık {value} katına ulaşıyor."
+          }
+        },
+        "utility-degree-sums": {
+          "t": {
+            "how": "{cell} için iki bulanık fayda derecesi sayı sayı toplanır.",
+            "meaning": "{value}, {cell} için T̃: iki karşılaştırma birlikte."
+          }
+        },
+        "max-utility-degree-sum": {
+          "d": {
+            "how": "D̃, tüm T̃ değerleri arasından en büyük l, en büyük m ve en büyük u değerini alır.",
+            "meaning": "{value}, en büyük birleşik derece: sonraki adımın ölçüsü."
+          }
+        },
+        "max-utility-degree-sum-crisp": {
+          "df": {
+            "how": "D̃ tek bir sayıya dönüştürülür (durulaştırılır).",
+            "meaning": "Her bulanık fayda fonksiyonu {value} sayısına bölünür."
+          }
+        },
+        "utility-functions": {
+          "f-k-minus": {
+            "how": "{row} seçeneğinin anti-ideale göre faydası: K̃⁺, df_crisp değerine bölünür. Yazarların tanımındaki çaprazlamaya dikkat.",
+            "meaning": "{value}, {row} seçeneğinin bulanık fayda fonksiyonu f(K̃⁻)."
+          },
+          "f-k-plus": {
+            "how": "{row} seçeneğinin ideale göre faydası: K̃⁻, df_crisp değerine bölünür.",
+            "meaning": "{value}, {row} seçeneğinin bulanık fayda fonksiyonu f(K̃⁺)."
+          }
+        },
+        "defuzzification": {
+          "defuzzify": {
+            "how": "{row} seçeneğinin {column} sütunundaki bulanık değeri tek bir sayıya dönüştürülür (durulaştırılır).",
+            "meaning": "{value}, son fayda hesabında kullanılan sayı."
+          }
+        },
+        "final-utility": {
+          "final-utility": {
+            "how": "{cell} için kesin K⁺ ve K⁻ toplanır ve iki kesin fayda fonksiyonundan oluşan bir terime bölünür.",
+            "meaning": "{value}, {cell} için son fayda değeri. En yüksek değere sahip seçenek birinci olur."
+          }
+        }
+      }
+    },
+    "critic": {
+      "steps": {
+        "data": {
+          "title": "Veri",
+          "idea": "CRITIC ağırlıkları yalnızca veriden bulur: kimsenin hangi kriterin daha önemli olduğunu söylemesi gerekmez.",
+          "why": "İki şeye bakar: bir kriter seçenekleri ne kadar ayırt ediyor ve diğer kriterlerin söylemediği bir şey söylüyor mu."
+        },
+        "normalize": {
+          "title": "0–1 aralığına getir",
+          "idea": "Her sütun, en kötü değeri 0 ve en iyi değeri 1 olacak şekilde yeniden ölçeklenir.",
+          "why": "Farklı birimlerdeki sütunlar ancak böyle karşılaştırılabilir. Maliyet kriterinde en düşük değer 1 olur."
+        },
+        "contrast": {
+          "title": "Ne kadar ayırt ediyor?",
+          "idea": "Her kriter için ortalama, her değerin ortalamadan uzaklığı ve standart sapma σ hesaplanır.",
+          "why": "Tüm seçenekler bir kriterde aşağı yukarı aynı puanı alıyorsa, o kriter seçim yapmaya yardım etmez. Büyük σ güçlü bir ayrım demektir."
+        },
+        "correlation": {
+          "title": "Başka bir kriteri mi tekrarlıyor?",
+          "idea": "Her kriter çiftinin korelasyonu r hesaplanır.",
+          "why": "1'e yakın korelasyon, iki kriterin birlikte hareket ettiğini ve neredeyse aynı şeyi söylediğini gösterir. 0'a yakın ya da negatifse farklı şeyler söylerler."
+        },
+        "information": {
+          "title": "Ne kadar yeni bilgi?",
+          "idea": "Çelişki, tüm kriterler üzerinden 1 − r değerlerini toplar; bilgi miktarı C = σ × çelişki olur.",
+          "why": "Bir kriter, seçenekleri iyi ayırt ediyor ve diğer kriterlerle çelişiyorsa çok bilgi taşır."
+        },
+        "weights": {
+          "title": "Bilgi ağırlığa dönüşür",
+          "idea": "Her kriterin ağırlığı, toplam bilgideki payıdır.",
+          "why": "Ağırlıkların toplamı 1'dir. En çok bilgi taşıyan kriter en büyük ağırlığı alır."
+        }
+      },
+      "formulas": {
+        "normalized-matrix": {
+          "benefit": {
+            "how": "Fayda kriteri {column} için: ({row} değeri − en kötü değer) ÷ (en iyi değer − en kötü değer).",
+            "meaning": "{row} seçeneği {column} kriterinde, en kötü değerden (0) en iyiye (1) giden yolun {value} noktasında."
+          },
+          "cost": {
+            "how": "En büyük değerin en kötü olduğu maliyet kriteri {column} için: (en kötü değer − {row} değeri) ÷ (en kötü değer − en iyi değer).",
+            "meaning": "{row} seçeneği {column} kriterinde, en kötü değerden (0) en iyiye (1) giden yolun {value} noktasında."
+          }
+        },
+        "means": {
+          "mean": {
+            "how": "{cell} sütunundaki normalleştirilmiş değerler toplanır ve seçenek sayısına bölünür.",
+            "meaning": "{value}, {cell} için ortalama. Sonraki adım her değerin buna olan uzaklığını ölçer."
+          }
+        },
+        "deviations": {
+          "deviation": {
+            "how": "{row} seçeneğinin normalleştirilmiş değerinden {column} ortalaması çıkarılır.",
+            "meaning": "{row} seçeneği {column} kriterinde ortalamadan {value} uzakta. Negatif değer ortalamanın altında demektir."
+          }
+        },
+        "standard-deviations": {
+          "sigma": {
+            "how": "{cell} sapmalarının kareleri ortalanır ve karekökü alınır.",
+            "meaning": "{value}, {cell} için ayırt edicilik: büyüdükçe seçenekler bu kriterde daha çok farklılaşır."
+          }
+        },
+        "correlation-matrix": {
+          "pearson": {
+            "how": "{row} ve {column} sapmaları seçenek seçenek çarpılır, toplanır, sonra n sayısına ve iki standart sapmaya bölünür.",
+            "meaning": "{value}, {row} ile {column} arasındaki korelasyon: 1'e yakınsa birlikte, −1'e yakınsa zıt yönde hareket ederler."
+          }
+        },
+        "conflict": {
+          "conflict": {
+            "how": "{cell} için her kriter üzerinden 1 − r toplanır.",
+            "meaning": "{value}, {cell} için çelişki: diğerleriyle korelasyonu azaldıkça büyür."
+          }
+        },
+        "information-content": {
+          "information": {
+            "how": "{cell} için standart sapma, çelişkiyle çarpılır.",
+            "meaning": "{value}, {cell} için bilgi miktarı C."
+          }
+        },
+        "weights": {
+          "weight": {
+            "how": "{cell} için bilgi miktarı, tüm kriterlerin toplam bilgisine bölünür.",
+            "meaning": "Toplam ağırlığın {value} kadarı {cell} kriterine düşüyor."
+          }
+        }
+      }
+    },
+    "merec": {
+      "steps": {
+        "data": {
+          "title": "Veri",
+          "idea": "MEREC ağırlıkları yalnızca veriden bulur; bir kriter çıkarılınca ne olduğunu sorar.",
+          "why": "Çıkarıldığında seçeneklerin performansını çok değiştiren kriter önemlidir."
+        },
+        "normalize": {
+          "title": "En kötüden uzaklık",
+          "idea": "Her değer, sütundaki en kötü değer 1 olacak ve daha iyi değerler küçülecek şekilde bölünür.",
+          "why": "Bu, çoğu yöntemin tersidir ve bilerek böyledir: sonraki adımdaki logaritmalar değer en kötüden uzaklaştıkça büyür, böylece daha iyi performans daha büyük bir sayı verir."
+        },
+        "performance": {
+          "title": "Genel performans",
+          "idea": "Her seçeneğin genel performansı S, değerlerinin logaritmalarından hesaplanır.",
+          "why": "|ln n| en kötü değerde 0'dır ve daha iyi değerlerde büyür. S bunları tüm kriterler üzerinden özetler."
+        },
+        "removal": {
+          "title": "Bir kriteri çıkar",
+          "idea": "Her seçenek için S, her seferinde bir kriter dışarıda bırakılarak yeniden hesaplanır.",
+          "why": "Tam S ile karşılaştırmak, her kriterin ne kadar katkı yaptığını gösterir."
+        },
+        "effects": {
+          "title": "Çıkarma etkisi",
+          "idea": "Bir kriterin çıkarma etkisi E, kriter dışarıda bırakılınca S'nin ne kadar değiştiğini toplar.",
+          "why": "Değişim büyüdükçe kriter, seçenekleri birbirinden ayırmak için daha önemlidir."
+        },
+        "weights": {
+          "title": "Etki ağırlığa dönüşür",
+          "idea": "Her kriterin ağırlığı, toplam çıkarma etkisindeki payıdır.",
+          "why": "Ağırlıkların toplamı 1'dir. Etkisi en büyük olan kriter en büyük ağırlığı alır."
+        }
+      },
+      "formulas": {
+        "normalized-matrix": {
+          "benefit": {
+            "how": "Fayda kriteri {column} için: sütundaki en küçük değer ÷ {row} değeri.",
+            "meaning": "{value}: 1, {column} kriterindeki en kötü değer olurdu. Sayı küçüldükçe {row} seçeneği daha iyidir."
+          },
+          "cost": {
+            "how": "Maliyet kriteri {column} için: {row} değeri ÷ sütundaki en büyük değer.",
+            "meaning": "{value}: 1, {column} kriterindeki en kötü değer olurdu. Sayı küçüldükçe {row} seçeneği daha iyidir."
+          }
+        },
+        "absolute-logs": {
+          "abs-ln": {
+            "how": "{row} seçeneğinin {column} kriterindeki normalleştirilmiş değerinin doğal logaritmasının mutlak değeri.",
+            "meaning": "{value}: 0 en kötü değeri, daha büyük sayılar ondan daha uzak değerleri gösterir."
+          }
+        },
+        "overall-performance": {
+          "overall": {
+            "how": "{cell} için mutlak logaritmalar tüm kriterler üzerinden ortalanır, 1 eklenir ve doğal logaritması alınır.",
+            "meaning": "{value}, {cell} için tüm kriterlerle genel performans S."
+          }
+        },
+        "removal-performance": {
+          "removal": {
+            "how": "{row} seçeneğinin S değeri gibi, ama {column} terimi olmadan. Bölen yine tüm kriterlerin sayısıdır.",
+            "meaning": "{value}, {column} dışarıda bırakılınca {row} seçeneğinin performansı."
+          }
+        },
+        "removal-effects": {
+          "effect": {
+            "how": "{cell} için |S′ − S| farkı tüm seçenekler üzerinden toplanır.",
+            "meaning": "{value}, {cell} için çıkarma etkisi."
+          }
+        },
+        "weights": {
+          "weight": {
+            "how": "{cell} için çıkarma etkisi, tüm etkilerin toplamına bölünür.",
+            "meaning": "Toplam ağırlığın {value} kadarı {cell} kriterine düşüyor."
+          }
+        }
+      }
+    },
+    "swara": {
+      "steps": {
+        "order": {
+          "title": "Önem sırası",
+          "idea": "Bir uzman kriterleri en önemliden en önemsize doğru dizer ve her birinin bir öncekinden ne kadar az önemli olduğunu söyler.",
+          "why": "Bu karşılaştırmalı önem s küçük bir sayıdır: büyüdükçe bir önceki kritere göre düşüş de büyür. İlk kriterin değeri yoktur; o referanstır."
+        },
+        "coefficients": {
+          "title": "Katsayılar",
+          "idea": "Her karşılaştırmalı önem s, k = s + 1 katsayısına dönüşür.",
+          "why": "İlk kriter k = 1 alır. Daha büyük k, bir önceki kritere göre daha büyük bir düşüş demektir."
+        },
+        "chain": {
+          "title": "Listede adım adım aşağı",
+          "idea": "Listede aşağı inerken her kriterin değeri, bir öncekinin değerinin kendi katsayısına bölümüdür.",
+          "why": "Böylece önem, uzmanın söylediği kadar adım adım azalır."
+        },
+        "weights": {
+          "title": "Toplamı 1 olan ağırlıklar",
+          "idea": "Değerler toplamlarına bölünür.",
+          "why": "Önemli olan yalnızca kriterler arasındaki oranlardır. Bu adımdan sonra ağırlıkların toplamı 1'dir."
+        }
+      },
+      "formulas": {
+        "coefficients": {
+          "first": {
+            "how": "{cell} en önemli kriter, bu yüzden katsayısı 1.",
+            "meaning": "{value}: diğer kriterlerin karşılaştırıldığı referans."
+          },
+          "coefficient": {
+            "how": "{cell} için karşılaştırmalı öneme 1 eklenir.",
+            "meaning": "{value}: büyüdükçe bir önceki kritere göre önemdeki düşüş de büyür."
+          }
+        },
+        "recalculated-weights": {
+          "first": {
+            "how": "Zinciri ilk kriter 1 ile başlatır.",
+            "meaning": "{value}: zincirin başlangıç noktası."
+          },
+          "recalculated": {
+            "how": "Bir önceki kriterin değeri, {cell} katsayısına bölünür.",
+            "meaning": "{value}, {cell} kriterinin ilk kritere göre önemi."
+          }
+        },
+        "weights": {
+          "weight": {
+            "how": "{cell} değeri, tüm değerlerin toplamına bölünür.",
+            "meaning": "Toplam ağırlığın {value} kadarı {cell} kriterine düşüyor."
+          }
+        }
+      }
+    },
+    "fuzzySwara": {
+      "steps": {
+        "order": {
+          "title": "Önem sırası",
+          "idea": "Bir uzman kriterleri önem sırasına dizer ve her birinin bir öncekinden ne kadar az önemli olduğunu sözcüklerle söyler.",
+          "why": "Biraz daha az önemli gibi sözcükler, IMF SWARA ölçeğiyle üçgen bulanık sayılara dönüşür. İlk kriterin değerlendirmesi yoktur; o referanstır."
+        },
+        "coefficients": {
+          "title": "Katsayılar",
+          "idea": "Her değerlendirme s̃, k̃ = s̃ + 1 bulanık katsayısına dönüşür.",
+          "why": "İlk kriter (1, 1, 1) alır. Daha büyük katsayı, bir önceki kritere göre daha büyük bir düşüş demektir."
+        },
+        "chain": {
+          "title": "Listede adım adım aşağı",
+          "idea": "Listede aşağı inerken her bulanık değer, bir öncekinin kendi katsayısına bölümüdür; sonra hepsi toplanır.",
+          "why": "Önem adım adım azalır. Bulanık bölme (l, u ile; m, m ile; u, l ile) sözcüklerin belirsizliğini korur."
+        },
+        "fuzzyWeights": {
+          "title": "Bulanık ağırlıklar",
+          "idea": "Her bulanık değer, bulanık toplama bölünür.",
+          "why": "Böylece her kriter önemdeki payını alır, hâlâ bir üçgen olarak."
+        },
+        "weights": {
+          "title": "Her kritere tek sayı",
+          "idea": "Her bulanık ağırlık tek bir sayıya dönüşür ve sayılar toplamı 1 olacak şekilde ölçeklenir.",
+          "why": "MARCOS gibi diğer yöntemler kriter başına tek bir ağırlık ister."
+        }
+      },
+      "formulas": {
+        "coefficients": {
+          "first": {
+            "how": "{cell} en önemli kriter, bu yüzden katsayısı (1, 1, 1).",
+            "meaning": "{value}: diğer kriterlerin karşılaştırıldığı referans."
+          },
+          "coefficient": {
+            "how": "{cell} değerlendirmesinin her sayısına 1 eklenir.",
+            "meaning": "{value}: büyüdükçe bir önceki kritere göre önemdeki düşüş de büyür."
+          }
+        },
+        "recalculated-weights": {
+          "first": {
+            "how": "Zinciri ilk kriter (1, 1, 1) ile başlatır.",
+            "meaning": "{value}: zincirin başlangıç noktası."
+          },
+          "recalculated": {
+            "how": "Bir önceki kriterin bulanık değeri, {cell} katsayısına bölünür: l, u ile; m, m ile; u, l ile.",
+            "meaning": "{value}, {cell} kriterinin ilk kritere göre önemi."
+          }
+        },
+        "recalculated-weights-sum": {
+          "sum": {
+            "how": "Tüm kriterlerin bulanık değerleri sayı sayı toplanır.",
+            "meaning": "{value}, bulanık ağırlıkların hesaplandığı toplam."
+          }
+        },
+        "fuzzy-weights": {
+          "weight": {
+            "how": "{cell} için bulanık değer, bulanık toplama bölünür.",
+            "meaning": "{value}, {cell} için bulanık ağırlık."
+          }
+        },
+        "crisp-weights": {
+          "defuzzify": {
+            "how": "{cell} için bulanık ağırlık tek bir sayıya dönüştürülür (durulaştırılır).",
+            "meaning": "{value}, ölçeklemeden önce {cell} için kesin ağırlık. Bu sayıların toplamı tam olarak 1 değildir."
+          }
+        },
+        "weights": {
+          "normalized": {
+            "how": "{cell} için kesin ağırlık, tüm kesin ağırlıkların toplamına bölünür.",
+            "meaning": "Toplam ağırlığın {value} kadarı {cell} kriterine düşüyor."
+          }
+        }
+      }
+    }
+  },
+  "lessonExample": {
+    "phone": "Telefon {name}",
+    "criteria": {
+      "price": "Fiyat (₺)",
+      "battery": "Pil (saat)",
+      "camera": "Kamera (puan)"
+    }
+  },
+  "fuzzyLesson": {
+    "steps": {
+      "why": {
+        "title": "Neden tek sayı yetmez?",
+        "idea": "İnsanlar çoğu zaman kesin bir sayı veremez, yalnızca bir aralık söyler: yaklaşık 7.",
+        "why": "Kesin bir sayı emin olduğumuzu varsayar. Bulanık sayı ise aralığı hesabın içinde tutar."
+      },
+      "triangle": {
+        "title": "Üç sayı",
+        "idea": "Yaklaşık 7, üç sayıyla yazılabilir: en az ne olabileceği, en olası değer ve en fazla ne olabileceği.",
+        "why": "Üçü birlikte bir üçgen çizer. Üçgenin bir noktadaki yüksekliği o değerin ne kadar inandırıcı olduğunu gösterir: en olası değerde tam, aralığın dışında sıfır."
+      },
+      "scale": {
+        "title": "Sözcükten üçgene",
+        "idea": "Dilsel bir ölçek her sözcüğe bir üçgen verir.",
+        "why": "Uzmanlar yüksek ya da düşük gibi sözcüklerle cevap verebilir; Mateo her sözcüğün üçgeniyle hesap yapar."
+      },
+      "arithmetic": {
+        "title": "Üçgenlerle hesap",
+        "idea": "İki üçgen, l'leri, m'leri ve u'ları ayrı ayrı toplanarak toplanır.",
+        "why": "Belirsizlik her adımda büyür: toplam, iki sayıdan da geniştir. Diğer işlemler de benzer kurallara uyar."
+      },
+      "try": {
+        "title": "Kendiniz deneyin",
+        "idea": "İki üçgenin köşelerini sürükleyin ve sonucu izleyin.",
+        "why": "Aşağıdaki her sonuç, yöntemlerin de kullandığı Mateo'nun bulanık aritmetiğiyle hesaplanır."
+      }
+    },
+    "triple": "({l}; {m}; {u})",
+    "points": {
+      "l": "en az bu kadar olabilir",
+      "m": "en olası değer (tepe noktası)",
+      "u": "en fazla bu kadar olabilir"
+    },
+    "why": {
+      "chart": "Kesin 7 sayısı ve yaklaşık 7 bulanık sayısı",
+      "exact": "Tam 7: tek bir çizgi",
+      "about": "Yaklaşık 7: bir üçgen",
+      "meaning": "Üçgen şunu söyler: kesinlikle 5'in altında ya da 9'un üstünde değil, büyük olasılıkla 7."
+    },
+    "triangle": {
+      "chart": "Yaklaşık 7'nin üçgeni",
+      "meaning": "{value} yazmak şunu söyler: ilk ve son sayı arasında, büyük olasılıkla ortadaki. Sayılar her zaman sıralıdır: l ≤ m ≤ u."
+    },
+    "scale": {
+      "chart": "5 düzeyli ölçeğin üçgenleri",
+      "meaning": "Yüksek gibi bir puan girildiğinde Mateo onun üçgeniyle hesap yapar. Projenin ölçekleri Ayarlar'dan düzenlenir."
+    },
+    "arithmetic": {
+      "chart": "A, B ve toplamları",
+      "how": "l + l, m + m, u + u:",
+      "single": "Seçenekleri sıralamak için üçgen en sonunda tek bir sayıya dönüştürülür. Ağırlıklı ortalama (l + 4m + u) / 6 ile {value} üçgeni {mean} olur.",
+      "meaning": "Bulanık yöntemler üçgenin tamamını her adımda taşır ve onu ancak en sonda tek bir sayıya dönüştürür."
+    },
+    "next": "Bulanık MARCOS'ta görün"
   },
   "table": {
     "rowsShown": "{total} satırın {shown} tanesi gösteriliyor.",
@@ -160,167 +740,6 @@
     },
     "fuzzyNote": "Bulanık değerler en olası değerleri m’ye göre sıralanır.",
     "unavailable": "Bu analizde hikâyesi anlatılacak bir sıralama yok."
-  },
-  "sequences": {
-    "marcos": {
-      "normalized-weights": {
-        "normalized-weight": "Ağırlıkların toplamı 1 olsun diye her ağırlık tüm ağırlıkların toplamına bölünür."
-      },
-      "extended-matrix": {
-        "anti-ideal-benefit": "Fayda kriterinde en kötü değer, sütunundaki en küçük değerdir. Negatif ideal satıra (AAI) yazılır.",
-        "anti-ideal-cost": "Maliyet kriterinde en kötü değer, sütunundaki en büyük değerdir. Negatif ideal satıra (AAI) yazılır.",
-        "ideal-benefit": "Fayda kriterinde en iyi değer, sütunundaki en büyük değerdir. İdeal satıra (AI) yazılır.",
-        "ideal-cost": "Maliyet kriterinde en iyi değer, sütunundaki en küçük değerdir. İdeal satıra (AI) yazılır."
-      },
-      "normalized-matrix": {
-        "benefit": "Fayda kriterindeki bir değer, o kriterin ideal değerine bölünür. Sonuç 1’e ne kadar yakınsa alternatif ideale o kadar yakındır.",
-        "cost": "Maliyet kriterinde bölme tersine çevrilir: ideal değer, değere bölünür. Daha düşük maliyet 1’e daha yakın bir sonuç verir."
-      },
-      "weighted-matrix": {
-        "weighted": "Normalize değer kendi kriterinin ağırlığıyla çarpılır; böylece önemli kriterler daha çok sayılır."
-      },
-      "sums": {
-        "sum": "Bir satırın ağırlıklı değerleri toplanır. Bu, her alternatif için ve ayrıca negatif ideal ile ideal satırlar için yapılır."
-      },
-      "utility-degrees": {
-        "k-minus": "K⁻ bir alternatifi negatif ideal çözümle karşılaştırır: alternatifin toplamı, negatif ideal satırın toplamına bölünür. Büyük olan daha iyidir.",
-        "k-plus": "K⁺ bir alternatifi ideal çözümle karşılaştırır: alternatifin toplamı, ideal satırın toplamına bölünür. 1’e ne kadar yakınsa ideale o kadar yakındır."
-      },
-      "utility-functions": {
-        "f-k-minus": "Negatif ideal çözüme göre fayda fonksiyonu. Çaprazlamaya dikkat edin: payda K⁺ bulunur.",
-        "f-k-plus": "İdeal çözüme göre fayda fonksiyonu; payda K⁻ bulunur."
-      },
-      "final-utility": {
-        "final-utility": "Nihai fayda, iki fayda derecesini ve iki fayda fonksiyonunu tek bir sayıda birleştirir. En yüksek değer kazanır."
-      }
-    },
-    "fuzzyMarcos": {
-      "normalized-weights": {
-        "normalized-weight": "Ağırlıkların toplamı 1 olsun diye her ağırlık tüm ağırlıkların toplamına bölünür."
-      },
-      "extended-matrix": {
-        "anti-ideal-benefit": "Fayda kriterinde negatif ideal değer, sütunun en küçük l, en küçük m ve en küçük u değerlerini alır.",
-        "anti-ideal-cost": "Maliyet kriterinde negatif ideal değer, sütunun en büyük l, en büyük m ve en büyük u değerlerini alır.",
-        "ideal-benefit": "Fayda kriterinde ideal değer, sütunun en büyük l, en büyük m ve en büyük u değerlerini alır.",
-        "ideal-cost": "Maliyet kriterinde ideal değer, sütunun en küçük l, en küçük m ve en küçük u değerlerini alır."
-      },
-      "normalized-matrix": {
-        "benefit": "Fayda kriterindeki bir değerin her bileşeni tek bir sayıya bölünür: idealin üst değeri u.",
-        "cost": "Maliyet kriterinde idealin alt değeri l her bileşene bölünür. l ≤ m ≤ u korunsun diye bileşenler yer değiştirir."
-      },
-      "weighted-matrix": {
-        "weighted": "Normalize bulanık değer kendi kriterinin ağırlığıyla bileşen bileşen çarpılır."
-      },
-      "sums": {
-        "sum": "Bir satırın ağırlıklı bulanık değerleri bileşen bileşen toplanır; her alternatif için ve negatif ideal ile ideal satırlar için."
-      },
-      "utility-degrees": {
-        "k-minus": "K̃⁻, bir alternatifin bulanık toplamının negatif ideal satırın bulanık toplamına bölümüdür. Bulanık bölmede l u’ya, m m’ye, u l’ye bölünür.",
-        "k-plus": "K̃⁺, bir alternatifin bulanık toplamının ideal satırın bulanık toplamına bölümüdür; aynı bulanık bölme kullanılır."
-      },
-      "utility-degree-sums": {
-        "t": "Bir alternatifin iki bulanık fayda derecesi bileşen bileşen toplanır."
-      },
-      "max-utility-degree-sum": {
-        "d": "D̃, tüm T̃ değerleri arasından en büyük l, en büyük m ve en büyük u değerlerini alır."
-      },
-      "max-utility-degree-sum-crisp": {
-        "df": "D̃, derecelendirilmiş ortalama ile tek bir kesin sayıya çevrilir. Her bulanık fayda fonksiyonu bu sayıya bölünür."
-      },
-      "utility-functions": {
-        "f-k-minus": "Negatif ideal çözüme göre bulanık fayda fonksiyonu: K̃⁺’nın df_crisp’e bölümü. Çaprazlamaya dikkat edin.",
-        "f-k-plus": "İdeal çözüme göre bulanık fayda fonksiyonu: K̃⁻’nin df_crisp’e bölümü."
-      },
-      "defuzzification": {
-        "defuzzify": "Nihai fayda hesaplanabilsin diye her bulanık fayda derecesi ve fayda fonksiyonu tek bir kesin sayıya çevrilir."
-      },
-      "final-utility": {
-        "final-utility": "Nihai fayda, kesin fayda derecelerini ve fayda fonksiyonlarını tek bir sayıda birleştirir. En yüksek değer kazanır."
-      }
-    },
-    "critic": {
-      "normalized-matrix": {
-        "benefit": "Fayda kriterinin her değeri 0 ile 1 arasına ölçeklenir: sütunun en kötü değeri 0, en iyi değeri 1 olur.",
-        "cost": "Maliyet kriterinin her değeri 0 ile 1 arasına ölçeklenir: sütunun en düşük değeri 1, en yüksek değeri 0 olur."
-      },
-      "means": {
-        "mean": "Normalleştirilmiş her sütunun ortalaması, sonraki adımdaki sapmaların ölçüldüğü merkezdir."
-      },
-      "deviations": {
-        "deviation": "Her normalleştirilmiş değerden sütununun ortalaması çıkarılır. Sonraki iki adım bu sapmaları kullanır."
-      },
-      "standard-deviations": {
-        "sigma": "Normalleştirilmiş bir sütunun standart sapması kontrast yoğunluğunu ölçer: alternatifler bir kriterde ne kadar farklıysa o kadar büyüktür."
-      },
-      "correlation-matrix": {
-        "pearson": "İki kriterin Pearson korelasyonu, ortalamadan sapmalarının çarpımlarının toplamının n ile iki standart sapmanın çarpımına bölünmesiyle bulunur."
-      },
-      "conflict": {
-        "conflict": "Bir kriterin çatışması, diğer tüm kriterlerle korelasyonunun 1'den farklarını toplar. Diğerleriyle az ilişkili bir kriter daha çok çatışma taşır."
-      },
-      "information-content": {
-        "information": "Bir kriterin bilgi içeriği, standart sapmasının çatışmasıyla çarpımıdır."
-      },
-      "weights": {
-        "weight": "Her bilgi içeriği hepsinin toplamına bölünür; böylece ağırlıkların toplamı 1 olur."
-      }
-    },
-    "merec": {
-      "normalized-matrix": {
-        "benefit": "Fayda kriterinde sütunun en küçük değeri değere bölünür; en iyi performans 1 alır, küçük değerler daha az alır.",
-        "cost": "Maliyet kriterinde değer sütunun en büyük değerine bölünür; en iyi performans en küçük oranı alır."
-      },
-      "absolute-logs": {
-        "abs-ln": "Normalleştirilmiş her değerin doğal logaritmasının mutlak değeri, değerin 1'den ne kadar uzak olduğunu ölçer."
-      },
-      "overall-performance": {
-        "overall": "Bir alternatifin genel performansı, mutlak logaritmalarının ortalamasına 1 eklenip logaritması alınarak bulunur."
-      },
-      "removal-performance": {
-        "removal": "Performans, bir kriter dışarıda bırakılarak yeniden hesaplanır. Bu işlem her alternatif ve her kriter için yapılır."
-      },
-      "removal-effects": {
-        "effect": "Bir kriterin çıkarma etkisi, o kriter dışarıda bırakıldığında her alternatifin performansının ne kadar değiştiğini toplar."
-      },
-      "weights": {
-        "weight": "Her çıkarma etkisi hepsinin toplamına bölünür; böylece ağırlıkların toplamı 1 olur."
-      }
-    },
-    "swara": {
-      "coefficients": {
-        "first": "En önemli kriterin katsayısı 1'dir.",
-        "coefficient": "Bir kriterin katsayısı, kendisinden önceki kriterle karşılaştırmalı önemine 1 eklenerek bulunur."
-      },
-      "recalculated-weights": {
-        "first": "En önemli kriter 1 değeriyle başlar.",
-        "recalculated": "Her değer, kendisinden önceki kriterin değerinin bu kriterin katsayısına bölünmesiyle bulunur."
-      },
-      "weights": {
-        "weight": "Yeniden hesaplanan her değer hepsinin toplamına bölünür; böylece ağırlıkların toplamı 1 olur."
-      }
-    },
-    "fuzzySwara": {
-      "coefficients": {
-        "first": "En önemli kriterin katsayısı (1, 1, 1)'dir.",
-        "coefficient": "Bir kriterin katsayısı, bulanık karşılaştırmalı önemine 1 eklenerek bulunur. 1 eklemek üçgenin tamamını sağa kaydırır."
-      },
-      "recalculated-weights": {
-        "first": "En önemli kriter (1, 1, 1) değeriyle başlar.",
-        "recalculated": "Her bulanık değer, kendisinden önceki kriterin değerinin bu kriterin katsayısına bölünmesiyle bulunur."
-      },
-      "recalculated-weights-sum": {
-        "sum": "Tüm kriterlerin bulanık değerleri bileşen bileşen toplanır."
-      },
-      "fuzzy-weights": {
-        "weight": "Her bulanık değer bulanık toplama bölünür; böylece ağırlıklar toplamı yaklaşık 1 olan bulanık sayılar olur."
-      },
-      "crisp-weights": {
-        "defuzzify": "Her bulanık ağırlık, seçilen durulaştırma yöntemiyle tek bir sayıya çevrilir."
-      },
-      "weights": {
-        "normalized": "Durulaştırılmış ağırlıklar toplamlarına bölünür; böylece kesin ağırlıkların toplamı 1 olur."
-      }
-    }
   },
   "playground": {
     "title": "Bulanık Oyun Alanı",

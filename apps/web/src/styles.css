@@ -118,17 +118,18 @@
 .ex-cell button:hover {
   background-color: color-mix(in srgb, var(--primary) 10%, transparent);
 }
-/* A value on its way from the cell it came from to the cell it helps to produce. */
-.ex-ghost {
-  position: absolute;
-  z-index: 5;
-  text-align: right;
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-  font-weight: 600;
-  color: var(--primary);
-  will-change: transform, opacity;
+/* A lesson step comes in with a short fade: the only motion of a lesson. */
+@keyframes lesson-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
 }
-.ex-scrubber {
-  accent-color: var(--primary);
+.lesson-enter {
+  animation: lesson-enter var(--duration-slow) var(--ease-standard);
+}
+@media (prefers-reduced-motion: reduce) {
+  .lesson-enter {
+    animation: none;
+  }
 }

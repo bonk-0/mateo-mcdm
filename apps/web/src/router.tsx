@@ -56,7 +56,6 @@ export function buildRoutes(): RouteObject[] {
         },
         {
           path: 'learn',
-          element: <AreaLayout area="learn" />,
           children: [
             { index: true, element: <Redirect to="/learn/library" /> },
             {
@@ -71,6 +70,13 @@ export function buildRoutes(): RouteObject[] {
               lazy: () =>
                 import('./library/MethodPage').then((module) => ({
                   Component: module.MethodPage,
+                })),
+            },
+            {
+              path: 'fuzzy',
+              lazy: () =>
+                import('./tfn/FuzzyLesson').then((module) => ({
+                  Component: module.FuzzyLesson,
                 })),
             },
             {

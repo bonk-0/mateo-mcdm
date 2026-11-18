@@ -22,6 +22,13 @@ vi.mock('../workspace/charts/EChart', () => ({
   EChart: ({ label }: { label: string }) => <div role="img" aria-label={label} />,
 }));
 
+/** Opens the folded reference of a method page: formulas, the paper's example, sources. */
+async function openReference(user: ReturnType<typeof userEvent.setup>, sampleId: string) {
+  const section = await screen.findByTestId(`library-reference-toggle-${sampleId}`);
+  await user.click(within(section).getAllByRole('button')[0]!);
+  return section;
+}
+
 const settleTransition = () => new Promise((resolve) => setTimeout(resolve, 700));
 
 async function createProject(user: ReturnType<typeof userEvent.setup>) {
@@ -47,6 +54,24 @@ describe('Method Library', () => {
     autosaveSettings.delayMs = 1500;
   });
 
+  it('opens Learn on three questions, each with its lessons', async () => {
+    const user = userEvent.setup();
+    const { router } = renderApp('/learn');
+    await waitFor(() => expect(router.state.location.pathname).toBe('/learn/library'));
+    const weighting = within(await screen.findByTestId('learn-topic-weighting'));
+    expect(
+      weighting.getByRole('heading', { name: 'How important is each criterion?' }),
+    ).toBeTruthy();
+    for (const id of ['critic', 'merec', 'swara'])
+      expect(weighting.getByTestId(`library-card-${id}`)).toBeTruthy();
+    const ranking = within(screen.getByTestId('learn-topic-ranking'));
+    expect(ranking.getByTestId('library-card-marcos').textContent).toMatch(/7 steps/u);
+    const fuzzy = within(screen.getByTestId('learn-topic-fuzzy'));
+    expect(fuzzy.getByTestId('library-card-fuzzy').textContent).toMatch(/5 steps/u);
+    await user.click(fuzzy.getByTestId('library-card-playground'));
+    await waitFor(() => expect(router.state.location.pathname).toBe('/learn/playground'));
+  });
+
   it('lists the Phase 1 methods and links to their pages', async () => {
     const user = userEvent.setup();
     const { router } = renderApp('/learn/library');
@@ -58,16 +83,25 @@ describe('Method Library', () => {
     expect(await screen.findByTestId('library-page-critic')).toBeTruthy();
   });
 
-  it('shows the template of a method page, with formulas read from the trace', async () => {
+  it('teaches a method on the phone example and keeps the paper under Reference', async () => {
+    const user = userEvent.setup();
     renderApp('/learn/library/marcos');
     const page = await screen.findByTestId('library-page-marcos');
+    expect(screen.getByTestId('library-purpose').textContent).not.toBe('');
+    expect(within(page).getByRole('heading', { name: 'Learn step by step' })).toBeTruthy();
+    // The lesson runs the real method on three phones.
+    const lesson = screen.getByTestId('lesson');
+    expect(lesson.textContent).toContain('Phone A');
+    expect(lesson.textContent).toContain('Price (₺)');
+    expect(screen.queryByRole('heading', { name: 'Steps and formulas' })).toBeNull();
+
+    await openReference(user, 'marcos');
     for (const heading of [
       'Introduction',
-      'Purpose',
       'Inputs',
       'Supported number types',
       'Steps and formulas',
-      'Animated example',
+      'Reference example',
       'Sample data',
       'Properties and edge cases',
       'References',
@@ -81,36 +115,45 @@ describe('Method Library', () => {
     expect(
       screen.getByTestId('library-formula-final-utility').querySelector('.katex'),
     ).toBeTruthy();
-    // The animated example is the Explain player on the reference dataset.
-    expect(screen.getByTestId('explain-panel')).toBeTruthy();
     // References link to the papers of docs/methods.
     const references = within(screen.getByTestId('library-references'));
     expect(references.getByRole('link', { name: /10\.1016\/j\.cie\.2019\.106231/u })).toBeTruthy();
-    // Related methods.
     expect(
       within(screen.getByTestId('library-related')).getByRole('link', { name: 'Fuzzy MARCOS' }),
     ).toBeTruthy();
   });
 
+  it('ends a lesson with what to do next', async () => {
+    const user = userEvent.setup();
+    const { router } = renderApp('/learn/library/critic');
+    await screen.findByTestId('library-page-critic');
+    const lesson = screen.getByTestId('lesson');
+    const markers = within(lesson).getAllByRole('button', { name: /^Step \d+:/u });
+    await user.click(markers.at(-1)!);
+    expect(screen.queryByTestId('lesson-next')).toBeNull();
+    await user.click(screen.getByTestId('lesson-own-data'));
+    await waitFor(() => expect(router.state.location.pathname).toBe('/'));
+  });
+
   it('shows the pages in Turkish', async () => {
+    const user = userEvent.setup();
     renderApp('/learn/library/critic');
     await screen.findByTestId('library-page-critic');
     act(() => useSettings.getState().update({ language: 'tr' }));
     const page = await screen.findByTestId('library-page-critic');
-    expect(await within(page).findByRole('heading', { name: 'Adımlar ve formüller' })).toBeTruthy();
+    expect(await within(page).findByRole('heading', { name: 'Adım adım öğren' })).toBeTruthy();
+    expect(screen.getByTestId('lesson').textContent).toContain('Telefon A');
+    await openReference(user, 'critic');
     expect(within(page).getByRole('heading', { name: 'Adımlar ve formüller' })).toBeTruthy();
     expect(within(page).getByRole('heading', { name: 'Kaynaklar' })).toBeTruthy();
   });
 
-  it.each(['critic', 'merec', 'swara', 'fuzzy-marcos'])(
-    'shows the Explain player in the example of %s',
-    async (id) => {
-      renderApp(`/learn/library/${id}`);
-      await screen.findByTestId(`library-page-${id}`);
-      expect(screen.getByTestId('explain-panel')).toBeTruthy();
-      expect(screen.queryByTestId('library-no-animation')).toBeNull();
-    },
-  );
+  it.each(['critic', 'merec', 'swara', 'fuzzy-marcos'])('teaches %s step by step', async (id) => {
+    renderApp(`/learn/library/${id}`);
+    await screen.findByTestId(`library-page-${id}`);
+    expect(screen.getByTestId('lesson-idea').textContent).not.toBe('');
+    expect(screen.getByTestId('lesson-next')).toBeTruthy();
+  });
 
   it('puts classical and fuzzy SWARA on one page', async () => {
     const user = userEvent.setup();
@@ -119,6 +162,7 @@ describe('Method Library', () => {
     expect(screen.queryByTestId('library-variant-fuzzy-swara')).toBeNull();
     await user.click(screen.getByRole('tab', { name: 'Fuzzy SWARA (IMF SWARA)' }));
     expect(await screen.findByTestId('library-variant-fuzzy-swara')).toBeTruthy();
+    await openReference(user, 'fuzzy-swara');
     const references = within(screen.getByTestId('library-references'));
     expect(references.getByRole('link', { name: /10\.3390\/axioms10020092/u })).toBeTruthy();
   });
@@ -127,6 +171,7 @@ describe('Method Library', () => {
     const user = userEvent.setup();
     const { router } = renderApp('/learn/library/marcos');
     await screen.findByTestId('library-page-marcos');
+    await openReference(user, 'marcos');
     // Without a project the button creates one first.
     expect(screen.getByTestId('sample-open-marcos').textContent).toMatch(/Create a project/u);
     const session = await createProject(user);
@@ -153,6 +198,7 @@ describe('Method Library', () => {
 
     // Opening the sample again reuses its decision problem.
     await act(() => router.navigate('/learn/library/marcos'));
+    await openReference(user, 'marcos');
     await user.click(await screen.findByTestId('sample-open-marcos'));
     await waitFor(() => expect(router.state.location.pathname).toBe('/result'));
     expect(session.document.model.datasets).toHaveLength(1);
@@ -162,6 +208,7 @@ describe('Method Library', () => {
     const user = userEvent.setup();
     const { router } = renderApp('/learn/library/swara');
     await screen.findByTestId('library-page-swara');
+    await openReference(user, 'swara');
     const session = await createProject(user);
     await user.click(await screen.findByTestId('sample-open-swara'));
     await waitFor(() => expect(router.state.location.pathname).toBe('/weights'));
@@ -194,6 +241,7 @@ describe('Method Library', () => {
     const user = userEvent.setup();
     const { router } = renderApp('/learn/library/fuzzy-marcos');
     await screen.findByTestId('library-page-fuzzy-marcos');
+    await openReference(user, 'fuzzy-marcos');
     const session = await createProject(user);
     await user.click(await screen.findByTestId('sample-open-fuzzy-marcos'));
     await waitFor(() => expect(router.state.location.pathname).toBe('/result'));
