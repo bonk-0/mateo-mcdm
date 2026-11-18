@@ -47,7 +47,7 @@
 - Integrate HiGHS (WebAssembly) behind a small `Solver` interface in `packages/engine`, running in a worker.
 - LOPCOW (classical; no fuzzy variant, see the P2.1 decisions).
 - FUCOM: comparative priorities, consistency (DFC), optimization model as in the reference.
-- BWM: nonlinear model where solvable exactly, and the linear model (Rezaei 2016); consistency ratio / indicator per reference. The nonlinear optimum is not unique in general: report ξ*, each weight's interval over the optimal set and the interval centres, never a single solver-dependent vertex.
+- BWM: nonlinear model where solvable exactly, and the linear model (Rezaei 2016); consistency ratio / indicator per reference. The nonlinear optimum is not unique in general: report ξ*, each weight's interval over the optimal set and the interval centres, never a single solver-dependent vertex. Also the input-based consistency ratio CR^I with the thresholds of Liang et al. (2020), so the result says whether the comparisons are acceptably consistent.
 - Traces include the optimization model, solver status and the reported objective value (ξ or χ).
 
 **Out of scope:** UI (P2.7).
@@ -159,7 +159,7 @@
 **Scope**
 - LOPCOW in the existing weighting workspace.
 - FUCOM input UI: rank criteria by drag and drop, enter comparative priorities.
-- BWM input UI: select best and worst, enter best-to-others and others-to-worst vectors, consistency feedback live.
+- BWM input UI: select best and worst, enter best-to-others and others-to-worst vectors, consistency feedback live (CR^I against its threshold, from the engine's `inputConsistency`).
 - Explain sequences for all three, including a visual of the optimization result and consistency.
 
 **Out of scope:** group/multi-expert input (P3.4).

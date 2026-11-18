@@ -8,6 +8,7 @@
 import type { LinearSolver, OperationEvaluator, OperationOptions, TraceValue } from '@mateo/engine';
 import { solverLabel } from '@mateo/engine';
 import type { BwmVectors, WeightBound } from './model';
+import { inputThreshold } from './consistency';
 import { linearOptimum, nonlinearXi, weightBound } from './model';
 
 export const BWM_OPERATIONS = {
@@ -19,6 +20,8 @@ export const BWM_OPERATIONS = {
   linearXi: 'bwm.linear-xi',
   /** w_j of the linear model. Operands: a_B·, a_·W. */
   linearWeight: 'bwm.linear-weight',
+  /** Threshold of CR^I (Liang et al. 2020, Table 3). No operands; options: criteria, scale. */
+  inputThreshold: 'bwm.input-threshold',
 } as const;
 
 /** Options shared by every BWM operation. */
@@ -72,7 +75,18 @@ export function bwmOperationEvaluators(
       }
     };
 
+  const threshold = (args: readonly TraceValue[], options: OperationOptions): Evaluation => {
+    if (args.length !== 0) {
+      return { problem: `unexpected number of operands (${args.length})`, kind: 'arity' };
+    }
+    const value = inputThreshold(Number(options['criteria']), Number(options['scale']));
+    return value === null
+      ? { problem: 'the paper gives no threshold for these options', kind: 'operand' }
+      : { value };
+  };
+
   return {
+    [BWM_OPERATIONS.inputThreshold]: threshold,
     [BWM_OPERATIONS.nonlinearXi]: evaluate(false, (vectors) => nonlinearXi(solver, vectors)),
     [BWM_OPERATIONS.weightBound]: evaluate(true, (vectors, xi, options) =>
       weightBound(

@@ -304,18 +304,31 @@ export const en = {
     'The nonlinear model is the original method; its optimal weights may form a range, so each weight is reported as an interval and its centre. The linear model always has a single solution.',
   'methods.bwm.parameters.model.nonlinear': 'Nonlinear (Rezaei 2015)',
   'methods.bwm.parameters.model.linear': 'Linear (Rezaei 2016)',
+  'methods.bwm.parameters.scale.label': 'Preference scale',
+  'methods.bwm.parameters.scale.description':
+    'The largest value of the scale the comparisons are given on (1 to this value). The consistency threshold depends on it.',
   'methods.bwm.rows.bestToOthers': 'Best to others a_Bj',
   'methods.bwm.rows.othersToWorst': 'Others to worst a_jW',
   'methods.bwm.rows.lowerBound': 'Smallest optimal weight',
   'methods.bwm.rows.upperBound': 'Largest optimal weight',
   'methods.bwm.rows.centre': 'Interval centre c_j',
   'methods.bwm.rows.weight': 'Weight w_j',
+  'methods.bwm.rows.inputRatio': 'Input-based ratio CR^I_j',
   'methods.bwm.steps.best-to-others.name': 'Best-to-others vector',
   'methods.bwm.steps.best-to-others.explanation':
     'How strongly the best criterion is preferred to each criterion, on 1–9. The best criterion compared with itself is 1.',
   'methods.bwm.steps.others-to-worst.name': 'Others-to-worst vector',
   'methods.bwm.steps.others-to-worst.explanation':
     'How strongly each criterion is preferred to the worst criterion, on 1–9. The worst criterion compared with itself is 1.',
+  'methods.bwm.steps.input-consistency.name': 'Input-based consistency CR^I_j',
+  'methods.bwm.steps.input-consistency.explanation':
+    'For each criterion, how far the indirect comparison a_Bj · a_jW is from the direct preference of the best over the worst, a_BW, as a share of the largest possible gap. Calculated from the comparisons alone (Liang, Brunelli and Rezaei 2020).',
+  'methods.bwm.steps.input-consistency-ratio.name': 'Input-based consistency ratio CR^I',
+  'methods.bwm.steps.input-consistency-ratio.explanation':
+    'The largest CR^I_j. It is 0 when the comparisons are fully consistent.',
+  'methods.bwm.steps.input-threshold.name': 'Consistency threshold',
+  'methods.bwm.steps.input-threshold.explanation':
+    'The comparisons are acceptably consistent when CR^I does not exceed this threshold, which Liang, Brunelli and Rezaei (2020) derived for {count, number} criteria on a scale of 1 to {scale, number}. Above it, revise the comparisons, starting with the criterion with the largest CR^I_j.',
   'methods.bwm.steps.optimal-xi.name': 'Optimal ξ*',
   'methods.bwm.steps.optimal-xi.explanation':
     'The smallest ξ for which some weights keep every ratio w_B / w_j and w_j / w_W within ξ of the stated preference. For a fixed ξ the conditions are linear, so ξ* is found by bisection with a linear programme at each step, solved with {solver}. ξ* = 0 means the comparisons are fully consistent.',
@@ -398,6 +411,8 @@ export const en = {
     'The best criterion must be preferred to the worst (a value above 1). If they are equally important, all criteria are.',
   'validation.bwm.ordinal-inconsistency':
     'The vectors disagree on "{first}" and "{second}": the best-to-others vector ranks "{second}" higher, the others-to-worst vector ranks "{first}" higher. The weights can still be calculated, but the consistency will be poor.',
+  'validation.bwm.threshold-unavailable':
+    'The consistency threshold is only defined for up to {max, number} criteria, and there are {count, number}. The weights are calculated, but the comparisons cannot be judged acceptable or not.',
 } as const;
 
 export type MethodsMessageKey = keyof typeof en;

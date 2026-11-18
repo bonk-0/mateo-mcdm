@@ -1,10 +1,11 @@
 # BWM (Best–Worst Method)
 
 **References (method).**
+- Input-based consistency: Liang, F., Brunelli, M., Rezaei, J. (2020). Consistency issues in the best worst method: Measurements and thresholds. *Omega*, 96, 102175. DOI [10.1016/j.omega.2019.102175](https://doi.org/10.1016/j.omega.2019.102175)
 - Nonlinear model: Rezaei, J. (2015). Best-worst multi-criteria decision-making method. *Omega*, 53, 49–57. DOI [10.1016/j.omega.2014.11.009](https://doi.org/10.1016/j.omega.2014.11.009)
 - Linear model and properties: Rezaei, J. (2016). Best-worst multi-criteria decision-making method: Some properties and a linear model. *Omega*, 64, 126–130. DOI [10.1016/j.omega.2015.12.001](https://doi.org/10.1016/j.omega.2015.12.001)
 
-**Verification.** Metadata of both papers confirmed against Crossref. **Both are paywalled and were not read.** The formulation and the worked example come from the method author's own lecture slides, published on the method's website: Rezaei, J. (2019), *BWM: Best Worst Method*, [slides 21–25](https://bestworstmethod.com/wp-content/uploads/2020/01/Best-Worst-Method-BWM-2019.pdf). Slide 34 cites both Omega papers as the source of the models.
+**Verification.** Liang et al. (2020) is open access and its full text was read: the definition of CR^I (Eq. 6–7) and Table 3 were checked in two independent copies (TU Delft repository and the University of Trento archive), which print identical values. Metadata of both Rezaei papers confirmed against Crossref. **Both are paywalled and were not read.** The formulation and the worked example come from the method author's own lecture slides, published on the method's website: Rezaei, J. (2019), *BWM: Best Worst Method*, [slides 21–25](https://bestworstmethod.com/wp-content/uploads/2020/01/Best-Worst-Method-BWM-2019.pdf). Slide 34 cites both Omega papers as the source of the models.
 
 ## Formulation
 
@@ -19,6 +20,16 @@ The decision maker chooses the best criterion B and the worst criterion W, then 
 **Linear model (2016):** min ξ^L s.t. |w_B − a_Bj w_j| ≤ ξ^L, |w_j − a_jW w_W| ≤ ξ^L, Σ w_j = 1, w_j ≥ 0. A linear programme with a unique optimum; ξ^L* itself is the consistency indicator and is not divided by CI.
 
 Both models need an LP solver (P2.2's HiGHS wrapper). `docs/methods/verification/lp.py` is a small exact simplex used only to recompute the fixture.
+
+## Input-based consistency and thresholds (Liang et al. 2020)
+
+CR and ξ^L* only exist after the optimization, and CR is only meaningful against CI. Liang, Brunelli and Rezaei add a ratio computed from the two vectors alone, so it works for both models and can be shown while the comparisons are entered:
+
+CR^I_j = |a_Bj · a_jW − a_BW| / (a_BW² − a_BW) (a_BW > 1), CR^I = max_j CR^I_j.
+
+It is 0 exactly when a_Bj · a_jW = a_BW for every j. The paper's Table 3 gives a threshold for 3–9 criteria and a preference scale of 1 to 3–9 (found by simulation: the point where the share of ordinally consistent inputs rejected equals the share of ordinally inconsistent inputs accepted). **The comparisons are acceptably consistent when CR^I ≤ threshold.** The threshold depends on the scale the user could have used, not the largest value they did use, so BWM has a `scale` parameter (integer 3–9, default 9) that also bounds the values accepted. With two criteria CR^I is always 0 and the threshold is 0. More than 9 criteria have no threshold: the result then has `threshold` and `acceptable` set to `null` and validation warns.
+
+The result carries `inputConsistency { ratios, ratio, threshold, acceptable }` for both models; the trace has the steps `input-consistency`, `input-consistency-ratio` and `input-threshold`. Both the Table 3 lookup (`bwm.input-threshold`) and the ratios are audited by `verifyTrace`. The paper's thresholds are Monte Carlo approximations and only judge ordinal consistency, so a result just above the threshold is a signal to review, not proof of an error. For the car example CR^I = 8/56 = 0.143 against 0.3062 (5 criteria, scale 9), so the comparisons are acceptable.
 
 **Implementation (P2.2).** `packages/methods/bwm`, parameter `model` (`nonlinear`, the default, or `linear`), solved with HiGHS through the engine's `LinearSolver`:
 - ξ* by bisection on ξ in [0, max a − 1] (equal weights are feasible at max a − 1) until the bracket is narrower than 10⁻¹²; feasibility at a fixed ξ is the sign of the largest uniform slack t* of the linear conditions (an LP). Fully consistent input gives ξ* = 0 exactly. The returned ξ* is the feasible end of the bracket, and the 2n interval LPs are solved there.

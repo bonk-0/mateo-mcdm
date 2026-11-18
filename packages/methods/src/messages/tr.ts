@@ -305,18 +305,31 @@ export const tr: Readonly<Record<MethodsMessageKey, string>> = {
     'Doğrusal olmayan model yöntemin özgün hâlidir; en iyi ağırlıkları bir aralık oluşturabilir, bu yüzden her ağırlık bir aralık ve onun merkezi olarak verilir. Doğrusal modelin her zaman tek bir çözümü vardır.',
   'methods.bwm.parameters.model.nonlinear': 'Doğrusal olmayan (Rezaei 2015)',
   'methods.bwm.parameters.model.linear': 'Doğrusal (Rezaei 2016)',
+  'methods.bwm.parameters.scale.label': 'Tercih ölçeği',
+  'methods.bwm.parameters.scale.description':
+    'Karşılaştırmaların verildiği ölçeğin en büyük değeri (1’den bu değere kadar). Tutarlılık eşiği buna bağlıdır.',
   'methods.bwm.rows.bestToOthers': 'En iyiden diğerlerine a_Bj',
   'methods.bwm.rows.othersToWorst': 'Diğerlerinden en kötüye a_jW',
   'methods.bwm.rows.lowerBound': 'En küçük optimal ağırlık',
   'methods.bwm.rows.upperBound': 'En büyük optimal ağırlık',
   'methods.bwm.rows.centre': 'Aralık merkezi c_j',
   'methods.bwm.rows.weight': 'Ağırlık w_j',
+  'methods.bwm.rows.inputRatio': 'Girdi tabanlı oran CR^I_j',
   'methods.bwm.steps.best-to-others.name': 'En iyiden diğerlerine vektörü',
   'methods.bwm.steps.best-to-others.explanation':
     'En iyi kriterin her kritere 1–9 ölçeğinde ne kadar tercih edildiği. En iyi kriterin kendisiyle karşılaştırması 1’dir.',
   'methods.bwm.steps.others-to-worst.name': 'Diğerlerinden en kötüye vektörü',
   'methods.bwm.steps.others-to-worst.explanation':
     'Her kriterin en kötü kritere 1–9 ölçeğinde ne kadar tercih edildiği. En kötü kriterin kendisiyle karşılaştırması 1’dir.',
+  'methods.bwm.steps.input-consistency.name': 'Girdi tabanlı tutarlılık CR^I_j',
+  'methods.bwm.steps.input-consistency.explanation':
+    'Her kriter için dolaylı karşılaştırma a_Bj · a_jW ile en iyinin en kötüye doğrudan tercihi a_BW arasındaki farkın, olabilecek en büyük farka oranı. Yalnızca karşılaştırmalardan hesaplanır (Liang, Brunelli ve Rezaei 2020).',
+  'methods.bwm.steps.input-consistency-ratio.name': 'Girdi tabanlı tutarlılık oranı CR^I',
+  'methods.bwm.steps.input-consistency-ratio.explanation':
+    'En büyük CR^I_j değeri. Karşılaştırmalar tamamen tutarlıysa 0’dır.',
+  'methods.bwm.steps.input-threshold.name': 'Tutarlılık eşiği',
+  'methods.bwm.steps.input-threshold.explanation':
+    'CR^I bu eşiği aşmıyorsa karşılaştırmalar kabul edilebilir ölçüde tutarlıdır. Eşik, Liang, Brunelli ve Rezaei (2020) tarafından {count, number} kriter ve 1–{scale, number} ölçeği için türetilmiştir. Aşılırsa karşılaştırmalar, en büyük CR^I_j değerine sahip kriterden başlayarak gözden geçirilmelidir.',
   'methods.bwm.steps.optimal-xi.name': 'Optimal ξ*',
   'methods.bwm.steps.optimal-xi.explanation':
     'Her w_B / w_j ve w_j / w_W oranını belirtilen tercihten en fazla ξ uzakta tutan bir ağırlık vektörünün bulunduğu en küçük ξ. ξ sabitken koşullar doğrusaldır; bu yüzden ξ*, her adımda {solver} ile çözülen bir doğrusal programla ikiye bölme yöntemiyle bulunur. ξ* = 0, karşılaştırmaların tam tutarlı olduğu anlamına gelir.',
@@ -399,4 +412,6 @@ export const tr: Readonly<Record<MethodsMessageKey, string>> = {
     'En iyi kriter en kötüye tercih edilmelidir (1’den büyük bir değer). İkisi eşit önemdeyse tüm kriterler eşit önemdedir.',
   'validation.bwm.ordinal-inconsistency':
     'Vektörler "{first}" ve "{second}" konusunda çelişiyor: en iyiden diğerlerine vektörü "{second}" kriterini, diğerlerinden en kötüye vektörü "{first}" kriterini daha önemli görüyor. Ağırlıklar yine hesaplanabilir, ancak tutarlılık düşük olacaktır.',
+  'validation.bwm.threshold-unavailable':
+    'Tutarlılık eşiği en çok {max, number} kriter için tanımlıdır, burada {count, number} kriter var. Ağırlıklar hesaplanır, ancak karşılaştırmaların kabul edilebilir olup olmadığı değerlendirilemez.',
 };
