@@ -24,6 +24,9 @@ describe('Tauri configuration', () => {
   it('restricts content to the app itself', () => {
     const csp = config.app.security.csp;
     expect(csp).toContain("default-src 'self'");
-    expect(csp).not.toContain('unsafe-eval');
+    // JavaScript eval stays forbidden; compiling the bundled WebAssembly (the HiGHS solver,
+    // P2.2) is allowed, and only from the app's own scripts.
+    expect(csp).not.toContain("'unsafe-eval'");
+    expect(csp).toContain("script-src 'self' 'wasm-unsafe-eval';");
   });
 });

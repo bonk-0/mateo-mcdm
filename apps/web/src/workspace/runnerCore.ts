@@ -30,6 +30,11 @@ export type RunOutcome =
  */
 export type ResultOutcome = { readonly ok: true; readonly result: unknown } | RunFailure;
 
+/** Whether the job's method needs the optimization solver (BWM). */
+export function jobNeedsSolver(job: RunJob): boolean {
+  return workspaceRegistry().find(job.methodId)?.requires?.includes('linear-solver') === true;
+}
+
 /**
  * Runs a job through the engine's `runMethod`. Used in the worker, and directly where
  * workers do not exist (tests).
@@ -52,7 +57,10 @@ export function executeJob(job: RunJob, options: RunMethodOptions = {}): RunOutc
 }
 
 /** {@link executeJob} for callers that only need the result: no trace is recorded. */
-export function executeResultJob(job: RunJob): ResultOutcome {
-  const outcome = executeJob(job, { recordTrace: false });
+export function executeResultJob(
+  job: RunJob,
+  options: Pick<RunMethodOptions, 'solver'> = {},
+): ResultOutcome {
+  const outcome = executeJob(job, { ...options, recordTrace: false });
   return outcome.ok ? { ok: true, result: outcome.record.result } : outcome;
 }
