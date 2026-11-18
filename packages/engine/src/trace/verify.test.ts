@@ -26,7 +26,9 @@ type Mutable<T> = T extends string | number | boolean | null | undefined
   : { -readonly [K in keyof T]: Mutable<T[K]> };
 
 const freshTrace = (): Mutable<Trace> =>
-  deepClone(weightedSumMethod.run(sampleInput(), { normalization: 'max' }).trace) as Mutable<Trace>;
+  deepClone(
+    weightedSumMethod.run(sampleInput(), { normalization: 'max' }, {}).trace,
+  ) as Mutable<Trace>;
 
 const problemCodes = (trace: Trace, options = {}) =>
   verifyTrace(trace, options).map((problem) => problem.code);
@@ -117,7 +119,7 @@ describe('trace inspection', () => {
 
 describe('verifyTrace', () => {
   it('accepts a trace produced by the builder, before and after a JSON round trip', () => {
-    const trace = weightedSumMethod.run(sampleInput(), { normalization: 'sum' }).trace;
+    const trace = weightedSumMethod.run(sampleInput(), { normalization: 'sum' }, {}).trace;
     expect(verifyTrace(trace, { requireKnownOperations: true })).toEqual([]);
     const restored = JSON.parse(JSON.stringify(trace)) as Trace;
     expect(restored).toEqual(trace);

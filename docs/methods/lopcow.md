@@ -21,6 +21,10 @@ The source only says "standard deviation". The worked example fixes the conventi
 - Fewer than two alternatives: the sample standard deviation is undefined. Reject.
 - The absolute value makes PV ≥ 0 whatever the sign of the logarithm.
 
+## Implementation
+
+`packages/methods/lopcow` (P2.2) follows the formulation above with the sample standard deviation and records the column means and deviations as steps of their own. It needs **at least three alternatives**: with two, every normalised column is {0, 1}, whose root mean square equals its sample standard deviation, so every PV is 0.
+
 ## Worked example
 
 Fixture: `packages/methods/lopcow/fixtures/biswas-2024.json`. Eight energy-sector firms, six criteria (C4 debt-to-equity is a cost criterion). Prints the normalised matrix (Table 5), mean squares, σ, PV and their sum (Table 6) and the weights **0.1804, 0.2962, 0.2344, 0.2337, 0.0219, 0.0334**. Every printed value is reproduced; no errata.

@@ -58,7 +58,8 @@ function post<T extends RunOutcome | ResultOutcome>(
 
 /**
  * Runs a method in a Web Worker. Without Worker support (unit tests) it runs in place, so
- * both paths use the same `executeJob`.
+ * both paths use the same `executeJob`. Only the worker loads the optimization solver, so
+ * in place a method that needs it (BWM) reports `solver.unavailable`.
  */
 export function runJob(job: RunJob): Promise<RunOutcome> {
   const target = startWorker();

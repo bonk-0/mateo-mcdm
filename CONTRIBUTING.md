@@ -42,6 +42,7 @@ packages/
   engine/       Pure calculation engine
   fuzzy/        Fuzzy number types and arithmetic
   methods/      One folder per MCDM method
+  solver/       HiGHS (WebAssembly) behind the engine's LinearSolver interface
   io/           Excel/CSV import and export
   project/      .mateo file format and storage
   explain/      Traces to animation timelines

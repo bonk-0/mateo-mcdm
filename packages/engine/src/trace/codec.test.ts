@@ -22,7 +22,7 @@ const roundTrip = (trace: Trace): Trace =>
   decodeTrace(JSON.parse(JSON.stringify(encodeTrace(trace))) as unknown);
 
 const sampleTrace = (normalization: 'max' | 'sum' = 'max'): Trace =>
-  weightedSumMethod.run(sampleInput(), { normalization }).trace;
+  weightedSumMethod.run(sampleInput(), { normalization }, {}).trace;
 
 interface Pair {
   readonly a: number;

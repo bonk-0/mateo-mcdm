@@ -9,15 +9,25 @@ import { describe, expect, it } from 'vitest';
 import marcosFixture from '../marcos/fixtures/damjanovic-2022-s1.json';
 import fuzzyFixture from '../fuzzy-marcos/fixtures/stankovic-2020.json';
 import type { MethodsMessageKey } from './index';
+import { loadHighsSolver } from '@mateo/solver';
+import bwmFixture from '../bwm/fixtures/rezaei-car.json';
+import fucomFixture from '../fucom/fixtures/pamucar-2018-example-2.json';
+import lopcowFixture from '../lopcow/fixtures/biswas-2024.json';
 import {
+  BWM_ISSUE_CODES,
   CRITIC_ISSUE_CODES,
+  FUCOM_ISSUE_CODES,
+  LOPCOW_ISSUE_CODES,
   FUZZY_MARCOS_ISSUE_CODES,
   FUZZY_SWARA_ISSUE_CODES,
   MARCOS_ISSUE_CODES,
   MEREC_ISSUE_CODES,
   SWARA_ISSUE_CODES,
   METHODS_MESSAGES,
+  bwmMethod,
   criticMethod,
+  fucomMethod,
+  lopcowMethod,
   fuzzyMarcosMethod,
   fuzzySwaraMethod,
   marcosMethod,
@@ -37,6 +47,13 @@ function traceKeys(trace: Trace): string[] {
   for (const step of trace.steps) {
     keys.add(step.nameKey);
     keys.add(step.explanationKey);
+    for (const row of step.output.cells) {
+      for (const cell of row) {
+        if (cell.derivation.kind === 'empty' && cell.derivation.reasonKey !== undefined) {
+          keys.add(cell.derivation.reasonKey);
+        }
+      }
+    }
     for (const item of [...step.output.rows, ...step.output.columns]) {
       if (isTextKey(item.label)) keys.add(item.label.key);
     }
@@ -72,13 +89,37 @@ describe('method messages', () => {
       ...Object.values(MEREC_ISSUE_CODES),
       ...Object.values(SWARA_ISSUE_CODES),
       ...Object.values(FUZZY_SWARA_ISSUE_CODES),
+      ...Object.values(LOPCOW_ISSUE_CODES),
+      ...Object.values(FUCOM_ISSUE_CODES),
+      ...Object.values(BWM_ISSUE_CODES),
     ]) {
       expect(known.has(messageKeyForCode(code)), code).toBe(true);
     }
   });
 
-  it('covers every key of the method definitions and their traces', () => {
+  it('covers every key of the method definitions and their traces', async () => {
+    const solver = await loadHighsSolver();
+    const bwmInput = {
+      criteria: orderedCriteria(bwmFixture.input.criteria.map((c) => ({ id: c.id, name: c.id }))),
+      best: bwmFixture.input.best,
+      worst: bwmFixture.input.worst,
+      bestToOthers: bwmFixture.input.bestToOthers,
+      othersToWorst: bwmFixture.input.othersToWorst,
+    };
+    const ranked = orderedCriteria(fucomFixture.input.ranking.map((id) => ({ id, name: id })));
     const traces = [
+      runMethod(lopcowMethod, crispMatrixInput(lopcowFixture.input)).trace,
+      runMethod(fucomMethod, {
+        criteria: ranked,
+        priorities: { kind: 'significance', values: fucomFixture.input.significance },
+      }).trace,
+      runMethod(fucomMethod, {
+        criteria: ranked,
+        priorities: { kind: 'comparative', values: [2, 1, 1, 3] },
+      }).trace,
+      ...(['nonlinear', 'linear'] as const).map(
+        (model) => runMethod(bwmMethod, bwmInput, { model }, { solver }).trace,
+      ),
       runMethod(marcosMethod, crispInput(marcosFixture.input), { normalizeWeights: true }).trace,
       runMethod(fuzzyMarcosMethod, tfnInput(fuzzyFixture.input)).trace,
       runMethod(criticMethod, crispMatrixInput(criticFixture.input)).trace,
@@ -117,6 +158,9 @@ describe('method messages', () => {
       merecMethod,
       swaraMethod,
       fuzzySwaraMethod,
+      lopcowMethod,
+      fucomMethod,
+      bwmMethod,
     ];
     const definitionKeys = methods.flatMap((method) => [
       method.nameKey,

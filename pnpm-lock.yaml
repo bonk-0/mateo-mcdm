@@ -83,6 +83,9 @@ importers:
       '@mateo/project':
         specifier: workspace:*
         version: link:../../packages/project
+      '@mateo/solver':
+        specifier: workspace:*
+        version: link:../../packages/solver
       '@mateo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -107,6 +110,9 @@ importers:
       echarts:
         specifier: ^6.1.0
         version: 6.1.0
+      highs:
+        specifier: 1.15.4
+        version: 1.15.4
       i18next:
         specifier: ^27.1.2
         version: 27.1.2(typescript@6.0.3)
@@ -255,6 +261,13 @@ importers:
       '@mateo/fuzzy':
         specifier: workspace:*
         version: link:../fuzzy
+    devDependencies:
+      '@mateo/solver':
+        specifier: workspace:*
+        version: link:../solver
+      fast-check:
+        specifier: ^4.10.2
+        version: 4.10.2
 
   packages/project:
     dependencies:
@@ -268,6 +281,19 @@ importers:
       fake-indexeddb:
         specifier: ^6.2.8
         version: 6.2.8
+
+  packages/solver:
+    dependencies:
+      '@mateo/engine':
+        specifier: workspace:*
+        version: link:../engine
+      highs:
+        specifier: 1.15.4
+        version: 1.15.4
+    devDependencies:
+      fast-check:
+        specifier: ^4.10.2
+        version: 4.10.2
 
   packages/ui:
     dependencies:
@@ -2146,6 +2172,10 @@ packages:
   hasown@2.0.4:
     resolution: {integrity: sha512-T2UbfbBEF32wiepXIsMlTW9+dDYC6wMh/t/vYA4tuOMKqWz/n3vr1NFSxQiyP+zk2mXsoMA/i/7qV6LKut1t1A==}
     engines: {node: '>= 0.4'}
+
+  highs@1.15.4:
+    resolution: {integrity: sha512-vsC03XHDqWAVrEFUt22h8e4CDDMb+LAFa0bycjPUq2kadRigK5pNLVIlwspKvMxxVtrr4NAucZHP/CAgigxiDQ==}
+    engines: {node: '>=18'}
 
   hookified@1.15.1:
     resolution: {integrity: sha512-MvG/clsADq1GPM2KGo2nyfaWVyn9naPiXrqIe4jYjXNZQt238kWyOGrsyc/DmRAQ+Re6yeo6yX/yoNCG5KAEVg==}
@@ -5202,6 +5232,8 @@ snapshots:
   hasown@2.0.4:
     dependencies:
       function-bind: 1.1.2
+
+  highs@1.15.4: {}
 
   hookified@1.15.1: {}
 

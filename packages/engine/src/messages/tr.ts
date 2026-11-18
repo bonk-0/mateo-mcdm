@@ -52,4 +52,9 @@ export const tr: Readonly<Record<EngineMessageKey, string>> = {
     '"{name}" parametresi tam sayı olmalıdır; {value, number} tam sayı değil.',
   'validation.parameter.invalid-option':
     '"{value}", "{name}" parametresi için geçerli bir seçenek değil.',
+
+  'validation.solver.unavailable':
+    'Bu yöntem optimizasyon çözücüsüne ihtiyaç duyuyor, ancak çözücü yüklenemedi.',
+  'validation.solver.failed':
+    'Optimizasyon çözücüsü ({solver}) bu modeli çözemedi (durum: {status}). Girdi değerlerini kontrol edip tekrar deneyin.',
 };

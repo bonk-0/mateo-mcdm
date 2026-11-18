@@ -1,8 +1,11 @@
 import { createMethodRegistry, type MethodRegistry } from '@mateo/engine';
 import {
+  bwmMethod,
   criticMethod,
+  fucomMethod,
   fuzzyMarcosMethod,
   fuzzySwaraMethod,
+  lopcowMethod,
   marcosMethod,
   merecMethod,
   swaraMethod,
@@ -17,13 +20,19 @@ export type RankingMethodId = (typeof RANKING_METHOD_IDS)[number];
 
 let registry: MethodRegistry | undefined;
 
-/** The methods of Phase 1. Created on first use, in the page and in the worker alike. */
+/**
+ * Every method the app can run, created on first use in the page and in the worker alike.
+ * The workspaces offer the ids above; LOPCOW, FUCOM and BWM get their workspaces in P2.7.
+ */
 export function workspaceRegistry(): MethodRegistry {
   registry ??= createMethodRegistry([
     criticMethod,
     merecMethod,
     swaraMethod,
     fuzzySwaraMethod,
+    lopcowMethod,
+    fucomMethod,
+    bwmMethod,
     marcosMethod,
     fuzzyMarcosMethod,
   ]);

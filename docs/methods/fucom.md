@@ -13,6 +13,8 @@
 
 **Consequence for the implementation.** With crisp priorities the chain w_k = φ_(k/(k+1)) · w_(k+1), normalised to sum 1, satisfies every constraint exactly, so χ = 0 and the optimum is unique. The paper's own examples have DFC = 0.00 for this reason. P2.2 can compute crisp FUCOM in closed form, record χ = 0 in the trace and keep the optimisation model only for the trace's explanation; a solver is needed only if priorities are entered directly and are inconsistent with each other (which the chain definition rules out).
 
+**Implementation (P2.2).** `packages/methods/fucom` does exactly this, without a solver. Input: the criteria in ranking order and either the significance values ϖ or the comparative priorities φ. The trace records the chain, the weights, then every condition of model (5) recomputed from the weights, and reports their largest deviation as χ (0 up to round-off), so the trace shows why the closed form is the optimum instead of asserting it.
+
 ## Edge cases
 
 - φ must be > 0; a significance value below the previous one breaks the ranking: reject.

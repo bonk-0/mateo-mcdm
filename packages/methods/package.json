@@ -15,5 +15,9 @@
   "dependencies": {
     "@mateo/engine": "workspace:*",
     "@mateo/fuzzy": "workspace:*"
+  },
+  "devDependencies": {
+    "@mateo/solver": "workspace:*",
+    "fast-check": "^4.10.2"
   }
 }

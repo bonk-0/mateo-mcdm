@@ -3,9 +3,12 @@ import type { Trace } from '../trace/types';
 import type { VerifyTraceOptions } from '../trace/verify';
 import { withoutTraceRecording } from '../trace/builder';
 import { assertValidTrace } from '../trace/verify';
-import { mergeValidation } from '../validation/collector';
+import type { LinearSolver } from '../solver/linear-program';
+import { SolverFailure } from '../solver/failure';
+import { ISSUE_CODES } from '../validation/codes';
+import { createIssue, mergeValidation } from '../validation/collector';
 import type { ValidationIssue, ValidationResult } from '../validation/types';
-import type { Method } from './method';
+import type { Method, MethodContext } from './method';
 import type { ParameterSchema, ParameterValuesOf } from './parameters';
 import { resolveParameters } from './parameters';
 
@@ -67,12 +70,24 @@ export interface RunMethodOptions {
    * tests and debugging; off by default because it roughly doubles the work.
    */
   readonly verifyTrace?: boolean | VerifyTraceOptions;
+  /**
+   * The solver for methods that declare the `linear-solver` requirement. Without it such
+   * a method is not run: `runMethod` throws a {@link MethodValidationError} with the issue
+   * `solver.unavailable`. Ignored by other methods.
+   */
+  readonly solver?: LinearSolver;
+}
+
+/** Adds one error to a validation result. */
+function withError(validation: ValidationResult, error: ValidationIssue): ValidationResult {
+  return { ok: false, errors: [...validation.errors, error], warnings: validation.warnings };
 }
 
 /**
  * The one way to run a method: resolve parameters, validate, run, and return the record.
  * Throws {@link MethodValidationError} when validation reports errors, so `run` never sees
- * input its own `validate` rejected.
+ * input its own `validate` rejected. A required service that is missing, and a solver that
+ * fails inside `run` ({@link SolverFailure}), are reported the same way.
  */
 export function runMethod<TInput, TSchema extends ParameterSchema, TResult>(
   method: Method<TInput, TSchema, TResult>,
@@ -93,9 +108,27 @@ export function runMethod<TInput, TSchema extends ParameterSchema, TResult>(
       'verifyTrace needs a recorded trace; it cannot be combined with recordTrace: false.',
     );
   }
-  const { result, trace } = recordTrace
-    ? method.run(input, resolved.values)
-    : withoutTraceRecording(() => method.run(input, resolved.values));
+  // A method receives only the services it declares.
+  const needsSolver = method.requires?.includes('linear-solver') === true;
+  if (needsSolver && options.solver === undefined) {
+    throw new MethodValidationError(
+      method.id,
+      withError(validation, createIssue('error', ISSUE_CODES.solverUnavailable)),
+    );
+  }
+  const context: MethodContext = needsSolver ? { solver: options.solver } : {};
+  let run: ReturnType<typeof method.run>;
+  try {
+    run = recordTrace
+      ? method.run(input, resolved.values, context)
+      : withoutTraceRecording(() => method.run(input, resolved.values, context));
+  } catch (error) {
+    if (error instanceof SolverFailure) {
+      throw new MethodValidationError(method.id, withError(validation, error.issue));
+    }
+    throw error;
+  }
+  const { result, trace } = run;
   if (trace.methodId !== method.id || trace.methodVersion !== method.version) {
     throw new EngineError(
       'INVALID_TRACE',
