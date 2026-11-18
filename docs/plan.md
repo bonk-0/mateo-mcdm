@@ -197,7 +197,7 @@ Each method declares its inputs and outputs, so the Hybrid Builder and Batch Ana
 
 The plan uses each method's original and most widely cited formulation. Citations below must be checked against the actual papers before they appear in the app or in reports, and the golden test for each method is written from that paper's worked example.
 
-The Phase 1 rows were verified in P1.4; formulations, worked examples, errata and the reasons for any substitute example are in [`docs/methods/`](methods/fixtures.md). The other rows are still unverified and are checked in their phase's references sub-phase.
+The Phase 1 rows were verified in P1.4 and the Phase 2 rows in P2.1; formulations, worked examples, errata, the reasons for any substitute example and the fuzzy-variant decisions are in [`docs/methods/`](methods/fixtures.md). Where an original paper is paywalled or not online, the row names the open-access source the formulation and example were taken from. The other rows are still unverified and are checked in their phase's references sub-phase.
 
 | Method | Reference formulation |
 |---|---|
@@ -205,19 +205,19 @@ The Phase 1 rows were verified in P1.4; formulations, worked examples, errata an
 | Fuzzy MARCOS (TFN) | Stanković, Stević, Das, Subotić, Pamučar (2020), *Mathematics* 8(3), 457, doi:10.3390/math8030457 |
 | CRITIC | Diakoulaki, Mavrotas, Papayannakis (1995), *Computers & Operations Research* 22(7), 763–770, doi:10.1016/0305-0548(94)00059-H |
 | MEREC | Keshavarz-Ghorabaee, Amiri, Zavadskas, Turskis, Antucheviciene (2021), *Symmetry* 13(4), 525, doi:10.3390/sym13040525 |
-| LOPCOW | Ecer, Pamučar (2022), *Omega* 112, 102690 |
+| LOPCOW | Ecer, Pamučar (2022), *Omega* 112, 102690, doi:10.1016/j.omega.2022.102690 (paywalled; formulation and example from Biswas, Pamučar, Dawn, Simic (2024), *Decision Making Advances* 2(1), 1–21, doi:10.31181/dma21202419). No fuzzy variant in Phase 2 |
 | SWARA | Keršulienė, Zavadskas, Turskis (2010), *Journal of Business Economics and Management* 11(2), 243–258, doi:10.3846/jbem.2010.12 |
 | Fuzzy SWARA (TFN) | IMF SWARA: Vrtagić, Softić, Subotić, Stević, Dordevic, Ponjavic (2021), *Axioms* 10(2), 92, doi:10.3390/axioms10020092 (chosen over the Chang-scale variant, see `docs/methods/swara.md`) |
-| FUCOM | Pamučar, Stević, Sremac (2018), *Symmetry* 10(9), 393 |
-| BWM | Rezaei (2015), *Omega* 53; linear model: Rezaei (2016), *Omega* 64 |
-| DEMATEL | Gabus, Fontela (1972/1973), Battelle Geneva Research Centre; fuzzy variant chosen in Phase 2 from the most cited TFN formulation |
-| VIKOR | Opricovic, Tzeng (2004), *European Journal of Operational Research* 156(2) |
-| EDAS | Keshavarz Ghorabaee, Zavadskas, Olfat, Turskis (2015), *Informatica* 26(3) |
-| CODAS | Keshavarz Ghorabaee, Zavadskas, Turskis, Antucheviciene (2016), *Economic Computation and Economic Cybernetics Studies and Research* 50(3) |
-| WASPAS | Zavadskas, Turskis, Antucheviciene, Zakarevicius (2012), *Elektronika ir Elektrotechnika* 122(6) |
-| COPRAS | Zavadskas, Kaklauskas, Šarka (1994), *Technological and Economic Development of Economy* 1(3) |
-| MOORA | Brauers, Zavadskas (2006), *Control and Cybernetics* 35(2) |
-| ARAS | Zavadskas, Turskis (2010), *Technological and Economic Development of Economy* 16(2) |
+| FUCOM | Pamučar, Stević, Sremac (2018), *Symmetry* 10(9), 393, doi:10.3390/sym10090393. Fuzzy FUCOM deferred (no reproducible example) |
+| BWM | Rezaei (2015), *Omega* 53, 49–57, doi:10.1016/j.omega.2014.11.009; linear model: Rezaei (2016), *Omega* 64, 126–130, doi:10.1016/j.omega.2015.12.001 (both paywalled; example from the author's slides at bestworstmethod.com). Fuzzy BWM (Guo, Zhao 2017) deferred: paywalled |
+| DEMATEL | Gabus, Fontela (1972/1973), Battelle Geneva Research Centre (not online; formulation and example from Chen, Tzeng, Huang (2018), *Technological and Economic Development of Economy* 24(2), 600–614, doi:10.3846/20294913.2016.1216471). Fuzzy: Lin, Wu (2008), *Expert Systems with Applications* 34(1), 205–213, doi:10.1016/j.eswa.2006.08.012 (paywalled, no golden test yet; see `docs/methods/dematel.md`) |
+| VIKOR | Opricovic, Tzeng (2004), *European Journal of Operational Research* 156(2), 445–455, doi:10.1016/S0377-2217(03)00020-1 (paywalled; formulation and example from Opricovic, Tzeng (2008), *Yugoslav Journal of Operations Research* 18(2), 187–203, doi:10.2298/YUJOR0802187O). Fuzzy VIKOR (Opricovic 2011, *ESWA* 38(10)) deferred: paywalled |
+| EDAS | Keshavarz Ghorabaee, Zavadskas, Olfat, Turskis (2015), *Informatica* 26(3), 435–451, doi:10.15388/Informatica.2015.57. Fuzzy: Keshavarz Ghorabaee et al. (2016), *IJCCC* 11(3), 358–371, doi:10.15837/ijccc.2016.3.2557 (trapezoidal, no fixture yet) |
+| CODAS | Keshavarz Ghorabaee, Zavadskas, Turskis, Antucheviciene (2016), *Economic Computation and Economic Cybernetics Studies and Research* 50(3), 25–44 (no DOI; RePEc cys:ecocyb:v:50:y:2016:i:3:p:25-44). Fuzzy: Keshavarz Ghorabaee et al. (2017), *Journal of Business Economics and Management* 18(1), 1–19, doi:10.3846/16111699.2016.1278559 (trapezoidal, no fixture yet) |
+| WASPAS | Zavadskas, Turskis, Antucheviciene, Zakarevicius (2012), *Elektronika ir Elektrotechnika* 122(6), 3–6, doi:10.5755/j01.eee.122.6.1810. Fuzzy (TFN): Turskis, Zavadskas, Antucheviciene, Kosareva (2015), *IJCCC* 10(6), 873–888, doi:10.15837/ijccc.2015.6.2078 |
+| COPRAS | Zavadskas, Kaklauskas, Šarka (1994), *Technological and Economic Development of Economy* 1(3), 131–139 (not online; formulation and example from Podvezko (2011), *Engineering Economics* 22(2), 134–146, doi:10.5755/j01.ee.22.2.310). Fuzzy (TFN, defuzzify first): Yazdani, Alidoosti, Zavadskas (2011), *Economic Research* 24(4), 27–40, doi:10.1080/1331677X.2011.11517478 |
+| MOORA | Brauers, Zavadskas (2006), *Control and Cybernetics* 35(2), 445–469 (no DOI; EuDML 209425). Fuzzy: Brauers, Baležentis, Baležentis (2011), *Technological and Economic Development of Economy* 17(2), 259–290, doi:10.3846/20294913.2011.580566 (no fixture yet) |
+| ARAS | Zavadskas, Turskis (2010), *Technological and Economic Development of Economy* 16(2), 159–172, doi:10.3846/tede.2010.10. Fuzzy (ARAS-F): Turskis, Zavadskas (2010), *Transport* 25(4), 423–432, doi:10.3846/transport.2010.52 (no fixture yet) |
 | FMEA | Classical RPN = S × O × D (MIL-STD-1629A); AIAG–VDA action priority as an optional mode |
 | Fine-Kinney | Kinney, Wiruth (1976), Naval Weapons Center, based on Fine (1971) |
 

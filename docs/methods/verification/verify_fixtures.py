@@ -26,6 +26,9 @@ import math
 import os
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import phase2  # noqa: E402  (sibling module with the Phase 2 methods)
+
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 FIXTURES = os.path.join(ROOT, 'packages', 'methods', '*', 'fixtures', '*.json')
 
@@ -273,6 +276,9 @@ def run(fx):
         return marcos(inp, params)
     if method == 'fuzzy-marcos':
         return fuzzy_marcos(inp, params)
+    key = method if variant == 'classical' else f'{method}/{variant}'
+    if key in phase2.METHODS:
+        return phase2.METHODS[key](inp, params)
     raise ValueError(f'unknown method {method}')
 
 
@@ -299,6 +305,10 @@ def walk(printed, computed, path, decimals, out):
         for key, value in printed.items():
             walk(value, computed[key], f'{path}.{key}', decimals, out)
         return
+    if isinstance(printed, str):
+        if printed != computed:
+            out.append((path, printed, computed))
+        return
     if isinstance(printed, list):
         assert isinstance(computed, list) and len(computed) == len(printed), path
         for i, (p, c) in enumerate(zip(printed, computed)):
@@ -320,7 +330,7 @@ def check(path):
             if 'rows' in block and rows_all is not None:
                 computed = select_rows(block, computed, rows_all)
             values = block['values']
-            decimals = block.get('decimals')
+            decimals = block.get('decimals', fx['precision']['decimals'])
             if isinstance(values, dict):  # label -> value
                 for label, v in values.items():
                     walk(v, computed[label], f'{section}.{name}.values.{label}', decimals, mismatches)

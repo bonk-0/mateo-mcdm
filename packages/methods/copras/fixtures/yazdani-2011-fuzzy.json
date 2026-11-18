@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "method": "copras",
+  "variant": "tfn",
+  "numberType": "tfn",
+  "title": "Risk of critical infrastructure assets: eight assets, five criteria",
+  "source": {
+    "role": "original",
+    "citation": "Yazdani, M., Alidoosti, A., Zavadskas, E. K. (2011). Risk analysis of critical infrastructures using fuzzy COPRAS. Ekonomska istrazivanja - Economic Research, 24(4), 27-40.",
+    "doi": "10.1080/1331677X.2011.11517478",
+    "location": "Section 3 (Eqs. 5-17), Tables 4-7",
+    "accessedVia": "https://hrcak.srce.hr/file/115209",
+    "note": "Read from the open-access copy on Hrcak, the Croatian journal portal (CC BY)."
+  },
+  "precision": {
+    "decimals": 4,
+    "rule": "round-half-away-from-zero"
+  },
+  "input": {
+    "alternatives": ["RPP", "RST", "MST-200", "SY", "RC", "MST-300", "SUA", "TUA"],
+    "criteria": [
+      {
+        "id": "C1",
+        "direction": "cost"
+      },
+      {
+        "id": "C2",
+        "direction": "cost"
+      },
+      {
+        "id": "C3",
+        "direction": "cost"
+      },
+      {
+        "id": "C4",
+        "direction": "benefit"
+      },
+      {
+        "id": "C5",
+        "direction": "benefit"
+      }
+    ],
+    "scale": [
+      {
+        "abbreviation": "VP",
+        "term": "very poor",
+        "tfn": [0, 0, 2.5]
+      },
+      {
+        "abbreviation": "P",
+        "term": "poor",
+        "tfn": [0, 2.5, 5]
+      },
+      {
+        "abbreviation": "F",
+        "term": "fair",
+        "tfn": [2.5, 5, 7.5]
+      },
+      {
+        "abbreviation": "G",
+        "term": "good",
+        "tfn": [5, 7.5, 10]
+      },
+      {
+        "abbreviation": "VG",
+        "term": "very good",
+        "tfn": [7.5, 10, 10]
+      }
+    ],
+    "matrix": [
+      [
+        [5, 7.5, 10],
+        [2.5, 5, 7.5],
+        [5, 7.5, 10],
+        [7.5, 10, 10],
+        [2.5, 5, 7.5]
+      ],
+      [
+        [2.5, 5, 7.5],
+        [5, 7.5, 10],
+        [2.5, 5, 7.5],
+        [0, 2.5, 5],
+        [0, 2.5, 5]
+      ],
+      [
+        [2.5, 5, 7.5],
+        [2.5, 5, 7.5],
+        [0, 2.5, 5],
+        [7.5, 10, 10],
+        [5, 7.5, 10]
+      ],
+      [
+        [5, 7.5, 10],
+        [0, 0, 2.5],
+        [0, 2.5, 5],
+        [2.5, 5, 7.5],
+        [7.5, 10, 10]
+      ],
+      [
+        [2.5, 5, 7.5],
+        [5, 7.5, 10],
+        [0, 2.5, 5],
+        [2.5, 5, 7.5],
+        [7.5, 10, 10]
+      ],
+      [
+        [7.5, 10, 10],
+        [2.5, 5, 7.5],
+        [2.5, 5, 7.5],
+        [0, 2.5, 5],
+        [5, 7.5, 10]
+      ],
+      [
+        [0, 0, 2.5],
+        [0, 2.5, 5],
+        [5, 7.5, 10],
+        [7.5, 10, 10],
+        [5, 7.5, 10]
+      ],
+      [
+        [5, 7.5, 10],
+        [5, 7.5, 10],
+        [2.5, 5, 7.5],
+        [0, 2.5, 5],
+        [2.5, 5, 7.5]
+      ]
+    ],
+    "weights": [
+      [0.25, 0.5, 0.75],
+      [0.5, 0.75, 1.0],
+      [0.75, 1.0, 1.0],
+      [0.0, 0.25, 0.5],
+      [0.25, 0.5, 0.75]
+    ]
+  },
+  "parameters": {
+    "defuzzification": "centroid"
+  },
+  "steps": {
+    "crispWeights": {
+      "printedIn": "Table 4, BNP",
+      "decimals": 3,
+      "values": [0.5, 0.75, 0.916, 0.25, 0.5]
+    },
+    "weightedNormalizedMatrix": {
+      "printedIn": "Table 6, columns C1-C4",
+      "decimals": 6,
+      "values": [
+        [0.078947, 0.091837, 0.183333, 0.050926, null],
+        [0.052632, 0.137755, 0.122222, 0.013889, null],
+        [0.052632, 0.091837, 0.061111, 0.050926, null],
+        [0.078947, 0.015306, 0.061111, 0.027778, null],
+        [0.052632, 0.137755, 0.061111, 0.027778, null],
+        [0.096491, 0.091837, 0.122222, 0.013889, null],
+        [0.008772, 0.045918, 0.183333, 0.050926, null],
+        [0.078947, 0.137755, 0.122222, 0.013889, null]
+      ]
+    }
+  },
+  "result": {
+    "relativeSignificance": {
+      "printedIn": "Table 7, Q",
+      "values": [0.290986, 0.256163, 0.454007, 0.554037, 0.385727, 0.304489, 0.408648, 0.262609]
+    },
+    "utilityDegree": {
+      "printedIn": "Table 7, N (%)",
+      "decimals": 2,
+      "values": [52.52115, 46.2358, 81.94529, 100, 69.62121, 54.95828, 73.75836, 47.39924]
+    },
+    "ranking": {
+      "printedIn": "Table 7, rank",
+      "decimals": 0,
+      "values": [6, 8, 2, 1, 4, 5, 3, 7]
+    }
+  },
+  "deviations": [
+    {
+      "path": "steps.crispWeights.values[2]",
+      "printed": 0.916,
+      "recomputed": 0.9167,
+      "note": "BNP of VH (0.75, 1, 1) is 0.91667; Table 4 truncates it to 0.916."
+    }
+  ],
+  "notes": [
+    "Criteria: C1 threat, C2 vulnerability, C3 consequence (cost: more is riskier), C4 detectability and C5 reaction (benefit). Ratings and weights are linguistic terms mapped to TFNs (Tables 1, 2, 4); the fuzzy matrix of Table 5 is stored as TFNs.",
+    "This most-cited open-access fuzzy COPRAS defuzzifies every TFN by its centroid (BNP = (l + m + u)/3, Eq. 5) before normalising, so after Step 2 it is crisp COPRAS. A separate fuzzy arithmetic implementation is not needed: Mateo can run it as an explicit defuzzification step followed by COPRAS.",
+    "The C3 weight 0.9167 is printed as 0.916; the paper evidently computed with 0.916, which moves Q by about 1e-5. Results are compared at four decimals.",
+    "Table 6 prints a C5 column (0.234375, 1.289063, ...) that cannot come from Table 5 (a weighted normalised value cannot exceed its weight 0.5); Q in Table 7 uses the correct values. The column is marked null.",
+    "Higher Q means more secure (the table header reads \"Rank based on security\")."
+  ]
+}

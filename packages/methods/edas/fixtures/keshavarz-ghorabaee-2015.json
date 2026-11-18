@@ -1,0 +1,424 @@
+{
+  "schemaVersion": 1,
+  "method": "edas",
+  "variant": "classical",
+  "numberType": "crisp",
+  "title": "ABC inventory classification: 47 stock-keeping units, three criteria",
+  "source": {
+    "role": "original",
+    "citation": "Keshavarz Ghorabaee, M., Zavadskas, E. K., Olfat, L., Turskis, Z. (2015). Multi-criteria inventory classification using a new method of evaluation based on distance from average solution (EDAS). Informatica, 26(3), 435-451.",
+    "doi": "10.15388/Informatica.2015.57",
+    "location": "Section 2 (Eqs. 1-11) and Section 3, Tables 1-3",
+    "accessedVia": "https://informatica.vu.lt/journal/INFORMATICA/article/779/file/pdf",
+    "note": "Read from the publisher's open-access PDF."
+  },
+  "precision": {
+    "decimals": 2,
+    "rule": "round-half-away-from-zero"
+  },
+  "input": {
+    "alternatives": [
+      "S1",
+      "S2",
+      "S3",
+      "S4",
+      "S5",
+      "S6",
+      "S7",
+      "S8",
+      "S9",
+      "S10",
+      "S11",
+      "S12",
+      "S13",
+      "S14",
+      "S15",
+      "S16",
+      "S17",
+      "S18",
+      "S19",
+      "S20",
+      "S21",
+      "S22",
+      "S23",
+      "S24",
+      "S25",
+      "S26",
+      "S27",
+      "S28",
+      "S29",
+      "S30",
+      "S31",
+      "S32",
+      "S33",
+      "S34",
+      "S35",
+      "S36",
+      "S37",
+      "S38",
+      "S39",
+      "S40",
+      "S41",
+      "S42",
+      "S43",
+      "S44",
+      "S45",
+      "S46",
+      "S47"
+    ],
+    "criteria": [
+      {
+        "id": "C1",
+        "direction": "benefit"
+      },
+      {
+        "id": "C2",
+        "direction": "benefit"
+      },
+      {
+        "id": "C3",
+        "direction": "benefit"
+      }
+    ],
+    "matrix": [
+      [49.92, 5840.64, 2],
+      [210, 5670, 5],
+      [23.76, 5037.12, 4],
+      [27.73, 4769.56, 1],
+      [57.98, 3478.8, 3],
+      [31.24, 2936.67, 3],
+      [28.2, 2820, 3],
+      [55, 2640, 4],
+      [73.44, 2423.52, 6],
+      [160.5, 2407.5, 4],
+      [5.12, 1075.2, 2],
+      [20.87, 1043.5, 5],
+      [86.5, 1038, 7],
+      [110.4, 883.2, 5],
+      [71.2, 854.4, 3],
+      [45, 810, 3],
+      [14.66, 703.68, 4],
+      [49.5, 594, 6],
+      [47.5, 570, 5],
+      [58.45, 467.6, 4],
+      [24.4, 463.6, 4],
+      [65, 455, 4],
+      [86.5, 432.5, 4],
+      [33.2, 398.4, 3],
+      [37.05, 370.5, 1],
+      [33.84, 338.4, 3],
+      [84.03, 336.12, 1],
+      [78.4, 313.6, 6],
+      [134.34, 268.68, 7],
+      [56, 224, 1],
+      [72, 216, 5],
+      [53.02, 212.08, 2],
+      [49.48, 197.92, 5],
+      [7.07, 190.89, 7],
+      [60.6, 181.8, 3],
+      [40.82, 163.28, 3],
+      [30, 150, 5],
+      [67.4, 134.8, 3],
+      [59.6, 119.2, 5],
+      [51.68, 103.36, 6],
+      [19.8, 79.2, 2],
+      [37.7, 75.4, 2],
+      [29.89, 59.78, 5],
+      [48.3, 48.3, 3],
+      [34.4, 34.4, 7],
+      [28.8, 28.8, 3],
+      [8.46, 25.38, 5]
+    ],
+    "weights": [1, 1, 1]
+  },
+  "parameters": {},
+  "steps": {
+    "averageSolution": {
+      "printedIn": "Table 1, row AV",
+      "values": [54.44, 1099.68, 3.91]
+    },
+    "positiveDistances": {
+      "printedIn": "Table 2, columns PDA_i1-PDA_i3",
+      "values": [
+        [0.0, 4.31, 0.0],
+        [2.86, 4.16, 0.28],
+        [0.0, 3.58, 0.02],
+        [0.0, 3.34, 0.0],
+        [0.07, 2.16, 0.0],
+        [0.0, 1.67, 0.0],
+        [0.0, 1.56, 0.0],
+        [0.01, 1.4, 0.02],
+        [0.35, 1.2, 0.53],
+        [1.95, 1.19, 0.02],
+        [0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.28],
+        [0.59, 0.0, 0.79],
+        [1.03, 0.0, 0.28],
+        [0.31, 0.0, 0.0],
+        [0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.02],
+        [0.0, 0.0, 0.53],
+        [0.0, 0.0, 0.28],
+        [0.07, 0.0, 0.02],
+        [0.0, 0.0, 0.02],
+        [0.19, 0.0, 0.02],
+        [0.59, 0.0, 0.02],
+        [0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0],
+        [0.54, 0.0, 0.0],
+        [0.44, 0.0, 0.53],
+        [1.47, 0.0, 0.79],
+        [0.03, 0.0, 0.0],
+        [0.32, 0.0, 0.28],
+        [0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.28],
+        [0.0, 0.0, 0.79],
+        [0.11, 0.0, 0.0],
+        [0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.28],
+        [0.24, 0.0, 0.0],
+        [0.1, 0.0, 0.28],
+        [0.0, 0.0, 0.53],
+        [0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.28],
+        [0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.79],
+        [0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.28]
+      ]
+    },
+    "negativeDistances": {
+      "printedIn": "Table 2, columns NDA_i1-NDA_i3",
+      "values": [
+        [0.08, 0.0, 0.49],
+        [0.0, 0.0, 0.0],
+        [0.56, 0.0, 0.0],
+        [0.49, 0.0, 0.75],
+        [0.0, 0.0, 0.23],
+        [0.43, 0.0, 0.23],
+        [0.48, 0.0, 0.23],
+        [0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0],
+        [0.91, 0.02, 0.49],
+        [0.62, 0.05, 0.0],
+        [0.0, 0.06, 0.0],
+        [0.0, 0.2, 0.0],
+        [0.0, 0.22, 0.23],
+        [0.17, 0.26, 0.23],
+        [0.73, 0.36, 0.0],
+        [0.09, 0.46, 0.0],
+        [0.13, 0.48, 0.0],
+        [0.0, 0.58, 0.0],
+        [0.55, 0.58, 0.0],
+        [0.0, 0.59, 0.0],
+        [0.0, 0.61, 0.0],
+        [0.39, 0.64, 0.23],
+        [0.32, 0.66, 0.75],
+        [0.38, 0.69, 0.23],
+        [0.0, 0.69, 0.75],
+        [0.0, 0.72, 0.0],
+        [0.0, 0.76, 0.0],
+        [0.0, 0.8, 0.75],
+        [0.0, 0.8, 0.0],
+        [0.03, 0.81, 0.49],
+        [0.09, 0.82, 0.0],
+        [0.87, 0.83, 0.0],
+        [0.0, 0.84, 0.23],
+        [0.25, 0.85, 0.23],
+        [0.45, 0.86, 0.0],
+        [0.0, 0.88, 0.23],
+        [0.0, 0.89, 0.0],
+        [0.05, 0.91, 0.0],
+        [0.64, 0.93, 0.49],
+        [0.31, 0.93, 0.49],
+        [0.45, 0.95, 0.0],
+        [0.11, 0.96, 0.23],
+        [0.37, 0.97, 0.0],
+        [0.47, 0.97, 0.23],
+        [0.85, 0.98, 0.0]
+      ]
+    },
+    "weightedPositiveSums": {
+      "printedIn": "Table 2, column SP_i",
+      "values": [
+        4.31, 7.29, 3.6, 3.34, 2.23, 1.67, 1.56, 1.43, 2.09, 3.16, 0.0, 0.28, 1.38, 1.31, 0.31, 0.0,
+        0.02, 0.53, 0.28, 0.1, 0.02, 0.22, 0.61, 0.0, 0.0, 0.0, 0.54, 0.97, 2.26, 0.03, 0.6, 0.0,
+        0.28, 0.79, 0.11, 0.0, 0.28, 0.24, 0.37, 0.53, 0.0, 0.0, 0.28, 0.0, 0.79, 0.0, 0.28
+      ]
+    },
+    "normalizedPositiveSums": {
+      "printedIn": "Table 2, column NSP_i",
+      "values": [
+        0.59, 1.0, 0.49, 0.46, 0.31, 0.23, 0.22, 0.2, 0.29, 0.43, 0.0, 0.04, 0.19, 0.18, 0.04, 0.0,
+        0.0, 0.07, 0.04, 0.01, 0.0, 0.03, 0.08, 0.0, 0.0, 0.0, 0.08, 0.13, 0.31, 0.0, 0.08, 0.0,
+        0.04, 0.11, 0.02, 0.0, 0.04, 0.03, 0.05, 0.07, 0.0, 0.0, 0.04, 0.0, 0.11, 0.0, 0.04
+      ]
+    },
+    "weightedNegativeSums": {
+      "printedIn": "Table 2, column SN_i",
+      "values": [
+        0.57, 0.0, 0.56, 1.24, 0.23, 0.66, 0.72, 0.0, 0.0, 0.0, 1.42, 0.67, 0.06, 0.2, 0.46, 0.67,
+        1.09, 0.55, 0.61, 0.58, 1.13, 0.59, 0.61, 1.26, 1.73, 1.3, 1.44, 0.72, 0.76, 1.54, 0.8,
+        1.32, 0.91, 1.7, 1.07, 1.34, 1.31, 1.11, 0.89, 0.96, 2.05, 1.73, 1.4, 1.3, 1.34, 1.68, 1.82
+      ]
+    },
+    "normalizedNegativeSums": {
+      "printedIn": "Table 2, column NSN_i",
+      "values": [
+        0.72, 1.0, 0.73, 0.4, 0.89, 0.68, 0.65, 1.0, 1.0, 1.0, 0.31, 0.68, 0.97, 0.9, 0.78, 0.67,
+        0.47, 0.73, 0.7, 0.72, 0.45, 0.72, 0.71, 0.39, 0.16, 0.37, 0.3, 0.65, 0.63, 0.25, 0.61,
+        0.36, 0.56, 0.17, 0.48, 0.35, 0.36, 0.46, 0.57, 0.53, 0.0, 0.16, 0.32, 0.37, 0.35, 0.18,
+        0.11
+      ]
+    }
+  },
+  "result": {
+    "appraisalScores": {
+      "printedIn": "Table 2, column AS_i",
+      "values": [
+        0.66, 1.0, 0.61, 0.43, 0.6, 0.45, 0.43, 0.6, 0.64, 0.72, 0.16, 0.36, 0.58, 0.54, 0.41, 0.34,
+        0.24, 0.4, 0.37, 0.37, 0.23, 0.37, 0.39, 0.19, 0.08, 0.18, 0.19, 0.39, 0.47, 0.13, 0.35,
+        0.18, 0.3, 0.14, 0.25, 0.18, 0.2, 0.25, 0.31, 0.3, 0.0, 0.08, 0.18, 0.18, 0.23, 0.09, 0.08
+      ]
+    },
+    "ranking": {
+      "printedIn": "Table 3 (items listed by decreasing AS)",
+      "decimals": 0,
+      "values": [
+        3, 1, 5, 13, 7, 11, 12, 6, 4, 2, 40, 21, 8, 9, 14, 23, 29, 15, 19, 20, 31, 18, 16, 33, 44,
+        36, 34, 17, 10, 42, 22, 38, 26, 41, 27, 39, 32, 28, 24, 25, 47, 45, 37, 35, 30, 43, 46
+      ]
+    }
+  },
+  "deviations": [
+    {
+      "path": "steps.positiveDistances.values[4][0]",
+      "printed": 0.07,
+      "recomputed": 0.065,
+      "note": "Double rounding: 0.0650 rounds to 0.065 and then to 0.07. Correct to two decimals is 0.06."
+    },
+    {
+      "path": "steps.positiveDistances.values[38][0]",
+      "printed": 0.1,
+      "recomputed": 0.0948,
+      "note": "Double rounding: 0.0948 rounds to 0.095 and then to 0.1. Correct to two decimals is 0.09."
+    },
+    {
+      "path": "steps.negativeDistances.values[3][2]",
+      "printed": 0.75,
+      "recomputed": 0.7446,
+      "note": "Double rounding: 0.7446 rounds to 0.745 and then to 0.75. Correct to two decimals is 0.74."
+    },
+    {
+      "path": "steps.negativeDistances.values[19][1]",
+      "printed": 0.58,
+      "recomputed": 0.5748,
+      "note": "Double rounding: 0.5748 rounds to 0.575 and then to 0.58. Correct to two decimals is 0.57."
+    },
+    {
+      "path": "steps.negativeDistances.values[24][2]",
+      "printed": 0.75,
+      "recomputed": 0.7446,
+      "note": "Double rounding: 0.7446 rounds to 0.745 and then to 0.75. Correct to two decimals is 0.74."
+    },
+    {
+      "path": "steps.negativeDistances.values[26][2]",
+      "printed": 0.75,
+      "recomputed": 0.7446,
+      "note": "Double rounding: 0.7446 rounds to 0.745 and then to 0.75. Correct to two decimals is 0.74."
+    },
+    {
+      "path": "steps.negativeDistances.values[27][1]",
+      "printed": 0.72,
+      "recomputed": 0.7148,
+      "note": "Double rounding: 0.7148 rounds to 0.715 and then to 0.72. Correct to two decimals is 0.71."
+    },
+    {
+      "path": "steps.negativeDistances.values[29][2]",
+      "printed": 0.75,
+      "recomputed": 0.7446,
+      "note": "Double rounding: 0.7446 rounds to 0.745 and then to 0.75. Correct to two decimals is 0.74."
+    },
+    {
+      "path": "steps.negativeDistances.values[34][1]",
+      "printed": 0.84,
+      "recomputed": 0.8347,
+      "note": "Double rounding: 0.8347 rounds to 0.835 and then to 0.84. Correct to two decimals is 0.83."
+    },
+    {
+      "path": "steps.negativeDistances.values[46][0]",
+      "printed": 0.85,
+      "recomputed": 0.8446,
+      "note": "Double rounding: 0.8446 rounds to 0.845 and then to 0.85. Correct to two decimals is 0.84."
+    },
+    {
+      "path": "steps.normalizedPositiveSums.values[6]",
+      "printed": 0.22,
+      "recomputed": 0.2146,
+      "note": "Double rounding: 0.2146 rounds to 0.215 and then to 0.22. Correct to two decimals is 0.21."
+    },
+    {
+      "path": "steps.normalizedPositiveSums.values[26]",
+      "printed": 0.08,
+      "recomputed": 0.0745,
+      "note": "Double rounding: 0.0745 rounds to 0.075 and then to 0.08. Correct to two decimals is 0.07."
+    },
+    {
+      "path": "steps.weightedNegativeSums.values[19]",
+      "printed": 0.58,
+      "recomputed": 0.5748,
+      "note": "Double rounding: 0.5748 rounds to 0.575 and then to 0.58. Correct to two decimals is 0.57."
+    },
+    {
+      "path": "steps.weightedNegativeSums.values[27]",
+      "printed": 0.72,
+      "recomputed": 0.7148,
+      "note": "Double rounding: 0.7148 rounds to 0.715 and then to 0.72. Correct to two decimals is 0.71."
+    },
+    {
+      "path": "steps.normalizedNegativeSums.values[11]",
+      "printed": 0.68,
+      "recomputed": 0.6748,
+      "note": "Double rounding: 0.6748 rounds to 0.675 and then to 0.68. Correct to two decimals is 0.67."
+    },
+    {
+      "path": "steps.normalizedNegativeSums.values[21]",
+      "printed": 0.72,
+      "recomputed": 0.7145,
+      "note": "Double rounding: 0.7145 rounds to 0.715 and then to 0.72. Correct to two decimals is 0.71."
+    },
+    {
+      "path": "steps.normalizedNegativeSums.values[22]",
+      "printed": 0.71,
+      "recomputed": 0.7045,
+      "note": "Double rounding: 0.7045 rounds to 0.705 and then to 0.71. Correct to two decimals is 0.70."
+    },
+    {
+      "path": "steps.normalizedNegativeSums.values[25]",
+      "printed": 0.37,
+      "recomputed": 0.3648,
+      "note": "Double rounding: 0.3648 rounds to 0.365 and then to 0.37. Correct to two decimals is 0.36."
+    },
+    {
+      "path": "result.appraisalScores.values[10]",
+      "printed": 0.16,
+      "recomputed": 0.1549,
+      "note": "Double rounding: 0.1549 rounds to 0.155 and then to 0.16. Correct to two decimals is 0.15."
+    },
+    {
+      "path": "result.appraisalScores.values[35]",
+      "printed": 0.18,
+      "recomputed": 0.1748,
+      "note": "Double rounding: 0.1748 rounds to 0.175 and then to 0.18. Correct to two decimals is 0.17."
+    }
+  ],
+  "notes": [
+    "Criteria: C1 average unit cost, C2 annual dollar usage, C3 lead time. All three are treated as beneficial: a higher value moves an item towards class A (Section 3).",
+    "The paper says the weights are \"equally distributed\" but prints none. The printed SP_i and SN_i are the plain sums of PDA and NDA, so the fixture uses weights of 1. Any equal weights give the same NSP, NSN and AS, because both sums are divided by their maximum; a golden test that normalises weights to 1/3 must divide its SP and SN by 3 before comparing them with this table.",
+    "Table 3 lists the items by decreasing AS; tied printed scores (for example S8 and S5, both 0.60) are ordered by their unrounded values, which the fixture ranking reproduces.",
+    "Several printed two-decimal values are one unit higher than the recomputed value rounded once (for example 0.7446 printed as 0.75). Every such case lies between x.xx45 and x.xx50, so the paper evidently rounded to three decimals first and then to two. They are listed as deviations."
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "method": "vikor",
+  "variant": "classical",
+  "numberType": "crisp",
+  "precision": {
+    "decimals": 3,
+    "rule": "round-half-away-from-zero"
+  },
+  "parameters": {
+    "v": "opricovic-tzeng-2008"
+  },
+  "title": "Hydropower planning, DEA-derived weights (W5), compromise set",
+  "source": {
+    "role": "original",
+    "citation": "Opricovic, S., Tzeng, G.-H. (2008). A comparative analysis of the DEA-CCR model and the VIKOR method. Yugoslav Journal of Operations Research, 18(2), 187-203.",
+    "doi": "10.2298/YUJOR0802187O",
+    "accessedVia": "https://yujor.fon.bg.ac.rs/index.php/yujor/article/download/303/194",
+    "location": "Section 3 (Eqs. 1-4), Table 1 and Table 7, weight set W5",
+    "note": "Open-access paper by both authors of the method; see the W1 fixture."
+  },
+  "input": {
+    "alternatives": ["A1", "A2", "A3", "A4", "A5", "A6"],
+    "criteria": [
+      {
+        "id": "f1",
+        "direction": "benefit"
+      },
+      {
+        "id": "f2",
+        "direction": "cost"
+      },
+      {
+        "id": "f3",
+        "direction": "benefit"
+      },
+      {
+        "id": "f4",
+        "direction": "benefit"
+      },
+      {
+        "id": "f5",
+        "direction": "cost"
+      },
+      {
+        "id": "f6",
+        "direction": "cost"
+      },
+      {
+        "id": "f7",
+        "direction": "cost"
+      },
+      {
+        "id": "f8",
+        "direction": "benefit"
+      }
+    ],
+    "matrix": [
+      [4184.3, 2914.0, 407.2, 251.0, 195, 244, 15, 2.41],
+      [5211.9, 3630.0, 501.7, 308.3, 282, 346, 21, 1.41],
+      [5021.3, 3920.5, 504.0, 278.6, 12, 56, 3, 4.42],
+      [5566.1, 3957.9, 559.5, 335.3, 167, 268, 16, 3.36],
+      [5060.5, 3293.5, 514.1, 284.2, 69, 90, 7, 4.04],
+      [4317.9, 2925.9, 432.8, 239.3, 12, 55, 3, 4.36]
+    ],
+    "weights": [0, 3.19, 1, 1.79, 0, 4.58, 0, 1.56]
+  },
+  "steps": {
+    "groupUtility": {
+      "printedIn": "Table 7, W5, row S",
+      "values": [0.544, 0.76, 0.372, 0.585, 0.261, 0.222]
+    },
+    "individualRegret": {
+      "printedIn": "Table 7, W5, row R",
+      "values": [0.245, 0.378, 0.254, 0.277, 0.096, 0.148]
+    }
+  },
+  "result": {
+    "compromiseIndex": {
+      "printedIn": "Table 7, W5, row Q",
+      "values": [0.568, 1.0, 0.402, 0.66, 0.04, 0.081]
+    },
+    "ranking": {
+      "printedIn": "Table 7, W5 (ranked by Q, lower is better)",
+      "decimals": 0,
+      "values": [4, 6, 3, 5, 1, 2]
+    },
+    "compromiseSolution": {
+      "printedIn": "Section 4, weight set W5",
+      "values": ["A5", "A6"]
+    }
+  },
+  "deviations": [],
+  "notes": [
+    "Hydropower system planning on the Drina river, six alternatives and eight criteria (Table 1): f1 profit, f3 total energy, f4 peak energy and f8 environmental protection are maximised; f2 costs, f5 homes to relocate, f6 reservoir area and f7 villages to displace are minimised.",
+    "Strategy weight v = (n + 1) / (2n) = 9/16 for n = 8 criteria, as introduced in this paper (Section 3); the 2004 paper uses v = 0.5. The method must expose v, with 0.5 as the classical default. With v = 0.5 the printed Q values are not reproduced.",
+    "Compromise solution: C1 acceptable advantage Q(A(2)) - Q(A(1)) >= DQ = 1/(J - 1) = 0.2, C2 acceptable stability (A(1) also best by S or R). If C1 fails the set is every A(M) with Q(A(M)) - Q(A(1)) < DQ; if only C2 fails it is {A(1), A(2)}.",
+    "The paper does not print f* and f-; they are the column best and worst values of Table 1.",
+    "W5 are the DEA multipliers {0, 3.19, 1, 1.79, 0, 4.58, 0, 1.56}, printed unnormalised; Table 7 is reproduced after dividing them by their sum. Zero weights must be accepted.",
+    "C1 fails (Q(A6) - Q(A5) = 0.041 < 0.2) and A3 is the first alternative outside DQ, so the compromise set is {A5, A6}."
+  ]
+}

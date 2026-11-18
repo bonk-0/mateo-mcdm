@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "method": "dematel",
+  "variant": "classical",
+  "numberType": "crisp",
+  "title": "Quality-control factors: six factors, one expert",
+  "source": {
+    "role": "substitute",
+    "citation": "Chen, C.-Y., Tzeng, G.-H., Huang, J.-J. (2018). Generalized DEMATEL technique with centrality measurements. Technological and Economic Development of Economy, 24(2), 600-614.",
+    "doi": "10.3846/20294913.2016.1216471",
+    "location": "Section 2 (Eqs. 1-4) and Section 3, the classical case (alpha = 0) and Table 2",
+    "accessedVia": "https://journals.vilniustech.lt/index.php/TEDE/article/download/120/180",
+    "note": "The original Battelle reports of Gabus and Fontela (1972, 1973) are not available online; this open-access paper co-authored by the author who made DEMATEL widely used in MCDM states the classical procedure and prints a complete example. See docs/methods/dematel.md."
+  },
+  "precision": {
+    "decimals": 4,
+    "rule": "round-half-away-from-zero"
+  },
+  "input": {
+    "factors": ["S1", "S2", "S3", "S4", "S5", "S6"],
+    "directRelation": [
+      [1, 2, 1, 1, 0, 4],
+      [0, 3, 0, 3, 0, 2],
+      [4, 2, 0, 3, 3, 1],
+      [3, 3, 0, 3, 0, 3],
+      [2, 2, 2, 4, 2, 3],
+      [3, 4, 2, 4, 2, 2]
+    ]
+  },
+  "parameters": {
+    "normalization": "max-row-or-column-sum"
+  },
+  "steps": {
+    "normalizationConstant": {
+      "printedIn": "Section 3 (1/s = 1/18)",
+      "decimals": 0,
+      "values": 18
+    },
+    "normalizedMatrix": {
+      "printedIn": "Section 3, normalised direct-relation matrix",
+      "values": [
+        [0.0556, 0.1111, 0.0556, 0.0556, 0.0, 0.2222],
+        [0.0, 0.1667, 0.0, 0.1667, 0.0, 0.1111],
+        [0.2222, 0.1111, 0.0, 0.1667, 0.1667, 0.0556],
+        [0.1667, 0.1667, 0.0, 0.1667, 0.0, 0.1667],
+        [0.1111, 0.1111, 0.1111, 0.2222, 0.1111, 0.1667],
+        [0.1667, 0.2222, 0.1111, 0.2222, 0.1111, 0.1111]
+      ]
+    },
+    "totalRelation": {
+      "printedIn": "Section 3, total relation matrix (alpha = 0)",
+      "values": [
+        [0.2308, 0.3713, 0.1255, 0.3186, 0.0781, 0.4363],
+        [0.1346, 0.3839, 0.0446, 0.3838, 0.0446, 0.2898],
+        [0.4423, 0.4394, 0.0943, 0.5036, 0.2521, 0.3756],
+        [0.3654, 0.4822, 0.0777, 0.474, 0.0703, 0.446],
+        [0.4038, 0.5178, 0.2184, 0.6445, 0.2324, 0.5312],
+        [0.4615, 0.6558, 0.2182, 0.6677, 0.2289, 0.5041]
+      ]
+    }
+  },
+  "result": {
+    "dispatch": {
+      "printedIn": "Table 2, D (row sums)",
+      "decimals": 3,
+      "values": [1.561, 1.281, 2.107, 1.916, 2.548, 2.286]
+    },
+    "receive": {
+      "printedIn": "Table 2, R (column sums)",
+      "decimals": 3,
+      "values": [2.038, 2.85, 0.779, 2.992, 0.906, 2.133]
+    },
+    "prominence": {
+      "printedIn": "Table 2, D + R",
+      "decimals": 3,
+      "values": [3.599, 4.131, 2.886, 4.908, 3.454, 4.419]
+    },
+    "relation": {
+      "printedIn": "Table 2, D - R",
+      "decimals": 3,
+      "values": [-0.477, -1.569, 1.328, -1.076, 1.642, 0.153]
+    }
+  },
+  "deviations": [
+    {
+      "path": "result.dispatch.values[5]",
+      "printed": 2.286,
+      "recomputed": 2.7363,
+      "note": "Typo in Table 2: the sum of the printed total relation matrix is 2.736."
+    },
+    {
+      "path": "result.receive.values[5]",
+      "printed": 2.133,
+      "recomputed": 2.5831,
+      "note": "Typo in Table 2: the sum of the printed total relation matrix is 2.583."
+    },
+    {
+      "path": "result.prominence.values[1]",
+      "printed": 4.131,
+      "recomputed": 4.1317,
+      "note": "Table 2 adds the rounded D and R; the unrounded sum differs by one unit in the third decimal."
+    },
+    {
+      "path": "result.prominence.values[4]",
+      "printed": 3.454,
+      "recomputed": 3.4545,
+      "note": "Table 2 adds the rounded D and R; the unrounded sum differs by one unit in the third decimal."
+    },
+    {
+      "path": "result.prominence.values[5]",
+      "printed": 4.419,
+      "recomputed": 5.3194,
+      "note": "Follows the two typos for S6 (2.286 + 2.133); the correct D + R is 5.319."
+    },
+    {
+      "path": "result.relation.values[0]",
+      "printed": -0.477,
+      "recomputed": -0.4778,
+      "note": "Table 2 adds the rounded D and R; the unrounded sum differs by one unit in the third decimal."
+    },
+    {
+      "path": "result.relation.values[2]",
+      "printed": 1.328,
+      "recomputed": 1.3286,
+      "note": "Table 2 adds the rounded D and R; the unrounded sum differs by one unit in the third decimal."
+    },
+    {
+      "path": "result.relation.values[3]",
+      "printed": -1.076,
+      "recomputed": -1.0766,
+      "note": "Table 2 adds the rounded D and R; the unrounded sum differs by one unit in the third decimal."
+    }
+  ],
+  "notes": [
+    "Normalisation X = Z / s with s = max(max row sum, max column sum) = max(17, 18) = 18; total relation T = X (I - X)^-1.",
+    "The matrix is one expert’s 0-4 assessment and, unusually, has non-zero diagonal entries (a factor rated as influencing itself). The printed T is reproduced exactly with them, so the method must not silently zero the diagonal; it should warn instead.",
+    "Table 2 prints D and R of S6 as 2.286 and 2.133; the row and column sums of the printed T are 2.736 and 2.583. Their difference 0.153 matches the printed D - R, so both are typos (deviations). D + R of S6 follows the typos (4.419 instead of 5.319)."
+  ]
+}
