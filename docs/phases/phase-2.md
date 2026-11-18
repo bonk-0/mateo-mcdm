@@ -298,4 +298,4 @@
 - All Phase 2 methods pass golden tests against verified references (fuzzy DEMATEL, fuzzy MOORA and ARAS-F: property tests, per the P2.1 decisions).
 - Every method has a workspace, an Explain sequence and a Method Library page in TR and EN.
 - Every example combination in `base-plan.md` §13.1 runs in the Hybrid Builder.
-- Installers build in CI; no accessibility regressions.
+- The production web build passes the end-to-end suite in CI, offline use included; no accessibility regressions.

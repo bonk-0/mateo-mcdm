@@ -1,6 +1,6 @@
 # Mateo — Phase 1 release notes
 
-First usable release. Everything works offline, in English and Turkish.
+First usable release. Mateo runs in your browser, in English and Turkish. After the first visit it also works offline, and you can install it from the browser like an app.
 
 ## What you can do
 
@@ -14,7 +14,8 @@ First usable release. Everything works offline, in English and Turkish.
 
 ## Reliability
 
-- Projects are saved automatically to a single `.mateo` file. The file is a transactional database, so an unexpected exit never leaves it half written; you reopen it with your last saved state.
+- Projects are saved automatically in your browser, each as a single `.mateo` file. Every save replaces the file in one step, so an unexpected exit never leaves it half written; you reopen it with your last saved state.
+- Download a project as a `.mateo` file to keep a copy anywhere or to open it on another computer, and open such a file again from the project menu or by dropping it on the start page.
 - Large problems (500 alternatives × 50 criteria) run in well under a few seconds.
 
 ## Accessibility
@@ -23,5 +24,4 @@ Phase 1 screens are built to WCAG 2.1 AA: keyboard operation, visible focus, scr
 
 ## Known limits
 
-- Windows installers are not code-signed yet, so Windows may warn on first run.
 - Only CRITIC, MEREC, SWARA and MARCOS (crisp and fuzzy) are available. More methods follow in later phases.

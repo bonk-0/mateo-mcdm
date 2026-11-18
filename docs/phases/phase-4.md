@@ -58,7 +58,7 @@
 **Scope**
 - Exercises generated from fixture datasets or small random datasets: the user predicts the next step's values (or a selected cell) and Mateo checks against the engine trace with a tolerance.
 - Hints that reveal the formula, then the substitution, then the answer.
-- Progress stored locally per user profile; available in TR and EN.
+- Progress stored in the browser (there are no accounts), outside project files; available in TR and EN.
 - Exercises for at least MARCOS, CRITIC, SWARA, VIKOR and TFN arithmetic.
 
 **Depends on:** Phase 3

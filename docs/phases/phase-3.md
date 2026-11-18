@@ -106,6 +106,7 @@
 **Scope**
 - Scenario builder: combinations of weighting methods, ranking methods, fuzzy configurations, parameter sets; compatibility checks from P2.9.
 - Execution in a worker pool with progress, cancel and retry per scenario; partial results kept.
+- Runs in the browser: the pool is sized from `navigator.hardwareConcurrency`, and before results are stored in the project the expected size is checked against the storage quota (`navigator.storage.estimate`), with a clear message instead of a failed save.
 - Results grid with comparison (reusing P2.10) and batch export.
 
 **Depends on:** Phase 2
@@ -120,7 +121,7 @@
 
 **Scope**
 - Report model built from stored analyses: project info, method description, formulas, parameters, tables, charts, interpretation text, references, calculation date, method and app version.
-- Print-ready HTML report template with KaTeX formulas and chart images; PDF export.
+- Print-ready HTML report template with KaTeX formulas and chart images; PDF export through the browser's print dialog (Save as PDF), so one template serves screen, print and PDF and nothing leaves the computer.
 - Language selected at export time, independent of the UI language.
 - Report options: which sections and tables to include.
 
@@ -151,6 +152,7 @@
 - Version timeline built on P1.8 snapshots; named versions.
 - Diff view: data changes (cells, criteria, alternatives), method configuration changes.
 - Restore a version as the current state (non-destructive: creates a new version).
+- Size stays in check: the browser storage rewrites the whole `.mateo` file on each save (`docs/project-file.md`, Storage), so measure save time and file size on a project with many versions and analyses, and keep both within the targets of P3.11.
 
 **Depends on:** Phase 2
 
@@ -173,4 +175,4 @@
 - Group, trapezoidal, FMEA and Fine-Kinney golden tests pass against verified references.
 - PDF and DOCX reports are generated in TR and EN from stored analyses only.
 - Batch runs can be cancelled and resumed without data loss.
-- Installers build in CI; no accessibility regressions.
+- The production web build passes the end-to-end suite in CI, offline use included; no accessibility regressions.
