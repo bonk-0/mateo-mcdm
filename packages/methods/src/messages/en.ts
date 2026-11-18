@@ -353,6 +353,122 @@ export const en = {
   'methods.bwm.steps.linear-xi.explanation':
     'The smallest ξ for which some weights keep every difference |w_B − a_Bj · w_j| and |w_j − a_jW · w_W| within ξ, found with a linear programme solved with {solver}. ξ^L* itself is the consistency indicator: the closer to 0, the more consistent the comparisons.',
 
+  // ------------------------------------------------------------ DEMATEL
+  'methods.dematel.name': 'DEMATEL',
+  'methods.dematel.columns.rowSum': 'Row sum',
+  'methods.dematel.columns.dispatch': 'Dispatched influence D',
+  'methods.dematel.columns.receive': 'Received influence R',
+  'methods.dematel.columns.prominence': 'Prominence D + R',
+  'methods.dematel.columns.relation': 'Relation D − R',
+  'methods.dematel.rows.columnSum': 'Column sum',
+  'methods.dematel.rows.weightBasis': 'Weight basis a_i',
+  'methods.dematel.rows.weight': 'Weight w_i',
+  'methods.dematel.parameters.normalization.label': 'Normalization constant',
+  'methods.dematel.parameters.normalization.description':
+    'The constant s that divides the direct-relation matrix. The larger of the biggest row sum and the biggest column sum is the classical form and guarantees that the series of indirect influences converges.',
+  'methods.dematel.parameters.normalization.maxRowOrColumnSum': 'Largest row or column sum',
+  'methods.dematel.parameters.normalization.maxRowSum': 'Largest row sum only',
+  'methods.dematel.parameters.threshold.label': 'Threshold of the cause-effect map',
+  'methods.dematel.parameters.threshold.description':
+    'Which relations of the total-relation matrix the map shows. It only affects the map, not T, D + R, D − R or the weights.',
+  'methods.dematel.parameters.threshold.mean': 'Mean of the total-relation matrix',
+  'methods.dematel.parameters.threshold.custom': 'Value I enter',
+  'methods.dematel.parameters.customThreshold.label': 'Threshold value',
+  'methods.dematel.parameters.customThreshold.description':
+    'Used when the threshold is entered by hand. Relations of at least this value are shown. 0 shows every relation.',
+  'methods.dematel.parameters.weightBasis.label': 'Weights from',
+  'methods.dematel.parameters.weightBasis.description':
+    'Prominence D + R gives each factor the share of its involvement. The distance √((D + R)² + (D − R)²) also credits strong causes and strong effects.',
+  'methods.dematel.parameters.weightBasis.prominence': 'Prominence D + R',
+  'methods.dematel.parameters.weightBasis.distance': 'Distance √((D + R)² + (D − R)²)',
+  'methods.dematel.steps.expert-matrices.name': 'Expert matrices',
+  'methods.dematel.steps.expert-matrices.explanation':
+    'The direct-relation matrix of every expert, one below the other: the influence each factor has on each other factor.',
+  'methods.dematel.steps.direct-relation.name': 'Direct-relation matrix Z',
+  'methods.dematel.steps.direct-relation.explanation':
+    '{experts, plural, one {The influence each factor has directly on each other factor, as entered.} other {The mean of the {experts, number} expert matrices, cell by cell.}}',
+  'methods.dematel.steps.row-sums.name': 'Row sums',
+  'methods.dematel.steps.row-sums.explanation':
+    'The total direct influence each factor dispatches: the sum of its row of Z.',
+  'methods.dematel.steps.column-sums.name': 'Column sums',
+  'methods.dematel.steps.column-sums.explanation':
+    'The total direct influence each factor receives: the sum of its column of Z.',
+  'methods.dematel.steps.normalization-constant.name': 'Normalization constant s',
+  'methods.dematel.steps.normalization-constant.explanation':
+    '{normalization, select, max-row-sum {The largest row sum.} other {The larger of the largest row sum and the largest column sum.}} Dividing by it makes every indirect influence smaller than the one before.',
+  'methods.dematel.steps.normalized-matrix.name': 'Normalized matrix X',
+  'methods.dematel.steps.normalized-matrix.explanation': 'Every cell of Z divided by s.',
+  'methods.dematel.steps.inverse.name': 'Inverse (I − X)⁻¹',
+  'methods.dematel.steps.inverse.explanation':
+    'The inverse of the identity matrix minus X. It equals I + X + X² + …, the sum of the direct influence and of all indirect influences along chains of any length.',
+  'methods.dematel.steps.total-relation.name': 'Total-relation matrix T',
+  'methods.dematel.steps.total-relation.explanation':
+    'T = X (I − X)⁻¹ = X + X² + X³ + …: the direct influence plus every indirect influence of each factor on each other factor.',
+  'methods.dematel.steps.influence.name': 'Dispatched and received influence',
+  'methods.dematel.steps.influence.explanation':
+    'D is the sum of the row of T (what a factor dispatches to all factors), R the sum of its column (what it receives from all factors).',
+  'methods.dematel.steps.prominence-relation.name': 'Prominence and relation',
+  'methods.dematel.steps.prominence-relation.explanation':
+    'D + R shows how involved a factor is in the system. D − R is positive for a cause (it influences more than it is influenced) and negative for an effect.',
+  'methods.dematel.steps.weight-basis.name': 'Weight basis a_i',
+  'methods.dematel.steps.weight-basis.explanation':
+    'The distance of each factor from the origin of the prominence-relation plane: √((D + R)² + (D − R)²).',
+  'methods.dematel.steps.weight-basis-sum.name': 'Sum of the weight basis',
+  'methods.dematel.steps.weight-basis-sum.explanation':
+    'The sum over all factors of the value the weights are derived from.',
+  'methods.dematel.steps.weights.name': 'Factor weights',
+  'methods.dematel.steps.weights.explanation':
+    'Each factor’s value divided by the sum, so the weights sum to 1 and can feed a ranking method.',
+  'methods.dematel.steps.threshold.name': 'Threshold of the cause-effect map',
+  'methods.dematel.steps.threshold.explanation':
+    '{threshold, select, mean {The mean of all entries of the total-relation matrix.} other {The value entered as a parameter.}} The map shows the relations of at least this value between different factors.',
+
+  // ------------------------------------------------------------ Fuzzy DEMATEL
+  'methods.fuzzyDematel.name': 'Fuzzy DEMATEL (TFN)',
+  'methods.fuzzyDematel.parameters.defuzzification.label': 'Defuzzification',
+  'methods.fuzzyDematel.parameters.defuzzification.description':
+    'How D̃ + R̃, D̃ − R̃ and the total-relation matrix are turned into crisp numbers. Centroid and graded mean work on each number alone; CFCS normalizes with all the numbers of a table.',
+  'methods.fuzzyDematel.parameters.defuzzification.centroid': 'Centroid (l + m + u) / 3',
+  'methods.fuzzyDematel.parameters.defuzzification.gradedMean': 'Graded mean (l + 4m + u) / 6',
+  'methods.fuzzyDematel.parameters.defuzzification.cfcs':
+    'CFCS (converting fuzzy data into crisp scores)',
+  'methods.fuzzyDematel.steps.expert-matrices.name': 'Expert matrices (TFN)',
+  'methods.fuzzyDematel.steps.expert-matrices.explanation':
+    'The direct-relation matrix of every expert as triangular fuzzy numbers, one below the other.',
+  'methods.fuzzyDematel.steps.direct-relation.name': 'Fuzzy direct-relation matrix Z̃',
+  'methods.fuzzyDematel.steps.direct-relation.explanation':
+    '{experts, plural, one {The fuzzy influence each factor has directly on each other factor, as entered.} other {The mean of the {experts, number} expert matrices, component by component.}}',
+  'methods.fuzzyDematel.steps.row-sums.name': 'Fuzzy row sums',
+  'methods.fuzzyDematel.steps.row-sums.explanation':
+    'The sum of each row of Z̃, component by component.',
+  'methods.fuzzyDematel.steps.column-sums.name': 'Fuzzy column sums',
+  'methods.fuzzyDematel.steps.column-sums.explanation':
+    'The sum of each column of Z̃, component by component.',
+  'methods.fuzzyDematel.steps.normalization-constant.name': 'Normalization constant s',
+  'methods.fuzzyDematel.steps.normalization-constant.explanation':
+    '{normalization, select, max-row-sum {The largest upper component of the row sums.} other {The larger of the largest upper component of the row sums and of the column sums.}} The upper components are the largest, so dividing by s keeps all three matrices convergent.',
+  'methods.fuzzyDematel.steps.normalized-matrix.name': 'Fuzzy normalized matrix X̃',
+  'methods.fuzzyDematel.steps.normalized-matrix.explanation':
+    'Every component of Z̃ divided by s. The l, m and u matrices are handled separately from here on.',
+  'methods.fuzzyDematel.steps.inverse.name': 'Inverse (I − X)⁻¹ per component',
+  'methods.fuzzyDematel.steps.inverse.explanation':
+    'The inverse of the identity matrix minus X, computed for the l matrix, the m matrix and the u matrix separately and put back together as fuzzy numbers.',
+  'methods.fuzzyDematel.steps.total-relation.name': 'Fuzzy total-relation matrix T̃',
+  'methods.fuzzyDematel.steps.total-relation.explanation':
+    'T = X (I − X)⁻¹ for the l, m and u matrices separately: T_l = X_l (I − X_l)⁻¹, and the same for m and u.',
+  'methods.fuzzyDematel.steps.influence.name': 'Fuzzy dispatched and received influence',
+  'methods.fuzzyDematel.steps.influence.explanation':
+    'D̃ is the sum of each row of T̃, R̃ the sum of each column, component by component.',
+  'methods.fuzzyDematel.steps.fuzzy-prominence-relation.name': 'Fuzzy prominence and relation',
+  'methods.fuzzyDematel.steps.fuzzy-prominence-relation.explanation':
+    'D̃ + R̃ and D̃ − R̃ with fuzzy addition and subtraction.',
+  'methods.fuzzyDematel.steps.defuzzified-total-relation.name': 'Crisp total-relation matrix',
+  'methods.fuzzyDematel.steps.defuzzified-total-relation.explanation':
+    'Each fuzzy entry of T̃ defuzzified with the {defuzzification, select, centroid {centroid (l + m + u) / 3} graded-mean {graded mean (l + 4m + u) / 6} cfcs {CFCS method} other {selected formula}}. It sets the threshold of the cause-effect map.',
+  'methods.fuzzyDematel.steps.prominence-relation.name': 'Crisp prominence and relation',
+  'methods.fuzzyDematel.steps.prominence-relation.explanation':
+    'D̃ + R̃ and D̃ − R̃ defuzzified with the {defuzzification, select, centroid {centroid (l + m + u) / 3} graded-mean {graded mean (l + 4m + u) / 6} cfcs {CFCS method, each column on its own} other {selected formula}}. The weights and the groups of causes and effects come from these values.',
+
   // ------------------------------------------------------------ validation
   'validation.marcos.reserved-alternative-id':
     'The alternative id "{id}" is reserved for the anti-ideal or ideal solution of MARCOS.',
@@ -413,6 +529,14 @@ export const en = {
     'The vectors disagree on "{first}" and "{second}": the best-to-others vector ranks "{second}" higher, the others-to-worst vector ranks "{first}" higher. The weights can still be calculated, but the consistency will be poor.',
   'validation.bwm.threshold-unavailable':
     'The consistency threshold is only defined for up to {max, number} criteria, and there are {count, number}. The weights are calculated, but the comparisons cannot be judged acceptable or not.',
+  'validation.dematel.relation-shape':
+    'The matrix of expert {expert, number} must have {order, number} rows and {order, number} columns, one for each factor.',
+  'validation.dematel.non-zero-diagonal':
+    'Factor "{id}" is rated as influencing itself (expert {expert, number}). The value is kept, because the formula allows it. Set it to 0 if self-influence is not meant.',
+  'validation.dematel.zero-matrix':
+    'Every influence is 0, so the matrix cannot be normalized. Rate at least one relation above 0.',
+  'validation.dematel.near-singular':
+    'The total influence cannot be calculated: the indirect influences do not fade away (for example, every factor dispatches exactly as much influence as the largest one), so the matrix I − X cannot be inverted (condition number {condition, number}). Lower some ratings or use the larger of the row and column sums as the normalization constant.',
 } as const;
 
 export type MethodsMessageKey = keyof typeof en;
