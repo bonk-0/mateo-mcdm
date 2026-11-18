@@ -36,8 +36,12 @@
       "description": "Every calculation stored in this project, with its tables and charts."
     },
     "library": {
-      "title": "Method Library",
-      "description": "How each method works, its formulas and the paper it is based on."
+      "title": "Learn",
+      "description": "What would you like to learn? Each lesson walks through a method on a small example, one step at a time."
+    },
+    "fuzzyLesson": {
+      "title": "What is a fuzzy number?",
+      "description": "Why \"about 7\" is a triangle, how a scale of words becomes numbers, and how fuzzy numbers are added."
     },
     "playground": {
       "title": "Fuzzy Playground",

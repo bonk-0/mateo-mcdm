@@ -36,8 +36,12 @@
       "description": "Bu projede saklanan tüm hesaplamalar, tabloları ve grafikleriyle."
     },
     "library": {
-      "title": "Yöntem Kütüphanesi",
-      "description": "Her yöntemin nasıl çalıştığı, formülleri ve dayandığı makale."
+      "title": "Öğren",
+      "description": "Ne öğrenmek istersiniz? Her ders bir yöntemi küçük bir örnek üzerinde adım adım anlatır."
+    },
+    "fuzzyLesson": {
+      "title": "Bulanık sayı nedir?",
+      "description": "\"Yaklaşık 7\" neden bir üçgendir, sözcüklerden oluşan bir ölçek nasıl sayıya dönüşür ve bulanık sayılar nasıl toplanır."
     },
     "playground": {
       "title": "Bulanık Deneme Alanı",

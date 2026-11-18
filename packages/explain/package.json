@@ -2,7 +2,7 @@
   "name": "@mateo/explain",
   "version": "0.0.0",
   "private": true,
-  "description": "Turns engine step traces into animation timelines.",
+  "description": "Turns engine step traces into step-by-step lessons.",
   "type": "module",
   "exports": {
     ".": "./src/index.ts"

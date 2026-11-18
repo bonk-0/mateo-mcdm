@@ -46,7 +46,7 @@ export function useCellLabels(trace: Trace): (ref: CellRef) => CellLabels {
           ? row
           : shape === 'row-vector' || shape === 'scalar'
             ? column
-            : t('stage.cellName', { row, column });
+            : t('lesson.cellName', { row, column });
       return { step: step ? message(step.nameKey) : ref.step, row, column, cell };
     },
     [trace, axes, t, message, textOf],

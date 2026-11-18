@@ -1,71 +1,46 @@
 import type { Trace } from '@mateo/engine';
-import type { ExplainSequence, Timeline } from '@mateo/explain';
-import { ExplainError, buildTimeline, checkTimeline, sequenceFor } from '@mateo/explain';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@mateo/ui';
-import { BookOpenText, ListOrdered } from 'lucide-react';
-import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { ExplainPlayer } from './ExplainPlayer';
-import { StoryView } from './StoryView';
+import type { ExplainSequence, Lesson } from '@mateo/explain';
+import { buildLesson, fitsLesson, resultFocus, sequenceFor } from '@mateo/explain';
+import { useMemo, type ReactNode } from 'react';
+import { LessonView } from './Lesson';
 
 export interface Explanation {
   readonly sequence: ExplainSequence;
-  readonly timeline: Timeline;
+  readonly lesson: Lesson;
 }
 
 /**
- * The animated explanation of a stored trace, or `null` when its method has no explain
- * sequence or the trace was written by a version
- * of the method whose steps the sequence does not know.
+ * The lesson of a stored trace, or `null` when its method has no lesson or the trace was
+ * written by a version of the method whose steps the lesson does not know.
  */
 export function explanationOf(trace: Trace): Explanation | null {
   const sequence = sequenceFor(trace.methodId);
-  if (!sequence) return null;
-  try {
-    checkTimeline(trace, sequence);
-  } catch (error) {
-    if (error instanceof ExplainError) return null;
-    throw error;
-  }
-  // Built on first use: the results page asks whether a trace can be explained on every
-  // analysis, and building the timeline of a large one takes a while.
-  let timeline: Timeline | undefined;
-  return {
-    sequence,
-    get timeline() {
-      timeline ??= buildTimeline(trace, sequence);
-      return timeline;
-    },
-  };
+  if (!sequence || !fitsLesson(trace, sequence)) return null;
+  return { sequence, lesson: buildLesson(trace, sequence) };
 }
 
-/** Explain mode of one analysis: the step-by-step player and the story of the result. */
-export function ExplainPanel({ trace, explanation }: { trace: Trace; explanation: Explanation }) {
-  const { t } = useTranslation('explain');
-  const { sequence, timeline } = explanation;
-  const story = useMemo(() => sequence.story, [sequence]);
+/**
+ * "How was this calculated?" of one analysis: the method's lesson on the user's own data.
+ * With `followResult` it follows the alternative that ranks first and the heaviest criterion,
+ * so that the lesson answers why the result is what it is.
+ */
+export function ExplainPanel({
+  trace,
+  explanation,
+  followResult = false,
+  finish,
+}: {
+  trace: Trace;
+  explanation: Explanation;
+  followResult?: boolean;
+  finish?: ReactNode;
+}) {
+  const { sequence, lesson } = explanation;
+  const focus = useMemo(
+    () => (followResult ? resultFocus(trace, sequence) : {}),
+    [followResult, trace, sequence],
+  );
   return (
-    <Tabs defaultValue="timeline" className="space-y-4" data-testid="explain-panel">
-      <TabsList aria-label={t('panel.label')}>
-        <TabsTrigger value="timeline" data-testid="explain-tab-timeline">
-          <ListOrdered aria-hidden />
-          {t('panel.timeline')}
-        </TabsTrigger>
-        {story && (
-          <TabsTrigger value="story" data-testid="explain-tab-story">
-            <BookOpenText aria-hidden />
-            {t('panel.story')}
-          </TabsTrigger>
-        )}
-      </TabsList>
-      <TabsContent value="timeline">
-        <ExplainPlayer trace={trace} timeline={timeline} />
-      </TabsContent>
-      {story && (
-        <TabsContent value="story">
-          <StoryView trace={trace} plan={story} />
-        </TabsContent>
-      )}
-    </Tabs>
+    <LessonView trace={trace} sequence={sequence} lesson={lesson} focus={focus} finish={finish} />
   );
 }

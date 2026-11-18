@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 
-/** A 10 × 8 decision matrix: the size Explain mode must animate smoothly (P1.13). */
+/** A 10 × 8 decision matrix: a lesson shows it focused around the explained cell. */
 const VALUES = Array.from({ length: 10 }, (_, i) =>
   Array.from({ length: 8 }, (_, j) => 10 + ((i * 7 + j * 13 + i * j) % 29)),
 );
@@ -37,66 +37,61 @@ async function runMarcos(page: Page): Promise<void> {
   await page.waitForTimeout(400);
 }
 
-test('Explain mode plays the MARCOS timeline and is operable from the keyboard', async ({
+test('"How it was calculated" teaches the result step by step, from the keyboard too', async ({
   page,
 }) => {
   await runMarcos(page);
-  // Explain opens below the results, which stay on screen.
+  // The lesson opens beside the results, on the user's own data.
   await page.getByTestId('view-explain').click();
-  const player = page.getByTestId('explain-player');
-  await expect(player).toHaveAttribute('data-animated', 'true');
-  await expect(player).toHaveAttribute('data-scene', 'initial-matrix');
+  const lesson = page.getByTestId('lesson');
+  await expect(lesson).toHaveAttribute('data-step', 'decision');
+  await expect(page.getByTestId('lesson-idea')).not.toBeEmpty();
 
-  // Jump to a step, then drive the player with the keyboard only.
-  await page.getByTestId('explain-step-normalized-matrix').focus();
-  await page.keyboard.press('Enter');
-  await expect(player).toHaveAttribute('data-scene', 'normalized-matrix/benefit');
-  await expect(page.getByTestId('explain-formula').locator('.katex').first()).toBeVisible();
-  await page.keyboard.press('End');
-  await expect(player).toHaveAttribute('data-scene', 'ranking');
-  await page.keyboard.press('Home');
-  await expect(player).toHaveAttribute('data-scene', 'initial-matrix');
+  // Next and the arrow keys move through the steps; nothing plays by itself.
+  await page.getByTestId('lesson-next').click();
+  await expect(lesson).toHaveAttribute('data-step', 'reference');
+  await lesson.focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(lesson).toHaveAttribute('data-part', 'normalized-matrix');
+  await page.waitForTimeout(1000);
+  await expect(lesson).toHaveAttribute('data-part', 'normalized-matrix');
 
-  // Play: values fly between the matrices and the timeline moves on by itself.
-  await page.getByTestId('explain-speed').selectOption('3');
-  // Jumping to a step plays its first scene once; Space pauses, and plays on from there.
-  await page.getByTestId('explain-step-extended-matrix').click();
-  await expect(page.getByTestId('explain-play')).toHaveAccessibleName('Pause');
-  await page.getByTestId('explain-play').focus();
-  await page.keyboard.press('Space');
-  await expect(page.getByTestId('explain-play')).toHaveAccessibleName('Play');
-  await page.keyboard.press('Space');
-  await expect(page.getByTestId('explain-play')).toHaveAccessibleName('Pause');
-  await expect(player).toHaveAttribute('data-scene', 'extended-matrix', { timeout: 30_000 });
-  await expect(page.locator('.ex-ghost').first()).toBeAttached();
-  await expect(player).toHaveAttribute('data-scene', /^normalized-matrix/u, { timeout: 30_000 });
-  await page.keyboard.press('Space');
-  await expect(page.getByTestId('explain-play')).toHaveAccessibleName('Play');
-
-  // "How was this calculated?" for the example cell, and the story of the result.
-  await page.getByTestId('explain-derivation').click();
+  // One cell is explained in words and numbers; the formula is there on request.
+  await expect(page.getByTestId('lesson-how')).not.toBeEmpty();
+  await expect(page.getByTestId('lesson-substitution').locator('.katex').first()).toBeVisible();
+  await page.getByTestId('lesson-formula-toggle').click();
+  await expect(page.getByTestId('lesson-formula').locator('.katex').first()).toBeVisible();
+  await page.getByTestId('lesson-derivation').click();
   await expect(page.getByRole('dialog', { name: 'How was this calculated?' })).toBeVisible();
   await page.keyboard.press('Escape');
-  await page.getByTestId('explain-tab-story').click();
+
+  // Any cell can be explained.
+  const picked = page
+    .getByTestId('output-normalized-matrix')
+    .locator('[data-testid^="cell-normalized-matrix-"]')
+    .nth(9);
+  const name = (await picked.getAttribute('aria-description'))!.replace(/^Explain /u, '');
+  await picked.click();
+  await expect(page.getByTestId('lesson-cell')).toHaveText(name);
+
+  // The last step tells the story of the result.
+  await page
+    .getByTestId(/^lesson-marker-/u)
+    .last()
+    .click();
   await expect(page.getByTestId('story-winner')).toContainText('ranks first');
 
   // The results are still there.
   await expect(page.getByTestId('ranking-table')).toBeVisible();
 });
 
-test('with reduced motion Explain mode shows static steps', async ({ page }) => {
+test('the Learn home leads to a lesson on a small example', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await runMarcos(page);
-  await page.getByTestId('view-explain').click();
-  const player = page.getByTestId('explain-player');
-  await expect(player).toHaveAttribute('data-animated', 'false');
-  await expect(page.getByTestId('explain-play')).toHaveCount(0);
-  await page.getByTestId('explain-step-weighted-matrix').click();
-  await page.getByTestId('explain-next').click();
-  await expect(player).toHaveAttribute('data-scene', 'weighted-matrix');
-  // The whole table is there at once: 10 alternatives and the two reference rows.
-  const cells = page.getByTestId('output-weighted-matrix').locator('[data-value]');
-  await expect(cells).toHaveCount(12 * 8);
-  await expect(cells.last()).toBeVisible();
-  await expect(page.locator('.ex-ghost')).toHaveCount(0);
+  await page.goto('/#/learn');
+  await page.getByTestId('library-card-marcos').click();
+  const lesson = page.getByTestId('lesson');
+  await expect(lesson).toContainText('Phone A');
+  await expect(page.locator('.lesson-enter')).toHaveCount(0);
+  await page.getByTestId('lesson-next').click();
+  await expect(lesson).toHaveAttribute('data-step', 'reference');
 });

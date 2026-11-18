@@ -1,5 +1,5 @@
 import { tfnAdd, tfnDivide, tfnMultiply, tfnSubtract, centroid, gradedMean } from '@mateo/fuzzy';
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { applyOperation } from '../tfn/playground';
@@ -25,6 +25,31 @@ describe('the Fuzzy Playground operations', () => {
       ok: false,
       reason: 'zero-divisor',
     });
+  });
+});
+
+describe('the lesson "What is a fuzzy number?"', () => {
+  it('builds up to the playground in five steps, with numbers of @mateo/fuzzy', async () => {
+    const user = userEvent.setup();
+    const { router } = renderApp('/learn/fuzzy');
+    const lesson = await screen.findByTestId('fuzzy-lesson');
+    expect(screen.getByRole('heading', { level: 1, name: 'What is a fuzzy number?' })).toBeTruthy();
+    expect(lesson.getAttribute('data-step')).toBe('why');
+    await user.click(screen.getByTestId('fuzzy-lesson-next'));
+    expect(lesson.getAttribute('data-step')).toBe('triangle');
+    await user.click(screen.getByTestId('fuzzy-lesson-next'));
+    expect(screen.getByTestId('fuzzy-lesson-scale').querySelectorAll('li')).toHaveLength(5);
+    await user.click(screen.getByTestId('fuzzy-lesson-next'));
+    const sum = tfnAdd(A, B);
+    expect(screen.getByTestId('fuzzy-lesson-sum').textContent).toContain(
+      `(${sum.l}, ${sum.m}, ${sum.u})`,
+    );
+    await user.click(screen.getByTestId('fuzzy-lesson-next'));
+    // The last step is the playground itself, then the Fuzzy MARCOS lesson.
+    expect(screen.getByTestId('fuzzy-playground')).toBeTruthy();
+    expect(screen.queryByTestId('fuzzy-lesson-next')).toBeNull();
+    await user.click(screen.getByRole('link', { name: /Fuzzy MARCOS/u }));
+    await waitFor(() => expect(router.state.location.pathname).toBe('/learn/library/fuzzy-marcos'));
   });
 });
 

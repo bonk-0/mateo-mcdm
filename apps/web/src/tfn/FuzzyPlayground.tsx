@@ -103,11 +103,11 @@ function OperandEditor({
 }
 
 /**
- * The Fuzzy Playground: drag the points of two triangular fuzzy numbers and watch the
+ * The Fuzzy Playground (also the last step of the fuzzy-number lesson, `embedded`): drag the points of two triangular fuzzy numbers and watch the
  * result of an operation and the defuzzified values follow. Everything is calculated by
  * `@mateo/fuzzy`; the page only draws.
  */
-export function FuzzyPlayground() {
+export function FuzzyPlayground({ embedded = false }: { embedded?: boolean } = {}) {
   const { t } = useTranslation(['explain', 'nav']);
   const textOf = useTextRef();
   const formatters = useFormatters();
@@ -183,29 +183,35 @@ export function FuzzyPlayground() {
       ]
     : [];
 
+  const reset = (
+    <Button
+      type="button"
+      variant="outline"
+      data-testid="playground-reset"
+      onClick={() => {
+        setA(START_A);
+        setB(START_B);
+        setK(2);
+        setOperation('add');
+        setScaleId(NO_SCALE);
+      }}
+    >
+      <RotateCcw aria-hidden />
+      {t('playground.reset')}
+    </Button>
+  );
+
   return (
     <section aria-labelledby={`${idPrefix}-title`} data-testid="fuzzy-playground">
-      <PageHeader
-        title={t('nav:items.playground.title')}
-        description={t('nav:items.playground.description')}
-        actions={
-          <Button
-            type="button"
-            variant="outline"
-            data-testid="playground-reset"
-            onClick={() => {
-              setA(START_A);
-              setB(START_B);
-              setK(2);
-              setOperation('add');
-              setScaleId(NO_SCALE);
-            }}
-          >
-            <RotateCcw aria-hidden />
-            {t('playground.reset')}
-          </Button>
-        }
-      />
+      {embedded ? (
+        <div className="mb-4 flex justify-end">{reset}</div>
+      ) : (
+        <PageHeader
+          title={t('nav:items.playground.title')}
+          description={t('nav:items.playground.description')}
+          actions={reset}
+        />
+      )}
       <h2 id={`${idPrefix}-title`} className="sr-only">
         {t('playground.title')}
       </h2>

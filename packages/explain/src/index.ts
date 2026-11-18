@@ -1,13 +1,14 @@
 /**
- * @mateo/explain — turns engine step traces into animation timelines (docs/plan.md §8).
+ * @mateo/explain — turns engine step traces into lessons (docs/plan.md §8).
  *
- * - `buildTimeline`: a trace and a method's explain sequence become scenes (formula
- *   scenes, matrix scenes, vector scenes) with cell flights and reveal timing.
+ * - `buildLesson`: a trace and a method's sequence become lesson steps, each covering one
+ *   or more trace steps, with the earlier steps it reads from.
+ * - `exampleCell`, `resultFocus`: which cell a lesson explains, and on the user's own data
+ *   the winner and the heaviest criterion.
  * - `explainCell`, `substitutionLatex`: how one cell was produced, for linked
  *   highlighting, numeric substitution and "How was this calculated?".
- * - `playerReducer`: the timeline player as a pure state machine.
  * - `buildRankingStory`: the story of a final ranking.
- * - `sequences`: the explain sequences of MARCOS and Fuzzy MARCOS.
+ * - `sequences`: the lessons of every Phase 1 method.
  *
  * The package has no arithmetic of its own: every value it hands out is a copy of a value
  * in the trace, and it never imports a UI library.
@@ -18,9 +19,8 @@ export * from './cell';
 export * from './errors';
 export * from './focus';
 export * from './latex';
+export * from './lesson';
 export * from './numbers';
-export * from './player';
 export * from './sequences';
 export * from './story';
-export * from './timeline';
 export * from './types';

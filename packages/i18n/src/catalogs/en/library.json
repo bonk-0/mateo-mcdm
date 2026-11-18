@@ -1,20 +1,44 @@
 {
-  "index": {
-    "weightingTitle": "Weighting methods",
-    "weightingText": "Derive the importance of the criteria, from the data or from expert judgement.",
-    "rankingTitle": "Ranking methods",
-    "rankingText": "Rank the alternatives with the weights of the criteria.",
-    "open": "Read the reference page"
+  "home": {
+    "weighting": {
+      "where": "Step 2: Weights",
+      "question": "How important is each criterion?",
+      "text": "Derive the weights of the criteria from the data or from an expert's judgement."
+    },
+    "ranking": {
+      "where": "Step 3: Result",
+      "question": "Which alternative is best?",
+      "text": "Rank the alternatives once the criteria have weights."
+    },
+    "fuzzy": {
+      "where": "Fuzzy numbers",
+      "question": "What if the values are uncertain?",
+      "text": "Work with \"about 7\" instead of exactly 7."
+    },
+    "steps": "{count, plural, one {# step} other {# steps}}",
+    "tryIt": "Try it"
+  },
+  "lesson": {
+    "moreLessons": "More lessons",
+    "ownData": "Try it on your own data"
+  },
+  "lessonExample": {
+    "marcos": "The lesson ranks three phones, A, B and C, on price (lower is better), battery life and camera score (higher is better). Price matters most, then battery, then camera. Every number below is calculated by the real method.",
+    "fuzzy-marcos": "The same three phones as in MARCOS, but each value is \"about\" a number: about 20,000 for the price, about 30 hours of battery. Every value is a triangular fuzzy number, and every number below is calculated by the real method.",
+    "critic": "The lesson derives the weights of price, battery life and camera score for three phones, A, B and C, from the data alone. Every number below is calculated by the real method.",
+    "merec": "The lesson derives the weights of price, battery life and camera score for three phones, A, B and C, by removing one criterion at a time. Every number below is calculated by the real method.",
+    "swara": "An expert orders the criteria of a phone: price first, then battery life, then camera score, and says how much less important each one is than the one before. Every number below is calculated by the real method.",
+    "fuzzy-swara": "The same order as in SWARA (price, then battery life, then camera score), but the expert answers in words such as \"slightly less important\". Every number below is calculated by the real method."
   },
   "page": {
-    "back": "Method Library",
+    "back": "Learn",
     "section": {
+      "lesson": "Learn step by step",
       "introduction": "Introduction",
-      "purpose": "Purpose",
       "inputs": "Inputs",
       "numberTypes": "Supported number types",
       "steps": "Steps and formulas",
-      "example": "Animated example",
+      "example": "Reference example",
       "sample": "Sample data",
       "notes": "Properties and edge cases",
       "references": "References",
@@ -22,7 +46,9 @@
     },
     "variant": "Variant of the method",
     "stepsText": "The formulas below are the ones the engine uses: this page reads them from the calculation trace of the reference example, so they cannot differ from the implementation. Every step is a table of the trace.",
-    "formulaWhen": "Applies: {condition}"
+    "formulaWhen": "Applies: {condition}",
+    "reference": "Reference: formulas, edge cases and sources",
+    "referenceHint": "The formulas as the engine uses them, the paper's own example, and the properties of the method."
   },
   "family": {
     "weighting": "Weighting method",
@@ -38,8 +64,7 @@
       "original": "the original paper of the method.",
       "substitute": "an open-access application by authors of the method, because the original paper could not be read in full (see docs/methods)."
     },
-    "location": "Printed in: {location}.",
-    "noAnimation": "A step-by-step animation of this method is not available yet. The tables below show the same calculation: open any cell to see how it was calculated."
+    "location": "Printed in: {location}."
   },
   "sample": {
     "text": "The sample is the reference example: the same numbers as the paper, so Mateo reproduces its printed result.",

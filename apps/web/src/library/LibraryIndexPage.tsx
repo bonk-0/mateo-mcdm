@@ -1,63 +1,103 @@
+import { sequenceFor } from '@mateo/explain';
 import { Badge } from '@mateo/ui';
 import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
+import { pathOf } from '../navigation/navigation';
 import { PageHeader } from '../routes/PageHeader';
-import { LIBRARY_PAGES, libraryPath, type MethodFamily } from './methods';
+import { FUZZY_LESSON_STEPS } from '../tfn/fuzzyLessonSteps';
+import { LIBRARY_PAGES, libraryPath, type LibraryPage } from './methods';
 
-const FAMILIES: readonly MethodFamily[] = ['weighting', 'ranking'];
+/** The questions Learn answers, in the order of the decision path. */
+const TOPICS = ['weighting', 'ranking', 'fuzzy'] as const;
+type Topic = (typeof TOPICS)[number];
 
-/** The Method Library: one card per method page, grouped by what the method does. */
+interface LessonLink {
+  readonly id: string;
+  readonly to: string;
+  readonly title: string;
+  /** Number of steps, or `null` for something that is not a lesson. */
+  readonly steps: number | null;
+}
+
+/**
+ * The steps of a method page's first lesson. A sample is named after its method, so the id
+ * finds the sequence without loading the sample data (library.test checks this).
+ */
+function stepsOf(page: LibraryPage): number {
+  return sequenceFor(page.variants[0]!.sampleId)?.lesson.length ?? 0;
+}
+
+/** Learn: three questions, each with its lessons. */
 export function LibraryIndexPage() {
   const { t } = useTranslation(['library', 'nav']);
+  const lessonsOf = (topic: Topic): LessonLink[] =>
+    topic === 'fuzzy'
+      ? [
+          {
+            id: 'fuzzy',
+            to: pathOf('fuzzyLesson'),
+            title: t('nav:items.fuzzyLesson.title'),
+            steps: FUZZY_LESSON_STEPS.length,
+          },
+          {
+            id: 'playground',
+            to: pathOf('playground'),
+            title: t('nav:items.playground.title'),
+            steps: null,
+          },
+        ]
+      : LIBRARY_PAGES.filter((page) => page.family === topic).map((page) => ({
+          id: page.id,
+          to: libraryPath(page.id),
+          title: t(`library:pages.${page.id}.title`),
+          steps: stepsOf(page),
+        }));
+
   return (
     <div className="flex flex-col">
       <PageHeader
         title={t('nav:items.library.title')}
         description={t('nav:items.library.description')}
       />
-      <div className="space-y-10">
-        {FAMILIES.map((family) => (
-          <section key={family} aria-labelledby={`library-${family}`} className="space-y-3">
-            <div>
-              <h2 id={`library-${family}`} className="text-lg font-semibold">
-                {t(`library:index.${family}Title`)}
+      <ul className="grid gap-4 md:grid-cols-3">
+        {TOPICS.map((topic) => (
+          <li
+            key={topic}
+            className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-5"
+            data-testid={`learn-topic-${topic}`}
+          >
+            <Badge variant="accent" className="self-start">
+              {t(`library:home.${topic}.where`)}
+            </Badge>
+            <div className="flex flex-col gap-1">
+              <h2 className="text-base font-semibold text-balance">
+                {t(`library:home.${topic}.question`)}
               </h2>
-              <p className="text-sm text-muted-foreground">{t(`library:index.${family}Text`)}</p>
+              <p className="text-sm text-muted-foreground">{t(`library:home.${topic}.text`)}</p>
             </div>
-            <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {LIBRARY_PAGES.filter((page) => page.family === family).map((page) => (
-                <li key={page.id}>
+            <ul className="mt-auto flex flex-col gap-1.5">
+              {lessonsOf(topic).map((lesson) => (
+                <li key={lesson.id}>
                   <Link
-                    to={libraryPath(page.id)}
-                    data-testid={`library-card-${page.id}`}
-                    className="group flex h-full flex-col gap-2 rounded-xl border border-border bg-surface p-4 transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                    to={lesson.to}
+                    data-testid={`library-card-${lesson.id}`}
+                    className="group flex items-center justify-between gap-3 rounded-lg bg-muted px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                   >
-                    <span className="flex flex-wrap items-center gap-2">
-                      <span className="text-base font-semibold">
-                        {t(`library:pages.${page.id}.title`)}
-                      </span>
-                      {page.variants.some((variant) => variant.fuzzy) && (
-                        <Badge variant="accent">{t('library:numberType.tfn')}</Badge>
-                      )}
-                    </span>
-                    <span className="flex-1 text-sm text-muted-foreground">
-                      {t(`library:pages.${page.id}.summary`)}
-                    </span>
-                    <span className="inline-flex items-center gap-1 text-sm font-medium text-primary">
-                      {t('library:index.open')}
-                      <ArrowRight
-                        className="size-4 transition-transform group-hover:translate-x-0.5"
-                        aria-hidden
-                      />
+                    <span>{lesson.title}</span>
+                    <span className="flex items-center gap-1.5 text-xs font-normal text-muted-foreground group-hover:text-accent-foreground">
+                      {lesson.steps === null
+                        ? t('library:home.tryIt')
+                        : t('library:home.steps', { count: lesson.steps })}
+                      <ArrowRight className="size-3.5" aria-hidden />
                     </span>
                   </Link>
                 </li>
               ))}
             </ul>
-          </section>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }

@@ -13,7 +13,7 @@ export { marcosSequence } from './marcos';
 export { merecSequence } from './merec';
 export { swaraSequence } from './swara';
 
-/** Every Phase 1 method has an animated explanation: three weighting and two ranking ones. */
+/** Every Phase 1 method has a lesson: three weighting and two ranking ones. */
 export const EXPLAIN_SEQUENCES: readonly ExplainSequence[] = [
   marcosSequence,
   fuzzyMarcosSequence,
@@ -23,7 +23,7 @@ export const EXPLAIN_SEQUENCES: readonly ExplainSequence[] = [
   fuzzySwaraSequence,
 ];
 
-/** The explain sequence of a method, or `undefined` when it has none. */
+/** The lesson of a method, or `undefined` when it has none. */
 export function sequenceFor(methodId: string): ExplainSequence | undefined {
   return EXPLAIN_SEQUENCES.find((sequence) => sequence.methodId === methodId);
 }

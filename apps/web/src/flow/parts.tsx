@@ -101,8 +101,8 @@ export function Bars({
 }
 
 /**
- * "How was this calculated?": the animated explanation when the method has one, and every
- * table of the calculation behind a second fold.
+ * "How was this calculated?": the method's lesson on the user's own data, following the
+ * winner and the heaviest criterion, and every table of the calculation behind a fold.
  */
 export function HowCalculated({ analysis }: { analysis: StoredAnalysis }) {
   const { t } = useTranslation('flow');
@@ -110,7 +110,7 @@ export function HowCalculated({ analysis }: { analysis: StoredAnalysis }) {
   const explanation = useMemo(() => explanationOf(trace), [trace]);
   return (
     <div className="flex flex-col gap-4">
-      {explanation && <ExplainPanel trace={trace} explanation={explanation} />}
+      {explanation && <ExplainPanel trace={trace} explanation={explanation} followResult />}
       <Disclosure title={t('how.tables')} testId="trace-tables">
         <TraceTables trace={trace} />
       </Disclosure>
